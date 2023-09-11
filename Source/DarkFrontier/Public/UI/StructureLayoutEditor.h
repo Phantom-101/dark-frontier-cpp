@@ -17,11 +17,11 @@ class DARKFRONTIER_API UStructureLayoutEditor : public UCommonUserWidget
 protected:
 
 	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
-	TObjectPtr<class UCommonListView> Sections;
+	TObjectPtr<class UCommonListView> Parts;
 	
 public:
 
 	UFUNCTION(BlueprintCallable)
-	void UpdateView(class AStructure* Target);
+	void UpdateView(class AStructure* Target) const;
 	
 };

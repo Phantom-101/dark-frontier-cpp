@@ -21,14 +21,14 @@ public:
 
 protected:
 
-	UPROPERTY(BlueprintReadOnly);
-	TObjectPtr<class AStructureSection> RootSection;
+	UPROPERTY(BlueprintReadOnly)
+	TObjectPtr<class AStructurePart> RootPart;
 
-	UPROPERTY(BlueprintReadOnly);
-	TArray<TObjectPtr<AStructureSection>> Sections;
+	UPROPERTY(BlueprintReadOnly)
+	TArray<TObjectPtr<AStructurePart>> CachedParts;
 
 	UPROPERTY()
-	int32 NextSectionId;
+	int32 NextPartId;
 
 public:
 
@@ -59,35 +59,35 @@ protected:
 	TObjectPtr<class UCameraComponent> Camera;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	TObjectPtr<class AActor> CameraTarget;
+	TObjectPtr<AActor> CameraTarget;
 
 	virtual void Tick(float DeltaTime) override;
 	
 public:
 
 	UFUNCTION(BlueprintCallable)
-	void InitRootSection(AStructureSection* NewRoot);
+	void InitRootPart(AStructurePart* NewRoot);
 
 	UFUNCTION(BlueprintCallable)
-	AStructureSection* GetRootSection();
+	AStructurePart* GetRootPart();
 
 	UFUNCTION(BlueprintCallable)
-	void RegisterSection(AStructureSection* Section);
+	void RegisterPart(AStructurePart* InPart);
 
 	UFUNCTION(BlueprintCallable)
-	void UnregisterSection(AStructureSection* Section);
+	void UnregisterPart(AStructurePart* InPart);
 
 	UFUNCTION(BlueprintCallable)
-	void UpdateSections();
+	TArray<AStructurePart*> GetCachedParts();
+	
+	UFUNCTION(BlueprintCallable)
+	void UpdateCachedParts();
 
 	UFUNCTION(BlueprintCallable)
-	TArray<AStructureSection*> GetCachedSections();
+	TArray<AStructurePart*> GetConnectedParts() const;
 
 	UFUNCTION(BlueprintCallable)
-	TArray<AStructureSection*> GetConnectedSections();
-
-	UFUNCTION(BlueprintCallable)
-	bool IsLayoutValid();
+	bool IsPartLayoutValid();
 
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 

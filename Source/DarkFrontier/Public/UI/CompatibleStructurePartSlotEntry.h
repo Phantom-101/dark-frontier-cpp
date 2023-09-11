@@ -5,26 +5,33 @@
 #include "CoreMinimal.h"
 #include "CommonUserWidget.h"
 #include "Blueprint/IUserObjectListEntry.h"
-#include "CompatibleSectionEntry.generated.h"
+#include "CompatibleStructurePartSlotEntry.generated.h"
 
 /**
  * 
  */
 UCLASS(Abstract)
-class DARKFRONTIER_API UCompatibleSectionEntry : public UCommonUserWidget, public IUserObjectListEntry
+class DARKFRONTIER_API UCompatibleStructurePartSlotEntry : public UCommonUserWidget, public IUserObjectListEntry
 {
 	GENERATED_BODY()
 
 protected:
 
+	UPROPERTY(BlueprintReadOnly)
+	TObjectPtr<class UStructureBuilder> StructureBuilder;
+	
 	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
-	TObjectPtr<class UCommonTextBlock> TypeText;
+	TObjectPtr<class UCommonTextBlock> NameText;
 
 	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
-	TObjectPtr<class UCommonListView> SlotList;
-
+	TObjectPtr<class UCommonButtonBase> AddButton;
+	
 public:
 
 	virtual void NativeOnListItemObjectSet(UObject* ListItemObject) override;
+
+private:
+
+	void OnAddButtonClicked() const;
 	
 };

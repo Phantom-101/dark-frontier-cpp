@@ -6,8 +6,8 @@
 #include "Structures/StructureAbilitySystemComponent.h"
 #include "Structures/StructureAttributeSet.h"
 #include "Structures/StructureGameplayAbility.h"
-#include "Structures/StructureSection.h"
-#include "Structures/StructureSectionSlot.h"
+#include "Structures/StructurePart.h"
+#include "Structures/StructurePartSlot.h"
 
 AStructure::AStructure()
 {
@@ -33,7 +33,7 @@ void AStructure::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	check(RootSection);
+	check(RootPart);
 	
 	UStaticMeshComponent* Mesh = Cast<UStaticMeshComponent>(GetComponentByClass(UStaticMeshComponent::StaticClass()));
 	
@@ -49,79 +49,88 @@ void AStructure::Tick(float DeltaTime)
 	UpdateCameraPosition();
 }
 
-void AStructure::InitRootSection(AStructureSection* NewRoot)
+void AStructure::InitRootPart(AStructurePart* NewRoot)
 {
-	if(RootSection == nullptr && NewRoot->OwningStructure == nullptr)
+	if(RootPart == nullptr && NewRoot->OwningStructure == nullptr)
 	{
 		NewRoot->InitOwningStructure(this);
-		RootSection = NewRoot;
-		RootSection->SetActorRelativeLocation(FVector::ZeroVector);
-		RootSection->SetActorRelativeRotation(FRotator::ZeroRotator);
+		RootPart = NewRoot;
+		RootPart->SetActorRelativeLocation(FVector::ZeroVector);
+		RootPart->SetActorRelativeRotation(FRotator::ZeroRotator);
 	}
 }
 
-AStructureSection* AStructure::GetRootSection()
+AStructurePart* AStructure::GetRootPart()
 {
-	return RootSection;
+	return RootPart;
 }
 
-void AStructure::RegisterSection(AStructureSection* Section)
+void AStructure::RegisterPart(AStructurePart* InPart)
 {
-	Section->SectionId = NextSectionId;
-	NextSectionId++;
-	Sections.Add(Section);
+	InPart->PartId = NextPartId;
+	NextPartId++;
+	CachedParts.Add(InPart);
 	UpdateAttributes();
 }
 
-void AStructure::UnregisterSection(AStructureSection* Section)
+void AStructure::UnregisterPart(AStructurePart* InPart)
 {
-	Sections.Remove(Section);
+	CachedParts.Remove(InPart);
 	UpdateAttributes();
 }
 
-void AStructure::UpdateSections()
-{
-	// Called after a slot has been detached
-	const TArray<AStructureSection*> ConnectedSections = GetConnectedSections();
-	TArray<AStructureSection*> ToRemove;
-	for(AStructureSection* Section : Sections)
-	{
-		if(!ConnectedSections.Contains(Section))
-		{
-			ToRemove.Add(Section);
-			Section->Destroy();
-		}
-	}
-	for(AStructureSection* Section : ToRemove)
-	{
-		UnregisterSection(Section);
-	}
-	// If no sections were removed, reconnect all valid connections
-	for(AStructureSection* Section : ConnectedSections)
-	{
-		Section->AttachNearbySectionSlots();
-	}
-}
-
-TArray<AStructureSection*> AStructure::GetCachedSections()
+TArray<AStructurePart*> AStructure::GetCachedParts()
 {
 	// Implicitly copied
-	return Sections;
+	return CachedParts;
 }
 
-TArray<AStructureSection*> AStructure::GetConnectedSections()
+void AStructure::UpdateCachedParts()
 {
-	TArray<AStructureSection*> Ret, Temp;
-	Ret.Add(RootSection);
-	Temp.Add(RootSection);
+	// Called after a slot has been detached
+	const TArray<AStructurePart*> ConnectedParts = GetConnectedParts();
+	// Checking connected unregistered parts is not necessary but this exists just in case
+	TArray<AStructurePart*> ToAdd, ToRemove;
+	for(AStructurePart* Part : CachedParts)
+	{
+		if(!CachedParts.Contains(Part))
+		{
+			ToAdd.Add(Part);
+		}
+		if(!ConnectedParts.Contains(Part))
+		{
+			ToRemove.Add(Part);
+			Part->Destroy();
+		}
+	}
+	for(AStructurePart* Part : ToAdd)
+	{
+		RegisterPart(Part);
+	}
+	for(AStructurePart* Part : ToRemove)
+	{
+		UnregisterPart(Part);
+	}
+	// If no sections were removed, reconnect all valid connections
+	for(AStructurePart* Part : ConnectedParts)
+	{
+		Part->AttachNearbyPartSlots();
+	}
+}
+
+TArray<AStructurePart*> AStructure::GetConnectedParts() const
+{
+	TArray<AStructurePart*> Ret, Temp;
+	Ret.Add(RootPart);
+	Temp.Add(RootPart);
 	while(Temp.Num() > 0)
 	{
-		for(const UStructureSectionSlot* Slot : Temp[0]->SectionSlots)
+		for(const UStructurePartSlot* Slot : Temp[0]->PartSlots)
 		{
-			if(Slot->AttachedSlot != nullptr && !Ret.Contains(Slot->AttachedSlot->OwningSection))
+			if(Slot->AttachedSlot != nullptr && !Ret.Contains(Slot->AttachedSlot->OwningPart))
 			{
-				Ret.Add(Slot->AttachedSlot->OwningSection);
-				Temp.Add(Slot->AttachedSlot->OwningSection);
+				Ret.Add(Slot->AttachedSlot->OwningPart);
+				Temp.Add(Slot->AttachedSlot->OwningPart);
 			}
 		}
 		Temp.RemoveAt(0);
@@ -129,8 +138,18 @@ TArray<AStructureSection*> AStructure::GetConnectedSections()
 	return Ret;
 }
 
-bool AStructure::IsLayoutValid()
+bool AStructure::IsPartLayoutValid()
 {
+	for(int i = 0; i < CachedParts.Num(); i++)
+	{
+		for(int j = i + 1; j < CachedParts.Num(); j++)
+		{
+			if(CachedParts[i]->IsOverlappingActor(CachedParts[j]))
+			{
+				return false;
+			}
+		}
+	}
 	return true;
 }
 
@@ -214,7 +233,7 @@ void AStructure::UpdateAttributes()
 {
 	ApplyEffect(DefaultAttributes);
 
-	for(const AStructureSection* Section : Sections)
+	for(const AStructurePart* Section : CachedParts)
 	{
 		ApplyEffect(Section->AttributeEffect);
 	}

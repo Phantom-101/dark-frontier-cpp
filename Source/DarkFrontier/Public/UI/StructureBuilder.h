@@ -24,16 +24,10 @@ protected:
 	TObjectPtr<class AStructure> TargetStructure;
 	
 	UPROPERTY(BlueprintReadOnly)
-	TObjectPtr<class UStructureSectionSlot> SelectedSectionSlot;
+	TObjectPtr<class UStructurePartSlot> SelectedPartSlot;
 
 	UPROPERTY(BlueprintReadOnly)
-	TObjectPtr<class UStructureEquipmentSlot> SelectedEquipmentSlot;
-
-	UPROPERTY(BlueprintReadOnly)
-	TArray<TSubclassOf<class AStructureSection>> AvailableSectionTypes;
-
-	UPROPERTY(BlueprintReadOnly)
-	TArray<TSubclassOf<class AStructureEquipment>> AvailableEquipmentTypes;
+	TArray<TSubclassOf<class AStructurePart>> AvailableParts;
 
 	UPROPERTY(BlueprintReadOnly)
 	TObjectPtr<class UUIBase> UIBase;
@@ -42,7 +36,7 @@ protected:
 	TObjectPtr<class UStructureLayoutEditor> LayoutEditor;
 
 	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
-	TObjectPtr<class UCompatibleSectionSelect> SectionSelect;
+	TObjectPtr<class UCompatibleStructurePartSelect> PartSelect;
 
 	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
 	TObjectPtr<class UCommonButtonBase> CloseButton;
@@ -58,43 +52,28 @@ protected:
 public:
 	
 	UFUNCTION(BlueprintCallable)
-	void SetParams(AStructure* NewTargetStructure, TArray<TSubclassOf<AStructureSection>> NewAvailableSectionTypes, TArray<TSubclassOf<AStructureEquipment>> NewAvailableEquipmentTypes);
+	void SetParams(AStructure* NewTargetStructure, TArray<TSubclassOf<AStructurePart>> InAvailableParts);
 
 	UFUNCTION(BlueprintCallable)
-	void UpdateView();
+	void UpdateView() const;
 
 	UFUNCTION(BlueprintCallable)
-	TArray<TSubclassOf<AStructureSection>> GetAvailableSectionTypes();
+	TArray<TSubclassOf<AStructurePart>> GetAvailableParts();
 
 	UFUNCTION(BlueprintCallable)
-	UStructureSectionSlot* GetSelectedSectionSlot();
+	UStructurePartSlot* GetSelectedPartSlot() const;
 	
 	UFUNCTION(BlueprintCallable)
-	void SetSelectedSectionSlot(UStructureSectionSlot* NewSlot);
+	void SetSelectedPartSlot(UStructurePartSlot* NewSlot);
 
 	UFUNCTION(BlueprintCallable)
-	void AttachSectionType(TSubclassOf<AStructureSection> SectionType, FText SlotName);
+	void AttachPartOfType(TSubclassOf<AStructurePart> PartClass, FText SlotName);
 	
 	UFUNCTION(BlueprintCallable)
-	void RemoveAttachedSection(UStructureSectionSlot* Target);
+	void RemoveAttachedPart(UStructurePartSlot* Target) const;
 
 	UFUNCTION(BlueprintCallable)
-	void DisconnectAttachedSection(UStructureSectionSlot* Target);
-
-	UFUNCTION(BlueprintCallable)
-	TArray<TSubclassOf<AStructureEquipment>> GetAvailableEquipmentTypes();
-	
-	UFUNCTION(BlueprintCallable)
-	UStructureEquipmentSlot* GetSelectedEquipmentSlot();
-	
-	UFUNCTION(BlueprintCallable)
-	void SetSelectedEquipmentSlot(UStructureEquipmentSlot* NewSlot);
-
-	UFUNCTION(BlueprintCallable)
-	void AttachEquipmentType(TSubclassOf<AStructureEquipment> EquipmentType, FText SlotName);
-
-	UFUNCTION(BlueprintCallable)
-	void RemoveAttachedEquipment(UStructureEquipmentSlot* Target);
+	void DisconnectAttachedPart(UStructurePartSlot* Target) const;
 
 private:
 

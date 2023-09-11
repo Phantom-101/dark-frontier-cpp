@@ -1,8 +1,6 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "Structures/StructureController.h"
-
-#include "CommonActivatableWidget.h"
 #include "EnhancedInputSubsystems.h"
 #include "EnhancedInputComponent.h"
 #include "Structures/Structure.h"
@@ -98,5 +96,5 @@ void AStructureController::UnlockCursor(const FInputActionInstance& Instance)
 void AStructureController::EditStructure(const FInputActionInstance& Instance)
 {
 	UStructureBuilder* Builder = UIBaseWidget->PushGame<UStructureBuilder>(StructureBuilderUIClass);
-	Builder->SetParams(Cast<AStructure>(GetPawn()), AvailableSectionTypes, AvailableEquipmentTypes);
+	Builder->SetParams(Cast<AStructure>(GetPawn()), AvailableParts);
 }

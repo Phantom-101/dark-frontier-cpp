@@ -50,10 +50,7 @@ public:
 	TSubclassOf<UCommonActivatableWidget> StructureBuilderUIClass;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TArray<TSubclassOf<class AStructureSection>> AvailableSectionTypes;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TArray<TSubclassOf<class AStructureEquipment>> AvailableEquipmentTypes;
+	TArray<TSubclassOf<class AStructurePart>> AvailableParts;
 
 	UPROPERTY(BlueprintReadOnly)
 	TObjectPtr<UUIBase> UIBaseWidget;

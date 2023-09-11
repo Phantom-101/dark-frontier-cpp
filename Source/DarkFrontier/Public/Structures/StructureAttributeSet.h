@@ -113,6 +113,20 @@ public:
 	UFUNCTION()
 	virtual void OnRep_ShieldFieldDamageReduction(const FGameplayAttributeData& OldShieldFieldDamageReduction);
 
+	UPROPERTY(BlueprintReadOnly, Category="Attributes", ReplicatedUsing=OnRep_MaxCharge)
+	FGameplayAttributeData MaxCharge;
+	ATTRIBUTE_ACCESSORS(UStructureAttributeSet, MaxCharge);
+
+	UFUNCTION()
+	virtual void OnRep_MaxCharge(const FGameplayAttributeData& OldMaxCharge);
+
+	UPROPERTY(BlueprintReadOnly, Category="Attributes", ReplicatedUsing=OnRep_Charge)
+	FGameplayAttributeData Charge;
+	ATTRIBUTE_ACCESSORS(UStructureAttributeSet, Charge);
+
+	UFUNCTION()
+	virtual void OnRep_Charge(const FGameplayAttributeData& OldCharge);
+	
 	UPROPERTY(BlueprintReadOnly, Category="Attributes", ReplicatedUsing=OnRep_LinearAcceleration)
 	FGameplayAttributeData LinearAcceleration;
 	ATTRIBUTE_ACCESSORS(UStructureAttributeSet, LinearAcceleration);

@@ -14,6 +14,7 @@ void UStructureAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty
 
 	DOREPLIFETIME_CONDITION_NOTIFY(UStructureAttributeSet, MaxHull, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UStructureAttributeSet, Hull, COND_None, REPNOTIFY_Always);
+	// todo add other attributes later
 }
 
 void UStructureAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data)
@@ -27,6 +28,10 @@ void UStructureAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModC
 	else if (Data.EvaluatedData.Attribute == GetShieldAttribute())
 	{
 		SetShield(FMath::Clamp(GetShield(), 0, GetMaxShield()));
+	}
+	else if (Data.EvaluatedData.Attribute == GetChargeAttribute())
+	{
+		SetCharge(FMath::Clamp(GetCharge(), 0, GetMaxCharge()));
 	}
 }
 
@@ -88,6 +93,16 @@ void UStructureAttributeSet::OnRep_ShieldBeamDamageReduction(const FGameplayAttr
 void UStructureAttributeSet::OnRep_ShieldFieldDamageReduction(const FGameplayAttributeData& OldShieldFieldDamageReduction)
 {
 	GAMEPLAYATTRIBUTE_REPNOTIFY(UStructureAttributeSet, ShieldFieldDamageReduction, OldShieldFieldDamageReduction);
+}
+
+void UStructureAttributeSet::OnRep_MaxCharge(const FGameplayAttributeData& OldMaxCharge)
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UStructureAttributeSet, MaxCharge, OldMaxCharge);
+}
+
+void UStructureAttributeSet::OnRep_Charge(const FGameplayAttributeData& OldCharge)
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UStructureAttributeSet, Charge, OldCharge);
 }
 
 void UStructureAttributeSet::OnRep_LinearAcceleration(const FGameplayAttributeData& OldLinearAcceleration)
