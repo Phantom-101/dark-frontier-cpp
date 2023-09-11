@@ -3,15 +3,15 @@
 #include "UI/StructureLayoutEditor.h"
 #include "CommonListView.h"
 #include "Structures/Structure.h"
-#include "Structures/StructureSection.h"
+#include "Structures/StructurePart.h"
 
-void UStructureLayoutEditor::UpdateView(AStructure* Target)
+void UStructureLayoutEditor::UpdateView(AStructure* Target) const
 {
-	Sections->ClearListItems();
-	for(AStructureSection* Section : Target->GetCachedSections())
+	Parts->ClearListItems();
+	for(AStructurePart* Part : Target->GetCachedParts())
 	{
-		Sections->AddItem(Section);
+		Parts->AddItem(Part);
 	}
-	Sections->RegenerateAllEntries();
-	Sections->RequestRefresh();
+	Parts->RegenerateAllEntries();
+	Parts->RequestRefresh();
 }

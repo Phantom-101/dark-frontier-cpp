@@ -3,11 +3,12 @@
 #include "UI/StructureBuilder.h"
 #include "CommonButtonBase.h"
 #include "Libraries/UIBlueprintLibrary.h"
+#include "Structures/Structure.h"
 #include "Structures/StructureController.h"
-#include "UI/CompatibleSectionSelect.h"
+#include "UI/CompatibleStructurePartSelect.h"
 #include "UI/StructureLayoutEditor.h"
-#include "Structures/StructureSection.h"
-#include "Structures/StructureSectionSlot.h"
+#include "Structures/StructurePart.h"
+#include "Structures/StructurePartSlot.h"
 #include "UI/ConfirmationModal.h"
 #include "UI/UIBase.h"
 
@@ -20,7 +21,7 @@ void UStructureBuilder::NativeConstruct()
 	CloseButton->OnClicked().Clear();
 	CloseButton->OnClicked().AddUObject<UStructureBuilder>(this, &UStructureBuilder::OnCloseButtonClicked);
 
-	SetSelectedSectionSlot(nullptr);
+	SetSelectedPartSlot(nullptr);
 }
 
 void UStructureBuilder::NativeOnActivated()
@@ -40,87 +41,65 @@ TOptional<FUIInputConfig> UStructureBuilder::GetDesiredInputConfig() const
 	return FUIInputConfig(ECommonInputMode::Menu, EMouseCaptureMode::NoCapture);
 }
 
-void UStructureBuilder::SetParams(AStructure* NewTargetStructure, TArray<TSubclassOf<AStructureSection>> NewAvailableSectionTypes, TArray<TSubclassOf<AStructureEquipment>> NewAvailableEquipmentTypes)
+void UStructureBuilder::SetParams(AStructure* NewTargetStructure, const TArray<TSubclassOf<AStructurePart>> InAvailableParts)
 {
 	TargetStructure = NewTargetStructure;
-	AvailableSectionTypes = NewAvailableSectionTypes;
-	AvailableEquipmentTypes = NewAvailableEquipmentTypes;
+	AvailableParts = InAvailableParts;
 	UpdateView();
 }
 
-void UStructureBuilder::UpdateView()
+void UStructureBuilder::UpdateView() const
 {
 	LayoutEditor->UpdateView(TargetStructure);
 }
 
-TArray<TSubclassOf<AStructureSection>> UStructureBuilder::GetAvailableSectionTypes()
+TArray<TSubclassOf<AStructurePart>> UStructureBuilder::GetAvailableParts()
 {
-	return AvailableSectionTypes;
+	return AvailableParts;
 }
 
-UStructureSectionSlot* UStructureBuilder::GetSelectedSectionSlot()
+UStructurePartSlot* UStructureBuilder::GetSelectedPartSlot() const
 {
-	return SelectedSectionSlot;
+	return SelectedPartSlot;
 }
 
-void UStructureBuilder::SetSelectedSectionSlot(UStructureSectionSlot* NewSlot)
+void UStructureBuilder::SetSelectedPartSlot(UStructurePartSlot* NewSlot)
 {
-	SelectedSectionSlot = NewSlot;
-	if(SelectedSectionSlot)
+	SelectedPartSlot = NewSlot;
+	if(SelectedPartSlot)
 	{
-		SectionSelect->SetVisibility(ESlateVisibility::Visible);
-		SectionSelect->UpdateView();
+		PartSelect->SetVisibility(ESlateVisibility::Visible);
+		PartSelect->UpdateView();
 	}
 	else
 	{
-		SectionSelect->SetVisibility(ESlateVisibility::Collapsed);
+		PartSelect->SetVisibility(ESlateVisibility::Collapsed);
 	}
 }
 
-void UStructureBuilder::AttachSectionType(TSubclassOf<AStructureSection> SectionType, FText SlotName)
+void UStructureBuilder::AttachPartOfType(const TSubclassOf<AStructurePart> PartClass, const FText SlotName)
 {
-	AStructureSection* Section = Cast<AStructureSection>(GetWorld()->SpawnActor(SectionType));
-	Section->GetSectionSlotByName(SlotName)->Attach(SelectedSectionSlot);
-	SetSelectedSectionSlot(nullptr);
+	AStructurePart* Section = Cast<AStructurePart>(GetWorld()->SpawnActor(PartClass));
+	Section->GetPartSlotByName(SlotName)->Attach(SelectedPartSlot);
+	// Assume part layout invalidity is due to added section
+	if(!Section->OwningStructure->IsPartLayoutValid())
+	{
+		Section->RemovePart();
+	}
+	SetSelectedPartSlot(nullptr);
 	UpdateView();
 }
 
-void UStructureBuilder::RemoveAttachedSection(UStructureSectionSlot* Target)
+void UStructureBuilder::RemoveAttachedPart(UStructurePartSlot* Target) const
 {
-	Target->AttachedSlot->OwningSection->RemoveSection();
+	Target->AttachedSlot->OwningPart->RemovePart();
 	UpdateView();
 }
 
-void UStructureBuilder::DisconnectAttachedSection(UStructureSectionSlot* Target)
+void UStructureBuilder::DisconnectAttachedPart(UStructurePartSlot* Target) const
 {
 	Target->Detach();
 	UpdateView();
-}
-
-TArray<TSubclassOf<AStructureEquipment>> UStructureBuilder::GetAvailableEquipmentTypes()
-{
-	return AvailableEquipmentTypes;
-}
-
-UStructureEquipmentSlot* UStructureBuilder::GetSelectedEquipmentSlot()
-{
-	return SelectedEquipmentSlot;
-}
-
-
-void UStructureBuilder::SetSelectedEquipmentSlot(UStructureEquipmentSlot* NewSlot)
-{
-	SelectedEquipmentSlot = NewSlot;
-	// todo update equipment select view
-}
-
-void UStructureBuilder::AttachEquipmentType(TSubclassOf<AStructureEquipment> EquipmentType, FText SlotName)
-{
-	
-}
-
-void UStructureBuilder::RemoveAttachedEquipment(UStructureEquipmentSlot* Target)
-{
 }
 
 void UStructureBuilder::OnCloseButtonClicked()

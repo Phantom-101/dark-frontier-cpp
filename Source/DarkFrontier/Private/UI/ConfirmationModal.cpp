@@ -8,7 +8,9 @@ void UConfirmationModal::NativeConstruct()
 {
 	Super::NativeConstruct();
 
+	ConfirmButton->OnClicked().Clear();
 	ConfirmButton->OnClicked().AddUObject<UConfirmationModal>(this, &UConfirmationModal::OnConfirmButtonClicked);
+	CancelButton->OnClicked().Clear();
 	CancelButton->OnClicked().AddUObject<UConfirmationModal>(this, &UConfirmationModal::OnCancelButtonClicked);
 }
 

@@ -5,20 +5,20 @@
 #include "CoreMinimal.h"
 #include "CommonUserWidget.h"
 #include "Blueprint/IUserObjectListEntry.h"
-#include "SectionSlotLayoutEditor.generated.h"
+#include "StructurePartSlotLayoutEditor.generated.h"
 
 /**
  * 
  */
 UCLASS(Abstract)
-class DARKFRONTIER_API USectionSlotLayoutEditor : public UCommonUserWidget, public IUserObjectListEntry
+class DARKFRONTIER_API UStructurePartSlotLayoutEditor : public UCommonUserWidget, public IUserObjectListEntry
 {
 	GENERATED_BODY()
 
 protected:
 	
 	UPROPERTY(BlueprintReadOnly)
-	TObjectPtr<class UStructureSectionSlot> SectionSlot;
+	TObjectPtr<class UStructurePartSlot> PartSlot;
 
 	UPROPERTY(BlueprintReadOnly)
 	TObjectPtr<class UStructureBuilder> StructureBuilder;

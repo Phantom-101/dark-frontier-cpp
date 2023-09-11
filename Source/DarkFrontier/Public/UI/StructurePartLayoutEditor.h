@@ -5,13 +5,13 @@
 #include "CoreMinimal.h"
 #include "CommonUserWidget.h"
 #include "Blueprint/IUserObjectListEntry.h"
-#include "SectionLayoutEditor.generated.h"
+#include "StructurePartLayoutEditor.generated.h"
 
 /**
  * 
  */
 UCLASS(Abstract)
-class DARKFRONTIER_API USectionLayoutEditor : public UCommonUserWidget, public IUserObjectListEntry
+class DARKFRONTIER_API UStructurePartLayoutEditor : public UCommonUserWidget, public IUserObjectListEntry
 {
 	GENERATED_BODY()
 
@@ -27,10 +27,7 @@ protected:
 	TObjectPtr<UCommonTextBlock> RootSectionText;
 
 	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
-	TObjectPtr<class UCommonListView> SectionSlotList;
-
-	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
-	TObjectPtr<UCommonListView> EquipmentSlotList;
+	TObjectPtr<class UCommonListView> PartSlotList;
 	
 public:
 

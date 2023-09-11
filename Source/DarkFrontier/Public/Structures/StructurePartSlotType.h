@@ -3,21 +3,21 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "StructureSectionSlotType.generated.h"
+#include "StructurePartSlotType.generated.h"
 
 /**
  * 
  */
 UCLASS(Blueprintable)
-class DARKFRONTIER_API UStructureSectionSlotType : public UObject
+class DARKFRONTIER_API UStructurePartSlotType : public UObject
 {
 	GENERATED_BODY()
 
 public:
 
-	UStructureSectionSlotType();
+	UStructurePartSlotType();
 
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
-	bool CanAttach(UStructureSectionSlotType* Other);
+	bool CanAttach(UStructurePartSlotType* Other);
 	
 };

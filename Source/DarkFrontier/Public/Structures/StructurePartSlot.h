@@ -4,28 +4,28 @@
 
 #include "CoreMinimal.h"
 #include "Components/SceneComponent.h"
-#include "StructureSectionSlot.generated.h"
+#include "StructurePartSlot.generated.h"
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
-class DARKFRONTIER_API UStructureSectionSlot : public USceneComponent
+class DARKFRONTIER_API UStructurePartSlot : public USceneComponent
 {
 	GENERATED_BODY()
 
 public:
 
-	UStructureSectionSlot();
+	UStructurePartSlot();
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FText SlotName;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TSubclassOf<class UStructureSectionSlotType> SlotType;
+	TSubclassOf<class UStructurePartSlotType> SlotType;
 
 	UPROPERTY(BlueprintReadOnly)
-	TObjectPtr<class AStructureSection> OwningSection;
+	TObjectPtr<class AStructurePart> OwningPart;
 
 	UPROPERTY(BlueprintReadOnly)
-	TObjectPtr<UStructureSectionSlot> AttachedSlot;
+	TObjectPtr<UStructurePartSlot> AttachedSlot;
 
 protected:
 	
@@ -34,15 +34,15 @@ protected:
 public:
 
 	UFUNCTION(BlueprintCallable)
-	void Attach(UStructureSectionSlot* NewSlot);
+	void Attach(UStructurePartSlot* NewSlot);
 
 	UFUNCTION(BlueprintCallable)
 	void Detach();
 	
 	UFUNCTION(BlueprintCallable)
-	void MatchTransform(UStructureSectionSlot* Other);
+	void MatchTransform(UStructurePartSlot* Other);
 
 	UFUNCTION(BlueprintCallable)
-	void PhysicallyAttach(UStructureSectionSlot* NewSlot);
+	void PhysicallyAttach(UStructurePartSlot* NewSlot);
 	
 };

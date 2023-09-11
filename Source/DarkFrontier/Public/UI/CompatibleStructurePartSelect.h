@@ -4,13 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "CommonUserWidget.h"
-#include "CompatibleSectionSelect.generated.h"
+#include "CompatibleStructurePartSelect.generated.h"
 
 /**
  * 
  */
 UCLASS(Abstract)
-class DARKFRONTIER_API UCompatibleSectionSelect : public UCommonUserWidget
+class DARKFRONTIER_API UCompatibleStructurePartSelect : public UCommonUserWidget
 {
 	GENERATED_BODY()
 
