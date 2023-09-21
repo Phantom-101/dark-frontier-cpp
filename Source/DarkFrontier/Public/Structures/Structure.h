@@ -27,7 +27,7 @@ protected:
 	UPROPERTY(BlueprintReadOnly)
 	TArray<TObjectPtr<AStructurePart>> CachedParts;
 
-	UPROPERTY()
+	UPROPERTY(BlueprintReadOnly)
 	int32 NextPartId;
 
 public:
@@ -60,6 +60,12 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	TObjectPtr<AActor> CameraTarget;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	FVector2D LookRotation;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	float ZoomLevel = 2.5;
 
 	virtual void Tick(float DeltaTime) override;
 	
@@ -113,6 +119,9 @@ public:
 	void Look(FVector2D Value);
 
 	UFUNCTION(BlueprintCallable)
+	void Zoom(float Value);
+
+	UFUNCTION(BlueprintCallable)
 	void SetCameraTarget(AActor* NewTarget);
 
 	virtual void PossessedBy(AController* NewController) override;
@@ -125,5 +134,7 @@ protected:
 	FVector CalculateImpulse(FVector RawVelocities, FVector RawInput, float MaxSpeed, float Accel, float DeltaTime) const;
 
 	void UpdateCameraPosition();
+
+	void GetStructureBounds(bool OnlyCollidingComponents, FVector& Origin, FVector& Extent) const;
 	
 };

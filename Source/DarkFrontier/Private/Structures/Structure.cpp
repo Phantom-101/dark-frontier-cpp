@@ -204,6 +204,12 @@ void AStructure::RotateOverride(const FVector Value)
 
 void AStructure::Look(const FVector2D Value)
 {
+	LookRotation = FVector2D(FMath::Fmod(LookRotation.X + Value.X, 360), FMath::Clamp(LookRotation.Y + Value.Y, -90, 90));
+}
+
+void AStructure::Zoom(const float Value)
+{
+	ZoomLevel = FMath::Clamp(ZoomLevel + Value, 1.5, 10);
 }
 
 void AStructure::SetCameraTarget(AActor* NewTarget)
@@ -233,9 +239,9 @@ void AStructure::UpdateAttributes()
 {
 	ApplyEffect(DefaultAttributes);
 
-	for(const AStructurePart* Section : CachedParts)
+	for(const AStructurePart* Part : CachedParts)
 	{
-		ApplyEffect(Section->AttributeEffect);
+		ApplyEffect(Part->AttributeEffect);
 	}
 }
 
@@ -261,9 +267,31 @@ void AStructure::UpdateCameraPosition()
 	}
 
 	FVector Origin, Extent;
-	CameraTarget->GetActorBounds(false, Origin, Extent, true);
+	if(const AStructure* TargetStructure = Cast<AStructure>(CameraTarget))
+	{
+		TargetStructure->GetStructureBounds(true, Origin, Extent);
+	}
+	else
+	{
+		CameraTarget->GetActorBounds(true, Origin, Extent, true);
+	}
 	const double SafeRadius = Extent.Length();
 	// todo do not assume target actor location is in world space
 	SpringArm->SetRelativeLocation(GetTransform().InverseTransformPosition(CameraTarget->GetActorLocation()));
-	SpringArm->TargetArmLength = SafeRadius * 1.5;
+	SpringArm->TargetArmLength = SafeRadius * ZoomLevel;
+
+	SpringArm->SetWorldRotation(CameraTarget->GetActorRotation());
+	SpringArm->AddLocalRotation(FRotator(LookRotation.Y, LookRotation.X, 0));
+}
+
+void AStructure::GetStructureBounds(const bool OnlyCollidingComponents, FVector& Origin, FVector& Extent) const
+{
+	FBox Bounds = GetComponentsBoundingBox(!OnlyCollidingComponents);
+	TArray<AActor*> AttachedActors;
+	GetAttachedActors(AttachedActors);
+	for (const AActor* AttachedActor : AttachedActors)
+	{
+		Bounds += AttachedActor->GetComponentsBoundingBox(!OnlyCollidingComponents);
+	}
+	Bounds.GetCenterAndExtents(Origin, Extent);
 }
