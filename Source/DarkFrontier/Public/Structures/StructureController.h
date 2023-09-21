@@ -35,6 +35,9 @@ public:
 	TObjectPtr<UInputAction> LookAction;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Input")
+	TObjectPtr<UInputAction> ZoomAction;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Input")
 	TObjectPtr<UInputAction> UnlockCursorAction;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Input")
@@ -76,6 +79,9 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void Look(const FInputActionInstance& Instance);
+
+	UFUNCTION(BlueprintCallable)
+	void Zoom(const FInputActionInstance& Instance);
 
 	UFUNCTION(BlueprintCallable)
 	void UnlockCursor(const FInputActionInstance& Instance);

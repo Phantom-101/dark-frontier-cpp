@@ -45,6 +45,8 @@ void AStructureController::SetupInputComponent()
 	Input->BindAction(RotateOverrideAction, ETriggerEvent::Completed, this, &AStructureController::RotateOverride);
 	Input->BindAction(LookAction, ETriggerEvent::Triggered, this, &AStructureController::Look);
 	Input->BindAction(LookAction, ETriggerEvent::Completed, this, &AStructureController::Look);
+	Input->BindAction(ZoomAction, ETriggerEvent::Triggered, this, &AStructureController::Zoom);
+	Input->BindAction(ZoomAction, ETriggerEvent::Completed, this, &AStructureController::Zoom);
 	Input->BindAction(UnlockCursorAction, ETriggerEvent::Triggered, this, &AStructureController::UnlockCursor);
 	Input->BindAction(UnlockCursorAction, ETriggerEvent::Completed, this, &AStructureController::UnlockCursor);
 	// todo remove completed event
@@ -88,9 +90,17 @@ void AStructureController::Look(const FInputActionInstance& Instance)
 	}
 }
 
+void AStructureController::Zoom(const FInputActionInstance& Instance)
+{
+	if(Cast<AStructure>(GetPawn()))
+	{
+		Cast<AStructure>(GetPawn())->Zoom(Instance.GetValue().Get<float>());
+	}
+}
+
 void AStructureController::UnlockCursor(const FInputActionInstance& Instance)
 {
-	SetShowMouseCursor(Instance.GetValue().Get<bool>());
+	//SetShowMouseCursor(Instance.GetValue().Get<bool>());
 }
 
 void AStructureController::EditStructure(const FInputActionInstance& Instance)
