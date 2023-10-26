@@ -5,4 +5,5 @@
 void UCompatibleStructurePartEntryObject::Init(const AStructurePart* Part)
 {
 	PartClass = Part->GetClass();
+	PartName = Part->TypeName;
 }

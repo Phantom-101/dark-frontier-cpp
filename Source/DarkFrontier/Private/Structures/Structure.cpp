@@ -13,7 +13,7 @@ AStructure::AStructure()
 {
 	PrimaryActorTick.bCanEverTick = true;
 	
-	StaticMesh = CreateDefaultSubobject<UStaticMeshComponent>("StaticMesh");
+	UStaticMeshComponent* StaticMesh = CreateDefaultSubobject<UStaticMeshComponent>("StaticMesh");
 	SetRootComponent(StaticMesh);
 	
 	SpringArm = CreateDefaultSubobject<USpringArmComponent>("CameraArm");
@@ -27,6 +27,14 @@ AStructure::AStructure()
 	AbilitySystemComponent->SetReplicationMode(EGameplayEffectReplicationMode::Minimal);
 
 	Attributes = CreateDefaultSubobject<UStructureAttributeSet>("Attributes");
+}
+
+void AStructure::BeginPlay()
+{
+	Super::BeginPlay();
+	
+	ApplyEffect(DefaultAttributes);
+	ApplyEffect(RegenEffect);
 }
 
 void AStructure::Tick(float DeltaTime)
@@ -70,13 +78,19 @@ void AStructure::RegisterPart(AStructurePart* InPart)
 	InPart->PartId = NextPartId;
 	NextPartId++;
 	CachedParts.Add(InPart);
-	UpdateAttributes();
+	ApplyEffect(InPart->AttributeEffect);
 }
 
 void AStructure::UnregisterPart(AStructurePart* InPart)
 {
 	CachedParts.Remove(InPart);
-	UpdateAttributes();
+	FGameplayEffectQuery Query;
+	Query.EffectDefinition = InPart->AttributeEffect;
+	TArray<FActiveGameplayEffectHandle> Handles = GetAbilitySystemComponent()->GetActiveEffects(Query);
+	if(Handles.Num() > 0)
+	{
+		GetAbilitySystemComponent()->RemoveActiveGameplayEffect(Handles[0]);
+	}
 }
 
 TArray<AStructurePart*> AStructure::GetCachedParts()
@@ -153,6 +167,15 @@ bool AStructure::IsPartLayoutValid()
 	return true;
 }
 
+void AStructure::UpdatePartDistances()
+{
+	for(AStructurePart* Part : CachedParts)
+	{
+		Part->DistanceToRoot = -1;
+	}
+	RootPart->PropagateDistanceUpdate(0);
+}
+
 UAbilitySystemComponent* AStructure::GetAbilitySystemComponent() const
 {
 	return AbilitySystemComponent;
@@ -222,7 +245,6 @@ void AStructure::PossessedBy(AController* NewController)
 	Super::PossessedBy(NewController);
 
 	AbilitySystemComponent->InitAbilityActorInfo(this, this);
-	UpdateAttributes();
 
 	// Give any abilities here
 }
@@ -232,17 +254,6 @@ void AStructure::OnRep_PlayerState()
 	Super::OnRep_PlayerState();
 	
 	AbilitySystemComponent->InitAbilityActorInfo(this, this);
-	UpdateAttributes();
-}
-
-void AStructure::UpdateAttributes()
-{
-	ApplyEffect(DefaultAttributes);
-
-	for(const AStructurePart* Part : CachedParts)
-	{
-		ApplyEffect(Part->AttributeEffect);
-	}
 }
 
 FVector AStructure::CalculateImpulse(const FVector RawVelocities, const FVector RawInput, const float MaxSpeed, const float Accel, const float DeltaTime) const
@@ -266,32 +277,44 @@ void AStructure::UpdateCameraPosition()
 		SetCameraTarget(this);
 	}
 
-	FVector Origin, Extent;
+	FBoxSphereBounds Bounds;
 	if(const AStructure* TargetStructure = Cast<AStructure>(CameraTarget))
 	{
-		TargetStructure->GetStructureBounds(true, Origin, Extent);
+		Bounds = TargetStructure->GetStructureBounds(true);
 	}
 	else
 	{
-		CameraTarget->GetActorBounds(true, Origin, Extent, true);
+		Bounds = GetBounds(CameraTarget, true);
 	}
-	const double SafeRadius = Extent.Length();
 	// todo do not assume target actor location is in world space
 	SpringArm->SetRelativeLocation(GetTransform().InverseTransformPosition(CameraTarget->GetActorLocation()));
-	SpringArm->TargetArmLength = SafeRadius * ZoomLevel;
+	SpringArm->TargetArmLength = Bounds.SphereRadius * 2 * ZoomLevel;
 
 	SpringArm->SetWorldRotation(CameraTarget->GetActorRotation());
 	SpringArm->AddLocalRotation(FRotator(LookRotation.Y, LookRotation.X, 0));
 }
 
-void AStructure::GetStructureBounds(const bool OnlyCollidingComponents, FVector& Origin, FVector& Extent) const
+FBoxSphereBounds AStructure::GetStructureBounds(const bool OnlyCollidingComponents) const
 {
-	FBox Bounds = GetComponentsBoundingBox(!OnlyCollidingComponents);
+	FBoxSphereBounds Bounds;
 	TArray<AActor*> AttachedActors;
 	GetAttachedActors(AttachedActors);
 	for (const AActor* AttachedActor : AttachedActors)
 	{
-		Bounds += AttachedActor->GetComponentsBoundingBox(!OnlyCollidingComponents);
+		Bounds = Bounds + GetBounds(AttachedActor, OnlyCollidingComponents);
 	}
-	Bounds.GetCenterAndExtents(Origin, Extent);
+	return Bounds;
+}
+
+FBoxSphereBounds AStructure::GetBounds(const AActor* Actor, const bool OnlyCollidingComponents)
+{
+	FBoxSphereBounds Bounds;
+	Actor->ForEachComponent<UPrimitiveComponent>(false, [&](const UPrimitiveComponent* InPrimComp)
+	{
+		if (InPrimComp->IsRegistered() && (!OnlyCollidingComponents || InPrimComp->IsCollisionEnabled()))
+		{
+			Bounds = Bounds + InPrimComp->Bounds;
+		}
+	});
+	return Bounds;
 }

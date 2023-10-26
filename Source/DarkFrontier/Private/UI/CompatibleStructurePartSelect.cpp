@@ -37,6 +37,7 @@ void UCompatibleStructurePartSelect::UpdateView() const
 		}
 	}
 	TypeList->RegenerateAllEntries();
+	TypeList->ScrollIndexIntoView(0);
 }
 
 void UCompatibleStructurePartSelect::OnCloseButtonClicked() const

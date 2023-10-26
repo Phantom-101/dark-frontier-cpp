@@ -11,7 +11,9 @@ UCommonActivatableWidget* UUIBase::PeekGame() const
 
 UCommonActivatableWidget* UUIBase::PushGame(const TSubclassOf<UCommonActivatableWidget> WidgetClass) const
 {
+#if WITH_EDITOR
 	GEngine->AddOnScreenDebugMessage(-1, 10, FColor::White, FString::Printf(TEXT("Game stack pushed: %s"), *WidgetClass->GetDisplayNameText().ToString()));
+#endif
 	return GameStack->AddWidget(WidgetClass);
 }
 
@@ -22,7 +24,9 @@ UCommonActivatableWidget* UUIBase::PeekGameMenu() const
 
 UCommonActivatableWidget* UUIBase::PushGameMenu(const TSubclassOf<UCommonActivatableWidget> WidgetClass) const
 {
+#if WITH_EDITOR
 	GEngine->AddOnScreenDebugMessage(-1, 10, FColor::White, FString::Printf(TEXT("GameMenu stack pushed: %s"), *WidgetClass->GetDisplayNameText().ToString()));
+#endif
 	return GameMenuStack->AddWidget(WidgetClass);
 }
 
@@ -33,7 +37,9 @@ UCommonActivatableWidget* UUIBase::PeekMenu() const
 
 UCommonActivatableWidget* UUIBase::PushMenu(const TSubclassOf<UCommonActivatableWidget> WidgetClass) const
 {
+#if WITH_EDITOR
 	GEngine->AddOnScreenDebugMessage(-1, 10, FColor::White, FString::Printf(TEXT("Menu stack pushed: %s"), *WidgetClass->GetDisplayNameText().ToString()));
+#endif
 	return MenuStack->AddWidget(WidgetClass);
 }
 
@@ -44,6 +50,8 @@ UCommonActivatableWidget* UUIBase::PeekModal() const
 
 UCommonActivatableWidget* UUIBase::PushModal(const TSubclassOf<UCommonActivatableWidget> WidgetClass) const
 {
+#if WITH_EDITOR
 	GEngine->AddOnScreenDebugMessage(-1, 10, FColor::White, FString::Printf(TEXT("Modal stack pushed: %s"), *WidgetClass->GetDisplayNameText().ToString()));
+#endif
 	return ModalStack->AddWidget(WidgetClass);
 }

@@ -85,6 +85,13 @@ public:
 	UFUNCTION()
 	virtual void OnRep_Shield(const FGameplayAttributeData& OldShield);
 
+	UPROPERTY(BlueprintReadOnly, Category="Attributes", ReplicatedUsing=OnRep_ShieldRegen)
+	FGameplayAttributeData ShieldRegen;
+	ATTRIBUTE_ACCESSORS(UStructureAttributeSet, ShieldRegen);
+
+	UFUNCTION()
+	virtual void OnRep_ShieldRegen(const FGameplayAttributeData& OldShieldRegen);
+
 	UPROPERTY(BlueprintReadOnly, Category="Attributes", ReplicatedUsing=OnRep_ShieldKineticDamageReduction)
 	FGameplayAttributeData ShieldKineticDamageReduction;
 	ATTRIBUTE_ACCESSORS(UStructureAttributeSet, ShieldKineticDamageReduction);
@@ -113,19 +120,26 @@ public:
 	UFUNCTION()
 	virtual void OnRep_ShieldFieldDamageReduction(const FGameplayAttributeData& OldShieldFieldDamageReduction);
 
-	UPROPERTY(BlueprintReadOnly, Category="Attributes", ReplicatedUsing=OnRep_MaxCharge)
-	FGameplayAttributeData MaxCharge;
-	ATTRIBUTE_ACCESSORS(UStructureAttributeSet, MaxCharge);
+	UPROPERTY(BlueprintReadOnly, Category="Attributes", ReplicatedUsing=OnRep_MaxEnergy)
+	FGameplayAttributeData MaxEnergy;
+	ATTRIBUTE_ACCESSORS(UStructureAttributeSet, MaxEnergy);
 
 	UFUNCTION()
-	virtual void OnRep_MaxCharge(const FGameplayAttributeData& OldMaxCharge);
+	virtual void OnRep_MaxEnergy(const FGameplayAttributeData& OldMaxEnergy);
 
-	UPROPERTY(BlueprintReadOnly, Category="Attributes", ReplicatedUsing=OnRep_Charge)
-	FGameplayAttributeData Charge;
-	ATTRIBUTE_ACCESSORS(UStructureAttributeSet, Charge);
+	UPROPERTY(BlueprintReadOnly, Category="Attributes", ReplicatedUsing=OnRep_Energy)
+	FGameplayAttributeData Energy;
+	ATTRIBUTE_ACCESSORS(UStructureAttributeSet, Energy);
 
 	UFUNCTION()
-	virtual void OnRep_Charge(const FGameplayAttributeData& OldCharge);
+	virtual void OnRep_Energy(const FGameplayAttributeData& OldEnergy);
+
+	UPROPERTY(BlueprintReadOnly, Category="Attributes", ReplicatedUsing=OnRep_EnergyRegen)
+	FGameplayAttributeData EnergyRegen;
+	ATTRIBUTE_ACCESSORS(UStructureAttributeSet, EnergyRegen);
+
+	UFUNCTION()
+	virtual void OnRep_EnergyRegen(const FGameplayAttributeData& OldEnergyRegen);
 	
 	UPROPERTY(BlueprintReadOnly, Category="Attributes", ReplicatedUsing=OnRep_LinearAcceleration)
 	FGameplayAttributeData LinearAcceleration;

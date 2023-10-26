@@ -41,7 +41,9 @@ public:
 	template <typename WidgetType = UCommonActivatableWidget>
 	WidgetType* PushGame(const TSubclassOf<UCommonActivatableWidget> WidgetClass) const
 	{
+#if WITH_EDITOR
 		GEngine->AddOnScreenDebugMessage(-1, 10, FColor::White, FString::Printf(TEXT("Game stack pushed: %s"), *WidgetClass->GetDisplayNameText().ToString()));
+#endif
 		return GameStack->AddWidget<WidgetType>(WidgetClass);
 	}
 
@@ -54,7 +56,9 @@ public:
 	template <typename WidgetType = UCommonActivatableWidget>
 	WidgetType* PushGameMenu(const TSubclassOf<UCommonActivatableWidget> WidgetClass) const
 	{
+#if WITH_EDITOR
 		GEngine->AddOnScreenDebugMessage(-1, 10, FColor::White, FString::Printf(TEXT("GameMenu stack pushed: %s"), *WidgetClass->GetDisplayNameText().ToString()));
+#endif
 		return GameMenuStack->AddWidget<WidgetType>(WidgetClass);
 	}
 
@@ -67,7 +71,9 @@ public:
 	template <typename WidgetType = UCommonActivatableWidget>
 	WidgetType* PushMenu(const TSubclassOf<UCommonActivatableWidget> WidgetClass) const
 	{
+#if WITH_EDITOR
 		GEngine->AddOnScreenDebugMessage(-1, 10, FColor::White, FString::Printf(TEXT("Menu stack pushed: %s"), *WidgetClass->GetDisplayNameText().ToString()));
+#endif
 		return MenuStack->AddWidget<WidgetType>(WidgetClass);
 	}
 	
@@ -80,7 +86,9 @@ public:
 	template <typename WidgetType = UCommonActivatableWidget>
 	WidgetType* PushModal(const TSubclassOf<UCommonActivatableWidget> WidgetClass) const
 	{
+#if WITH_EDITOR
 		GEngine->AddOnScreenDebugMessage(-1, 10, FColor::White, FString::Printf(TEXT("Modal stack pushed: %s"), *WidgetClass->GetDisplayNameText().ToString()));
+#endif
 		return ModalStack->AddWidget<WidgetType>(WidgetClass);
 	}
 	

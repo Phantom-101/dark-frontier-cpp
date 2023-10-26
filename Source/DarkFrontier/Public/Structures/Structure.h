@@ -16,57 +16,62 @@ public:
 
 	AStructure();
 
-	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly)
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category="Setup")
 	TSubclassOf<class UGameplayEffect> DefaultAttributes;
+
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category="Setup")
+	TSubclassOf<UGameplayEffect> RegenEffect;
+
+	UPROPERTY(EditAnywhere)
+	TObjectPtr<class AFaction> OwningFaction;
 
 protected:
 
-	UPROPERTY(BlueprintReadOnly)
+	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly, Category="Layout")
 	TObjectPtr<class AStructurePart> RootPart;
 
-	UPROPERTY(BlueprintReadOnly)
+	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly, Category="Layout")
 	TArray<TObjectPtr<AStructurePart>> CachedParts;
 
-	UPROPERTY(BlueprintReadOnly)
+	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly, Category="Layout")
 	int32 NextPartId;
 
 public:
 
-	UPROPERTY(BlueprintReadOnly)
+	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly, Category="Input")
 	FVector MoveInput;
 
-	UPROPERTY(BlueprintReadOnly)
+	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly, Category="Input")
 	FVector RotateAddInput;
 
-	UPROPERTY(BlueprintReadOnly)
+	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly, Category="Input")
 	FVector RotateOverrideInput;
 
 protected:
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta=(AllowPrivateAccess="true"))
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="GAS", meta=(AllowPrivateAccess="true"))
 	TObjectPtr<class UStructureAbilitySystemComponent> AbilitySystemComponent;
 	
 	UPROPERTY()
 	TObjectPtr<class UStructureAttributeSet> Attributes;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	TObjectPtr<UStaticMeshComponent> StaticMesh;
-	
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Camera")
 	TObjectPtr<class USpringArmComponent> SpringArm;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Camera")
 	TObjectPtr<class UCameraComponent> Camera;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Camera")
 	TObjectPtr<AActor> CameraTarget;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Camera")
 	FVector2D LookRotation;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Camera")
 	float ZoomLevel = 2.5;
 
+	virtual void BeginPlay() override;
+	
 	virtual void Tick(float DeltaTime) override;
 	
 public:
@@ -94,6 +99,9 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	bool IsPartLayoutValid();
+
+	UFUNCTION(BlueprintCallable)
+	void UpdatePartDistances();
 
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 
@@ -128,13 +136,13 @@ public:
 	virtual void OnRep_PlayerState() override;
 
 protected:
-
-	void UpdateAttributes();
-
+	
 	FVector CalculateImpulse(FVector RawVelocities, FVector RawInput, float MaxSpeed, float Accel, float DeltaTime) const;
 
 	void UpdateCameraPosition();
 
-	void GetStructureBounds(bool OnlyCollidingComponents, FVector& Origin, FVector& Extent) const;
+	FBoxSphereBounds GetStructureBounds(bool OnlyCollidingComponents) const;
+
+	static FBoxSphereBounds GetBounds(const AActor* Actor, bool OnlyCollidingComponents);
 	
 };

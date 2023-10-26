@@ -13,7 +13,7 @@ void UStructurePartLayoutEditor::NativeOnListItemObjectSet(UObject* ListItemObje
 	
 	const AStructurePart* Part = Cast<AStructurePart>(ListItemObject);
 
-	TypeText->SetText(Part->GetClass()->GetDisplayNameText());
+	TypeText->SetText(Part->TypeName);
 	IdText->SetText(FText::FromString(FString::Printf(TEXT("#%i"), Part->PartId)));
 	RootSectionText->SetVisibility(Part == Part->OwningStructure->GetRootPart() ? ESlateVisibility::Visible : ESlateVisibility::Collapsed);
 
@@ -23,4 +23,5 @@ void UStructurePartLayoutEditor::NativeOnListItemObjectSet(UObject* ListItemObje
 		PartSlotList->AddItem(PartSlot);
 	}
 	PartSlotList->RegenerateAllEntries();
+	PartSlotList->ScrollIndexIntoView(0);
 }

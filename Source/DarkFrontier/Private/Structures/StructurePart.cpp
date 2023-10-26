@@ -1,6 +1,8 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "Structures/StructurePart.h"
+#include "Factions/Army.h"
+#include "Factions/Faction.h"
 #include "Structures/Structure.h"
 #include "Structures/StructurePartSlot.h"
 #include "Structures/StructurePartSlotType.h"
@@ -27,6 +29,7 @@ void AStructurePart::InitOwningStructure(AStructure* NewOwner)
 	OwningStructure = NewOwner;
 	OwningStructure->RegisterPart(this);
 	AttachToActor(OwningStructure, FAttachmentTransformRules(EAttachmentRule::KeepWorld, true));
+	ControlledBy = OwningStructure->OwningFaction;
 }
 
 void AStructurePart::RegisterPartSlot(UStructurePartSlot* Slot)
@@ -93,4 +96,135 @@ void AStructurePart::RemovePart()
 		}
 		OwningStructure->UpdateCachedParts();
 	}
+}
+
+void AStructurePart::PropagateDistanceUpdate(const int32 Distance)
+{
+	DistanceToRoot = Distance;
+	for(const UStructurePartSlot* Slot : PartSlots)
+	{
+		if(Slot->AttachedSlot != nullptr && Slot->AttachedSlot->OwningPart->DistanceToRoot == -1)
+		{
+			Slot->AttachedSlot->OwningPart->PropagateDistanceUpdate(Distance + 1);
+		}
+	}	
+}
+
+void AStructurePart::TickArmies()
+{
+	// Remove depleted armies
+	for(int i = Armies.Num() - 1; i >= 0; i--)
+	{
+		if(Armies[i]->Count <= 0)
+		{
+			Armies.RemoveAt(i);
+		}
+	}
+	
+	// Tabulate armies on both sides
+	TArray<UArmy*> DefenderArmies;
+	TArray<UArmy*> AttackerArmies;
+
+	// Calculate strengths based on attacker attack and defender defense
+	double DefenderStrength = 0;
+	double AttackerStrength = 0;
+
+	for(UArmy* Army : Armies)
+	{
+		Army->BuffMultiplier = 1;
+		const double Relation = Army->OwningFaction->GetRelation(OwningStructure->OwningFaction);
+		if(Relation == 1)
+		{
+			DefenderArmies.Add(Army);
+			DefenderStrength += Army->Defense * Army->Count;
+		}
+		else if (Relation == -1)
+		{
+			AttackerArmies.Add(Army);
+			AttackerStrength += Army->Attack * Army->Count;
+		}
+	}
+
+	if(DefenderArmies.Num() == 0)
+	{
+		// Garrison defeated
+
+		ControlledBy = AttackerArmies[0]->OwningFaction;
+
+		if(this == OwningStructure->GetRootPart())
+		{
+			OwningStructure->OwningFaction = ControlledBy;
+			// todo process ai changes
+			// Do not send attacker armies because they are now the defenders
+		}
+		else
+		{
+			// Send attacker armies to the connected part that is closest to the root part
+			if(PartSlots.Num() > 0)
+			{
+				AStructurePart* Target = PartSlots[0]->AttachedSlot->OwningPart;
+				int32 MinDistance = Target->DistanceToRoot;
+				for(int i = 1; i < PartSlots.Num(); i++)
+				{
+					AStructurePart* Part = PartSlots[i]->AttachedSlot->OwningPart;
+					if(Part->DistanceToRoot < MinDistance)
+					{
+						Target = Part;
+						MinDistance = Part->DistanceToRoot;
+					}
+				}
+				// Armies are added to a list to be added after all parts have had their army ticks
+				// This is to avoid timing issues where results of ticks can change depending on whether neighboring parts have sent attacker armies already
+				for(UArmy* Army : AttackerArmies)
+				{
+					Target->ArrivingArmies.Add(Army);
+					Armies.Remove(Army);
+				}
+			}
+		}
+	}
+	else
+	{
+		if(AttackerArmies.Num() != 0)
+		{
+			// Give 1.5x effectiveness buff to the side with the greater strength
+			const bool DefenderHasAdvantage = DefenderStrength >= AttackerStrength;
+
+			constexpr double BuffValue = 1.5;
+			const double DefenderBuff = DefenderHasAdvantage ? BuffValue : 1;
+			const double AttackerBuff = !DefenderHasAdvantage ? BuffValue : 1;
+
+			// Pre set defender army buffs so subsequent damage calculations are correct
+			for(UArmy* Army : DefenderArmies)
+			{
+				Army->BuffMultiplier = DefenderBuff;
+			}
+
+			// Each attacker army deals attack and takes counterattack
+			for(UArmy* Army : AttackerArmies)
+			{
+				Army->BuffMultiplier = AttackerBuff;
+				Army->AttackTarget(Army->GetPreferredTarget(DefenderArmies));
+			}
+
+			// Defender armies attack second
+			for(UArmy* Army : DefenderArmies)
+			{
+				if(Army->Count > 0)
+				{
+					Army->AttackTarget(Army->GetPreferredTarget(AttackerArmies));
+				}
+			}
+		}
+	}
+}
+
+void AStructurePart::ProcessArrivingArmies()
+{
+	for(UArmy* Army : ArrivingArmies)
+	{
+		Armies.Add(Army);
+	}
+
+	ArrivingArmies.Empty();
 }
