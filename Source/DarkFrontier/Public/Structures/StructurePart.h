@@ -15,17 +15,32 @@ public:
 
 	AStructurePart();
 
-	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly)
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category="Setup")
+	FText TypeName;
+
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category="Setup")
 	TSubclassOf<class UGameplayEffect> AttributeEffect;
 
-	UPROPERTY(BlueprintReadOnly)
+	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly, Category="Layout")
 	TObjectPtr<class AStructure> OwningStructure;
 
-	UPROPERTY(BlueprintReadOnly)
+	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly, Category="Layout")
 	int32 PartId;
 
-	UPROPERTY(BlueprintReadOnly);
+	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly, Category="Layout")
 	TArray<TObjectPtr<class UStructurePartSlot>> PartSlots;
+
+	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly, Category="Layout")
+	int32 DistanceToRoot = -1;
+
+	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly, Category="Combat")
+	TObjectPtr<class AFaction> ControlledBy;
+	
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category="Combat")
+	TArray<TObjectPtr<class UArmy>> Armies;
+
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category="Combat")
+	TArray<TObjectPtr<UArmy>> ArrivingArmies;
 
 protected:
 
@@ -52,5 +67,14 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void RemovePart();
+
+	UFUNCTION(BlueprintCallable)
+	void PropagateDistanceUpdate(int32 Distance);
+
+	UFUNCTION(BlueprintCallable)
+	void TickArmies();
+
+	UFUNCTION(BlueprintCallable)
+	void ProcessArrivingArmies();
 
 };

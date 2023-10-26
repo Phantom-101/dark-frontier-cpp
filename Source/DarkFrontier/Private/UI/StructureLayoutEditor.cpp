@@ -13,5 +13,6 @@ void UStructureLayoutEditor::UpdateView(AStructure* Target) const
 		Parts->AddItem(Part);
 	}
 	Parts->RegenerateAllEntries();
-	Parts->RequestRefresh();
+	// todo find another way to update scroll bar without interfering with user
+	Parts->ScrollIndexIntoView(0);
 }

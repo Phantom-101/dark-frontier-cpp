@@ -25,6 +25,9 @@ protected:
 	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
 	TObjectPtr<UImage> TurnIndicator;
 
+	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
+	TObjectPtr<class UCommonListView> GameplayEffectIndicators;
+
 	virtual TOptional<FUIInputConfig> GetDesiredInputConfig() const override;
 	
 	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;

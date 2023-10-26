@@ -22,7 +22,7 @@ void UStructurePartSlotLayoutEditor::NativeOnListItemObjectSet(UObject* ListItem
 	NameText->SetText(PartSlot->SlotName);
 	if(PartSlot->AttachedSlot)
 	{
-		TypeText->SetText(PartSlot->AttachedSlot->OwningPart->GetClass()->GetDisplayNameText());
+		TypeText->SetText(PartSlot->AttachedSlot->OwningPart->TypeName);
 		IdText->SetText(FText::FromString(FString::Printf(TEXT("#%i"), PartSlot->AttachedSlot->OwningPart->PartId)));
 
 		AddButton->SetIsInteractionEnabled(false);

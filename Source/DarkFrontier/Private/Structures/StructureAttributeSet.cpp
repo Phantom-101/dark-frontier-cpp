@@ -12,9 +12,28 @@ void UStructureAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
-	DOREPLIFETIME_CONDITION_NOTIFY(UStructureAttributeSet, MaxHull, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UStructureAttributeSet, MaxHull, COND_None, REPNOTIFY_OnChanged);
 	DOREPLIFETIME_CONDITION_NOTIFY(UStructureAttributeSet, Hull, COND_None, REPNOTIFY_Always);
-	// todo add other attributes later
+	DOREPLIFETIME_CONDITION_NOTIFY(UStructureAttributeSet, HullKineticDamageReduction, COND_None, REPNOTIFY_OnChanged);
+	DOREPLIFETIME_CONDITION_NOTIFY(UStructureAttributeSet, HullExplosiveDamageReduction, COND_None, REPNOTIFY_OnChanged);
+	DOREPLIFETIME_CONDITION_NOTIFY(UStructureAttributeSet, HullBeamDamageReduction, COND_None, REPNOTIFY_OnChanged);
+	DOREPLIFETIME_CONDITION_NOTIFY(UStructureAttributeSet, HullFieldDamageReduction, COND_None, REPNOTIFY_OnChanged);
+	DOREPLIFETIME_CONDITION_NOTIFY(UStructureAttributeSet, MaxShield, COND_None, REPNOTIFY_OnChanged);
+	DOREPLIFETIME_CONDITION_NOTIFY(UStructureAttributeSet, Shield, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UStructureAttributeSet, ShieldRegen, COND_None, REPNOTIFY_OnChanged);
+	DOREPLIFETIME_CONDITION_NOTIFY(UStructureAttributeSet, ShieldKineticDamageReduction, COND_None, REPNOTIFY_OnChanged);
+	DOREPLIFETIME_CONDITION_NOTIFY(UStructureAttributeSet, ShieldExplosiveDamageReduction, COND_None, REPNOTIFY_OnChanged);
+	DOREPLIFETIME_CONDITION_NOTIFY(UStructureAttributeSet, ShieldBeamDamageReduction, COND_None, REPNOTIFY_OnChanged);
+	DOREPLIFETIME_CONDITION_NOTIFY(UStructureAttributeSet, ShieldFieldDamageReduction, COND_None, REPNOTIFY_OnChanged);
+	DOREPLIFETIME_CONDITION_NOTIFY(UStructureAttributeSet, MaxEnergy, COND_None, REPNOTIFY_OnChanged);
+	DOREPLIFETIME_CONDITION_NOTIFY(UStructureAttributeSet, Energy, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UStructureAttributeSet, EnergyRegen, COND_None, REPNOTIFY_OnChanged);
+	DOREPLIFETIME_CONDITION_NOTIFY(UStructureAttributeSet, LinearAcceleration, COND_None, REPNOTIFY_OnChanged);
+	DOREPLIFETIME_CONDITION_NOTIFY(UStructureAttributeSet, LinearMaxSpeed, COND_None, REPNOTIFY_OnChanged);
+	DOREPLIFETIME_CONDITION_NOTIFY(UStructureAttributeSet, AngularAcceleration, COND_None, REPNOTIFY_OnChanged);
+	DOREPLIFETIME_CONDITION_NOTIFY(UStructureAttributeSet, AngularMaxSpeed, COND_None, REPNOTIFY_OnChanged);
+	DOREPLIFETIME_CONDITION_NOTIFY(UStructureAttributeSet, SensorStrength, COND_None, REPNOTIFY_OnChanged);
+	DOREPLIFETIME_CONDITION_NOTIFY(UStructureAttributeSet, SignatureVisibility, COND_None, REPNOTIFY_OnChanged);
 }
 
 void UStructureAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data)
@@ -29,9 +48,9 @@ void UStructureAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModC
 	{
 		SetShield(FMath::Clamp(GetShield(), 0, GetMaxShield()));
 	}
-	else if (Data.EvaluatedData.Attribute == GetChargeAttribute())
+	else if (Data.EvaluatedData.Attribute == GetEnergyAttribute())
 	{
-		SetCharge(FMath::Clamp(GetCharge(), 0, GetMaxCharge()));
+		SetEnergy(FMath::Clamp(GetEnergy(), 0, GetMaxEnergy()));
 	}
 }
 
@@ -75,6 +94,11 @@ void UStructureAttributeSet::OnRep_Shield(const FGameplayAttributeData& OldShiel
 	GAMEPLAYATTRIBUTE_REPNOTIFY(UStructureAttributeSet, Shield, OldShield);
 }
 
+void UStructureAttributeSet::OnRep_ShieldRegen(const FGameplayAttributeData& OldShieldRegen)
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UStructureAttributeSet, ShieldRegen, OldShieldRegen);
+}
+
 void UStructureAttributeSet::OnRep_ShieldKineticDamageReduction(const FGameplayAttributeData& OldShieldKineticDamageReduction)
 {
 	GAMEPLAYATTRIBUTE_REPNOTIFY(UStructureAttributeSet, ShieldKineticDamageReduction, OldShieldKineticDamageReduction);
@@ -95,14 +119,19 @@ void UStructureAttributeSet::OnRep_ShieldFieldDamageReduction(const FGameplayAtt
 	GAMEPLAYATTRIBUTE_REPNOTIFY(UStructureAttributeSet, ShieldFieldDamageReduction, OldShieldFieldDamageReduction);
 }
 
-void UStructureAttributeSet::OnRep_MaxCharge(const FGameplayAttributeData& OldMaxCharge)
+void UStructureAttributeSet::OnRep_MaxEnergy(const FGameplayAttributeData& OldMaxEnergy)
 {
-	GAMEPLAYATTRIBUTE_REPNOTIFY(UStructureAttributeSet, MaxCharge, OldMaxCharge);
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UStructureAttributeSet, MaxEnergy, OldMaxEnergy);
 }
 
-void UStructureAttributeSet::OnRep_Charge(const FGameplayAttributeData& OldCharge)
+void UStructureAttributeSet::OnRep_Energy(const FGameplayAttributeData& OldEnergy)
 {
-	GAMEPLAYATTRIBUTE_REPNOTIFY(UStructureAttributeSet, Charge, OldCharge);
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UStructureAttributeSet, Energy, OldEnergy);
+}
+
+void UStructureAttributeSet::OnRep_EnergyRegen(const FGameplayAttributeData& OldEnergyRegen)
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UStructureAttributeSet, EnergyRegen, OldEnergyRegen);
 }
 
 void UStructureAttributeSet::OnRep_LinearAcceleration(const FGameplayAttributeData& OldLinearAcceleration)

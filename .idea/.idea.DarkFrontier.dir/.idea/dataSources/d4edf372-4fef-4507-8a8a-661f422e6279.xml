@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <dataSource name="lang_en">
-  <database-model serializer="dbm" dbms="SQLITE" family-id="SQLITE" format-version="4.41">
-    <root id="1">
-      <ServerVersion>3.43.0</ServerVersion>
-    </root>
+  <database-model serializer="dbm" dbms="SQLITE" family-id="SQLITE" format-version="4.49">
+    <root id="1"/>
     <collation id="2" parent="1" name="BINARY"/>
     <collation id="3" parent="1" name="NOCASE"/>
     <collation id="4" parent="1" name="RTRIM"/>
@@ -1472,19 +1470,19 @@
       <System>1</System>
     </table>
     <column id="520" parent="518" name="term_key">
-      <DataType>TEXT|0s</DataType>
+      <DasType>TEXT|0s</DasType>
       <Position>1</Position>
     </column>
     <column id="521" parent="518" name="term_id">
-      <DataType>INTEGER|0s</DataType>
+      <DasType>INTEGER|0s</DasType>
       <Position>2</Position>
     </column>
     <column id="522" parent="518" name="translated_text">
-      <DataType>TEXT|0s</DataType>
+      <DasType>TEXT|0s</DasType>
       <Position>3</Position>
     </column>
     <column id="523" parent="518" name="dexp_keyword">
-      <DataType>TEXT|0s</DataType>
+      <DasType>TEXT|0s</DasType>
       <Position>4</Position>
     </column>
     <index id="524" parent="518" name="sqlite_autoindex_STT_1">
@@ -1511,23 +1509,23 @@
       <UnderlyingIndexName>sqlite_autoindex_STT_2</UnderlyingIndexName>
     </key>
     <column id="529" parent="519" name="type">
-      <DataType>TEXT|0s</DataType>
+      <DasType>TEXT|0s</DasType>
       <Position>1</Position>
     </column>
     <column id="530" parent="519" name="name">
-      <DataType>TEXT|0s</DataType>
+      <DasType>TEXT|0s</DasType>
       <Position>2</Position>
     </column>
     <column id="531" parent="519" name="tbl_name">
-      <DataType>TEXT|0s</DataType>
+      <DasType>TEXT|0s</DasType>
       <Position>3</Position>
     </column>
     <column id="532" parent="519" name="rootpage">
-      <DataType>INT|0s</DataType>
+      <DasType>INT|0s</DasType>
       <Position>4</Position>
     </column>
     <column id="533" parent="519" name="sql">
-      <DataType>TEXT|0s</DataType>
+      <DasType>TEXT|0s</DasType>
       <Position>5</Position>
     </column>
   </database-model>

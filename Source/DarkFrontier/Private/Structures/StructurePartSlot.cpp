@@ -21,7 +21,7 @@ void UStructurePartSlot::BeginPlay()
 
 void UStructurePartSlot::Attach(UStructurePartSlot* NewSlot)
 {
-	if(!NewSlot)
+	if(NewSlot == nullptr)
 	{
 		Detach();
 		return;
@@ -44,6 +44,7 @@ void UStructurePartSlot::Attach(UStructurePartSlot* NewSlot)
 			AttachedSlot = NewSlot;
 			NewSlot->AttachedSlot = this;
 		}
+		OwningPart->OwningStructure->UpdatePartDistances();
 	}
 }
 
@@ -54,6 +55,7 @@ void UStructurePartSlot::Detach()
 		AttachedSlot->AttachedSlot = nullptr;
 		AttachedSlot = nullptr;
 		OwningPart->OwningStructure->UpdateCachedParts();
+		OwningPart->OwningStructure->UpdatePartDistances();
 	}
 }
 

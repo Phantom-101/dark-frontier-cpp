@@ -17,7 +17,7 @@ void UCompatibleStructurePartEntry::NativeOnListItemObjectSet(UObject* ListItemO
 	const UCompatibleStructurePartEntryObject* Obj = Cast<UCompatibleStructurePartEntryObject>(ListItemObject);
 	const UStructureBuilder* StructureBuilder = UUIBlueprintLibrary::GetParentWidgetOfClass<UStructureBuilder>(GetOwningListView());
 
-	TypeText->SetText(Obj->PartClass->GetDisplayNameText());
+	TypeText->SetText(Obj->PartName);
 	SlotList->ClearListItems();
 	AStructurePart* Section = Cast<AStructurePart>(GetWorld()->SpawnActor(Obj->PartClass));
 	for(const UStructurePartSlot* SectionSlot : Section->GetCompatiblePartSlots(StructureBuilder->GetSelectedPartSlot()->SlotType))
@@ -28,4 +28,5 @@ void UCompatibleStructurePartEntry::NativeOnListItemObjectSet(UObject* ListItemO
 	}
 	Section->Destroy();
 	SlotList->RegenerateAllEntries();
+	SlotList->ScrollIndexIntoView(0);
 }
