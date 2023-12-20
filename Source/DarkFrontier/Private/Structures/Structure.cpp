@@ -13,7 +13,7 @@ AStructure::AStructure()
 {
 	PrimaryActorTick.bCanEverTick = true;
 	
-	UStaticMeshComponent* StaticMesh = CreateDefaultSubobject<UStaticMeshComponent>("StaticMesh");
+	StaticMesh = CreateDefaultSubobject<UStaticMeshComponent>("StaticMesh");
 	SetRootComponent(StaticMesh);
 	
 	SpringArm = CreateDefaultSubobject<USpringArmComponent>("CameraArm");

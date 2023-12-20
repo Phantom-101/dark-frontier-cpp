@@ -55,6 +55,9 @@ protected:
 	UPROPERTY()
 	TObjectPtr<class UStructureAttributeSet> Attributes;
 
+	UPROPERTY(VisibleAnywhere)
+	TObjectPtr<class UStaticMeshComponent> StaticMesh;
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Camera")
 	TObjectPtr<class USpringArmComponent> SpringArm;
 
