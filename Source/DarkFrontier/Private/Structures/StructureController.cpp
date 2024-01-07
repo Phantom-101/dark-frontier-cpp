@@ -29,7 +29,7 @@ void AStructureController::BeginPlay()
 
 	UIBaseWidget = CreateWidget<UUIBase>(GetGameInstance(), UIBaseClass);
 	UIBaseWidget->AddToViewport();
-	UIBaseWidget->PushGame(GameUIClass);
+	(void)UIBaseWidget->PushGame(GameUIClass);
 }
 
 void AStructureController::SetupInputComponent()
