@@ -17,7 +17,7 @@ TOptional<FUIInputConfig> UGameUI::GetDesiredInputConfig() const
 }
 
 void UGameUI::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
-{
+{  
 	Super::NativeTick(MyGeometry, InDeltaTime);
 
 	if(const AStructure* PlayerStructure = Cast<AStructure>(GetOwningPlayerPawn()))

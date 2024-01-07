@@ -8,14 +8,40 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="cb7ccd89-2b5f-4c19-9f87-96459d2ed121" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.DarkFrontier.dir/.idea/.name" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.DarkFrontier.dir/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.DarkFrontier.dir/.idea/dataSources.local.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.DarkFrontier.dir/.idea/dataSources/d4edf372-4fef-4507-8a8a-661f422e6279.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.DarkFrontier.dir/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.DarkFrontier.dir/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Structures/BP_DefaultStructure.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Structures/BP_DefaultStructure.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/ThirdPerson/Maps/ThirdPersonMap/7/QG/RIDJ04TF8FLFJ9R20NIX6N.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/__ExternalActors__/ThirdPerson/Maps/ThirdPersonMap/7/QG/RIDJ04TF8FLFJ9R20NIX6N.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Private/Structures/Structure.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Private/Structures/Structure.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Public/Structures/Structure.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Public/Structures/Structure.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/PC_Default.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/PC_Default.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Structures/BP_Structure.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Structures/BP_Structure.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/UIv2/Data/CUI_CD_PC_Controller.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/UIv2/Data/CUI_CD_PC_Keyboard.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/UIv2/Data/CUI_DT_Actions.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/UIv2/Data/CUI_InputData.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/UIv2/Screens/W_GameUI.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/UIv2/Screens/W_StructureBuilder.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/UIv2/Screens/W_UIBase.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/UIv2/Styling/CUI_BorderStyle_Header.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/UIv2/Styling/CUI_BorderStyle_Normal.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/UIv2/Styling/CUI_ButtonStyle_Normal.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/UIv2/Styling/CUI_TextStyle_Button.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/UIv2/Styling/CUI_TextStyle_Detail.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/UIv2/Styling/CUI_TextStyle_Detail_Italic.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/UIv2/Styling/CUI_TextStyle_Header.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/UIv2/Styling/CUI_TextStyle_Header_Sub.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/UIv2/Styling/CUI_TextStyle_Normal.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/UIv2/Styling/CUI_TextStyle_Normal_Sub.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/UIv2/Widgets/W_CompatibleStructurePartEntry.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/UIv2/Widgets/W_CompatibleStructurePartSelect.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/UIv2/Widgets/W_CompatibleStructurePartSlotEntry.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/UIv2/Widgets/W_ConfirmationModal.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/UIv2/Widgets/W_GameplayEffectIndicator.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/UIv2/Widgets/W_IconButton.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/UIv2/Widgets/W_StructureLayoutEditor.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/UIv2/Widgets/W_StructurePartLayoutEditor.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/UIv2/Widgets/W_StructurePartSlotLayoutEditor.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/UIv2/Widgets/W_TextButton.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/DarkFrontier.Build.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/DarkFrontier.Build.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Private/Structures/StructureController.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Private/Structures/StructureController.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Private/UI/GameUI.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Private/UI/GameUI.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Public/Libraries/UIBlueprintLibrary.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Public/Libraries/UIBlueprintLibrary.h" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -25,8 +51,14 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://$PROJECT_DIR$/../../../../../Program Files/Epic Games/UE_5.2/Engine/Intermediate/Build/Win64/UnrealEditor/Inc/SlateCore/UHT/SlateColor.generated.h" root0="SKIP_HIGHLIGHTING" />
+  </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="SWEA" />
   </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 4
@@ -148,6 +180,12 @@
       <workItem from="1696469226388" duration="2206000" />
       <workItem from="1696626361269" duration="3558000" />
       <workItem from="1703060348112" duration="3589000" />
+      <workItem from="1703108673446" duration="1513000" />
+      <workItem from="1703199311415" duration="4770000" />
+      <workItem from="1703374022533" duration="5255000" />
+      <workItem from="1703454267403" duration="9855000" />
+      <workItem from="1703576401223" duration="2504000" />
+      <workItem from="1703832615529" duration="611000" />
     </task>
     <servers />
   </component>
