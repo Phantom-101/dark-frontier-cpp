@@ -16,10 +16,13 @@ class DARKFRONTIER_API UCompatibleStructurePartEntryObject : public UObject
 
 public:
 
+	UPROPERTY()
 	TSubclassOf<class AStructurePart> PartClass;
 
+	UPROPERTY()
 	FText PartName;
-	
+
+	UFUNCTION()
 	void Init(const AStructurePart* Part);
 	
 };

@@ -7,6 +7,7 @@
 #include "ConfirmationModal.generated.h"
 
 DECLARE_MULTICAST_DELEGATE(FConfirmationModalActionTaken)
+// Include an additional dynamic delegate to allow blueprint access
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FConfirmationModalActionTakenDynamic);
 
 /**

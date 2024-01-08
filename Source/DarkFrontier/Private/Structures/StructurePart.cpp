@@ -1,9 +1,13 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "Structures/StructurePart.h"
+#include "AbilitySystemComponent.h"
+#include "GameplayEffect.h"
 #include "Factions/Army.h"
 #include "Factions/Faction.h"
 #include "Structures/Structure.h"
+#include "Structures/StructurePartAction.h"
+#include "Structures/StructurePartActionGroup.h"
 #include "Structures/StructurePartSlot.h"
 #include "Structures/StructurePartSlotType.h"
 
@@ -30,6 +34,30 @@ void AStructurePart::InitOwningStructure(AStructure* NewOwner)
 	OwningStructure->RegisterPart(this);
 	AttachToActor(OwningStructure, FAttachmentTransformRules(EAttachmentRule::KeepWorld, true));
 	ControlledBy = OwningStructure->OwningFaction;
+}
+
+void AStructurePart::OnRegistered()
+{
+	OwningStructure->ApplyEffect(AttributeEffect);
+	if(ActionGroupType && ActionType)
+	{
+		Action = OwningStructure->RegisterAction(ActionGroupType, ActionType);
+	}
+}
+
+void AStructurePart::OnUnregistered()
+{
+	FGameplayEffectQuery Query;
+	Query.EffectDefinition = AttributeEffect;
+	TArray<FActiveGameplayEffectHandle> Handles = OwningStructure->GetAbilitySystemComponent()->GetActiveEffects(Query);
+	if(Handles.Num() > 0)
+	{
+		OwningStructure->GetAbilitySystemComponent()->RemoveActiveGameplayEffect(Handles[0]);
+	}
+	if(ActionGroupType && Action)
+	{
+		OwningStructure->UnregisterAction(ActionGroupType, Action);
+	}
 }
 
 void AStructurePart::RegisterPartSlot(UStructurePartSlot* Slot)

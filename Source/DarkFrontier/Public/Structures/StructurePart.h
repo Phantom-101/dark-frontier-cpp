@@ -21,6 +21,15 @@ public:
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category="Setup")
 	TSubclassOf<class UGameplayEffect> AttributeEffect;
 
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category="Action")
+	TSubclassOf<class UStructurePartActionGroup> ActionGroupType;
+
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category="Action")
+	TSubclassOf<class UStructurePartAction> ActionType;
+
+	UPROPERTY(BlueprintReadOnly, EditInstanceOnly, Category="Action")
+	TObjectPtr<class UStructurePartAction> Action;
+
 	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly, Category="Layout")
 	TObjectPtr<class AStructure> OwningStructure;
 
@@ -52,6 +61,12 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void InitOwningStructure(AStructure* NewOwner);
+
+	UFUNCTION(BlueprintCallable)
+	void OnRegistered();
+
+	UFUNCTION(BlueprintCallable)
+	void OnUnregistered();
 
 	UFUNCTION(BlueprintCallable)
 	void RegisterPartSlot(UStructurePartSlot* Slot);

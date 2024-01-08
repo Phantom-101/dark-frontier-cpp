@@ -3,17 +3,37 @@
 #include "UI/GameUI.h"
 #include "AbilitySystemComponent.h"
 #include "ActiveGameplayEffectHandle.h"
+#include "CommonButtonBase.h"
 #include "CommonListView.h"
 #include "Blueprint/WidgetLayoutLibrary.h"
 #include "Components/Image.h"
 #include "Components/CanvasPanelSlot.h"
 #include "Structures/Structure.h"
+#include "Structures/StructureController.h"
+#include "Structures/StructurePartActionGroup.h"
 #include "UI/CustomGameplayEffectUIData.h"
 #include "UI/GameplayEffectIndicatorObject.h"
+
+bool UGameUI::GetIsActionsCollapsed() const
+{
+	return IsActionsCollapsed;
+}
 
 TOptional<FUIInputConfig> UGameUI::GetDesiredInputConfig() const
 {
 	return FUIInputConfig(ECommonInputMode::Game, EMouseCaptureMode::CapturePermanently);
+}
+
+void UGameUI::NativeConstruct()
+{
+	Super::NativeConstruct();
+
+	if(AStructureController* Controller = Cast<AStructureController>(GetWorld()->GetFirstPlayerController()))
+	{
+		Controller->OnActionsChanged.BindUObject<UGameUI>(this, &UGameUI::UpdateActions);
+	}
+
+	CollapseActionsButton->OnClicked().AddUObject<UGameUI>(this, &UGameUI::ToggleCollapseActions);
 }
 
 void UGameUI::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
@@ -26,7 +46,7 @@ void UGameUI::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 		UWidgetLayoutLibrary::SlotAsCanvasSlot(TurnIndicator)->SetPosition(FVector2D(ScaledRotateInput.Z, ScaledRotateInput.Y));
 
 		TArray<FActiveGameplayEffectHandle> Existing;
-		for(UObject* Object : GameplayEffectIndicators->GetListItems())
+		for(UObject* Object : GameplayEffectList->GetListItems())
 		{
 			UGameplayEffectIndicatorObject* Casted = Cast<UGameplayEffectIndicatorObject>(Object);
 			if(Casted->EffectHandle.IsValid() && Casted->EffectHandle.GetOwningAbilitySystemComponent() != nullptr)
@@ -35,7 +55,7 @@ void UGameUI::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 			}
 			else
 			{
-				GameplayEffectIndicators->RemoveItem(Casted);
+				GameplayEffectList->RemoveItem(Casted);
 			}
 		}
 		
@@ -45,8 +65,28 @@ void UGameUI::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 			{
 				UGameplayEffectIndicatorObject* Object = NewObject<UGameplayEffectIndicatorObject>();
 				Object->Init(Handle);
-				GameplayEffectIndicators->AddItem(Object);
+				GameplayEffectList->AddItem(Object);
 			}
 		}
 	}
+}
+
+void UGameUI::UpdateActions() const
+{
+	if(AStructure* PlayerStructure = Cast<AStructure>(GetOwningPlayerPawn()))
+	{
+		ActionGroupList->ClearListItems();
+		for(UStructurePartActionGroup* Group : PlayerStructure->GetActionGroups())
+		{
+			ActionGroupList->AddItem(Group);
+		}
+		ActionGroupList->RegenerateAllEntries();
+		ActionGroupList->ScrollIndexIntoView(0);
+	}
+}
+
+void UGameUI::ToggleCollapseActions()
+{
+	IsActionsCollapsed = !IsActionsCollapsed;
+	OnActionsCollapseToggled.Broadcast(IsActionsCollapsed);
 }
