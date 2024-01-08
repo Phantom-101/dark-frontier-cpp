@@ -1,5 +1,4 @@
 #include "Structures/StructurePartAuthoring.h"
-
 #include "Structures/Structure.h"
 #include "Structures/StructurePart.h"
 #include "Structures/StructurePartSlot.h"

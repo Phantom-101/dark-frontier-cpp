@@ -43,7 +43,11 @@ void AStructure::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	check(RootPart);
+	if(RootPart == nullptr)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 10, FColor::White, "Root part is null");
+		return;
+	}
 	
 	UStaticMeshComponent* Mesh = Cast<UStaticMeshComponent>(GetComponentByClass(UStaticMeshComponent::StaticClass()));
 	
