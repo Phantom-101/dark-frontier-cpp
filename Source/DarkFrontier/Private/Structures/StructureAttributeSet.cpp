@@ -28,6 +28,8 @@ void UStructureAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty
 	DOREPLIFETIME_CONDITION_NOTIFY(UStructureAttributeSet, MaxEnergy, COND_None, REPNOTIFY_OnChanged);
 	DOREPLIFETIME_CONDITION_NOTIFY(UStructureAttributeSet, Energy, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UStructureAttributeSet, EnergyRegen, COND_None, REPNOTIFY_OnChanged);
+	DOREPLIFETIME_CONDITION_NOTIFY(UStructureAttributeSet, EnergyUpkeep, COND_None, REPNOTIFY_OnChanged);
+	DOREPLIFETIME_CONDITION_NOTIFY(UStructureAttributeSet, EnergyUpkeepReduction, COND_None, REPNOTIFY_OnChanged);
 	DOREPLIFETIME_CONDITION_NOTIFY(UStructureAttributeSet, LinearAcceleration, COND_None, REPNOTIFY_OnChanged);
 	DOREPLIFETIME_CONDITION_NOTIFY(UStructureAttributeSet, LinearMaxSpeed, COND_None, REPNOTIFY_OnChanged);
 	DOREPLIFETIME_CONDITION_NOTIFY(UStructureAttributeSet, AngularAcceleration, COND_None, REPNOTIFY_OnChanged);
@@ -132,6 +134,16 @@ void UStructureAttributeSet::OnRep_Energy(const FGameplayAttributeData& OldEnerg
 void UStructureAttributeSet::OnRep_EnergyRegen(const FGameplayAttributeData& OldEnergyRegen)
 {
 	GAMEPLAYATTRIBUTE_REPNOTIFY(UStructureAttributeSet, EnergyRegen, OldEnergyRegen);
+}
+
+void UStructureAttributeSet::OnRep_EnergyUpkeep(const FGameplayAttributeData& OldEnergyUpkeep)
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UStructureAttributeSet, EnergyUpkeep, OldEnergyUpkeep);
+}
+
+void UStructureAttributeSet::OnRep_EnergyUpkeepReduction(const FGameplayAttributeData& OldEnergyUpkeepReduction)
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UStructureAttributeSet, EnergyUpkeepReduction, OldEnergyUpkeepReduction);
 }
 
 void UStructureAttributeSet::OnRep_LinearAcceleration(const FGameplayAttributeData& OldLinearAcceleration)

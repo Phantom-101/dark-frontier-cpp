@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
 #include "InputMappingContext.h"
+#include "Structure.h"
 #include "StructureController.generated.h"
 
 /**
@@ -19,44 +20,54 @@ public:
 
 	AStructureController();
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Input")
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category="Input")
 	TObjectPtr<UInputMappingContext> InputMapping;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Input")
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category="Input")
 	TObjectPtr<UInputAction> MoveAction;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Input")
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category="Input")
 	TObjectPtr<UInputAction> RotateAddAction;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Input")
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category="Input")
 	TObjectPtr<UInputAction> RotateOverrideAction;
 	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Input")
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category="Input")
 	TObjectPtr<UInputAction> LookAction;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Input")
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category="Input")
 	TObjectPtr<UInputAction> ZoomAction;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Input")
-	TObjectPtr<UInputAction> UnlockCursorAction;
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category="Input")
+	TObjectPtr<UInputAction> ToggleUnlockAction;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Input")
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category="Input")
 	TObjectPtr<UInputAction> EditStructureAction;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="UI")
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category="UI")
 	TSubclassOf<class UUIBase> UIBaseClass;
 	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="UI")
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category="UI")
 	TSubclassOf<class UCommonActivatableWidget> GameUIClass;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="UI")
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category="UI")
 	TSubclassOf<UCommonActivatableWidget> StructureBuilderUIClass;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly)
 	TArray<TSubclassOf<class AStructurePart>> AvailableParts;
 
-	UPROPERTY(BlueprintReadOnly)
+	UPROPERTY(BlueprintReadOnly, EditInstanceOnly)
+	TObjectPtr<class AStructure> StructurePawn;
+	
+	UPROPERTY(BlueprintReadOnly, EditInstanceOnly)
 	TObjectPtr<UUIBase> UIBaseWidget;
+
+	UPROPERTY(BlueprintReadOnly, EditInstanceOnly)
+	bool IsCursorUnlocked;
+
+	FStructureStateChanged OnLayoutChanged;
+
+	FStructureStateChanged OnActionsChanged;
 
 protected:
 	
@@ -65,6 +76,10 @@ protected:
 	virtual void SetupInputComponent() override;
 
 	virtual void Tick(float DeltaSeconds) override;
+
+	virtual void OnPossess(APawn* InPawn) override;
+
+	virtual void OnUnPossess() override;
 
 public:
 
@@ -84,8 +99,14 @@ public:
 	void Zoom(const FInputActionInstance& Instance);
 
 	UFUNCTION(BlueprintCallable)
-	void UnlockCursor(const FInputActionInstance& Instance);
+	void ToggleUnlock(const FInputActionInstance& Instance);
 	
 	UFUNCTION(BlueprintCallable)
 	void EditStructure(const FInputActionInstance& Instance);
+
+	UFUNCTION(BlueprintCallable)
+	void PropagateLayoutChange();
+
+	UFUNCTION(BlueprintCallable)
+	void PropagateActionsChange();
 };

@@ -7,6 +7,8 @@
 #include "GameFramework/Pawn.h"
 #include "Structure.generated.h"
 
+DECLARE_DELEGATE(FStructureStateChanged)
+
 UCLASS()
 class DARKFRONTIER_API AStructure : public APawn, public IAbilitySystemInterface
 {
@@ -35,6 +37,9 @@ protected:
 
 	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly, Category="Layout")
 	int32 NextPartId;
+
+	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly, Category="Layout")
+	TArray<TObjectPtr<class UStructurePartActionGroup>> ActionGroups;
 
 public:
 
@@ -73,6 +78,14 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Camera")
 	float ZoomLevel = 2.5;
 
+public:
+
+	FStructureStateChanged OnLayoutChanged;
+
+	FStructureStateChanged OnActionsChanged;
+	
+protected:
+
 	virtual void BeginPlay() override;
 	
 	virtual void Tick(float DeltaTime) override;
@@ -90,6 +103,15 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void UnregisterPart(AStructurePart* InPart);
+
+	UFUNCTION(BlueprintCallable)
+	class UStructurePartAction* RegisterAction(TSubclassOf<UStructurePartActionGroup> GroupType, TSubclassOf<UStructurePartAction> ActionType);
+
+	UFUNCTION(BlueprintCallable)
+	void UnregisterAction(TSubclassOf<UStructurePartActionGroup> GroupType, UStructurePartAction* InAction);
+
+	UFUNCTION(BlueprintCallable)
+	TArray<UStructurePartActionGroup*> GetActionGroups();
 
 	UFUNCTION(BlueprintCallable)
 	TArray<AStructurePart*> GetCachedParts();

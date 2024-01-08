@@ -47,9 +47,7 @@ void AStructureController::SetupInputComponent()
 	Input->BindAction(LookAction, ETriggerEvent::Completed, this, &AStructureController::Look);
 	Input->BindAction(ZoomAction, ETriggerEvent::Triggered, this, &AStructureController::Zoom);
 	Input->BindAction(ZoomAction, ETriggerEvent::Completed, this, &AStructureController::Zoom);
-	Input->BindAction(UnlockCursorAction, ETriggerEvent::Triggered, this, &AStructureController::UnlockCursor);
-	Input->BindAction(UnlockCursorAction, ETriggerEvent::Completed, this, &AStructureController::UnlockCursor);
-	// todo remove completed event
+	Input->BindAction(ToggleUnlockAction, ETriggerEvent::Started, this, &AStructureController::ToggleUnlock);
 	Input->BindAction(EditStructureAction, ETriggerEvent::Started, this, &AStructureController::EditStructure);
 }
 
@@ -58,53 +56,108 @@ void AStructureController::Tick(float DeltaSeconds)
 	Super::Tick(DeltaSeconds);
 }
 
+void AStructureController::OnPossess(APawn* InPawn)
+{
+	Super::OnPossess(InPawn);
+
+	StructurePawn = Cast<AStructure>(GetPawn());
+
+	if(StructurePawn)
+	{
+		StructurePawn->OnLayoutChanged.BindUObject<AStructureController>(this, &AStructureController::PropagateLayoutChange);
+		StructurePawn->OnActionsChanged.BindUObject<AStructureController>(this, &AStructureController::PropagateActionsChange);
+	}
+}
+
+void AStructureController::OnUnPossess()
+{
+	Super::OnUnPossess();
+
+	if(StructurePawn)
+	{
+		StructurePawn->OnLayoutChanged.Unbind();
+		StructurePawn->OnActionsChanged.Unbind();
+	}
+
+	StructurePawn = nullptr;
+}
+
 void AStructureController::Move(const FInputActionInstance& Instance)
 {
-	if(Cast<AStructure>(GetPawn()))
+	if(StructurePawn)
 	{
-		Cast<AStructure>(GetPawn())->Move(Instance.GetValue().Get<FVector>());
+		StructurePawn->Move(Instance.GetValue().Get<FVector>());
 	}
 }
 
 void AStructureController::RotateAdd(const FInputActionInstance& Instance)
 {
-	if(Cast<AStructure>(GetPawn()))
+	if(StructurePawn)
 	{
-		Cast<AStructure>(GetPawn())->RotateAdd(Instance.GetValue().Get<FVector>());
+		StructurePawn->RotateAdd(Instance.GetValue().Get<FVector>());
 	}
 }
 
 void AStructureController::RotateOverride(const FInputActionInstance& Instance)
 {
-	if(Cast<AStructure>(GetPawn()))
+	if(StructurePawn)
 	{
-		Cast<AStructure>(GetPawn())->RotateOverride(Instance.GetValue().Get<FVector>());
+		StructurePawn->RotateOverride(Instance.GetValue().Get<FVector>());
 	}
 }
 
 void AStructureController::Look(const FInputActionInstance& Instance)
 {
-	if(Cast<AStructure>(GetPawn()))
+	if(StructurePawn)
 	{
-		Cast<AStructure>(GetPawn())->Look(Instance.GetValue().Get<FVector2D>());
+		StructurePawn->Look(Instance.GetValue().Get<FVector2D>());
 	}
 }
 
 void AStructureController::Zoom(const FInputActionInstance& Instance)
 {
-	if(Cast<AStructure>(GetPawn()))
+	if(StructurePawn)
 	{
-		Cast<AStructure>(GetPawn())->Zoom(Instance.GetValue().Get<float>());
+		StructurePawn->Zoom(Instance.GetValue().Get<float>());
 	}
 }
 
-void AStructureController::UnlockCursor(const FInputActionInstance& Instance)
+void AStructureController::ToggleUnlock(const FInputActionInstance& Instance)
 {
-	//SetShowMouseCursor(Instance.GetValue().Get<bool>());
+	IsCursorUnlocked = !IsCursorUnlocked;
+	if(IsCursorUnlocked)
+	{
+		SetShowMouseCursor(true);
+		SetInputMode(FInputModeGameAndUI());
+		int32 SizeX, SizeY;
+		GetViewportSize(SizeX, SizeY);
+		SetMouseLocation(SizeX / 2, SizeY / 2);
+	}
+	else
+	{
+		SetShowMouseCursor(false);
+		SetInputMode(FInputModeGameOnly());
+	}
 }
 
 void AStructureController::EditStructure(const FInputActionInstance& Instance)
 {
 	UStructureBuilder* Builder = UIBaseWidget->PushGame<UStructureBuilder>(StructureBuilderUIClass);
-	Builder->SetParams(Cast<AStructure>(GetPawn()), AvailableParts);
+	Builder->SetParams(StructurePawn, AvailableParts);
+}
+
+void AStructureController::PropagateLayoutChange()
+{
+	if(OnLayoutChanged.IsBound())
+	{
+		OnLayoutChanged.Execute();
+	}
+}
+
+void AStructureController::PropagateActionsChange()
+{
+	if(OnActionsChanged.IsBound())
+	{
+		OnActionsChanged.Execute();
+	}
 }

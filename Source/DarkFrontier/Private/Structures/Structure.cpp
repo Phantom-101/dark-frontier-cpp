@@ -7,6 +7,8 @@
 #include "Structures/StructureAttributeSet.h"
 #include "Structures/StructureGameplayAbility.h"
 #include "Structures/StructurePart.h"
+#include "Structures/StructurePartAction.h"
+#include "Structures/StructurePartActionGroup.h"
 #include "Structures/StructurePartSlot.h"
 
 AStructure::AStructure()
@@ -78,19 +80,68 @@ void AStructure::RegisterPart(AStructurePart* InPart)
 	InPart->PartId = NextPartId;
 	NextPartId++;
 	CachedParts.Add(InPart);
-	ApplyEffect(InPart->AttributeEffect);
+	InPart->OnRegistered();
+	if(OnLayoutChanged.IsBound())
+	{
+		OnLayoutChanged.Execute();
+	}
 }
 
 void AStructure::UnregisterPart(AStructurePart* InPart)
 {
 	CachedParts.Remove(InPart);
-	FGameplayEffectQuery Query;
-	Query.EffectDefinition = InPart->AttributeEffect;
-	TArray<FActiveGameplayEffectHandle> Handles = GetAbilitySystemComponent()->GetActiveEffects(Query);
-	if(Handles.Num() > 0)
+	InPart->OnUnregistered();
+	if(OnLayoutChanged.IsBound())
 	{
-		GetAbilitySystemComponent()->RemoveActiveGameplayEffect(Handles[0]);
+		OnLayoutChanged.Execute();
 	}
+}
+
+UStructurePartAction* AStructure::RegisterAction(TSubclassOf<UStructurePartActionGroup> GroupType, TSubclassOf<UStructurePartAction> ActionType)
+{
+	UStructurePartAction* Action = NewObject<UStructurePartAction>(this, ActionType);
+	for(UStructurePartActionGroup* Group : ActionGroups)
+	{
+		if(Group->GetClass() == GroupType)
+		{
+			Group->Actions.Add(Action);
+			if(OnActionsChanged.IsBound())
+			{
+				OnActionsChanged.Execute();
+			}
+			return Action;
+		}
+	}
+	UStructurePartActionGroup* Group = NewObject<UStructurePartActionGroup>(this, GroupType);
+	ActionGroups.Add(Group);
+	Group->Actions.Add(Action);
+	if(OnActionsChanged.IsBound())
+	{
+		OnActionsChanged.Execute();
+	}
+	return Action;
+}
+
+void AStructure::UnregisterAction(TSubclassOf<UStructurePartActionGroup> GroupType, UStructurePartAction* InAction)
+{
+	for(UStructurePartActionGroup* Group : ActionGroups)
+	{
+		if(Group->GetClass() == GroupType)
+		{
+			Group->Actions.Remove(InAction);
+			if(OnActionsChanged.IsBound())
+			{
+				OnActionsChanged.Execute();
+			}
+			return;
+		}
+	}
+}
+
+TArray<UStructurePartActionGroup*> AStructure::GetActionGroups()
+{
+	// Implicitly copied
+	return ActionGroups;
 }
 
 TArray<AStructurePart*> AStructure::GetCachedParts()

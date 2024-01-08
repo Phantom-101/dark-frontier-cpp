@@ -140,6 +140,20 @@ public:
 
 	UFUNCTION()
 	virtual void OnRep_EnergyRegen(const FGameplayAttributeData& OldEnergyRegen);
+
+	UPROPERTY(BlueprintReadOnly, Category="Attributes", ReplicatedUsing=OnRep_EnergyUpkeep)
+	FGameplayAttributeData EnergyUpkeep;
+	ATTRIBUTE_ACCESSORS(UStructureAttributeSet, EnergyUpkeep);
+
+	UFUNCTION()
+	virtual void OnRep_EnergyUpkeep(const FGameplayAttributeData& OldEnergyUpkeep);
+
+	UPROPERTY(BlueprintReadOnly, Category="Attributes", ReplicatedUsing=OnRep_EnergyUpkeepReduction)
+	FGameplayAttributeData EnergyUpkeepReduction;
+	ATTRIBUTE_ACCESSORS(UStructureAttributeSet, EnergyUpkeepReduction);
+
+	UFUNCTION()
+	virtual void OnRep_EnergyUpkeepReduction(const FGameplayAttributeData& OldEnergyUpkeepReduction);
 	
 	UPROPERTY(BlueprintReadOnly, Category="Attributes", ReplicatedUsing=OnRep_LinearAcceleration)
 	FGameplayAttributeData LinearAcceleration;
