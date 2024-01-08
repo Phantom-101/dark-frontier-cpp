@@ -8,40 +8,27 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="cb7ccd89-2b5f-4c19-9f87-96459d2ed121" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/Content/Maps/Test.umap" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Content/__ExternalActors__/Misc/ThirdPerson/Maps/ThirdPersonMap/E/5Z/B9Q90CD0ZNUPARQCX87A3G.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.DarkFrontier.dir/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.DarkFrontier.dir/.idea/dataSources.local.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.DarkFrontier.dir/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.DarkFrontier.dir/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Content/PC_Default.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/PC_Default.uasset" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Content/Structures/BP_Structure.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Structures/BP_Structure.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/UIv2/Data/CUI_CD_PC_Controller.uasset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/UIv2/Data/CUI_CD_PC_Keyboard.uasset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/UIv2/Data/CUI_DT_Actions.uasset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/UIv2/Data/CUI_InputData.uasset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/UIv2/Screens/W_GameUI.uasset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/UIv2/Screens/W_StructureBuilder.uasset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/UIv2/Screens/W_UIBase.uasset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/UIv2/Styling/CUI_BorderStyle_Header.uasset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/UIv2/Styling/CUI_BorderStyle_Normal.uasset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/UIv2/Styling/CUI_ButtonStyle_Normal.uasset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/UIv2/Styling/CUI_TextStyle_Button.uasset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/UIv2/Styling/CUI_TextStyle_Detail.uasset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/UIv2/Styling/CUI_TextStyle_Detail_Italic.uasset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/UIv2/Styling/CUI_TextStyle_Header.uasset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/UIv2/Styling/CUI_TextStyle_Header_Sub.uasset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/UIv2/Styling/CUI_TextStyle_Normal.uasset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/UIv2/Styling/CUI_TextStyle_Normal_Sub.uasset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/UIv2/Widgets/W_CompatibleStructurePartEntry.uasset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/UIv2/Widgets/W_CompatibleStructurePartSelect.uasset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/UIv2/Widgets/W_CompatibleStructurePartSlotEntry.uasset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/UIv2/Widgets/W_ConfirmationModal.uasset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/UIv2/Widgets/W_GameplayEffectIndicator.uasset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/UIv2/Widgets/W_IconButton.uasset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/UIv2/Widgets/W_StructureLayoutEditor.uasset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/UIv2/Widgets/W_StructurePartLayoutEditor.uasset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/UIv2/Widgets/W_StructurePartSlotLayoutEditor.uasset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/UIv2/Widgets/W_TextButton.uasset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/DarkFrontier.Build.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/DarkFrontier.Build.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Private/Structures/StructureController.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Private/Structures/StructureController.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Private/UI/GameUI.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Private/UI/GameUI.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Public/Libraries/UIBlueprintLibrary.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Public/Libraries/UIBlueprintLibrary.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Structures/StationSmall/BP_StationSmall_ReactorMkI.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Structures/StationSmall/BP_StationSmall_ReactorMkI.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/UI/Screens/W_GameUI.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/UI/Screens/W_GameUI.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/UI/Styling/CUI_BorderStyle_Dark.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/UI/Styling/CUI_BorderStyle_DarkAlt.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/UI/Styling/CUI_BorderStyle_Light.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/UI/Widgets/W_CompatibleStructurePartSelect.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/UI/Widgets/W_CompatibleStructurePartSelect.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/UI/Widgets/W_ConfirmationModal.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/UI/Widgets/W_ConfirmationModal.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/UI/Widgets/W_GameplayEffectIndicator.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/UI/Widgets/W_GameplayEffectIndicator.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/UI/Widgets/W_StructurePartActionGroupEntry.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/UI/Widgets/W_StructurePartActionGroupEntry.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/UI/Widgets/W_StructurePartEntry.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/UI/Widgets/W_StructurePartEntry.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/UI/Widgets/W_StructurePartLayoutEditor.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/UI/Widgets/W_StructurePartLayoutEditor.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/UI/Widgets/W_TextButton.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/UI/Widgets/W_TextButton.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/Misc/ThirdPerson/Maps/ThirdPersonMap/3/ZE/NS61KJWJGEQ3P3SYF3W2Y8.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Private/Structures/Structure.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Private/Structures/Structure.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Private/Structures/StructurePartAuthoring.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Private/Structures/StructurePartAuthoring.cpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -94,6 +81,9 @@
       <configuration_2>
         <option name="CONFIGURATION" value="DebugGame Editor" />
         <option name="PLATFORM" value="Win64" />
+        <option name="EXECUTABLE_PATH" value="C:\Program Files\Epic Games\UE_5.2\Engine\Binaries\Win64\UnrealEditor-Win64-DebugGame.exe" />
+        <option name="WORKING_DIRECTORY" value="C:\Program Files\Epic Games\UE_5.2" />
+        <option name="MANDATORY_PROGRAM_PARAMETERS" value=" &quot;D:\unreal\projects\dark-frontier-cpp\DarkFrontier.uproject&quot;" />
         <option name="CUSTOM_PROGRAM_PARAMETERS" value="" />
         <option name="PASS_PARENT_ENVS" value="1" />
         <option name="USE_EXTERNAL_CONSOLE" value="0" />
@@ -101,6 +91,9 @@
       <configuration_3>
         <option name="CONFIGURATION" value="DebugGame" />
         <option name="PLATFORM" value="Win64" />
+        <option name="EXECUTABLE_PATH" value="D:\unreal\projects\dark-frontier-cpp\Binaries\Win64\DarkFrontier-Win64-DebugGame.exe" />
+        <option name="WORKING_DIRECTORY" value="C:\Program Files\Epic Games\UE_5.2" />
+        <option name="MANDATORY_PROGRAM_PARAMETERS" value="" />
         <option name="CUSTOM_PROGRAM_PARAMETERS" value="" />
         <option name="PASS_PARENT_ENVS" value="1" />
         <option name="USE_EXTERNAL_CONSOLE" value="0" />
@@ -108,6 +101,9 @@
       <configuration_4>
         <option name="CONFIGURATION" value="Development Editor" />
         <option name="PLATFORM" value="Win64" />
+        <option name="EXECUTABLE_PATH" value="C:\Program Files\Epic Games\UE_5.2\Engine\Binaries\Win64\UnrealEditor.exe" />
+        <option name="WORKING_DIRECTORY" value="C:\Program Files\Epic Games\UE_5.2" />
+        <option name="MANDATORY_PROGRAM_PARAMETERS" value=" &quot;D:\unreal\projects\dark-frontier-cpp\DarkFrontier.uproject&quot;" />
         <option name="CUSTOM_PROGRAM_PARAMETERS" value="" />
         <option name="PASS_PARENT_ENVS" value="1" />
         <option name="USE_EXTERNAL_CONSOLE" value="0" />
@@ -115,6 +111,9 @@
       <configuration_5>
         <option name="CONFIGURATION" value="Development" />
         <option name="PLATFORM" value="Win64" />
+        <option name="EXECUTABLE_PATH" value="D:\unreal\projects\dark-frontier-cpp\Binaries\Win64\DarkFrontier.exe" />
+        <option name="WORKING_DIRECTORY" value="C:\Program Files\Epic Games\UE_5.2" />
+        <option name="MANDATORY_PROGRAM_PARAMETERS" value="" />
         <option name="CUSTOM_PROGRAM_PARAMETERS" value="" />
         <option name="PASS_PARENT_ENVS" value="1" />
         <option name="USE_EXTERNAL_CONSOLE" value="0" />
@@ -122,6 +121,9 @@
       <configuration_6>
         <option name="CONFIGURATION" value="Shipping" />
         <option name="PLATFORM" value="Win64" />
+        <option name="EXECUTABLE_PATH" value="D:\unreal\projects\dark-frontier-cpp\Binaries\Win64\DarkFrontier-Win64-Shipping.exe" />
+        <option name="WORKING_DIRECTORY" value="C:\Program Files\Epic Games\UE_5.2" />
+        <option name="MANDATORY_PROGRAM_PARAMETERS" value="" />
         <option name="CUSTOM_PROGRAM_PARAMETERS" value="" />
         <option name="PASS_PARENT_ENVS" value="1" />
         <option name="USE_EXTERNAL_CONSOLE" value="0" />
@@ -129,6 +131,9 @@
       <configuration_7>
         <option name="CONFIGURATION" value="DebugGame Editor" />
         <option name="PLATFORM" value="Android" />
+        <option name="EXECUTABLE_PATH" value="C:\Program Files\Epic Games\UE_5.2\Engine\Binaries\Android\UnrealEditor-Android-DebugGame.so" />
+        <option name="WORKING_DIRECTORY" value="C:\Program Files\Epic Games\UE_5.2" />
+        <option name="MANDATORY_PROGRAM_PARAMETERS" value=" &quot;D:\unreal\projects\dark-frontier-cpp\DarkFrontier.uproject&quot;" />
         <option name="CUSTOM_PROGRAM_PARAMETERS" value="" />
         <option name="PASS_PARENT_ENVS" value="1" />
         <option name="USE_EXTERNAL_CONSOLE" value="0" />
@@ -136,6 +141,9 @@
       <configuration_8>
         <option name="CONFIGURATION" value="DebugGame" />
         <option name="PLATFORM" value="Android" />
+        <option name="EXECUTABLE_PATH" value="D:\unreal\projects\dark-frontier-cpp\Binaries\Android\DarkFrontier-Android-DebugGame.so" />
+        <option name="WORKING_DIRECTORY" value="C:\Program Files\Epic Games\UE_5.2" />
+        <option name="MANDATORY_PROGRAM_PARAMETERS" value="" />
         <option name="CUSTOM_PROGRAM_PARAMETERS" value="" />
         <option name="PASS_PARENT_ENVS" value="1" />
         <option name="USE_EXTERNAL_CONSOLE" value="0" />
@@ -143,6 +151,9 @@
       <configuration_9>
         <option name="CONFIGURATION" value="Development Editor" />
         <option name="PLATFORM" value="Android" />
+        <option name="EXECUTABLE_PATH" value="C:\Program Files\Epic Games\UE_5.2\Engine\Binaries\Android\UnrealEditor.so" />
+        <option name="WORKING_DIRECTORY" value="C:\Program Files\Epic Games\UE_5.2" />
+        <option name="MANDATORY_PROGRAM_PARAMETERS" value=" &quot;D:\unreal\projects\dark-frontier-cpp\DarkFrontier.uproject&quot;" />
         <option name="CUSTOM_PROGRAM_PARAMETERS" value="" />
         <option name="PASS_PARENT_ENVS" value="1" />
         <option name="USE_EXTERNAL_CONSOLE" value="0" />
@@ -150,6 +161,9 @@
       <configuration_10>
         <option name="CONFIGURATION" value="Development" />
         <option name="PLATFORM" value="Android" />
+        <option name="EXECUTABLE_PATH" value="D:\unreal\projects\dark-frontier-cpp\Binaries\Android\DarkFrontier.so" />
+        <option name="WORKING_DIRECTORY" value="C:\Program Files\Epic Games\UE_5.2" />
+        <option name="MANDATORY_PROGRAM_PARAMETERS" value="" />
         <option name="CUSTOM_PROGRAM_PARAMETERS" value="" />
         <option name="PASS_PARENT_ENVS" value="1" />
         <option name="USE_EXTERNAL_CONSOLE" value="0" />
@@ -157,6 +171,9 @@
       <configuration_11>
         <option name="CONFIGURATION" value="Shipping" />
         <option name="PLATFORM" value="Android" />
+        <option name="EXECUTABLE_PATH" value="D:\unreal\projects\dark-frontier-cpp\Binaries\Android\DarkFrontier-Android-Shipping.so" />
+        <option name="WORKING_DIRECTORY" value="C:\Program Files\Epic Games\UE_5.2" />
+        <option name="MANDATORY_PROGRAM_PARAMETERS" value="" />
         <option name="CUSTOM_PROGRAM_PARAMETERS" value="" />
         <option name="PASS_PARENT_ENVS" value="1" />
         <option name="USE_EXTERNAL_CONSOLE" value="0" />
@@ -186,6 +203,7 @@
       <workItem from="1703454267403" duration="9855000" />
       <workItem from="1703576401223" duration="2504000" />
       <workItem from="1703832615529" duration="611000" />
+      <workItem from="1704680192084" duration="708000" />
     </task>
     <servers />
   </component>
