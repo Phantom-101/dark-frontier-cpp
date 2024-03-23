@@ -1,10 +1,11 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "Structures/StructureController.h"
-#include "EnhancedInputSubsystems.h"
 #include "EnhancedInputComponent.h"
+#include "Input/CommonUIActionRouterBase.h"
 #include "Structures/Structure.h"
 #include "UI/StructureBuilder.h"
+#include "UI/Screens/StructureDetails/StructureDetails.h"
 #include "UI/UIBase.h"
 
 AStructureController::AStructureController()
@@ -14,18 +15,6 @@ AStructureController::AStructureController()
 void AStructureController::BeginPlay()
 {
 	Super::BeginPlay();
-
-	// Move to PawnClientRestart?
-	if(const ULocalPlayer* LocalPlayer = Cast<ULocalPlayer>(Player))
-	{
-		if (UEnhancedInputLocalPlayerSubsystem* InputSystem = LocalPlayer->GetSubsystem<UEnhancedInputLocalPlayerSubsystem>())
-		{
-			if (InputMapping)
-			{
-				InputSystem->AddMappingContext(InputMapping, 0);
-			}
-		}
-	}
 
 	UIBaseWidget = CreateWidget<UUIBase>(GetGameInstance(), UIBaseClass);
 	UIBaseWidget->AddToViewport();
@@ -47,13 +36,39 @@ void AStructureController::SetupInputComponent()
 	Input->BindAction(LookAction, ETriggerEvent::Completed, this, &AStructureController::Look);
 	Input->BindAction(ZoomAction, ETriggerEvent::Triggered, this, &AStructureController::Zoom);
 	Input->BindAction(ZoomAction, ETriggerEvent::Completed, this, &AStructureController::Zoom);
-	Input->BindAction(ToggleUnlockAction, ETriggerEvent::Started, this, &AStructureController::ToggleUnlock);
-	Input->BindAction(EditStructureAction, ETriggerEvent::Started, this, &AStructureController::EditStructure);
+	Input->BindAction(ToggleUnlockAction, ETriggerEvent::Completed, this, &AStructureController::ToggleUnlock);
+	Input->BindAction(EditStructureAction, ETriggerEvent::Completed, this, &AStructureController::EditStructure);
 }
 
 void AStructureController::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
+
+	/*
+	if(const ULocalPlayer* LocalPlayer = Cast<ULocalPlayer>(Player))
+    {
+    	if (const UCommonUIActionRouterBase* Router = LocalPlayer->GetSubsystem<UCommonUIActionRouterBase>())
+    	{
+    		if (Router)
+    		{
+    			Router->GetActiveInputMode();
+    			GEngine->AddOnScreenDebugMessage(-1, 10, FColor::White, FString::Printf(TEXT("current input mode: %s"), LexToString(Router->GetActiveInputMode())));
+			    const EMouseCaptureMode CaptureMode = Router->GetActiveMouseCaptureMode();
+    			FString Str;
+    			switch (CaptureMode)
+    			{
+    			case EMouseCaptureMode::NoCapture: Str = "NoCapture"; break;
+			    case EMouseCaptureMode::CapturePermanently: Str = "CapturePermanently"; break;
+			    case EMouseCaptureMode::CapturePermanently_IncludingInitialMouseDown: Str = "CapturePermanently_IncludingInitialMouseDown"; break;
+			    case EMouseCaptureMode::CaptureDuringMouseDown: Str = "CaptureDuringMouseDown"; break;
+			    case EMouseCaptureMode::CaptureDuringRightMouseDown: Str = "CaptureDuringRightMouseDown"; break;
+			    default: ;
+			    }
+    			GEngine->AddOnScreenDebugMessage(-1, 10, FColor::White, FString::Printf(TEXT("current capture mode: %s"), *Str));
+    		}
+    	}
+    }
+    */
 }
 
 void AStructureController::OnPossess(APawn* InPawn)
@@ -92,7 +107,7 @@ void AStructureController::Move(const FInputActionInstance& Instance)
 
 void AStructureController::RotateAdd(const FInputActionInstance& Instance)
 {
-	if(StructurePawn)
+	if(StructurePawn && !IsCursorUnlocked)
 	{
 		StructurePawn->RotateAdd(Instance.GetValue().Get<FVector>());
 	}
@@ -125,25 +140,34 @@ void AStructureController::Zoom(const FInputActionInstance& Instance)
 void AStructureController::ToggleUnlock(const FInputActionInstance& Instance)
 {
 	IsCursorUnlocked = !IsCursorUnlocked;
-	if(IsCursorUnlocked)
+	
+	if(const ULocalPlayer* LocalPlayer = Cast<ULocalPlayer>(Player))
 	{
-		SetShowMouseCursor(true);
-		SetInputMode(FInputModeGameAndUI());
-		int32 SizeX, SizeY;
-		GetViewportSize(SizeX, SizeY);
-		SetMouseLocation(SizeX / 2, SizeY / 2);
-	}
-	else
-	{
-		SetShowMouseCursor(false);
-		SetInputMode(FInputModeGameOnly());
+		if (UCommonUIActionRouterBase* Router = LocalPlayer->GetSubsystem<UCommonUIActionRouterBase>())
+		{
+			if (Router)
+			{
+				if(IsCursorUnlocked)
+				{
+					Router->SetActiveUIInputConfig(FUIInputConfig(ECommonInputMode::All, EMouseCaptureMode::NoCapture));
+					int32 SizeX, SizeY;
+					GetViewportSize(SizeX, SizeY);
+					SetMouseLocation(SizeX / 2, SizeY / 2);
+				}
+				else
+				{
+					Router->SetActiveUIInputConfig(FUIInputConfig(ECommonInputMode::Game, EMouseCaptureMode::CapturePermanently));
+				}
+			}
+		}
 	}
 }
 
 void AStructureController::EditStructure(const FInputActionInstance& Instance)
 {
-	UStructureBuilder* Builder = UIBaseWidget->PushGame<UStructureBuilder>(StructureBuilderUIClass);
-	Builder->SetParams(StructurePawn, AvailableParts);
+	UStructureDetails* Details = UIBaseWidget->PushGame<UStructureDetails>(StructureDetailsUIClass);
+	Details->Select(StructurePawn);
+	Details->Init(AvailableParts);
 }
 
 void AStructureController::PropagateLayoutChange()

@@ -68,7 +68,7 @@ void UStructureBuilder::SetSelectedPartSlot(UStructurePartSlot* NewSlot)
 	SelectedPartSlot = NewSlot;
 	if(SelectedPartSlot)
 	{
-		PartSelect->SetVisibility(ESlateVisibility::Visible);
+		PartSelect->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 		PartSelect->UpdateView();
 	}
 	else
@@ -80,7 +80,7 @@ void UStructureBuilder::SetSelectedPartSlot(UStructurePartSlot* NewSlot)
 void UStructureBuilder::AttachPartOfType(const TSubclassOf<AStructurePart> PartClass, const FText SlotName)
 {
 	AStructurePart* Section = Cast<AStructurePart>(GetWorld()->SpawnActor(PartClass));
-	Section->GetPartSlotByName(SlotName)->Attach(SelectedPartSlot);
+	Section->GetSlot(SlotName)->Attach(SelectedPartSlot);
 	// Assume part layout invalidity is due to added section
 	if(!Section->OwningStructure->IsPartLayoutValid())
 	{

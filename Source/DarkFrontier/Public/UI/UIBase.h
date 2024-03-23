@@ -4,7 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "CommonActivatableWidget.h"
-#include "CommonUserWidget.h"
 #include "Widgets/CommonActivatableWidgetContainer.h"
 #include "UIBase.generated.h"
 
@@ -12,7 +11,7 @@
  * 
  */
 UCLASS()
-class DARKFRONTIER_API UUIBase : public UCommonUserWidget
+class DARKFRONTIER_API UUIBase : public UCommonActivatableWidget
 {
 	GENERATED_BODY()
 
@@ -91,5 +90,9 @@ public:
 #endif
 		return ModalStack->AddWidget<WidgetType>(WidgetClass);
 	}
+
+protected:
+
+	virtual TOptional<FUIInputConfig> GetDesiredInputConfig() const override;
 	
 };

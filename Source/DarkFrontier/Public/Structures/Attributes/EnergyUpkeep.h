@@ -16,9 +16,9 @@ class DARKFRONTIER_API UEnergyUpkeep : public UGameplayModMagnitudeCalculation
 
 public:
 
-	FGameplayEffectAttributeCaptureDefinition EnergyUpkeepDefinition;
+	FGameplayEffectAttributeCaptureDefinition UpkeepDef;
 
-	FGameplayEffectAttributeCaptureDefinition EnergyUpkeepReductionDefinition;
+	FGameplayEffectAttributeCaptureDefinition UpkeepReductionDef;
 
 	UEnergyUpkeep();
 

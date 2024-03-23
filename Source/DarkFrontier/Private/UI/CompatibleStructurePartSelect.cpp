@@ -27,7 +27,7 @@ void UCompatibleStructurePartSelect::UpdateView() const
 		for(TSubclassOf<AStructurePart> Type : StructureBuilder->GetAvailableParts())
 		{
 			AStructurePart* Part = Cast<AStructurePart>(GetWorld()->SpawnActor(Type));
-			if(Part->GetCompatiblePartSlots(PartSlot->SlotType).Num() > 0)
+			if(Part->GetCompatibleSlots(PartSlot).Num() > 0)
 			{
 				UCompatibleStructurePartEntryObject* Obj = NewObject<UCompatibleStructurePartEntryObject>();
 				Obj->Init(Part);

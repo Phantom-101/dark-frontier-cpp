@@ -52,6 +52,9 @@ public:
 	TArray<TObjectPtr<UArmy>> ArrivingArmies;
 
 protected:
+	
+	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly)
+	TArray<TObjectPtr<UStructurePartSlot>> Slots;
 
 	virtual void BeginPlay() override;
 
@@ -71,12 +74,8 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void RegisterPartSlot(UStructurePartSlot* Slot);
 
-	UFUNCTION(BlueprintCallable)
-	UStructurePartSlot* GetPartSlotByName(FText Name);
-
-	UFUNCTION(BlueprintCallable)
-	TArray<UStructurePartSlot*> GetCompatiblePartSlots(TSubclassOf<class UStructurePartSlotType> SlotType);
-
+	static TArray<const UStructurePartSlot*> GetCompatiblePartSlots_CDO(TSubclassOf<AStructurePart> PartClass, const UStructurePartSlot* Other);
+	
 	UFUNCTION(BlueprintCallable)
 	void AttachNearbyPartSlots();
 
@@ -91,5 +90,24 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void ProcessArrivingArmies();
+
+	// Version 2 API
+
+	UFUNCTION(BlueprintCallable, Category="Status")
+	bool IsRootPart() const;
+
+	UFUNCTION(BlueprintCallable, Category="Status")
+	bool IsActive();
+
+	UFUNCTION(BlueprintCallable, Category="Slots")
+	TArray<UStructurePartSlot*> GetSlots();
+
+	UFUNCTION(BlueprintCallable, Category="Slots")
+	UStructurePartSlot* GetSlot(FText InName);
+
+	UFUNCTION(BlueprintCallable, Category="Slots")
+	TArray<UStructurePartSlot*> GetCompatibleSlots(const UStructurePartSlot* Other);
+	
+	// Statics
 
 };

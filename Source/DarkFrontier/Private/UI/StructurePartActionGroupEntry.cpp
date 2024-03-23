@@ -39,5 +39,5 @@ void UStructurePartActionGroupEntry::OnGroupButtonClicked() const
 
 void UStructurePartActionGroupEntry::OnCollapseToggled(const bool Target) const
 {
-	ActionList->SetVisibility(Target ? ESlateVisibility::Collapsed : ESlateVisibility::Visible);
+	ActionList->SetVisibility(Target ? ESlateVisibility::Collapsed : ESlateVisibility::SelfHitTestInvisible);
 }

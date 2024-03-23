@@ -21,9 +21,6 @@ public:
 	AStructureController();
 
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category="Input")
-	TObjectPtr<UInputMappingContext> InputMapping;
-
-	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category="Input")
 	TObjectPtr<UInputAction> MoveAction;
 
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category="Input")
@@ -51,7 +48,7 @@ public:
 	TSubclassOf<class UCommonActivatableWidget> GameUIClass;
 
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category="UI")
-	TSubclassOf<UCommonActivatableWidget> StructureBuilderUIClass;
+	TSubclassOf<UCommonActivatableWidget> StructureDetailsUIClass;
 
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly)
 	TArray<TSubclassOf<class AStructurePart>> AvailableParts;
