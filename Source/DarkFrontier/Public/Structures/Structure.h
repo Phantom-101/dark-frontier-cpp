@@ -162,7 +162,7 @@ public:
 
 protected:
 	
-	FVector CalculateImpulse(FVector RawVelocities, FVector RawInput, float MaxSpeed, float Accel, float DeltaTime) const;
+	FVector CalculateImpulse(const FVector& RawVelocities, const FVector& RawInput, float MaxSpeed, float Accel, float DeltaTime) const;
 
 	void UpdateCameraPosition();
 

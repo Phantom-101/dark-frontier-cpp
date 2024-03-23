@@ -20,7 +20,7 @@ void UCompatibleStructurePartEntry::NativeOnListItemObjectSet(UObject* ListItemO
 	TypeText->SetText(Obj->PartName);
 	SlotList->ClearListItems();
 	AStructurePart* Section = Cast<AStructurePart>(GetWorld()->SpawnActor(Obj->PartClass));
-	for(const UStructurePartSlot* SectionSlot : Section->GetCompatiblePartSlots(StructureBuilder->GetSelectedPartSlot()->SlotType))
+	for(const UStructurePartSlot* SectionSlot : Section->GetCompatibleSlots(StructureBuilder->GetSelectedPartSlot()))
 	{
 		UCompatibleStructurePartSlotEntryObject* SubObj = NewObject<UCompatibleStructurePartSlotEntryObject>();
 		SubObj->Init(SectionSlot);

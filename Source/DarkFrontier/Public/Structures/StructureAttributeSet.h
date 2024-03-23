@@ -141,19 +141,26 @@ public:
 	UFUNCTION()
 	virtual void OnRep_EnergyRegen(const FGameplayAttributeData& OldEnergyRegen);
 
-	UPROPERTY(BlueprintReadOnly, Category="Attributes", ReplicatedUsing=OnRep_EnergyUpkeep)
-	FGameplayAttributeData EnergyUpkeep;
-	ATTRIBUTE_ACCESSORS(UStructureAttributeSet, EnergyUpkeep);
+	UPROPERTY(BlueprintReadOnly, Category="Attributes", ReplicatedUsing=OnRep_MaxUpkeep)
+	FGameplayAttributeData MaxUpkeep;
+	ATTRIBUTE_ACCESSORS(UStructureAttributeSet, MaxUpkeep);
 
 	UFUNCTION()
-	virtual void OnRep_EnergyUpkeep(const FGameplayAttributeData& OldEnergyUpkeep);
+	virtual void OnRep_MaxUpkeep(const FGameplayAttributeData& OldMaxUpkeep);
 
-	UPROPERTY(BlueprintReadOnly, Category="Attributes", ReplicatedUsing=OnRep_EnergyUpkeepReduction)
-	FGameplayAttributeData EnergyUpkeepReduction;
-	ATTRIBUTE_ACCESSORS(UStructureAttributeSet, EnergyUpkeepReduction);
+	UPROPERTY(BlueprintReadOnly, Category="Attributes", ReplicatedUsing=OnRep_Upkeep)
+	FGameplayAttributeData Upkeep;
+	ATTRIBUTE_ACCESSORS(UStructureAttributeSet, Upkeep);
 
 	UFUNCTION()
-	virtual void OnRep_EnergyUpkeepReduction(const FGameplayAttributeData& OldEnergyUpkeepReduction);
+	virtual void OnRep_Upkeep(const FGameplayAttributeData& OldUpkeep);
+
+	UPROPERTY(BlueprintReadOnly, Category="Attributes", ReplicatedUsing=OnRep_UpkeepReduction)
+	FGameplayAttributeData UpkeepReduction;
+	ATTRIBUTE_ACCESSORS(UStructureAttributeSet, UpkeepReduction);
+
+	UFUNCTION()
+	virtual void OnRep_UpkeepReduction(const FGameplayAttributeData& OldUpkeepReduction);
 	
 	UPROPERTY(BlueprintReadOnly, Category="Attributes", ReplicatedUsing=OnRep_LinearAcceleration)
 	FGameplayAttributeData LinearAcceleration;

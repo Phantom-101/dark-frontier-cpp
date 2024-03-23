@@ -15,7 +15,7 @@ void UStructurePartLayoutEditor::NativeOnListItemObjectSet(UObject* ListItemObje
 
 	TypeText->SetText(Part->TypeName);
 	IdText->SetText(FText::FromString(FString::Printf(TEXT("#%i"), Part->PartId)));
-	RootSectionText->SetVisibility(Part == Part->OwningStructure->GetRootPart() ? ESlateVisibility::Visible : ESlateVisibility::Collapsed);
+	RootSectionText->SetVisibility(Part == Part->OwningStructure->GetRootPart() ? ESlateVisibility::SelfHitTestInvisible : ESlateVisibility::Collapsed);
 
 	PartSlotList->ClearListItems();
 	for(UStructurePartSlot* PartSlot : Part->PartSlots)

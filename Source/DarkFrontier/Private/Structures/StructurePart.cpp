@@ -3,6 +3,8 @@
 #include "Structures/StructurePart.h"
 #include "AbilitySystemComponent.h"
 #include "GameplayEffect.h"
+#include "Engine/SCS_Node.h"
+#include "Engine/SimpleConstructionScript.h"
 #include "Factions/Army.h"
 #include "Factions/Faction.h"
 #include "Structures/Structure.h"
@@ -19,6 +21,8 @@ AStructurePart::AStructurePart()
 void AStructurePart::BeginPlay()
 {
 	Super::BeginPlay();
+
+	GetComponents<UStructurePartSlot>(Slots);
 }
 
 void AStructurePart::Tick(float DeltaTime)
@@ -65,25 +69,29 @@ void AStructurePart::RegisterPartSlot(UStructurePartSlot* Slot)
 	PartSlots.Add(Slot);
 }
 
-UStructurePartSlot* AStructurePart::GetPartSlotByName(const FText Name)
+TArray<const UStructurePartSlot*> AStructurePart::GetCompatiblePartSlots_CDO(TSubclassOf<AStructurePart> PartClass, const UStructurePartSlot* Other)
 {
-	for(UStructurePartSlot* Slot : PartSlots)
+	TArray<UStructurePartSlot*> Slots;
+	const UBlueprintGeneratedClass* BPClass = Cast<UBlueprintGeneratedClass>(PartClass);
+	
+	if(BPClass == nullptr)
 	{
-		if(Slot->SlotName.EqualToCaseIgnored(Name))
+		return TArray<const UStructurePartSlot*>();
+	}
+	
+	TArray<USCS_Node*> Nodes = BPClass->SimpleConstructionScript->GetAllNodes();
+	for (const USCS_Node* Node : Nodes)
+	{
+		if (Node->ComponentClass == UStructurePartSlot::StaticClass())
 		{
-			return Slot;
+			Slots.Add(Cast<UStructurePartSlot>(Node->ComponentTemplate));
 		}
 	}
 	
-	return nullptr;
-}
-
-TArray<UStructurePartSlot*> AStructurePart::GetCompatiblePartSlots(const TSubclassOf<UStructurePartSlotType> SlotType)
-{
-	TArray<UStructurePartSlot*> Ret;
-	for(UStructurePartSlot* Slot : PartSlots)
+	TArray<const UStructurePartSlot*> Ret;
+	for(const UStructurePartSlot* Slot : Slots)
 	{
-		if(Slot->SlotType.GetDefaultObject()->CanAttach(SlotType.GetDefaultObject()))
+		if(Slot->CanAttach(Other))
 		{
 			Ret.Add(Slot);
 		}
@@ -255,4 +263,43 @@ void AStructurePart::ProcessArrivingArmies()
 	}
 
 	ArrivingArmies.Empty();
+}
+
+bool AStructurePart::IsRootPart() const
+{
+	return OwningStructure != nullptr && OwningStructure->GetRootPart() == this;
+}
+
+bool AStructurePart::IsActive()
+{
+	// Add hp to structure parts
+	return true;
+}
+
+TArray<UStructurePartSlot*> AStructurePart::GetSlots()
+{
+	return Slots;
+}
+
+UStructurePartSlot* AStructurePart::GetSlot(const FText InName)
+{
+	for(UStructurePartSlot* Slot : Slots)
+	{
+		if(Slot->SlotName.EqualTo(InName))
+		{
+			return Slot;
+		}
+	}
+	
+	return nullptr;
+}
+
+TArray<UStructurePartSlot*> AStructurePart::GetCompatibleSlots(const UStructurePartSlot* Other)
+{
+	TArray<UStructurePartSlot*> Ret;
+	for(UStructurePartSlot* Slot : Slots)
+	{
+		if(Slot->CanAttach(Other)) Ret.Add(Slot);
+	}
+	return Ret;
 }

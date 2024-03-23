@@ -26,7 +26,7 @@ AStructurePart* UStructurePartAuthoring::GetAuthoredPart()
 		}
 		else
 		{
-			AuthoredPart->GetPartSlotByName(UseSlot)->Attach(TargetPart->GetAuthoredPart()->GetPartSlotByName(TargetSlot));
+			AuthoredPart->GetSlot(UseSlot)->Attach(TargetPart->GetAuthoredPart()->GetSlot(TargetSlot));
 		}
 
 		DestroyComponent();

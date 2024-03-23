@@ -19,7 +19,7 @@ class DARKFRONTIER_API UUIBlueprintLibrary : public UBlueprintFunctionLibrary
 public:
 
 	template<class T>
-	static T* GetParentWidgetOfClass(UWidget* InWidget)
+	static T* GetParentWidgetOfClass(const UWidget* InWidget)
 	{
 		if(const UObject* Top = InWidget->GetParent())
 		{

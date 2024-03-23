@@ -55,3 +55,8 @@ UCommonActivatableWidget* UUIBase::PushModal(const TSubclassOf<UCommonActivatabl
 #endif
 	return ModalStack->AddWidget(WidgetClass);
 }
+
+TOptional<FUIInputConfig> UUIBase::GetDesiredInputConfig() const
+{
+	return FUIInputConfig(ECommonInputMode::All, EMouseCaptureMode::NoCapture);
+}

@@ -34,6 +34,8 @@ AStructure::AStructure()
 void AStructure::BeginPlay()
 {
 	Super::BeginPlay();
+
+	AbilitySystemComponent->InitAbilityActorInfo(this, this);
 	
 	ApplyEffect(DefaultAttributes);
 	ApplyEffect(RegenEffect);
@@ -311,7 +313,7 @@ void AStructure::OnRep_PlayerState()
 	AbilitySystemComponent->InitAbilityActorInfo(this, this);
 }
 
-FVector AStructure::CalculateImpulse(const FVector RawVelocities, const FVector RawInput, const float MaxSpeed, const float Accel, const float DeltaTime) const
+FVector AStructure::CalculateImpulse(const FVector& RawVelocities, const FVector& RawInput, const float MaxSpeed, const float Accel, const float DeltaTime) const
 {
 	const FVector Velocities = GetTransform().InverseTransformVector(RawVelocities);
 	const FVector ClampedInput = RawInput.GetClampedToMaxSize(1);

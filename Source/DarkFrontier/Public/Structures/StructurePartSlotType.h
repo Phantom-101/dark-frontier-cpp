@@ -3,21 +3,23 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Engine/DataAsset.h"
 #include "StructurePartSlotType.generated.h"
 
 /**
  * 
  */
-UCLASS(Blueprintable)
-class DARKFRONTIER_API UStructurePartSlotType : public UObject
+UCLASS()
+class DARKFRONTIER_API UStructurePartSlotType : public UDataAsset
 {
 	GENERATED_BODY()
 
 public:
+	
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly)
+	FText TypeName;
 
-	UStructurePartSlotType();
-
-	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
-	bool CanAttach(UStructurePartSlotType* Other);
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly)
+	FLinearColor Color;
 	
 };

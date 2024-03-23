@@ -5,16 +5,16 @@
 
 UEnergyUpkeep::UEnergyUpkeep()
 {
-	EnergyUpkeepDefinition.AttributeToCapture = UStructureAttributeSet::GetEnergyUpkeepAttribute();
-	EnergyUpkeepDefinition.AttributeSource = EGameplayEffectAttributeCaptureSource::Target;
-	EnergyUpkeepDefinition.bSnapshot = false;
+	UpkeepDef.AttributeToCapture = UStructureAttributeSet::GetUpkeepAttribute();
+	UpkeepDef.AttributeSource = EGameplayEffectAttributeCaptureSource::Target;
+	UpkeepDef.bSnapshot = false;
 
-	EnergyUpkeepReductionDefinition.AttributeToCapture = UStructureAttributeSet::GetEnergyUpkeepReductionAttribute();
-	EnergyUpkeepReductionDefinition.AttributeSource = EGameplayEffectAttributeCaptureSource::Target;
-	EnergyUpkeepReductionDefinition.bSnapshot = false;
+	UpkeepReductionDef.AttributeToCapture = UStructureAttributeSet::GetUpkeepReductionAttribute();
+	UpkeepReductionDef.AttributeSource = EGameplayEffectAttributeCaptureSource::Target;
+	UpkeepReductionDef.bSnapshot = false;
 
-	RelevantAttributesToCapture.Add(EnergyUpkeepDefinition);
-	RelevantAttributesToCapture.Add(EnergyUpkeepReductionDefinition);
+	RelevantAttributesToCapture.Add(UpkeepDef);
+	RelevantAttributesToCapture.Add(UpkeepReductionDef);
 }
 
 float UEnergyUpkeep::CalculateBaseMagnitude_Implementation(const FGameplayEffectSpec& Spec) const
@@ -26,15 +26,13 @@ float UEnergyUpkeep::CalculateBaseMagnitude_Implementation(const FGameplayEffect
 	EvaluationParameters.SourceTags = SourceTags;
 	EvaluationParameters.TargetTags = TargetTags;
 
-	float EnergyUpkeep = 0;
-	GetCapturedAttributeMagnitude(EnergyUpkeepDefinition, Spec, EvaluationParameters, EnergyUpkeep);
-	EnergyUpkeep = FMath::Max(EnergyUpkeep, 0);
+	float Upkeep = 0;
+	GetCapturedAttributeMagnitude(UpkeepDef, Spec, EvaluationParameters, Upkeep);
+	Upkeep = FMath::Max(Upkeep, 0);
 
-	float EnergyUpkeepReduction = 1;
-	GetCapturedAttributeMagnitude(EnergyUpkeepReductionDefinition, Spec, EvaluationParameters, EnergyUpkeepReduction);
-	EnergyUpkeepReduction = FMath::Max(EnergyUpkeepReduction, 1);
+	float UpkeepReduction = 1;
+	GetCapturedAttributeMagnitude(UpkeepReductionDef, Spec, EvaluationParameters, UpkeepReduction);
+	UpkeepReduction = FMath::Max(UpkeepReduction, 1);
 
-	return EnergyUpkeep / EnergyUpkeepReduction;
+	return Upkeep / UpkeepReduction;
 }
-
-
