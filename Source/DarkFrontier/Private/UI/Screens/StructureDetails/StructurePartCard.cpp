@@ -1,19 +1,20 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "UI/Screens/StructureDetails/StructurePartCard.h"
+
+#include "CommonButtonBase.h"
 #include "CommonTextBlock.h"
 #include "Components/ListViewBase.h"
 #include "Libraries/UIBlueprintLibrary.h"
 #include "Structures/StructurePart.h"
 #include "UI/Screens/StructureDetails/StructureDetails.h"
-#include "UI/Widgets/ClickableCard.h"
 
 void UStructurePartCard::NativeConstruct()
 {
 	Super::NativeConstruct();
 	
-	CardButton->OnClicked.Unbind();
-	CardButton->OnClicked.BindUObject<UStructurePartCard>(this, &UStructurePartCard::OnCardClicked);
+	CardButton->OnClicked().Clear();
+	CardButton->OnClicked().AddUObject<UStructurePartCard>(this, &UStructurePartCard::OnCardClicked);
 }
 
 void UStructurePartCard::NativeOnListItemObjectSet(UObject* ListItemObject)

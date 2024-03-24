@@ -44,10 +44,10 @@ protected:
 	TObjectPtr<class UStructurePartSlotInfo> SlotInfo;
 
 	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
-	TObjectPtr<class UClickableCard> ApplyButton;
+	TObjectPtr<UCommonButtonBase> ApplyButton;
 
 	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
-	TObjectPtr<UClickableCard> ExitButton;
+	TObjectPtr<UCommonButtonBase> ExitButton;
 
 	UPROPERTY(BlueprintReadOnly, EditInstanceOnly)
 	TArray<TSubclassOf<class AStructurePart>> AvailableParts;

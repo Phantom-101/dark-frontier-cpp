@@ -7,7 +7,7 @@
 #include "Structures/Structure.h"
 #include "Structures/StructureAttributeSet.h"
 #include "Structures/StructurePart.h"
-#include "UI/InfoField.h"
+#include "UI/Widgets/InfoField.h"
 
 void UStructureInfo::SetTarget(AStructure* InTargetStructure)
 {

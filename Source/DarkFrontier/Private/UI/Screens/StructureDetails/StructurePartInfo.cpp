@@ -7,7 +7,7 @@
 #include "Structures/StructureAttributeSet.h"
 #include "Structures/StructurePart.h"
 #include "Structures/StructurePartSlot.h"
-#include "UI/InfoField.h"
+#include "UI/Widgets/InfoField.h"
 #include "UI/Screens/StructureDetails/StructureCard.h"
 
 void UStructurePartInfo::SetTarget(AStructurePart* InTargetPart)

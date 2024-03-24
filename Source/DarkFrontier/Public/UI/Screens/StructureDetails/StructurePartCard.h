@@ -18,13 +18,13 @@ class DARKFRONTIER_API UStructurePartCard : public UCommonUserWidget, public IUs
 protected:
 
 	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
-	TObjectPtr<class UClickableCard> CardButton;
+	TObjectPtr<class UCommonButtonBase> CardButton;
 
 	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
 	TObjectPtr<class UCommonTextBlock> TypeText;
 
 	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
-	TObjectPtr<class UCommonButtonBase> RemoveButton;
+	TObjectPtr<UCommonButtonBase> RemoveButton;
 	
 	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
 	TObjectPtr<UCommonButtonBase> LookButton;

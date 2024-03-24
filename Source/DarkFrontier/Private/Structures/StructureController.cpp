@@ -6,7 +6,7 @@
 #include "Structures/Structure.h"
 #include "UI/StructureBuilder.h"
 #include "UI/Screens/StructureDetails/StructureDetails.h"
-#include "UI/UIBase.h"
+#include "UI/Screens/UIBase.h"
 
 AStructureController::AStructureController()
 {

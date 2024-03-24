@@ -1,6 +1,8 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "UI/Screens/StructureDetails/StructurePartSlotCard.h"
+
+#include "CommonBorder.h"
 #include "CommonButtonBase.h"
 #include "CommonTextBlock.h"
 #include "Components/ListViewBase.h"
@@ -8,14 +10,13 @@
 #include "Structures/StructurePartSlot.h"
 #include "Structures/StructurePartSlotType.h"
 #include "UI/Screens/StructureDetails/StructureDetails.h"
-#include "UI/Widgets/ClickableCard.h"
 
 void UStructurePartSlotCard::NativeConstruct()
 {
 	Super::NativeConstruct();
 
-	CardButton->OnClicked.Unbind();
-	CardButton->OnClicked.BindUObject<UStructurePartSlotCard>(this, &UStructurePartSlotCard::OnCardClicked);
+	CardButton->OnClicked().Clear();
+	CardButton->OnClicked().AddUObject<UStructurePartSlotCard>(this, &UStructurePartSlotCard::OnCardClicked);
 	AddButton->OnClicked().Clear();
 	AddButton->OnClicked().AddUObject<UStructurePartSlotCard>(this, &UStructurePartSlotCard::OnAddButtonClicked);
 }
@@ -34,14 +35,19 @@ void UStructurePartSlotCard::SetTarget(UStructurePartSlot* InTargetSlot)
 	if(TargetSlot == nullptr)
 	{
 		NameText->SetText(FText::FromString("None"));
-		NameText->SetColorAndOpacity(FLinearColor::White);
+		SideColor->SetVisibility(ESlateVisibility::Collapsed);
 	}
 	else
 	{
 		NameText->SetText(TargetSlot->SlotName);
-		if(TargetSlot->SlotType != nullptr)
+		if(TargetSlot->SlotType == nullptr)
 		{
-			NameText->SetColorAndOpacity(TargetSlot->SlotType->Color);
+			SideColor->SetVisibility(ESlateVisibility::Collapsed);
+		}
+		else
+		{
+			SideColor->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+			SideColor->SetBrushColor(TargetSlot->SlotType->Color);
 		}
 	}
 }

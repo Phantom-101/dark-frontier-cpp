@@ -1,6 +1,6 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-#include "UI/UIBase.h"
+#include "UI/Screens/UIBase.h"
 #include "CommonActivatableWidget.h"
 #include "Widgets/CommonActivatableWidgetContainer.h"
 
