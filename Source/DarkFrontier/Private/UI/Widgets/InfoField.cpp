@@ -1,6 +1,6 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-#include "UI/InfoField.h"
+#include "UI/Widgets/InfoField.h"
 #include "CommonTextBlock.h"
 #include "Components/Image.h"
 

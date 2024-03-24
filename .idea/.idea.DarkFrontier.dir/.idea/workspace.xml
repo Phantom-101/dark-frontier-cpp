@@ -8,89 +8,58 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="cb7ccd89-2b5f-4c19-9f87-96459d2ed121" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/Source/DarkFrontier/Private/UI/Widgets/Card.cpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Source/DarkFrontier/Private/UI/Widgets/ClickableCard.cpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Source/DarkFrontier/Public/UI/Widgets/Card.h" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Source/DarkFrontier/Public/UI/Widgets/ClickableCard.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.DarkFrontier.dir/.idea/.name" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.DarkFrontier.dir/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.DarkFrontier.dir/.idea/dataSources.local.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.DarkFrontier.dir/.idea/dataSources.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.DarkFrontier.dir/.idea/dataSources.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.DarkFrontier.dir/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.DarkFrontier.dir/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Config/DefaultGame.ini" beforeDir="false" afterPath="$PROJECT_DIR$/Config/DefaultGame.ini" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Config/DefaultInput.ini" beforeDir="false" afterPath="$PROJECT_DIR$/Config/DefaultInput.ini" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/GE_DefaultAttributes.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/GE_DefaultAttributes.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/GE_PassiveRegen.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/GE_PassiveRegen.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/GE_TestStructureAttributes.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/GE_TestStructureAttributes.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/PC_Default.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/PC_Default.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Structures/BP_Structure.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Structures/BP_Structure.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Structures/StationSmall/BP_StationSmallAccessorySlotType.uasset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Structures/StationSmall/BP_StationSmallSlotType.uasset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Structures/StationSmall/BP_StationSmall_Extension1.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Structures/StationSmall/BP_StationSmall_Extension1.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Structures/StationSmall/BP_StationSmall_Extension2.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Structures/StationSmall/BP_StationSmall_Extension2.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Structures/StationSmall/BP_StationSmall_Extension3.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Structures/StationSmall/BP_StationSmall_Extension3.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Structures/StationSmall/BP_StationSmall_Extension3Paneled.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Structures/StationSmall/BP_StationSmall_Extension3Paneled.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Structures/StationSmall/BP_StationSmall_FarmMkI.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Structures/StationSmall/BP_StationSmall_FarmMkI.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Structures/StationSmall/BP_StationSmall_FarmMkII.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Structures/StationSmall/BP_StationSmall_FarmMkII.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Structures/StationSmall/BP_StationSmall_HabitationMkI.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Structures/StationSmall/BP_StationSmall_HabitationMkI.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Structures/StationSmall/BP_StationSmall_HabitationMkII.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Structures/StationSmall/BP_StationSmall_HabitationMkII.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Structures/StationSmall/BP_StationSmall_JunctionMkI.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Structures/StationSmall/BP_StationSmall_JunctionMkI.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Structures/StationSmall/BP_StationSmall_JunctionMkII.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Structures/StationSmall/BP_StationSmall_JunctionMkII.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Structures/StationSmall/BP_StationSmall_ReactorMkI.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Structures/StationSmall/BP_StationSmall_ReactorMkI.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Structures/StationSmall/BP_StationSmall_RefineryMkI.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Structures/StationSmall/BP_StationSmall_RefineryMkI.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Structures/StationSmall/BP_StationSmall_RefineryMkII.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Structures/StationSmall/BP_StationSmall_RefineryMkII.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/UI/Data/CUI_CD_PC_Controller.uasset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/UI/Data/CUI_CD_PC_Keyboard.uasset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/UI/Data/CUI_DT_Actions.uasset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/UI/Data/CUI_InputData.uasset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/UI/Screens/W_GameUI.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/UI/Screens/W_GameUI.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/UI/Screens/W_StructureBuilder.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/UI/Screens/W_StructureBuilder.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/UI/Screens/W_UIBase.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/UI/Screens/W_UIBase.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/UI/Styling/CUI_BorderStyle_Header.uasset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/UI/Styling/CUI_BorderStyle_Inherit.uasset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/UI/Styling/CUI_BorderStyle_Normal.uasset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/UI/Styling/CUI_ButtonStyle_Normal.uasset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/UI/Styling/CUI_TextStyle_Button.uasset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/UI/Styling/CUI_TextStyle_Detail.uasset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/UI/Styling/CUI_TextStyle_Detail_Italic.uasset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/UI/Styling/CUI_TextStyle_Header.uasset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/UI/Styling/CUI_TextStyle_Header_Sub.uasset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/UI/Styling/CUI_TextStyle_Normal.uasset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/UI/Styling/CUI_TextStyle_Normal_Sub.uasset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/UI/Widgets/W_CompatibleStructurePartEntry.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/UI/Widgets/W_CompatibleStructurePartEntry.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/UI/Widgets/W_CompatibleStructurePartSelect.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/UI/Widgets/W_CompatibleStructurePartSelect.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/UI/Widgets/W_CompatibleStructurePartSlotEntry.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/UI/Widgets/W_CompatibleStructurePartSlotEntry.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/UI/Widgets/W_ConfirmationModal.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/UI/Widgets/W_ConfirmationModal.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/UI/Widgets/W_GameplayEffectIndicator.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/UI/Widgets/W_GameplayEffectIndicator.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/UI/Widgets/W_IconButton.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/UI/Widgets/W_IconButton.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/UI/Widgets/W_StructurePartActionGroupEntry.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/UI/Widgets/W_StructurePartActionGroupEntry.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/UI/Widgets/W_StructurePartEntry.uasset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/UI/Widgets/W_StructurePartLayoutEditor.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/UI/Widgets/W_StructurePartLayoutEditor.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/UI/Widgets/W_StructurePartSlotEntry.uasset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/UI/Widgets/W_StructurePartSlotLayoutEditor.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/UI/Widgets/W_StructurePartSlotLayoutEditor.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/UI/Widgets/W_TextButton.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/UI/Widgets/W_TextButton.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/Misc/ThirdPerson/Maps/ThirdPersonMap/E/5Z/B9Q90CD0ZNUPARQCX87A3G.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/__ExternalActors__/Misc/ThirdPerson/Maps/ThirdPersonMap/E/5Z/B9Q90CD0ZNUPARQCX87A3G.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/DarkFrontier.Build.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/DarkFrontier.Build.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Private/Structures/Attributes/EnergyUpkeep.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Private/Structures/Attributes/EnergyUpkeep.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Private/Structures/Structure.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Private/Structures/Structure.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Private/Structures/StructureAttributeSet.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Private/Structures/StructureAttributeSet.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Misc/ThirdPerson/Maps/ThirdPersonMap.umap" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Misc/ThirdPerson/Maps/ThirdPersonMap.umap" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/UI/Screens/StructureDetails/W_StructureCard.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/UI/Screens/StructureDetails/W_StructureCard.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/UI/Screens/StructureDetails/W_StructureDetails.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/UI/Screens/StructureDetails/W_StructureDetails.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/UI/Screens/StructureDetails/W_StructureInfo.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/UI/Screens/StructureDetails/W_StructureInfo.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/UI/Screens/StructureDetails/W_StructurePartCard.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/UI/Screens/StructureDetails/W_StructurePartCard.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/UI/Screens/StructureDetails/W_StructurePartInfo.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/UI/Screens/StructureDetails/W_StructurePartInfo.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/UI/Screens/StructureDetails/W_StructurePartOption.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/UI/Screens/StructureDetails/W_StructurePartOption.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/UI/Screens/StructureDetails/W_StructurePartSelector.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/UI/Screens/StructureDetails/W_StructurePartSelector.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/UI/Screens/StructureDetails/W_StructurePartSlotCard.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/UI/Screens/StructureDetails/W_StructurePartSlotCard.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/UI/Screens/StructureDetails/W_StructurePartSlotInfo.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/UI/Screens/StructureDetails/W_StructurePartSlotInfo.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/UI/Screens/StructureDetails/W_StructurePartSlotOption.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/UI/Screens/StructureDetails/W_StructurePartSlotOption.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/UI/Screens/StructureDetails/W_StructurePartSlotSelector.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/UI/Screens/StructureDetails/W_StructurePartSlotSelector.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/UI/Styling/Borders/CUI_BorderStyle_AccentBlue.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/UI/Styling/Borders/CUI_BorderStyle_AccentBlue.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/UI/Styling/Borders/CUI_BorderStyle_AccentGreen.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/UI/Styling/Borders/CUI_BorderStyle_AccentGreen.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/UI/Styling/Borders/CUI_BorderStyle_AccentRed.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/UI/Styling/Borders/CUI_BorderStyle_AccentRed.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/UI/Styling/Borders/CUI_BorderStyle_HeaderRounded.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/UI/Styling/Borders/CUI_BorderStyle_HeaderRounded.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/UI/Styling/Borders/CUI_BorderStyle_Inherit.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/UI/Styling/Borders/CUI_BorderStyle_Inherit.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/UI/Styling/Borders/CUI_BorderStyle_Transparent.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/UI/Styling/Borders/CUI_BorderStyle_Transparent.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/UI/Styling/Buttons/CUI_ButtonStyle_Invisible.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/UI/Styling/Buttons/CUI_ButtonStyle_Invisible.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/UI/Styling/Buttons/CUI_ButtonStyle_Transparent.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/UI/Styling/Buttons/CUI_ButtonStyle_Transparent.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/UI/Widgets/W_AreaButton.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/UI/Widgets/W_Card.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/UI/Widgets/W_Card.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/UI/Widgets/W_ClickableCard.uasset" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Private/Structures/StructureController.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Private/Structures/StructureController.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Private/Structures/StructurePart.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Private/Structures/StructurePart.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Private/Structures/StructurePartAuthoring.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Private/Structures/StructurePartAuthoring.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Private/Structures/StructurePartSlot.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Private/Structures/StructurePartSlot.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Private/Structures/StructurePartSlotType.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Private/UI/CompatibleStructurePartEntry.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Private/UI/CompatibleStructurePartEntry.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Private/UI/CompatibleStructurePartSelect.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Private/UI/CompatibleStructurePartSelect.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Private/UI/AlternatingColorScope.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Private/UI/Widgets/AlternatingColorScope.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Private/UI/InfoField.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Private/UI/Widgets/InfoField.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Private/UI/Screens/StructureDetails/StructureCard.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Private/UI/Screens/StructureDetails/StructureCard.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Private/UI/Screens/StructureDetails/StructureInfo.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Private/UI/Screens/StructureDetails/StructureInfo.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Private/UI/Screens/StructureDetails/StructurePartCard.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Private/UI/Screens/StructureDetails/StructurePartCard.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Private/UI/Screens/StructureDetails/StructurePartInfo.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Private/UI/Screens/StructureDetails/StructurePartInfo.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Private/UI/Screens/StructureDetails/StructurePartOption.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Private/UI/Screens/StructureDetails/StructurePartOption.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Private/UI/Screens/StructureDetails/StructurePartSlotCard.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Private/UI/Screens/StructureDetails/StructurePartSlotCard.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Private/UI/Screens/StructureDetails/StructurePartSlotOption.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Private/UI/Screens/StructureDetails/StructurePartSlotOption.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Private/UI/StructureBuilder.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Private/UI/StructureBuilder.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Private/UI/StructurePartActionGroupEntry.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Private/UI/StructurePartActionGroupEntry.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Private/UI/StructurePartLayoutEditor.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Private/UI/StructurePartLayoutEditor.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Private/UI/UIBase.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Private/UI/UIBase.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Public/Libraries/UIBlueprintLibrary.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Public/Libraries/UIBlueprintLibrary.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Public/Structures/Attributes/EnergyUpkeep.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Public/Structures/Attributes/EnergyUpkeep.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Public/Structures/Structure.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Public/Structures/Structure.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Public/Structures/StructureAttributeSet.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Public/Structures/StructureAttributeSet.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Public/Structures/StructureController.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Public/Structures/StructureController.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Public/Structures/StructurePart.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Public/Structures/StructurePart.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Public/Structures/StructurePartSlot.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Public/Structures/StructurePartSlot.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Public/Structures/StructurePartSlotType.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Public/Structures/StructurePartSlotType.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Public/UI/ConfirmationModal.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Public/UI/ConfirmationModal.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Public/UI/UIBase.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Public/UI/UIBase.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Private/UI/UIBase.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Private/UI/Screens/UIBase.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Private/UI/Widgets/Card.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Private/UI/Widgets/ClickableCard.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Public/UI/AlternatingColorScope.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Public/UI/Widgets/AlternatingColorScope.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Public/UI/InfoField.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Public/UI/Widgets/InfoField.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Public/UI/Screens/StructureDetails/StructureCard.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Public/UI/Screens/StructureDetails/StructureCard.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Public/UI/Screens/StructureDetails/StructureDetails.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Public/UI/Screens/StructureDetails/StructureDetails.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Public/UI/Screens/StructureDetails/StructurePartCard.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Public/UI/Screens/StructureDetails/StructurePartCard.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Public/UI/Screens/StructureDetails/StructurePartOption.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Public/UI/Screens/StructureDetails/StructurePartOption.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Public/UI/Screens/StructureDetails/StructurePartSlotCard.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Public/UI/Screens/StructureDetails/StructurePartSlotCard.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Public/UI/Screens/StructureDetails/StructurePartSlotOption.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Public/UI/Screens/StructureDetails/StructurePartSlotOption.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Public/UI/UIBase.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Public/UI/Screens/UIBase.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Public/UI/Widgets/Card.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Public/UI/Widgets/ClickableCard.h" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -117,26 +86,28 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "Uproject.DarkFrontier.executor": "Run",
+    "WebServerToolWindowFactoryState": "false",
+    "git-widget-placeholder": "master",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "vue.rearranger.settings.migration": "true"
   },
-  &quot;keyToStringList&quot;: {
-    &quot;rider.external.source.directories&quot;: [
-      &quot;C:\\Users\\woyu\\AppData\\Roaming\\JetBrains\\Rider2023.2\\resharper-host\\DecompilerCache&quot;,
-      &quot;C:\\Users\\woyu\\AppData\\Roaming\\JetBrains\\Rider2023.2\\resharper-host\\SourcesCache&quot;,
-      &quot;C:\\Users\\woyu\\AppData\\Local\\Symbols\\src&quot;
+  "keyToStringList": {
+    "rider.external.source.directories": [
+      "C:\\Users\\woyu\\AppData\\Roaming\\JetBrains\\Rider2023.3\\resharper-host\\DecompilerCache",
+      "C:\\Users\\woyu\\AppData\\Roaming\\JetBrains\\Rider2023.3\\resharper-host\\SourcesCache",
+      "C:\\Users\\woyu\\AppData\\Local\\Symbols\\src"
     ]
   }
-}</component>
+}]]></component>
   <component name="RunManager">
     <configuration name="DarkFrontier" type="Uproject" factoryName="rider.uproject">
       <option name="PROJECT_FILE_PATH" value="$PROJECT_DIR$/DarkFrontier.uproject" />
@@ -145,100 +116,110 @@
         <option name="PLATFORM" value="Win64" />
         <option name="EXECUTABLE_PATH" value="C:\Program Files\Epic Games\UE_5.2\Engine\Binaries\Win64\UnrealEditor-Win64-DebugGame.exe" />
         <option name="WORKING_DIRECTORY" value="C:\Program Files\Epic Games\UE_5.2" />
-        <option name="MANDATORY_PROGRAM_PARAMETERS" value=" &quot;D:\unreal\projects\dark-frontier-cpp\DarkFrontier.uproject&quot;" />
+        <option name="MANDATORY_PROGRAM_PARAMETERS" value=" &quot;C:\Users\woyu\Documents\Unreal Projects\DarkFrontier\DarkFrontier.uproject&quot;" />
         <option name="CUSTOM_PROGRAM_PARAMETERS" value="" />
         <option name="PASS_PARENT_ENVS" value="1" />
         <option name="USE_EXTERNAL_CONSOLE" value="0" />
+        <option name="TERMINAL_INTERACTION_BEHAVIOR" value="FORCE_CONSOLE" />
       </configuration_2>
       <configuration_3>
         <option name="CONFIGURATION" value="DebugGame" />
         <option name="PLATFORM" value="Win64" />
-        <option name="EXECUTABLE_PATH" value="D:\unreal\projects\dark-frontier-cpp\Binaries\Win64\DarkFrontier-Win64-DebugGame.exe" />
+        <option name="EXECUTABLE_PATH" value="C:\Users\woyu\Documents\Unreal Projects\DarkFrontier\Binaries\Win64\DarkFrontier-Win64-DebugGame.exe" />
         <option name="WORKING_DIRECTORY" value="C:\Program Files\Epic Games\UE_5.2" />
         <option name="MANDATORY_PROGRAM_PARAMETERS" value="" />
         <option name="CUSTOM_PROGRAM_PARAMETERS" value="" />
         <option name="PASS_PARENT_ENVS" value="1" />
         <option name="USE_EXTERNAL_CONSOLE" value="0" />
+        <option name="TERMINAL_INTERACTION_BEHAVIOR" value="FORCE_CONSOLE" />
       </configuration_3>
       <configuration_4>
         <option name="CONFIGURATION" value="Development Editor" />
         <option name="PLATFORM" value="Win64" />
         <option name="EXECUTABLE_PATH" value="C:\Program Files\Epic Games\UE_5.2\Engine\Binaries\Win64\UnrealEditor.exe" />
         <option name="WORKING_DIRECTORY" value="C:\Program Files\Epic Games\UE_5.2" />
-        <option name="MANDATORY_PROGRAM_PARAMETERS" value=" &quot;D:\unreal\projects\dark-frontier-cpp\DarkFrontier.uproject&quot;" />
+        <option name="MANDATORY_PROGRAM_PARAMETERS" value=" &quot;C:\Users\woyu\Documents\Unreal Projects\DarkFrontier\DarkFrontier.uproject&quot;" />
         <option name="CUSTOM_PROGRAM_PARAMETERS" value="" />
         <option name="PASS_PARENT_ENVS" value="1" />
         <option name="USE_EXTERNAL_CONSOLE" value="0" />
+        <option name="TERMINAL_INTERACTION_BEHAVIOR" value="FORCE_CONSOLE" />
       </configuration_4>
       <configuration_5>
         <option name="CONFIGURATION" value="Development" />
         <option name="PLATFORM" value="Win64" />
-        <option name="EXECUTABLE_PATH" value="D:\unreal\projects\dark-frontier-cpp\Binaries\Win64\DarkFrontier.exe" />
+        <option name="EXECUTABLE_PATH" value="C:\Users\woyu\Documents\Unreal Projects\DarkFrontier\Binaries\Win64\DarkFrontier.exe" />
         <option name="WORKING_DIRECTORY" value="C:\Program Files\Epic Games\UE_5.2" />
         <option name="MANDATORY_PROGRAM_PARAMETERS" value="" />
         <option name="CUSTOM_PROGRAM_PARAMETERS" value="" />
         <option name="PASS_PARENT_ENVS" value="1" />
         <option name="USE_EXTERNAL_CONSOLE" value="0" />
+        <option name="TERMINAL_INTERACTION_BEHAVIOR" value="FORCE_CONSOLE" />
       </configuration_5>
       <configuration_6>
         <option name="CONFIGURATION" value="Shipping" />
         <option name="PLATFORM" value="Win64" />
-        <option name="EXECUTABLE_PATH" value="D:\unreal\projects\dark-frontier-cpp\Binaries\Win64\DarkFrontier-Win64-Shipping.exe" />
+        <option name="EXECUTABLE_PATH" value="C:\Users\woyu\Documents\Unreal Projects\DarkFrontier\Binaries\Win64\DarkFrontier-Win64-Shipping.exe" />
         <option name="WORKING_DIRECTORY" value="C:\Program Files\Epic Games\UE_5.2" />
         <option name="MANDATORY_PROGRAM_PARAMETERS" value="" />
         <option name="CUSTOM_PROGRAM_PARAMETERS" value="" />
         <option name="PASS_PARENT_ENVS" value="1" />
         <option name="USE_EXTERNAL_CONSOLE" value="0" />
+        <option name="TERMINAL_INTERACTION_BEHAVIOR" value="FORCE_CONSOLE" />
       </configuration_6>
       <configuration_7>
         <option name="CONFIGURATION" value="DebugGame Editor" />
         <option name="PLATFORM" value="Android" />
         <option name="EXECUTABLE_PATH" value="C:\Program Files\Epic Games\UE_5.2\Engine\Binaries\Android\UnrealEditor-Android-DebugGame.so" />
         <option name="WORKING_DIRECTORY" value="C:\Program Files\Epic Games\UE_5.2" />
-        <option name="MANDATORY_PROGRAM_PARAMETERS" value=" &quot;D:\unreal\projects\dark-frontier-cpp\DarkFrontier.uproject&quot;" />
+        <option name="MANDATORY_PROGRAM_PARAMETERS" value=" &quot;C:\Users\woyu\Documents\Unreal Projects\DarkFrontier\DarkFrontier.uproject&quot;" />
         <option name="CUSTOM_PROGRAM_PARAMETERS" value="" />
         <option name="PASS_PARENT_ENVS" value="1" />
         <option name="USE_EXTERNAL_CONSOLE" value="0" />
+        <option name="TERMINAL_INTERACTION_BEHAVIOR" value="FORCE_CONSOLE" />
       </configuration_7>
       <configuration_8>
         <option name="CONFIGURATION" value="DebugGame" />
         <option name="PLATFORM" value="Android" />
-        <option name="EXECUTABLE_PATH" value="D:\unreal\projects\dark-frontier-cpp\Binaries\Android\DarkFrontier-Android-DebugGame.so" />
+        <option name="EXECUTABLE_PATH" value="C:\Users\woyu\Documents\Unreal Projects\DarkFrontier\Binaries\Android\DarkFrontier-Android-DebugGame.so" />
         <option name="WORKING_DIRECTORY" value="C:\Program Files\Epic Games\UE_5.2" />
         <option name="MANDATORY_PROGRAM_PARAMETERS" value="" />
         <option name="CUSTOM_PROGRAM_PARAMETERS" value="" />
         <option name="PASS_PARENT_ENVS" value="1" />
         <option name="USE_EXTERNAL_CONSOLE" value="0" />
+        <option name="TERMINAL_INTERACTION_BEHAVIOR" value="FORCE_CONSOLE" />
       </configuration_8>
       <configuration_9>
         <option name="CONFIGURATION" value="Development Editor" />
         <option name="PLATFORM" value="Android" />
         <option name="EXECUTABLE_PATH" value="C:\Program Files\Epic Games\UE_5.2\Engine\Binaries\Android\UnrealEditor.so" />
         <option name="WORKING_DIRECTORY" value="C:\Program Files\Epic Games\UE_5.2" />
-        <option name="MANDATORY_PROGRAM_PARAMETERS" value=" &quot;D:\unreal\projects\dark-frontier-cpp\DarkFrontier.uproject&quot;" />
+        <option name="MANDATORY_PROGRAM_PARAMETERS" value=" &quot;C:\Users\woyu\Documents\Unreal Projects\DarkFrontier\DarkFrontier.uproject&quot;" />
         <option name="CUSTOM_PROGRAM_PARAMETERS" value="" />
         <option name="PASS_PARENT_ENVS" value="1" />
         <option name="USE_EXTERNAL_CONSOLE" value="0" />
+        <option name="TERMINAL_INTERACTION_BEHAVIOR" value="FORCE_CONSOLE" />
       </configuration_9>
       <configuration_10>
         <option name="CONFIGURATION" value="Development" />
         <option name="PLATFORM" value="Android" />
-        <option name="EXECUTABLE_PATH" value="D:\unreal\projects\dark-frontier-cpp\Binaries\Android\DarkFrontier.so" />
+        <option name="EXECUTABLE_PATH" value="C:\Users\woyu\Documents\Unreal Projects\DarkFrontier\Binaries\Android\DarkFrontier.so" />
         <option name="WORKING_DIRECTORY" value="C:\Program Files\Epic Games\UE_5.2" />
         <option name="MANDATORY_PROGRAM_PARAMETERS" value="" />
         <option name="CUSTOM_PROGRAM_PARAMETERS" value="" />
         <option name="PASS_PARENT_ENVS" value="1" />
         <option name="USE_EXTERNAL_CONSOLE" value="0" />
+        <option name="TERMINAL_INTERACTION_BEHAVIOR" value="FORCE_CONSOLE" />
       </configuration_10>
       <configuration_11>
         <option name="CONFIGURATION" value="Shipping" />
         <option name="PLATFORM" value="Android" />
-        <option name="EXECUTABLE_PATH" value="D:\unreal\projects\dark-frontier-cpp\Binaries\Android\DarkFrontier-Android-Shipping.so" />
+        <option name="EXECUTABLE_PATH" value="C:\Users\woyu\Documents\Unreal Projects\DarkFrontier\Binaries\Android\DarkFrontier-Android-Shipping.so" />
         <option name="WORKING_DIRECTORY" value="C:\Program Files\Epic Games\UE_5.2" />
         <option name="MANDATORY_PROGRAM_PARAMETERS" value="" />
         <option name="CUSTOM_PROGRAM_PARAMETERS" value="" />
         <option name="PASS_PARENT_ENVS" value="1" />
         <option name="USE_EXTERNAL_CONSOLE" value="0" />
+        <option name="TERMINAL_INTERACTION_BEHAVIOR" value="FORCE_CONSOLE" />
       </configuration_11>
       <method v="2">
         <option name="Build" />
@@ -286,6 +267,7 @@
       <workItem from="1710629344190" duration="5140000" />
       <workItem from="1710658208735" duration="33638000" />
       <workItem from="1711173495316" duration="581000" />
+      <workItem from="1711229909128" duration="4867000" />
     </task>
     <servers />
   </component>

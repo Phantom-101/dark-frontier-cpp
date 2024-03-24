@@ -18,7 +18,7 @@ class DARKFRONTIER_API UStructureCard : public UCommonUserWidget, public IUserOb
 protected:
 
 	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
-	TObjectPtr<class UClickableCard> CardButton;
+	TObjectPtr<class UCommonButtonBase> CardButton;
 
 	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
 	TObjectPtr<class UCommonTextBlock> NameText;

@@ -1,12 +1,13 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "UI/Screens/StructureDetails/StructurePartSlotOption.h"
+
+#include "CommonButtonBase.h"
 #include "CommonTextBlock.h"
 #include "Components/ListViewBase.h"
 #include "Libraries/UIBlueprintLibrary.h"
 #include "UI/Screens/StructureDetails/StructureDetails.h"
 #include "UI/Screens/StructureDetails/StructurePartSlotOptionObject.h"
-#include "UI/Widgets/ClickableCard.h"
 
 void UStructurePartSlotOption::NativeOnListItemObjectSet(UObject* ListItemObject)
 {
@@ -15,8 +16,8 @@ void UStructurePartSlotOption::NativeOnListItemObjectSet(UObject* ListItemObject
 	const UStructurePartSlotOptionObject* Object = Cast<UStructurePartSlotOptionObject>(ListItemObject);
 	SlotName = Object->SlotName;
 
-	CardButton->OnClicked.Unbind();
-	CardButton->OnClicked.BindUObject<UStructurePartSlotOption>(this, &UStructurePartSlotOption::OnOptionClicked);
+	CardButton->OnClicked().Clear();
+	CardButton->OnClicked().AddUObject<UStructurePartSlotOption>(this, &UStructurePartSlotOption::OnOptionClicked);
 	NameText->SetText(SlotName);
 }
 

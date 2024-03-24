@@ -10,7 +10,7 @@
 #include "Structures/StructurePart.h"
 #include "Structures/StructurePartSlot.h"
 #include "UI/ConfirmationModal.h"
-#include "UI/UIBase.h"
+#include "UI/Screens/UIBase.h"
 
 void UStructureBuilder::NativeConstruct()
 {

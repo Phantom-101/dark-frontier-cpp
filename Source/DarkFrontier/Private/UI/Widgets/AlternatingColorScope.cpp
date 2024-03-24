@@ -1,6 +1,6 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-#include "UI/AlternatingColorScope.h"
+#include "UI/Widgets/AlternatingColorScope.h"
 #include "Blueprint/WidgetTree.h"
 #include "Slate/SObjectWidget.h"
 

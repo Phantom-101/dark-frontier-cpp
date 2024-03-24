@@ -18,7 +18,7 @@ class DARKFRONTIER_API UStructurePartSlotOption : public UCommonUserWidget, publ
 protected:
 
 	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
-	TObjectPtr<class UClickableCard> CardButton;
+	TObjectPtr<class UCommonButtonBase> CardButton;
 
 	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
 	TObjectPtr<class UCommonTextBlock> NameText;

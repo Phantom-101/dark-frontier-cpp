@@ -18,13 +18,16 @@ class DARKFRONTIER_API UStructurePartSlotCard : public UCommonUserWidget, public
 protected:
 
 	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
-	TObjectPtr<class UClickableCard> CardButton;
+	TObjectPtr<class UCommonButtonBase> CardButton;
+
+	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
+	TObjectPtr<class UCommonBorder> SideColor;
 
 	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
 	TObjectPtr<class UCommonTextBlock> NameText;
 	
 	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
-	TObjectPtr<class UCommonButtonBase> AddButton;
+	TObjectPtr<UCommonButtonBase> AddButton;
 
 	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
 	TObjectPtr<UCommonButtonBase> DetachButton;
