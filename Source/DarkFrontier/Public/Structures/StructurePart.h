@@ -22,12 +22,6 @@ public:
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category="Setup")
 	TSubclassOf<class UGameplayEffect> PassiveEffect;
 
-	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category="Setup")
-	TSubclassOf<class UStructurePartActionGroup> ActionGroupType;
-
-	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Instanced, Category="Setup")
-	TObjectPtr<class UStructurePartAction> Action;
-
 	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly, Category="Layout")
 	TObjectPtr<class AStructure> OwningStructure;
 

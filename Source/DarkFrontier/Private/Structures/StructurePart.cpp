@@ -5,11 +5,9 @@
 #include "GameplayEffect.h"
 #include "Engine/SCS_Node.h"
 #include "Engine/SimpleConstructionScript.h"
-#include "..\..\Public\Factions\Combatant.h"
+#include "Factions/Combatant.h"
 #include "Factions/Faction.h"
 #include "Structures/Structure.h"
-#include "Structures/StructurePartAction.h"
-#include "Structures/StructurePartActionGroup.h"
 #include "Structures/StructurePartSlot.h"
 
 AStructurePart::AStructurePart()

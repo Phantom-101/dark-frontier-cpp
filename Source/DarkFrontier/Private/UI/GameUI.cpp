@@ -10,14 +10,8 @@
 #include "Components/CanvasPanelSlot.h"
 #include "Structures/Structure.h"
 #include "Structures/StructureController.h"
-#include "Structures/StructurePartActionGroup.h"
 #include "UI/CustomGameplayEffectUIData.h"
 #include "UI/GameplayEffectIndicatorObject.h"
-
-bool UGameUI::GetIsActionsCollapsed() const
-{
-	return IsActionsCollapsed;
-}
 
 TOptional<FUIInputConfig> UGameUI::GetDesiredInputConfig() const
 {
@@ -27,13 +21,6 @@ TOptional<FUIInputConfig> UGameUI::GetDesiredInputConfig() const
 void UGameUI::NativeConstruct()
 {
 	Super::NativeConstruct();
-
-	if(AStructureController* Controller = Cast<AStructureController>(GetWorld()->GetFirstPlayerController()))
-	{
-		Controller->OnActionsChanged.BindUObject<UGameUI>(this, &UGameUI::UpdateActions);
-	}
-
-	CollapseActionsButton->OnClicked().AddUObject<UGameUI>(this, &UGameUI::ToggleCollapseActions);
 }
 
 void UGameUI::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
@@ -72,24 +59,4 @@ void UGameUI::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 			}
 		}
 	}
-}
-
-void UGameUI::UpdateActions() const
-{
-	if(AStructure* PlayerStructure = Cast<AStructure>(GetOwningPlayerPawn()))
-	{
-		ActionGroupList->ClearListItems();
-		//for(UStructurePartActionGroup* Group : PlayerStructure->GetActionGroups())
-		//{
-		//	ActionGroupList->AddItem(Group);
-		//}
-		ActionGroupList->RegenerateAllEntries();
-		ActionGroupList->ScrollIndexIntoView(0);
-	}
-}
-
-void UGameUI::ToggleCollapseActions()
-{
-	IsActionsCollapsed = !IsActionsCollapsed;
-	OnActionsCollapseToggled.Broadcast(IsActionsCollapsed);
 }
