@@ -8,7 +8,7 @@
 void UStructureLayoutEditor::UpdateView(AStructure* Target) const
 {
 	Parts->ClearListItems();
-	for(AStructurePart* Part : Target->GetCachedParts())
+	for(AStructurePart* Part : Target->GetParts())
 	{
 		Parts->AddItem(Part);
 	}

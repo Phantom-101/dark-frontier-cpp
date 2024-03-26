@@ -10,7 +10,7 @@ DECLARE_DELEGATE(FStructurePartActionTriggered)
 /**
  * 
  */
-UCLASS(Blueprintable)
+UCLASS(Blueprintable, DefaultToInstanced, EditInlineNew)
 class DARKFRONTIER_API UStructurePartAction : public UObject
 {
 	GENERATED_BODY()

@@ -3,21 +3,21 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Army.generated.h"
+#include "Combatant.generated.h"
 
 /**
  * 
  */
 UCLASS(Blueprintable)
-class DARKFRONTIER_API UArmy : public UObject
+class DARKFRONTIER_API UCombatant : public UObject
 {
 	GENERATED_BODY()
 
 public:
 
-	UArmy();
+	UCombatant();
 	
-	explicit UArmy(int StartingCount, class AFaction* Faction);
+	explicit UCombatant(int StartingCount, class AFaction* Faction);
 
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly)
 	double Attack = 0;
@@ -29,7 +29,7 @@ public:
 	double Health = 1;
 	
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly)
-	TMap<TSubclassOf<UArmy>, double> Effectiveness = {};
+	TMap<TSubclassOf<UCombatant>, double> Effectiveness = {};
 
 	UPROPERTY(BlueprintReadOnly, EditInstanceOnly)
 	double BuffMultiplier = 1;
@@ -41,17 +41,17 @@ public:
 	TObjectPtr<AFaction> OwningFaction;
 
 	UFUNCTION(BlueprintCallable)
-	UArmy* GetPreferredTarget(TArray<UArmy*> Armies);
+	UCombatant* GetPreferredTarget(TArray<UCombatant*> Combatants);
 
 	UFUNCTION(BlueprintCallable)
-	void AttackTarget(UArmy* Target);
+	void AttackTarget(UCombatant* Target);
 
 private:
 
 	UFUNCTION()
-	double GetAttackPreference(UArmy* Army);
+	double GetAttackPreference(UCombatant* Combatant);
 
 	UFUNCTION()
-	double GetEffectiveness(const UArmy* Army);
+	double GetEffectiveness(const UCombatant* Combatant);
 	
 };

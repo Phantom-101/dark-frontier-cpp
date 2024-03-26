@@ -40,11 +40,14 @@ void UGameUI::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 {  
 	Super::NativeTick(MyGeometry, InDeltaTime);
 
+	if(const AStructureController* PlayerController = Cast<AStructureController>(GetWorld()->GetFirstPlayerController()))
+	{
+		const FVector ScaledRotateInput = PlayerController->RotateAddInput * 200;
+		UWidgetLayoutLibrary::SlotAsCanvasSlot(TurnIndicator)->SetPosition(FVector2D(ScaledRotateInput.Z, ScaledRotateInput.Y));
+	}
+
 	if(const AStructure* PlayerStructure = Cast<AStructure>(GetOwningPlayerPawn()))
 	{
-		const FVector ScaledRotateInput = PlayerStructure->RotateAddInput * 200;
-		UWidgetLayoutLibrary::SlotAsCanvasSlot(TurnIndicator)->SetPosition(FVector2D(ScaledRotateInput.Z, ScaledRotateInput.Y));
-
 		TArray<FActiveGameplayEffectHandle> Existing;
 		for(UObject* Object : GameplayEffectList->GetListItems())
 		{
@@ -76,10 +79,10 @@ void UGameUI::UpdateActions() const
 	if(AStructure* PlayerStructure = Cast<AStructure>(GetOwningPlayerPawn()))
 	{
 		ActionGroupList->ClearListItems();
-		for(UStructurePartActionGroup* Group : PlayerStructure->GetActionGroups())
-		{
-			ActionGroupList->AddItem(Group);
-		}
+		//for(UStructurePartActionGroup* Group : PlayerStructure->GetActionGroups())
+		//{
+		//	ActionGroupList->AddItem(Group);
+		//}
 		ActionGroupList->RegenerateAllEntries();
 		ActionGroupList->ScrollIndexIntoView(0);
 	}

@@ -2,8 +2,8 @@
 
 #include "Structures/StructurePartSlot.h"
 #include "Structures/StructurePart.h"
-#include "Kismet/KismetMathLibrary.h"
 #include "Structures/Structure.h"
+#include "Kismet/KismetMathLibrary.h"
 #include "Structures/StructurePartSlotFilter.h"
 
 UStructurePartSlot::UStructurePartSlot()
@@ -14,9 +14,8 @@ UStructurePartSlot::UStructurePartSlot()
 void UStructurePartSlot::BeginPlay()
 {
 	Super::BeginPlay();
-
+	
 	OwningPart = Cast<AStructurePart>(GetOwner());
-	OwningPart->RegisterPartSlot(this);
 }
 
 bool UStructurePartSlot::CanAttach(const UStructurePartSlot* Other) const
@@ -24,47 +23,44 @@ bool UStructurePartSlot::CanAttach(const UStructurePartSlot* Other) const
 	return Filter->IsCompatible(Other) && Other->Filter->IsCompatible(this);
 }
 
-void UStructurePartSlot::Attach(UStructurePartSlot* NewSlot)
+bool UStructurePartSlot::TryAttach(UStructurePartSlot* NewSlot)
 {
-	if(NewSlot == nullptr)
-	{
-		Detach();
-		return;
-	}
+	if(NewSlot == nullptr) return false; // New slot must be non-null
+	if(AttachedSlot != nullptr || NewSlot->AttachedSlot != nullptr) return false; // Both slots must be detached
+	if(OwningPart->OwningStructure == nullptr && NewSlot->OwningPart->OwningStructure == nullptr) return false; // At least one slot must be part of an existing structure
+	if(!CanAttach(NewSlot)) return false;
 
-	if(AttachedSlot == nullptr && NewSlot->AttachedSlot == nullptr && CanAttach(NewSlot))
+	AttachedSlot = NewSlot;
+	AttachedSlot->AttachedSlot = this;
+
+	MatchTransform(AttachedSlot);
+	
+	if(OwningPart->OwningStructure == nullptr)
 	{
-		AttachedSlot = NewSlot;
-		AttachedSlot->AttachedSlot = this;
-		
-		if(OwningPart->OwningStructure == nullptr)
-		{
-			// This part previously not attached
-			OwningPart->InitOwningStructure(AttachedSlot->OwningPart->OwningStructure);
-			MatchTransform(AttachedSlot);
-			OwningPart->AttachNearbyPartSlots();
-		}
-		else if(AttachedSlot->OwningPart->OwningStructure == nullptr)
-		{
-			// Other part previously not attached
-			AttachedSlot->OwningPart->InitOwningStructure(OwningPart->OwningStructure);
-			AttachedSlot->MatchTransform(this);
-			AttachedSlot->OwningPart->AttachNearbyPartSlots();
-		}
-		
-		OwningPart->OwningStructure->UpdatePartDistances();
+		// This part previously not attached
+		OwningPart->TryInit(AttachedSlot->OwningPart->OwningStructure);
+		OwningPart->AttachSlots();
 	}
+	else if(AttachedSlot->OwningPart->OwningStructure == nullptr)
+	{
+		// Other part previously not attached
+		AttachedSlot->OwningPart->TryInit(OwningPart->OwningStructure);
+		AttachedSlot->OwningPart->AttachSlots();
+	}
+	
+	OwningPart->OwningStructure->UpdateLayoutInformation();
+	return true;
 }
 
-void UStructurePartSlot::Detach()
+bool UStructurePartSlot::TryDetach()
 {
-	if (AttachedSlot != nullptr)
-	{
-		AttachedSlot->AttachedSlot = nullptr;
-		AttachedSlot = nullptr;
-		OwningPart->OwningStructure->UpdateCachedParts();
-		OwningPart->OwningStructure->UpdatePartDistances();
-	}
+	if(AttachedSlot == nullptr) return true; // Slot already detached
+	
+	AttachedSlot->AttachedSlot = nullptr;
+	AttachedSlot = nullptr;
+	OwningPart->OwningStructure->UpdateLayoutInformation();
+
+	return true;
 }
 
 void UStructurePartSlot::MatchTransform(UStructurePartSlot* Other)

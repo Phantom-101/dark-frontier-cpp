@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "ActiveGameplayEffectHandle.h"
 #include "GameFramework/Actor.h"
 #include "StructurePart.generated.h"
 
@@ -19,95 +20,89 @@ public:
 	FText TypeName;
 
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category="Setup")
-	TSubclassOf<class UGameplayEffect> AttributeEffect;
+	TSubclassOf<class UGameplayEffect> PassiveEffect;
 
-	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category="Action")
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category="Setup")
 	TSubclassOf<class UStructurePartActionGroup> ActionGroupType;
 
-	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category="Action")
-	TSubclassOf<class UStructurePartAction> ActionType;
-
-	UPROPERTY(BlueprintReadOnly, EditInstanceOnly, Category="Action")
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Instanced, Category="Setup")
 	TObjectPtr<class UStructurePartAction> Action;
 
 	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly, Category="Layout")
 	TObjectPtr<class AStructure> OwningStructure;
 
 	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly, Category="Layout")
-	int32 PartId;
+	TArray<TObjectPtr<class UStructurePartSlot>> Slots;
 
 	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly, Category="Layout")
-	TArray<TObjectPtr<class UStructurePartSlot>> PartSlots;
+	int32 PartId = -1;
 
 	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly, Category="Layout")
-	int32 DistanceToRoot = -1;
+	int32 RootDistance = -1;
+
+	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly, Category="Gameplay")
+	FActiveGameplayEffectHandle PassiveEffectHandle;
 
 	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly, Category="Combat")
-	TObjectPtr<class AFaction> ControlledBy;
+	TObjectPtr<class AFaction> OwningFaction;
 	
 	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category="Combat")
-	TArray<TObjectPtr<class UArmy>> Armies;
+	TArray<TObjectPtr<class UCombatant>> Combatants;
 
 	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category="Combat")
-	TArray<TObjectPtr<UArmy>> ArrivingArmies;
+	TArray<TObjectPtr<UCombatant>> QueuedCombatants;
 
 protected:
 	
-	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly)
-	TArray<TObjectPtr<UStructurePartSlot>> Slots;
-
 	virtual void BeginPlay() override;
 
 	virtual void Tick(float DeltaTime) override;
 
 public:
 
-	UFUNCTION(BlueprintCallable)
-	void InitOwningStructure(AStructure* NewOwner);
+	UFUNCTION(BlueprintCallable, Category="Lifetime")
+	bool TryInit(AStructure* NewOwner);
 
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintCallable, Category="Lifetime")
 	void OnRegistered();
 
-	UFUNCTION(BlueprintCallable)
-	void OnUnregistered();
+	UFUNCTION(BlueprintCallable, Category="Lifetime")
+	void OnUnRegistered();
 
-	UFUNCTION(BlueprintCallable)
-	void RegisterPartSlot(UStructurePartSlot* Slot);
-
-	static TArray<const UStructurePartSlot*> GetCompatiblePartSlots_CDO(TSubclassOf<AStructurePart> PartClass, const UStructurePartSlot* Other);
-	
-	UFUNCTION(BlueprintCallable)
-	void AttachNearbyPartSlots();
-
-	UFUNCTION(BlueprintCallable)
-	void RemovePart();
-
-	UFUNCTION(BlueprintCallable)
-	void PropagateDistanceUpdate(int32 Distance);
-
-	UFUNCTION(BlueprintCallable)
-	void TickArmies();
-
-	UFUNCTION(BlueprintCallable)
-	void ProcessArrivingArmies();
-
-	// Version 2 API
-
-	UFUNCTION(BlueprintCallable, Category="Status")
+	UFUNCTION(BlueprintCallable, Category="State")
 	bool IsRootPart() const;
 
-	UFUNCTION(BlueprintCallable, Category="Status")
+	UFUNCTION(BlueprintCallable, Category="State")
 	bool IsActive();
 
-	UFUNCTION(BlueprintCallable, Category="Slots")
+	UFUNCTION(BlueprintCallable, Category="Layout")
 	TArray<UStructurePartSlot*> GetSlots();
 
-	UFUNCTION(BlueprintCallable, Category="Slots")
+	UFUNCTION(BlueprintCallable, Category="Layout")
+	TArray<UStructurePartSlot*> GetCompatibleSlots(const UStructurePartSlot* Other);
+
+	UFUNCTION(BlueprintCallable, Category="Layout")
 	UStructurePartSlot* GetSlot(FText InName);
 
-	UFUNCTION(BlueprintCallable, Category="Slots")
-	TArray<UStructurePartSlot*> GetCompatibleSlots(const UStructurePartSlot* Other);
-	
-	// Statics
+	UFUNCTION(BlueprintCallable, Category="Layout")
+	void AttachSlots();
+
+	UFUNCTION(BlueprintCallable, Category="Layout")
+	void DetachSlots();
+
+	UFUNCTION(BlueprintCallable, Category="Layout")
+	void UpdateDistance(int32 Distance);
+
+	UFUNCTION(BlueprintCallable, Category="Combat")
+	void TickCombatants();
+
+	UFUNCTION(BlueprintCallable, Category="Combat")
+	void DequeueCombatants();
+
+	static TArray<const UStructurePartSlot*> GetSlots_CDO(TSubclassOf<AStructurePart> PartClass);
+
+	static TArray<const UStructurePartSlot*> GetCompatibleSlots_CDO(TSubclassOf<AStructurePart> PartClass, const UStructurePartSlot* Other);
+
+	static const UStructurePartSlot* GetSlot_CDO(TSubclassOf<AStructurePart> PartClass, FText InName);
 
 };

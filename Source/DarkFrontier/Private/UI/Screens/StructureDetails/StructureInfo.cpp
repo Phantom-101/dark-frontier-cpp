@@ -59,7 +59,7 @@ void UStructureInfo::SetTarget(AStructure* InTargetStructure)
 	AngularField->SetContentFromString(FString::Format(TEXT("{0}+{1}"), FormatArgs));
 
 	PartCardList->ClearListItems();
-	for(AStructurePart* Part : TargetStructure->GetConnectedParts())
+	for(AStructurePart* Part : TargetStructure->GetParts())
 	{
 		PartCardList->AddItem(Part);
 	}

@@ -20,6 +20,8 @@ public:
 
 	AStructureController();
 
+protected:
+
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category="Input")
 	TObjectPtr<UInputAction> MoveAction;
 
@@ -50,24 +52,48 @@ public:
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category="UI")
 	TSubclassOf<UCommonActivatableWidget> StructureDetailsUIClass;
 
+	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly, Category="Controller")
+	TObjectPtr<class AStructure> StructurePawn;
+
+public:
+	
+	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly, Category="Input")
+	FVector MoveInput;
+
+	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly, Category="Input")
+	FVector RotateAddInput;
+
+	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly, Category="Input")
+	FVector RotateOverrideInput;
+
+	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly, Category="Input")
+	bool IsCursorUnlocked = false;
+
+protected:
+
+	UPROPERTY(BlueprintReadOnly, EditInstanceOnly, Category="Camera")
+	TObjectPtr<AActor> LookTarget;
+	
+	UPROPERTY(BlueprintReadOnly, EditInstanceOnly, Category="Camera")
+	FVector2D LookRotation;
+
+	UPROPERTY(BlueprintReadOnly, EditInstanceOnly, Category="Camera")
+	float ZoomLevel = 2.5;
+
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly)
 	TArray<TSubclassOf<class AStructurePart>> AvailableParts;
 
-	UPROPERTY(BlueprintReadOnly, EditInstanceOnly)
-	TObjectPtr<class AStructure> StructurePawn;
+public:
 	
-	UPROPERTY(BlueprintReadOnly, EditInstanceOnly)
+	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly, Category="UI")
 	TObjectPtr<UUIBase> UIBaseWidget;
-
-	UPROPERTY(BlueprintReadOnly, EditInstanceOnly)
-	bool IsCursorUnlocked;
 
 	FStructureStateChanged OnLayoutChanged;
 
 	FStructureStateChanged OnActionsChanged;
 
 protected:
-	
+
 	virtual void BeginPlay() override;
 
 	virtual void SetupInputComponent() override;
@@ -75,35 +101,42 @@ protected:
 	virtual void Tick(float DeltaSeconds) override;
 
 	virtual void OnPossess(APawn* InPawn) override;
-
+	
 	virtual void OnUnPossess() override;
 
-public:
+	UFUNCTION(BlueprintCallable, Category="Camera")
+	void UpdateCamera();
 
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintCallable, Category="Camera")
+	FBoxSphereBounds GetViewBounds(const AActor* Actor, const bool OnlyCollidingComponents);
+
+	UFUNCTION(BlueprintCallable, Category="Camera")
+	FBoxSphereBounds GetStructureViewBounds(const AStructure* Structure, const bool OnlyCollidingComponents);
+
+	UFUNCTION()
 	void Move(const FInputActionInstance& Instance);
 
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION()
 	void RotateAdd(const FInputActionInstance& Instance);
 
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION()
 	void RotateOverride(const FInputActionInstance& Instance);
 
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION()
 	void Look(const FInputActionInstance& Instance);
 
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION()
 	void Zoom(const FInputActionInstance& Instance);
 
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION()
 	void ToggleUnlock(const FInputActionInstance& Instance);
-	
-	UFUNCTION(BlueprintCallable)
+
+	UFUNCTION()
 	void EditStructure(const FInputActionInstance& Instance);
 
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION()
 	void PropagateLayoutChange();
 
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION()
 	void PropagateActionsChange();
 };

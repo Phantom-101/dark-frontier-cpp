@@ -18,28 +18,41 @@ public:
 
 	AStructure();
 
+protected:
+
+	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category="Components")
+	TObjectPtr<class UStructureAbilitySystemComponent> AbilitySystemComponent;
+	
+	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category="Components")
+	TObjectPtr<class UStructureAttributeSet> Attributes;
+
+	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category="Components")
+	TObjectPtr<UStaticMeshComponent> StaticMesh;
+
+public:
+
+	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category="Components")
+	TObjectPtr<class USpringArmComponent> SpringArm;
+
+protected:
+
+	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category="Components")
+	TObjectPtr<class UCameraComponent> Camera;
+
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category="Setup")
 	TSubclassOf<class UGameplayEffect> DefaultAttributes;
 
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category="Setup")
-	TSubclassOf<UGameplayEffect> RegenEffect;
-
-	UPROPERTY(EditAnywhere)
-	TObjectPtr<class AFaction> OwningFaction;
-
-protected:
+	TArray<TSubclassOf<UGameplayEffect>> PassiveEffectClasses;
 
 	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly, Category="Layout")
 	TObjectPtr<class AStructurePart> RootPart;
 
 	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly, Category="Layout")
-	TArray<TObjectPtr<AStructurePart>> CachedParts;
+	TArray<TObjectPtr<AStructurePart>> Parts;
 
 	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly, Category="Layout")
 	int32 NextPartId;
-
-	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly, Category="Layout")
-	TArray<TObjectPtr<class UStructurePartActionGroup>> ActionGroups;
 
 public:
 
@@ -47,38 +60,10 @@ public:
 	FVector MoveInput;
 
 	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly, Category="Input")
-	FVector RotateAddInput;
+	FVector RotateInput;
 
-	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly, Category="Input")
-	FVector RotateOverrideInput;
-
-protected:
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="GAS", meta=(AllowPrivateAccess="true"))
-	TObjectPtr<class UStructureAbilitySystemComponent> AbilitySystemComponent;
-	
-	UPROPERTY()
-	TObjectPtr<class UStructureAttributeSet> Attributes;
-
-	UPROPERTY(VisibleAnywhere)
-	TObjectPtr<class UStaticMeshComponent> StaticMesh;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Camera")
-	TObjectPtr<class USpringArmComponent> SpringArm;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Camera")
-	TObjectPtr<class UCameraComponent> Camera;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Camera")
-	TObjectPtr<AActor> CameraTarget;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Camera")
-	FVector2D LookRotation;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Camera")
-	float ZoomLevel = 2.5;
-
-public:
+	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly, Category="Combat")
+	TObjectPtr<class AFaction> OwningFaction;
 
 	FStructureStateChanged OnLayoutChanged;
 
@@ -92,82 +77,52 @@ protected:
 	
 public:
 
-	UFUNCTION(BlueprintCallable)
-	void InitRootPart(AStructurePart* NewRoot);
+	virtual void PossessedBy(AController* NewController) override;
 
-	UFUNCTION(BlueprintCallable)
-	AStructurePart* GetRootPart();
+	UFUNCTION(BlueprintCallable, Category="Lifetime")
+	bool TryInit(AStructurePart* NewRoot);
 
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintCallable, Category="Layout")
+	AStructurePart* GetRootPart() const;
+
+	UFUNCTION(BlueprintCallable, Category="Layout")
+	TArray<AStructurePart*> GetParts();
+
+	UFUNCTION(BlueprintCallable, Category="Layout")
 	void RegisterPart(AStructurePart* InPart);
 
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintCallable, Category="Layout")
 	void UnregisterPart(AStructurePart* InPart);
 
-	UFUNCTION(BlueprintCallable)
-	class UStructurePartAction* RegisterAction(TSubclassOf<UStructurePartActionGroup> GroupType, TSubclassOf<UStructurePartAction> ActionType);
+	UFUNCTION(BlueprintCallable, Category="Layout")
+	bool IsLayoutValid();
 
-	UFUNCTION(BlueprintCallable)
-	void UnregisterAction(TSubclassOf<UStructurePartActionGroup> GroupType, UStructurePartAction* InAction);
+	UFUNCTION(BlueprintCallable, Category="Layout")
+	bool IsLayoutSelfIntersecting();
 
-	UFUNCTION(BlueprintCallable)
-	TArray<UStructurePartActionGroup*> GetActionGroups();
+	UFUNCTION(BlueprintCallable, Category="Layout")
+	bool IsLayoutUpkeepOverloaded() const;
 
-	UFUNCTION(BlueprintCallable)
-	TArray<AStructurePart*> GetCachedParts();
-	
-	UFUNCTION(BlueprintCallable)
-	void UpdateCachedParts();
+	UFUNCTION(BlueprintCallable, Category="Layout")
+	void UpdateLayoutInformation();
 
-	UFUNCTION(BlueprintCallable)
-	TArray<AStructurePart*> GetConnectedParts() const;
+	UFUNCTION(BlueprintCallable, Category="Gameplay")
+	float GetUpkeep() const;
 
-	UFUNCTION(BlueprintCallable)
-	bool IsPartLayoutValid();
-
-	UFUNCTION(BlueprintCallable)
-	void UpdatePartDistances();
-
+	UFUNCTION(BlueprintCallable, Category="Gameplay")
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 
-	UFUNCTION(BlueprintCallable)
-	void ApplyEffect(TSubclassOf<class UGameplayEffect> EffectClass);
+	UFUNCTION(BlueprintCallable, Category="Gameplay")
+	struct FActiveGameplayEffectHandle ApplyEffect(TSubclassOf<class UGameplayEffect> EffectClass);
 
-	UFUNCTION(BlueprintCallable)
-	void GrantAbility(TSubclassOf<class UStructureGameplayAbility> AbilityClass);
+	UFUNCTION(BlueprintCallable, Category="Gameplay")
+	struct FGameplayAbilitySpecHandle GrantAbility(TSubclassOf<class UStructureGameplayAbility> AbilityClass);
 	
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintCallable, Category="Mechanics")
 	bool IsDetecting(AStructure* Other) const;
-
-	UFUNCTION(BlueprintCallable)
-	void Move(FVector Value);
-	
-	UFUNCTION(BlueprintCallable)
-	void RotateAdd(FVector Value);
-	
-	UFUNCTION(BlueprintCallable)
-	void RotateOverride(FVector Value);
-	
-	UFUNCTION(BlueprintCallable)
-	void Look(FVector2D Value);
-
-	UFUNCTION(BlueprintCallable)
-	void Zoom(float Value);
-
-	UFUNCTION(BlueprintCallable)
-	void SetCameraTarget(AActor* NewTarget);
-
-	virtual void PossessedBy(AController* NewController) override;
-	virtual void OnRep_PlayerState() override;
 
 protected:
 	
 	FVector CalculateImpulse(const FVector& RawVelocities, const FVector& RawInput, float MaxSpeed, float Accel, float DeltaTime) const;
-
-	void UpdateCameraPosition();
-
-	FBoxSphereBounds GetStructureBounds(bool OnlyCollidingComponents) const;
-
-	static FBoxSphereBounds GetBounds(const AActor* Actor, bool OnlyCollidingComponents);
 	
 };
