@@ -18,7 +18,7 @@ void UStructurePartLayoutEditor::NativeOnListItemObjectSet(UObject* ListItemObje
 	RootSectionText->SetVisibility(Part == Part->OwningStructure->GetRootPart() ? ESlateVisibility::SelfHitTestInvisible : ESlateVisibility::Collapsed);
 
 	PartSlotList->ClearListItems();
-	for(UStructurePartSlot* PartSlot : Part->PartSlots)
+	for(UStructurePartSlot* PartSlot : Part->Slots)
 	{
 		PartSlotList->AddItem(PartSlot);
 	}

@@ -5,13 +5,12 @@
 #include "GameplayEffect.h"
 #include "Engine/SCS_Node.h"
 #include "Engine/SimpleConstructionScript.h"
-#include "Factions/Army.h"
+#include "..\..\Public\Factions\Combatant.h"
 #include "Factions/Faction.h"
 #include "Structures/Structure.h"
 #include "Structures/StructurePartAction.h"
 #include "Structures/StructurePartActionGroup.h"
 #include "Structures/StructurePartSlot.h"
-#include "Structures/StructurePartSlotType.h"
 
 AStructurePart::AStructurePart()
 {
@@ -32,237 +31,30 @@ void AStructurePart::Tick(float DeltaTime)
 	// stuff here
 }
 
-void AStructurePart::InitOwningStructure(AStructure* NewOwner)
+bool AStructurePart::TryInit(AStructure* NewOwner)
 {
+	if(OwningStructure != nullptr) return false;
+	
 	OwningStructure = NewOwner;
 	OwningStructure->RegisterPart(this);
 	AttachToActor(OwningStructure, FAttachmentTransformRules(EAttachmentRule::KeepWorld, true));
-	ControlledBy = OwningStructure->OwningFaction;
+	OwningFaction = OwningStructure->OwningFaction;
+	
+	return true;
 }
 
 void AStructurePart::OnRegistered()
 {
-	OwningStructure->ApplyEffect(AttributeEffect);
-	if(ActionGroupType && ActionType)
-	{
-		Action = OwningStructure->RegisterAction(ActionGroupType, ActionType);
-	}
+	PassiveEffectHandle = OwningStructure->ApplyEffect(PassiveEffect);
 }
 
-void AStructurePart::OnUnregistered()
+void AStructurePart::OnUnRegistered()
 {
-	FGameplayEffectQuery Query;
-	Query.EffectDefinition = AttributeEffect;
-	TArray<FActiveGameplayEffectHandle> Handles = OwningStructure->GetAbilitySystemComponent()->GetActiveEffects(Query);
-	if(Handles.Num() > 0)
+	if(PassiveEffectHandle.IsValid())
 	{
-		OwningStructure->GetAbilitySystemComponent()->RemoveActiveGameplayEffect(Handles[0]);
+		OwningStructure->GetAbilitySystemComponent()->RemoveActiveGameplayEffect(PassiveEffectHandle);
+		PassiveEffectHandle = FActiveGameplayEffectHandle();
 	}
-	if(ActionGroupType && Action)
-	{
-		OwningStructure->UnregisterAction(ActionGroupType, Action);
-	}
-}
-
-void AStructurePart::RegisterPartSlot(UStructurePartSlot* Slot)
-{
-	PartSlots.Add(Slot);
-}
-
-TArray<const UStructurePartSlot*> AStructurePart::GetCompatiblePartSlots_CDO(TSubclassOf<AStructurePart> PartClass, const UStructurePartSlot* Other)
-{
-	TArray<UStructurePartSlot*> Slots;
-	const UBlueprintGeneratedClass* BPClass = Cast<UBlueprintGeneratedClass>(PartClass);
-	
-	if(BPClass == nullptr)
-	{
-		return TArray<const UStructurePartSlot*>();
-	}
-	
-	TArray<USCS_Node*> Nodes = BPClass->SimpleConstructionScript->GetAllNodes();
-	for (const USCS_Node* Node : Nodes)
-	{
-		if (Node->ComponentClass == UStructurePartSlot::StaticClass())
-		{
-			Slots.Add(Cast<UStructurePartSlot>(Node->ComponentTemplate));
-		}
-	}
-	
-	TArray<const UStructurePartSlot*> Ret;
-	for(const UStructurePartSlot* Slot : Slots)
-	{
-		if(Slot->CanAttach(Other))
-		{
-			Ret.Add(Slot);
-		}
-	}
-	return Ret;
-}
-
-void AStructurePart::AttachNearbyPartSlots()
-{
-	for(UStructurePartSlot* Slot : PartSlots)
-	{
-		if(Slot->AttachedSlot == nullptr)
-		{
-			for(AStructurePart* Part : OwningStructure->GetCachedParts())
-			{
-				if(Part != this)
-				{
-					for(UStructurePartSlot* Candidate : Part->PartSlots)
-					{
-						if((Candidate->GetComponentLocation() - Slot->GetComponentLocation()).IsNearlyZero(1))
-						{
-							Slot->Attach(Candidate);
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-void AStructurePart::RemovePart()
-{
-	if(OwningStructure->GetRootPart() != this)
-	{
-		for(UStructurePartSlot* Slot : PartSlots)
-		{
-			Slot->Detach();
-		}
-		OwningStructure->UpdateCachedParts();
-	}
-}
-
-void AStructurePart::PropagateDistanceUpdate(const int32 Distance)
-{
-	DistanceToRoot = Distance;
-	for(const UStructurePartSlot* Slot : PartSlots)
-	{
-		if(Slot->AttachedSlot != nullptr && Slot->AttachedSlot->OwningPart->DistanceToRoot == -1)
-		{
-			Slot->AttachedSlot->OwningPart->PropagateDistanceUpdate(Distance + 1);
-		}
-	}	
-}
-
-void AStructurePart::TickArmies()
-{
-	// Remove depleted armies
-	for(int i = Armies.Num() - 1; i >= 0; i--)
-	{
-		if(Armies[i]->Count <= 0)
-		{
-			Armies.RemoveAt(i);
-		}
-	}
-	
-	// Tabulate armies on both sides
-	TArray<UArmy*> DefenderArmies;
-	TArray<UArmy*> AttackerArmies;
-
-	// Calculate strengths based on attacker attack and defender defense
-	double DefenderStrength = 0;
-	double AttackerStrength = 0;
-
-	for(UArmy* Army : Armies)
-	{
-		Army->BuffMultiplier = 1;
-		const double Relation = Army->OwningFaction->GetRelation(OwningStructure->OwningFaction);
-		if(Relation == 1)
-		{
-			DefenderArmies.Add(Army);
-			DefenderStrength += Army->Defense * Army->Count;
-		}
-		else if (Relation == -1)
-		{
-			AttackerArmies.Add(Army);
-			AttackerStrength += Army->Attack * Army->Count;
-		}
-	}
-
-	if(DefenderArmies.Num() == 0)
-	{
-		// Garrison defeated
-
-		ControlledBy = AttackerArmies[0]->OwningFaction;
-
-		if(this == OwningStructure->GetRootPart())
-		{
-			OwningStructure->OwningFaction = ControlledBy;
-			// todo process ai changes
-			// Do not send attacker armies because they are now the defenders
-		}
-		else
-		{
-			// Send attacker armies to the connected part that is closest to the root part
-			if(PartSlots.Num() > 0)
-			{
-				AStructurePart* Target = PartSlots[0]->AttachedSlot->OwningPart;
-				int32 MinDistance = Target->DistanceToRoot;
-				for(int i = 1; i < PartSlots.Num(); i++)
-				{
-					AStructurePart* Part = PartSlots[i]->AttachedSlot->OwningPart;
-					if(Part->DistanceToRoot < MinDistance)
-					{
-						Target = Part;
-						MinDistance = Part->DistanceToRoot;
-					}
-				}
-				// Armies are added to a list to be added after all parts have had their army ticks
-				// This is to avoid timing issues where results of ticks can change depending on whether neighboring parts have sent attacker armies already
-				for(UArmy* Army : AttackerArmies)
-				{
-					Target->ArrivingArmies.Add(Army);
-					Armies.Remove(Army);
-				}
-			}
-		}
-	}
-	else
-	{
-		if(AttackerArmies.Num() != 0)
-		{
-			// Give 1.5x effectiveness buff to the side with the greater strength
-			const bool DefenderHasAdvantage = DefenderStrength >= AttackerStrength;
-
-			constexpr double BuffValue = 1.5;
-			const double DefenderBuff = DefenderHasAdvantage ? BuffValue : 1;
-			const double AttackerBuff = !DefenderHasAdvantage ? BuffValue : 1;
-
-			// Pre set defender army buffs so subsequent damage calculations are correct
-			for(UArmy* Army : DefenderArmies)
-			{
-				Army->BuffMultiplier = DefenderBuff;
-			}
-
-			// Each attacker army deals attack and takes counterattack
-			for(UArmy* Army : AttackerArmies)
-			{
-				Army->BuffMultiplier = AttackerBuff;
-				Army->AttackTarget(Army->GetPreferredTarget(DefenderArmies));
-			}
-
-			// Defender armies attack second
-			for(UArmy* Army : DefenderArmies)
-			{
-				if(Army->Count > 0)
-				{
-					Army->AttackTarget(Army->GetPreferredTarget(AttackerArmies));
-				}
-			}
-		}
-	}
-}
-
-void AStructurePart::ProcessArrivingArmies()
-{
-	for(UArmy* Army : ArrivingArmies)
-	{
-		Armies.Add(Army);
-	}
-
-	ArrivingArmies.Empty();
 }
 
 bool AStructurePart::IsRootPart() const
@@ -281,6 +73,17 @@ TArray<UStructurePartSlot*> AStructurePart::GetSlots()
 	return Slots;
 }
 
+TArray<UStructurePartSlot*> AStructurePart::GetCompatibleSlots(const UStructurePartSlot* Other)
+{
+	TArray<UStructurePartSlot*> Ret;
+	Ret.Reserve(Slots.Num());
+	for(UStructurePartSlot* Slot : Slots)
+	{
+		if(Slot->CanAttach(Other)) Ret.Add(Slot);
+	}
+	return Ret;
+}
+
 UStructurePartSlot* AStructurePart::GetSlot(const FText InName)
 {
 	for(UStructurePartSlot* Slot : Slots)
@@ -294,12 +97,212 @@ UStructurePartSlot* AStructurePart::GetSlot(const FText InName)
 	return nullptr;
 }
 
-TArray<UStructurePartSlot*> AStructurePart::GetCompatibleSlots(const UStructurePartSlot* Other)
+void AStructurePart::AttachSlots()
 {
-	TArray<UStructurePartSlot*> Ret;
 	for(UStructurePartSlot* Slot : Slots)
+	{
+		if(Slot->AttachedSlot == nullptr)
+		{
+			for(AStructurePart* Part : OwningStructure->GetParts())
+			{
+				if(Part != this)
+				{
+					for(UStructurePartSlot* Other : Part->Slots)
+					{
+						if((Other->GetComponentLocation() - Slot->GetComponentLocation()).IsNearlyZero(1))
+						{
+							Slot->TryAttach(Other);
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+void AStructurePart::DetachSlots()
+{
+	if(OwningStructure->GetRootPart() != this)
+	{
+		for(UStructurePartSlot* Slot : Slots)
+		{
+			Slot->TryDetach();
+		}
+		OwningStructure->UpdateLayoutInformation();
+	}
+}
+
+void AStructurePart::UpdateDistance(const int32 Distance)
+{
+	RootDistance = Distance;
+	for(const UStructurePartSlot* Slot : Slots)
+	{
+		if(Slot->AttachedSlot != nullptr && Slot->AttachedSlot->OwningPart->RootDistance == -1)
+		{
+			Slot->AttachedSlot->OwningPart->UpdateDistance(Distance + 1);
+		}
+	}
+}
+
+void AStructurePart::TickCombatants()
+{
+	// Remove depleted armies
+	for(int i = Combatants.Num() - 1; i >= 0; i--)
+	{
+		if(Combatants[i]->Count <= 0)
+		{
+			Combatants.RemoveAt(i);
+		}
+	}
+	
+	// Tabulate combatants on both sides
+	TArray<UCombatant*> DefenderCombatants;
+	TArray<UCombatant*> AttackerCombatants;
+
+	// Calculate strengths based on attacker attack and defender defense
+	double DefenderStrength = 0;
+	double AttackerStrength = 0;
+
+	for(UCombatant* Combatant : Combatants)
+	{
+		Combatant->BuffMultiplier = 1;
+		const double Relation = Combatant->OwningFaction->GetRelation(OwningStructure->OwningFaction);
+		if(Relation == 1)
+		{
+			DefenderCombatants.Add(Combatant);
+			DefenderStrength += Combatant->Defense * Combatant->Count;
+		}
+		else if (Relation == -1)
+		{
+			AttackerCombatants.Add(Combatant);
+			AttackerStrength += Combatant->Attack * Combatant->Count;
+		}
+	}
+
+	if(DefenderCombatants.Num() == 0)
+	{
+		// Garrison defeated
+
+		if(AttackerCombatants.Num() > 0)
+		{
+			OwningFaction = AttackerCombatants[0]->OwningFaction;
+
+			if(this == OwningStructure->GetRootPart())
+			{
+				OwningStructure->OwningFaction = OwningFaction;
+				// todo process ai changes
+				// Do not send attacker combatants because they are now the defenders
+			}
+			else
+			{
+				// Send attacker combatants to the connected part that is closest to the root part
+				if(Slots.Num() > 0)
+				{
+					AStructurePart* Target = Slots[0]->AttachedSlot->OwningPart;
+					int32 MinDistance = Target->RootDistance;
+					for(int i = 1; i < Slots.Num(); i++)
+					{
+						AStructurePart* Part = Slots[i]->AttachedSlot->OwningPart;
+						if(Part->RootDistance < MinDistance)
+						{
+							Target = Part;
+							MinDistance = Part->RootDistance;
+						}
+					}
+					// Combatants are added to a list to be added after all parts have had their combat ticks
+					// This is to avoid timing issues where results of ticks can change depending on whether neighboring parts have sent attacker combatants already
+					for(UCombatant* Combatant : AttackerCombatants)
+					{
+						Target->QueuedCombatants.Add(Combatant);
+						Combatants.Remove(Combatant);
+					}
+				}
+			}
+		}
+	}
+	else
+	{
+		if(AttackerCombatants.Num() != 0)
+		{
+			// Give 1.5x effectiveness buff to the side with the greater strength
+			const bool DefenderHasAdvantage = DefenderStrength >= AttackerStrength;
+
+			constexpr double BuffValue = 1.5;
+			const double DefenderBuff = DefenderHasAdvantage ? BuffValue : 1;
+			const double AttackerBuff = !DefenderHasAdvantage ? BuffValue : 1;
+
+			// Pre set defender army buffs so subsequent damage calculations are correct
+			for(UCombatant* Combatant : DefenderCombatants)
+			{
+				Combatant->BuffMultiplier = DefenderBuff;
+			}
+
+			// Each attacker army deals attack and takes counterattack
+			for(UCombatant* Combatant : AttackerCombatants)
+			{
+				Combatant->BuffMultiplier = AttackerBuff;
+				Combatant->AttackTarget(Combatant->GetPreferredTarget(DefenderCombatants));
+			}
+
+			// Defender armies attack second
+			for(UCombatant* Combatant : DefenderCombatants)
+			{
+				if(Combatant->Count > 0)
+				{
+					Combatant->AttackTarget(Combatant->GetPreferredTarget(AttackerCombatants));
+				}
+			}
+		}
+	}
+}
+
+void AStructurePart::DequeueCombatants()
+{
+	for(UCombatant* Combatant : QueuedCombatants)
+	{
+		Combatants.Add(Combatant);
+	}
+	QueuedCombatants.Empty();
+}
+
+TArray<const UStructurePartSlot*> AStructurePart::GetSlots_CDO(TSubclassOf<AStructurePart> PartClass)
+{
+	const UBlueprintGeneratedClass* BPClass = Cast<UBlueprintGeneratedClass>(PartClass);
+	if(BPClass == nullptr) return TArray<const UStructurePartSlot*>();
+
+	TArray<const UStructurePartSlot*> Slots;
+	TArray<USCS_Node*> Nodes = BPClass->SimpleConstructionScript->GetAllNodes();
+	for (const USCS_Node* Node : Nodes)
+	{
+		if (Node->ComponentClass == UStructurePartSlot::StaticClass())
+		{
+			Slots.Add(Cast<UStructurePartSlot>(Node->ComponentTemplate));
+		}
+	}
+	return Slots;
+}
+
+TArray<const UStructurePartSlot*> AStructurePart::GetCompatibleSlots_CDO(TSubclassOf<AStructurePart> PartClass, const UStructurePartSlot* Other)
+{
+	TArray<const UStructurePartSlot*> CDOSlots = GetSlots_CDO(PartClass);
+	TArray<const UStructurePartSlot*> Ret;
+	Ret.Reserve(CDOSlots.Num());
+	for(const UStructurePartSlot* Slot : CDOSlots)
 	{
 		if(Slot->CanAttach(Other)) Ret.Add(Slot);
 	}
 	return Ret;
+}
+
+const UStructurePartSlot* AStructurePart::GetSlot_CDO(TSubclassOf<AStructurePart> PartClass, FText InName)
+{
+	for(const UStructurePartSlot* Slot : GetSlots_CDO(PartClass))
+	{
+		if(Slot->SlotName.EqualTo(InName))
+		{
+			return Slot;
+		}
+	}
+	
+	return nullptr;
 }

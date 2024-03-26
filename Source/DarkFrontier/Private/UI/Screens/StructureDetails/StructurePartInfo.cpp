@@ -20,9 +20,9 @@ void UStructurePartInfo::SetTarget(AStructurePart* InTargetPart)
 	float Hull = 0;
 	float Upkeep = 0;
 
-	if(TargetPart->AttributeEffect != nullptr)
+	if(TargetPart->PassiveEffect != nullptr)
 	{
-		UGameplayEffect* Effect = TargetPart->AttributeEffect->GetDefaultObject<UGameplayEffect>();
+		UGameplayEffect* Effect = TargetPart->PassiveEffect->GetDefaultObject<UGameplayEffect>();
 		for(FGameplayModifierInfo Modifier : Effect->Modifiers)
 		{
 			float Magnitude;
@@ -38,7 +38,7 @@ void UStructurePartInfo::SetTarget(AStructurePart* InTargetPart)
 	UpkeepField->SetContentFromFloat(Upkeep);
 
 	SlotCardList->ClearListItems();
-	for(UStructurePartSlot* PartSlot : TargetPart->PartSlots)
+	for(UStructurePartSlot* PartSlot : TargetPart->Slots)
 	{
 		SlotCardList->AddItem(PartSlot);
 	}

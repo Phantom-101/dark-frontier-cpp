@@ -11,7 +11,7 @@ void UStructurePartSelector::PopulateOptions(TArray<TSubclassOf<AStructurePart>>
 	OptionList->ClearListItems();
 	for(const TSubclassOf<AStructurePart> Option : InOptions)
 	{
-		if(AStructurePart::GetCompatiblePartSlots_CDO(Option, InSlot).Num() > 0)
+		if(AStructurePart::GetCompatibleSlots_CDO(Option, InSlot).Num() > 0)
 		{
 			UStructurePartOptionObject* Object = NewObject<UStructurePartOptionObject>();
 			Object->Init(Option);

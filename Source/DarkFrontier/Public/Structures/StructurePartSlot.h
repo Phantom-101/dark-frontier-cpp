@@ -15,13 +15,13 @@ public:
 
 	UStructurePartSlot();
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category="Setup")
 	FText SlotName;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category="Setup")
 	TObjectPtr<class UStructurePartSlotType> SlotType;
 
-	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Instanced)
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Instanced, Category="Setup")
 	TObjectPtr<class UStructurePartSlotFilter> Filter;
 
 	UPROPERTY(BlueprintReadOnly)
@@ -40,10 +40,10 @@ public:
 	bool CanAttach(const UStructurePartSlot* Other) const;
 
 	UFUNCTION(BlueprintCallable)
-	void Attach(UStructurePartSlot* NewSlot);
+	bool TryAttach(UStructurePartSlot* NewSlot);
 	
 	UFUNCTION(BlueprintCallable)
-	void Detach();
+	bool TryDetach();
 
 protected:
 

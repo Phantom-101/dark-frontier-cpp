@@ -9,7 +9,7 @@
 void UStructurePartSlotSelector::PopulateOptions(const TSubclassOf<AStructurePart> InClass, const UStructurePartSlot* InSlot) const
 {
 	OptionList->ClearListItems();
-	for(const UStructurePartSlot* Option : AStructurePart::GetCompatiblePartSlots_CDO(InClass, InSlot))
+	for(const UStructurePartSlot* Option : AStructurePart::GetCompatibleSlots_CDO(InClass, InSlot))
 	{
 		UStructurePartSlotOptionObject* Object = NewObject<UStructurePartSlotOptionObject>();
 		Object->Init(Option->SlotName);

@@ -22,11 +22,11 @@ AStructurePart* UStructurePartAuthoring::GetAuthoredPart()
 		
 		if(TargetPart == nullptr)
 		{
-			Cast<AStructure>(GetOwner())->InitRootPart(AuthoredPart);
+			Cast<AStructure>(GetOwner())->TryInit(AuthoredPart);
 		}
 		else
 		{
-			AuthoredPart->GetSlot(UseSlot)->Attach(TargetPart->GetAuthoredPart()->GetSlot(TargetSlot));
+			AuthoredPart->GetSlot(UseSlot)->TryAttach(TargetPart->GetAuthoredPart()->GetSlot(TargetSlot));
 		}
 
 		DestroyComponent();

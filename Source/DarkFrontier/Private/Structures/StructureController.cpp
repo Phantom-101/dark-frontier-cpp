@@ -1,7 +1,9 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "Structures/StructureController.h"
+#include "AbilitySystemComponent.h"
 #include "EnhancedInputComponent.h"
+#include "GameFramework/SpringArmComponent.h"
 #include "Input/CommonUIActionRouterBase.h"
 #include "Structures/Structure.h"
 #include "UI/StructureBuilder.h"
@@ -44,41 +46,22 @@ void AStructureController::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
 
-	/*
-	if(const ULocalPlayer* LocalPlayer = Cast<ULocalPlayer>(Player))
-    {
-    	if (const UCommonUIActionRouterBase* Router = LocalPlayer->GetSubsystem<UCommonUIActionRouterBase>())
-    	{
-    		if (Router)
-    		{
-    			Router->GetActiveInputMode();
-    			GEngine->AddOnScreenDebugMessage(-1, 10, FColor::White, FString::Printf(TEXT("current input mode: %s"), LexToString(Router->GetActiveInputMode())));
-			    const EMouseCaptureMode CaptureMode = Router->GetActiveMouseCaptureMode();
-    			FString Str;
-    			switch (CaptureMode)
-    			{
-    			case EMouseCaptureMode::NoCapture: Str = "NoCapture"; break;
-			    case EMouseCaptureMode::CapturePermanently: Str = "CapturePermanently"; break;
-			    case EMouseCaptureMode::CapturePermanently_IncludingInitialMouseDown: Str = "CapturePermanently_IncludingInitialMouseDown"; break;
-			    case EMouseCaptureMode::CaptureDuringMouseDown: Str = "CaptureDuringMouseDown"; break;
-			    case EMouseCaptureMode::CaptureDuringRightMouseDown: Str = "CaptureDuringRightMouseDown"; break;
-			    default: ;
-			    }
-    			GEngine->AddOnScreenDebugMessage(-1, 10, FColor::White, FString::Printf(TEXT("current capture mode: %s"), *Str));
-    		}
-    	}
-    }
-    */
+	StructurePawn->MoveInput = MoveInput;
+	StructurePawn->RotateInput = (RotateAddInput + RotateOverrideInput).GetClampedToMaxSize(1);
+	
+	UpdateCamera();
 }
 
 void AStructureController::OnPossess(APawn* InPawn)
 {
 	Super::OnPossess(InPawn);
 
-	StructurePawn = Cast<AStructure>(GetPawn());
+	StructurePawn = Cast<AStructure>(InPawn);
 
 	if(StructurePawn)
 	{
+		StructurePawn->GetAbilitySystemComponent()->InitAbilityActorInfo(StructurePawn, StructurePawn);
+		
 		StructurePawn->OnLayoutChanged.BindUObject<AStructureController>(this, &AStructureController::PropagateLayoutChange);
 		StructurePawn->OnActionsChanged.BindUObject<AStructureController>(this, &AStructureController::PropagateActionsChange);
 	}
@@ -97,44 +80,81 @@ void AStructureController::OnUnPossess()
 	StructurePawn = nullptr;
 }
 
+void AStructureController::UpdateCamera()
+{
+	if(StructurePawn == nullptr) return;
+	
+	if(LookTarget == nullptr)
+	{
+		LookTarget = StructurePawn;
+	}
+	
+	FBoxSphereBounds Bounds;
+	if(const AStructure* TargetStructure = Cast<AStructure>(LookTarget))
+	{
+		Bounds = GetStructureViewBounds(TargetStructure, true);
+	}
+	else
+	{
+		Bounds = GetViewBounds(LookTarget, true);
+	}
+	
+	StructurePawn->SpringArm->SetRelativeLocation(StructurePawn->GetTransform().InverseTransformPosition(LookTarget->GetActorLocation()));
+	StructurePawn->SpringArm->TargetArmLength = Bounds.SphereRadius * 2 * ZoomLevel;
+
+	StructurePawn->SpringArm->SetWorldRotation(LookTarget->GetActorRotation());
+	StructurePawn->SpringArm->AddLocalRotation(FRotator(LookRotation.Y, LookRotation.X, 0));
+}
+
+FBoxSphereBounds AStructureController::GetViewBounds(const AActor* Actor, const bool OnlyCollidingComponents)
+{
+	FBoxSphereBounds Bounds;
+	Actor->ForEachComponent<UPrimitiveComponent>(false, [&](const UPrimitiveComponent* InPrimComp)
+	{
+		if (InPrimComp->IsRegistered() && (!OnlyCollidingComponents || InPrimComp->IsCollisionEnabled()))
+		{
+			Bounds = Bounds + InPrimComp->Bounds;
+		}
+	});
+	return Bounds;
+}
+
+FBoxSphereBounds AStructureController::GetStructureViewBounds(const AStructure* Structure, const bool OnlyCollidingComponents)
+{
+	FBoxSphereBounds Bounds;
+	TArray<AActor*> AttachedActors;
+	Structure->GetAttachedActors(AttachedActors);
+	for (const AActor* AttachedActor : AttachedActors)
+	{
+		Bounds = Bounds + GetViewBounds(AttachedActor, OnlyCollidingComponents);
+	}
+	return Bounds;
+}
+
 void AStructureController::Move(const FInputActionInstance& Instance)
 {
-	if(StructurePawn)
-	{
-		StructurePawn->Move(Instance.GetValue().Get<FVector>());
-	}
+	MoveInput = Instance.GetValue().Get<FVector>().GetClampedToMaxSize(1);
 }
 
 void AStructureController::RotateAdd(const FInputActionInstance& Instance)
 {
-	if(StructurePawn && !IsCursorUnlocked)
-	{
-		StructurePawn->RotateAdd(Instance.GetValue().Get<FVector>());
-	}
+	RotateAddInput = (RotateAddInput + Instance.GetValue().Get<FVector>()).GetClampedToMaxSize(1);
 }
 
 void AStructureController::RotateOverride(const FInputActionInstance& Instance)
 {
-	if(StructurePawn)
-	{
-		StructurePawn->RotateOverride(Instance.GetValue().Get<FVector>());
-	}
+	RotateOverrideInput = Instance.GetValue().Get<FVector>().GetClampedToMaxSize(1);
 }
 
 void AStructureController::Look(const FInputActionInstance& Instance)
 {
-	if(StructurePawn)
-	{
-		StructurePawn->Look(Instance.GetValue().Get<FVector2D>());
-	}
+	const FVector Value = Instance.GetValue().Get<FVector>();
+	LookRotation = FVector2D(FMath::Fmod(LookRotation.X + Value.X, 360), FMath::Clamp(LookRotation.Y + Value.Y, -90, 90));
 }
 
 void AStructureController::Zoom(const FInputActionInstance& Instance)
 {
-	if(StructurePawn)
-	{
-		StructurePawn->Zoom(Instance.GetValue().Get<float>());
-	}
+	ZoomLevel = FMath::Clamp(ZoomLevel + Instance.GetValue().Get<float>(), 1.5, 10);
 }
 
 void AStructureController::ToggleUnlock(const FInputActionInstance& Instance)
