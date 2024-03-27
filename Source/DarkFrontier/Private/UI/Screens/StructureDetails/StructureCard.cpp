@@ -1,7 +1,6 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "UI/Screens/StructureDetails/StructureCard.h"
-
 #include "CommonButtonBase.h"
 #include "CommonTextBlock.h"
 #include "Components/ListViewBase.h"

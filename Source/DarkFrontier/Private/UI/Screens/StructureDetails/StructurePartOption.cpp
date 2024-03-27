@@ -19,7 +19,7 @@ void UStructurePartOption::NativeOnListItemObjectSet(UObject* ListItemObject)
 	
 	CardButton->OnClicked().Clear();
 	CardButton->OnClicked().AddUObject<UStructurePartOption>(this, &UStructurePartOption::OnOptionClicked);
-	TypeText->SetText(PartClass->GetDefaultObject<AStructurePart>()->TypeName);
+	TypeText->SetText(PartClass->GetDefaultObject<AStructurePart>()->GetTypeName());
 }
 
 void UStructurePartOption::OnOptionClicked() const

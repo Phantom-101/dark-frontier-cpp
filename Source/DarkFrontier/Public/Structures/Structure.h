@@ -29,12 +29,8 @@ protected:
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category="Components")
 	TObjectPtr<UStaticMeshComponent> StaticMesh;
 
-public:
-
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category="Components")
 	TObjectPtr<class USpringArmComponent> SpringArm;
-
-protected:
 
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category="Components")
 	TObjectPtr<class UCameraComponent> Camera;
@@ -54,8 +50,6 @@ protected:
 	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly, Category="Layout")
 	int32 NextPartId;
 
-public:
-
 	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly, Category="Input")
 	FVector MoveInput;
 
@@ -64,6 +58,8 @@ public:
 
 	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly, Category="Combat")
 	TObjectPtr<class AFaction> OwningFaction;
+
+public:
 
 	FStructureStateChanged OnLayoutChanged;
 
@@ -110,6 +106,9 @@ public:
 	float GetUpkeep() const;
 
 	UFUNCTION(BlueprintCallable, Category="Gameplay")
+	bool IsDetecting(AStructure* Other) const;
+
+	UFUNCTION(BlueprintCallable, Category="Gameplay")
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 
 	UFUNCTION(BlueprintCallable, Category="Gameplay")
@@ -117,9 +116,21 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category="Gameplay")
 	struct FGameplayAbilitySpecHandle GrantAbility(TSubclassOf<class UStructureGameplayAbility> AbilityClass);
+
+	UFUNCTION(BlueprintCallable, Category="Input")
+	void SetMoveInput(FVector InInput);
+
+	UFUNCTION(BlueprintCallable, Category="Input")
+	void SetRotateInput(FVector InInput);
 	
-	UFUNCTION(BlueprintCallable, Category="Mechanics")
-	bool IsDetecting(AStructure* Other) const;
+	UFUNCTION(BlueprintCallable, Category="Combat")
+	AFaction* GetOwningFaction() const;
+
+	UFUNCTION(BlueprintCallable, Category="Combat")
+	void SetOwningFaction(AFaction* InFaction);
+	
+	UFUNCTION(BlueprintCallable, Category="Camera")
+	USpringArmComponent* GetCameraSpringArm() const;
 
 protected:
 	

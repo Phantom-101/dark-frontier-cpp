@@ -29,6 +29,16 @@ void AStructurePart::Tick(float DeltaTime)
 	// stuff here
 }
 
+FText AStructurePart::GetTypeName() const
+{
+	return TypeName;
+}
+
+TSubclassOf<UGameplayEffect> AStructurePart::GetPassiveEffect() const
+{
+	return PassiveEffect;
+}
+
 bool AStructurePart::TryInit(AStructure* NewOwner)
 {
 	if(OwningStructure != nullptr) return false;
@@ -36,7 +46,7 @@ bool AStructurePart::TryInit(AStructure* NewOwner)
 	OwningStructure = NewOwner;
 	OwningStructure->RegisterPart(this);
 	AttachToActor(OwningStructure, FAttachmentTransformRules(EAttachmentRule::KeepWorld, true));
-	OwningFaction = OwningStructure->OwningFaction;
+	OwningFaction = OwningStructure->GetOwningFaction();
 	
 	return true;
 }
@@ -55,15 +65,42 @@ void AStructurePart::OnUnRegistered()
 	}
 }
 
+AStructure* AStructurePart::GetOwningStructure() const
+{
+	return OwningStructure;
+}
+
 bool AStructurePart::IsRootPart() const
 {
 	return OwningStructure != nullptr && OwningStructure->GetRootPart() == this;
 }
 
-bool AStructurePart::IsActive()
+bool AStructurePart::IsActiveInLayout()
 {
 	// Add hp to structure parts
 	return true;
+}
+
+int AStructurePart::GetPartId() const
+{
+	return PartId;
+}
+
+bool AStructurePart::TryInitPartId(const int InId)
+{
+	if(PartId != -1) return false;
+	PartId = InId;
+	return true;
+}
+
+int AStructurePart::GetRootDistance() const
+{
+	return RootDistance;
+}
+
+void AStructurePart::ResetRootDistance()
+{
+	RootDistance = -1;
 }
 
 TArray<UStructurePartSlot*> AStructurePart::GetSlots()
@@ -86,7 +123,7 @@ UStructurePartSlot* AStructurePart::GetSlot(const FText InName)
 {
 	for(UStructurePartSlot* Slot : Slots)
 	{
-		if(Slot->SlotName.EqualTo(InName))
+		if(Slot->GetSlotName().EqualTo(InName))
 		{
 			return Slot;
 		}
@@ -99,7 +136,7 @@ void AStructurePart::AttachSlots()
 {
 	for(UStructurePartSlot* Slot : Slots)
 	{
-		if(Slot->AttachedSlot == nullptr)
+		if(Slot->GetAttachedSlot() == nullptr)
 		{
 			for(AStructurePart* Part : OwningStructure->GetParts())
 			{
@@ -135,9 +172,9 @@ void AStructurePart::UpdateDistance(const int32 Distance)
 	RootDistance = Distance;
 	for(const UStructurePartSlot* Slot : Slots)
 	{
-		if(Slot->AttachedSlot != nullptr && Slot->AttachedSlot->OwningPart->RootDistance == -1)
+		if(Slot->GetAttachedSlot() != nullptr && Slot->GetAttachedSlot()->GetOwningPart()->RootDistance == -1)
 		{
-			Slot->AttachedSlot->OwningPart->UpdateDistance(Distance + 1);
+			Slot->GetAttachedSlot()->GetOwningPart()->UpdateDistance(Distance + 1);
 		}
 	}
 }
@@ -164,7 +201,7 @@ void AStructurePart::TickCombatants()
 	for(UCombatant* Combatant : Combatants)
 	{
 		Combatant->BuffMultiplier = 1;
-		const double Relation = Combatant->OwningFaction->GetRelation(OwningStructure->OwningFaction);
+		const double Relation = Combatant->OwningFaction->GetRelation(OwningStructure->GetOwningFaction());
 		if(Relation == 1)
 		{
 			DefenderCombatants.Add(Combatant);
@@ -187,7 +224,7 @@ void AStructurePart::TickCombatants()
 
 			if(this == OwningStructure->GetRootPart())
 			{
-				OwningStructure->OwningFaction = OwningFaction;
+				OwningStructure->SetOwningFaction(OwningFaction);
 				// todo process ai changes
 				// Do not send attacker combatants because they are now the defenders
 			}
@@ -196,11 +233,11 @@ void AStructurePart::TickCombatants()
 				// Send attacker combatants to the connected part that is closest to the root part
 				if(Slots.Num() > 0)
 				{
-					AStructurePart* Target = Slots[0]->AttachedSlot->OwningPart;
+					AStructurePart* Target = Slots[0]->GetAttachedSlot()->GetOwningPart();
 					int32 MinDistance = Target->RootDistance;
 					for(int i = 1; i < Slots.Num(); i++)
 					{
-						AStructurePart* Part = Slots[i]->AttachedSlot->OwningPart;
+						AStructurePart* Part = Slots[i]->GetAttachedSlot()->GetOwningPart();
 						if(Part->RootDistance < MinDistance)
 						{
 							Target = Part;
@@ -296,7 +333,7 @@ const UStructurePartSlot* AStructurePart::GetSlot_CDO(TSubclassOf<AStructurePart
 {
 	for(const UStructurePartSlot* Slot : GetSlots_CDO(PartClass))
 	{
-		if(Slot->SlotName.EqualTo(InName))
+		if(Slot->GetSlotName().EqualTo(InName))
 		{
 			return Slot;
 		}

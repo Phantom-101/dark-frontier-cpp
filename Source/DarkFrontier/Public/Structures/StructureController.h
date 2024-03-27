@@ -55,8 +55,6 @@ protected:
 	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly, Category="Controller")
 	TObjectPtr<class AStructure> StructurePawn;
 
-public:
-	
 	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly, Category="Input")
 	FVector MoveInput;
 
@@ -68,8 +66,6 @@ public:
 
 	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly, Category="Input")
 	bool IsCursorUnlocked = false;
-
-protected:
 
 	UPROPERTY(BlueprintReadOnly, EditInstanceOnly, Category="Camera")
 	TObjectPtr<AActor> LookTarget;
@@ -113,6 +109,13 @@ protected:
 	UFUNCTION(BlueprintCallable, Category="Camera")
 	FBoxSphereBounds GetStructureViewBounds(const AStructure* Structure, const bool OnlyCollidingComponents);
 
+public:
+	
+	UFUNCTION(BlueprintCallable, Category="UI")
+	FVector GetTurnIndicatorOffset() const;
+
+protected:
+	
 	UFUNCTION()
 	void Move(const FInputActionInstance& Instance);
 

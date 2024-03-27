@@ -21,9 +21,6 @@ protected:
 	TObjectPtr<class UCommonButtonBase> CardButton;
 
 	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
-	TObjectPtr<class UCommonBorder> SideColor;
-
-	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
 	TObjectPtr<class UCommonTextBlock> NameText;
 	
 	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))

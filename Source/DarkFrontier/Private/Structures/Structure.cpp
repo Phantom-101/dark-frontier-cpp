@@ -68,7 +68,7 @@ void AStructure::PossessedBy(AController* NewController)
 bool AStructure::TryInit(AStructurePart* NewRoot)
 {
 	if(RootPart != nullptr) return false;
-	if(NewRoot->OwningStructure != nullptr) return false;
+	if(NewRoot->GetOwningStructure() != nullptr) return false;
 	
 	NewRoot->TryInit(this);
 	RootPart = NewRoot;
@@ -90,7 +90,7 @@ TArray<AStructurePart*> AStructure::GetParts()
 
 void AStructure::RegisterPart(AStructurePart* InPart)
 {
-	InPart->PartId = NextPartId;
+	InPart->TryInitPartId(NextPartId);
 	NextPartId++;
 	
 	Parts.Add(InPart);
@@ -147,11 +147,11 @@ void AStructure::UpdateLayoutInformation()
 	int CurrentIndex = 0;
 	while(CurrentIndex < NewParts.Num())
 	{
-		for(const UStructurePartSlot* Slot : NewParts[CurrentIndex]->Slots)
+		for(const UStructurePartSlot* Slot : NewParts[CurrentIndex]->GetSlots())
 		{
-			if(Slot->AttachedSlot != nullptr && !NewParts.Contains(Slot->AttachedSlot->OwningPart))
+			if(Slot->GetAttachedSlot() != nullptr && !NewParts.Contains(Slot->GetAttachedSlot()->GetOwningPart()))
 			{
-				NewParts.Add(Slot->AttachedSlot->OwningPart);
+				NewParts.Add(Slot->GetAttachedSlot()->GetOwningPart());
 			}
 		}
 		CurrentIndex++;
@@ -190,7 +190,7 @@ void AStructure::UpdateLayoutInformation()
 	// Update root distances
 	for(AStructurePart* Part : Parts)
 	{
-		Part->RootDistance = -1;
+		Part->ResetRootDistance();
 	}
 	RootPart->UpdateDistance(0);
 }
@@ -198,6 +198,11 @@ void AStructure::UpdateLayoutInformation()
 float AStructure::GetUpkeep() const
 {
 	return Attributes->GetUpkeep() / (Attributes->GetUpkeepReduction() + 1);
+}
+
+bool AStructure::IsDetecting(AStructure* Other) const
+{
+	return (GetActorLocation() - Other->GetActorLocation()).SquaredLength() <= Attributes->GetSensorStrength() * Other->Attributes->GetSignatureVisibility();
 }
 
 UAbilitySystemComponent* AStructure::GetAbilitySystemComponent() const
@@ -227,15 +232,35 @@ FGameplayAbilitySpecHandle AStructure::GrantAbility(TSubclassOf<UStructureGamepl
 {
 	if(HasAuthority() && AbilitySystemComponent && AbilityClass)
 	{
-		return AbilitySystemComponent->GiveAbility(FGameplayAbilitySpec(AbilityClass, 1, AbilityClass.GetDefaultObject()->InputID, this));
+		return AbilitySystemComponent->GiveAbility(FGameplayAbilitySpec(AbilityClass, 1, -1, this));
 	}
 
 	return FGameplayAbilitySpecHandle();
 }
 
-bool AStructure::IsDetecting(AStructure* Other) const
+void AStructure::SetMoveInput(const FVector InInput)
 {
-	return (GetActorLocation() - Other->GetActorLocation()).SquaredLength() <= Attributes->GetSensorStrength() * Other->Attributes->GetSignatureVisibility();
+	MoveInput = InInput.GetClampedToMaxSize(1);
+}
+
+void AStructure::SetRotateInput(const FVector InInput)
+{
+	RotateInput = InInput.GetClampedToMaxSize(1);
+}
+
+AFaction* AStructure::GetOwningFaction() const
+{
+	return OwningFaction;
+}
+
+void AStructure::SetOwningFaction(AFaction* InFaction)
+{
+	OwningFaction = InFaction;
+}
+
+USpringArmComponent* AStructure::GetCameraSpringArm() const
+{
+	return SpringArm;
 }
 
 FVector AStructure::CalculateImpulse(const FVector& RawVelocities, const FVector& RawInput, const float MaxSpeed, const float Accel, const float DeltaTime) const

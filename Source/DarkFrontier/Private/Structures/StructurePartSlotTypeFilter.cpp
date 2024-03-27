@@ -5,5 +5,5 @@
 
 bool UStructurePartSlotTypeFilter::IsCompatible(const UStructurePartSlot* Other)
 {
-	return CompatibleTypes.Contains(Other->SlotType);
+	return CompatibleTypes.Contains(Other->GetSlotType());
 }

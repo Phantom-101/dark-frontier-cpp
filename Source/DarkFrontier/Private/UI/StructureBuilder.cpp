@@ -82,7 +82,7 @@ void UStructureBuilder::AttachPartOfType(const TSubclassOf<AStructurePart> PartC
 	AStructurePart* Section = Cast<AStructurePart>(GetWorld()->SpawnActor(PartClass));
 	Section->GetSlot(SlotName)->TryAttach(SelectedPartSlot);
 	// Assume part layout invalidity is due to added section
-	if(!Section->OwningStructure->IsLayoutValid())
+	if(!Section->GetOwningStructure()->IsLayoutValid())
 	{
 		Section->DetachSlots();
 	}
@@ -92,7 +92,7 @@ void UStructureBuilder::AttachPartOfType(const TSubclassOf<AStructurePart> PartC
 
 void UStructureBuilder::RemoveAttachedPart(UStructurePartSlot* Target) const
 {
-	Target->AttachedSlot->OwningPart->DetachSlots();
+	Target->GetAttachedSlot()->GetOwningPart()->DetachSlots();
 	UpdateView();
 }
 

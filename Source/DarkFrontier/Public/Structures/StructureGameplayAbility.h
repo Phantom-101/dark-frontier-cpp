@@ -18,7 +18,22 @@ public:
 
 	UStructureGameplayAbility();
 
-	UPROPERTY(BlueprintReadOnly, EditAnywhere)
-	int32 InputID;
+protected:
+
+	UPROPERTY(EditDefaultsOnly, Category="Setup")
+	TObjectPtr<UTexture> Icon;
+
+	UPROPERTY(EditDefaultsOnly, Category="Setup")
+	FText Name;
+
+	UPROPERTY(EditDefaultsOnly, Category="Setup")
+	FText Description;
+	
+	UPROPERTY(EditDefaultsOnly, Category="Costs")
+	TMap<FGameplayTag, float> CostSetByCallerMagnitudes;
+
+	virtual bool CheckCost(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, FGameplayTagContainer* OptionalRelevantTags) const override;
+
+	virtual void ApplyCost(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo) const override;
 	
 };

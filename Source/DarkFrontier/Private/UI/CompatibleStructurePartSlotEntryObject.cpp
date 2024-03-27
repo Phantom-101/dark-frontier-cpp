@@ -6,6 +6,6 @@
 
 void UCompatibleStructurePartSlotEntryObject::Init(const UStructurePartSlot* PartSlot)
 {
-	PartClass = PartSlot->OwningPart->GetClass();
-	SlotName = PartSlot->SlotName;
+	PartClass = PartSlot->GetOwningPart()->GetClass();
+	SlotName = PartSlot->GetSlotName();
 }

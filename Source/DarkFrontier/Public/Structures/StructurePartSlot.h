@@ -15,6 +15,8 @@ public:
 
 	UStructurePartSlot();
 
+protected:
+
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category="Setup")
 	FText SlotName;
 
@@ -30,19 +32,32 @@ public:
 	UPROPERTY(BlueprintReadOnly)
 	TObjectPtr<UStructurePartSlot> AttachedSlot;
 
-protected:
-	
 	virtual void BeginPlay() override;
 
 public:
 
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintCallable, Category="Prototype")
+	FText GetSlotName() const;
+	
+	UFUNCTION(BlueprintCallable, Category="Prototype")
+	UStructurePartSlotType* GetSlotType() const;
+
+	UFUNCTION(BlueprintCallable, Category="Layout")
+	class AStructure* GetOwningStructure() const;
+
+	UFUNCTION(BlueprintCallable, Category="Layout")
+	AStructurePart* GetOwningPart() const;
+
+	UFUNCTION(BlueprintCallable, Category="Layout")
+	UStructurePartSlot* GetAttachedSlot() const;
+
+	UFUNCTION(BlueprintCallable, Category="Layout")
 	bool CanAttach(const UStructurePartSlot* Other) const;
 
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintCallable, Category="Layout")
 	bool TryAttach(UStructurePartSlot* NewSlot);
 	
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintCallable, Category="Layout")
 	bool TryDetach();
 
 protected:

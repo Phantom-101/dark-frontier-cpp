@@ -15,7 +15,33 @@ void UStructurePartSlot::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	OwningPart = Cast<AStructurePart>(GetOwner());
+	OwningPart = GetOwner<AStructurePart>();
+}
+
+FText UStructurePartSlot::GetSlotName() const
+{
+	return SlotName;
+}
+
+UStructurePartSlotType* UStructurePartSlot::GetSlotType() const
+{
+	return SlotType;
+}
+
+AStructure* UStructurePartSlot::GetOwningStructure() const
+{
+	checkf(OwningPart != nullptr, TEXT("Owning part should not be null"));
+	return OwningPart->GetOwningStructure();
+}
+
+AStructurePart* UStructurePartSlot::GetOwningPart() const
+{
+	return OwningPart;
+}
+
+UStructurePartSlot* UStructurePartSlot::GetAttachedSlot() const
+{
+	return AttachedSlot;
 }
 
 bool UStructurePartSlot::CanAttach(const UStructurePartSlot* Other) const
@@ -27,7 +53,7 @@ bool UStructurePartSlot::TryAttach(UStructurePartSlot* NewSlot)
 {
 	if(NewSlot == nullptr) return false; // New slot must be non-null
 	if(AttachedSlot != nullptr || NewSlot->AttachedSlot != nullptr) return false; // Both slots must be detached
-	if(OwningPart->OwningStructure == nullptr && NewSlot->OwningPart->OwningStructure == nullptr) return false; // At least one slot must be part of an existing structure
+	if(GetOwningStructure() == nullptr && NewSlot->GetOwningStructure() == nullptr) return false; // At least one slot must be part of an existing structure
 	if(!CanAttach(NewSlot)) return false;
 
 	AttachedSlot = NewSlot;
@@ -35,20 +61,20 @@ bool UStructurePartSlot::TryAttach(UStructurePartSlot* NewSlot)
 
 	MatchTransform(AttachedSlot);
 	
-	if(OwningPart->OwningStructure == nullptr)
+	if(GetOwningStructure() == nullptr)
 	{
 		// This part previously not attached
-		OwningPart->TryInit(AttachedSlot->OwningPart->OwningStructure);
+		OwningPart->TryInit(AttachedSlot->GetOwningStructure());
 		OwningPart->AttachSlots();
 	}
-	else if(AttachedSlot->OwningPart->OwningStructure == nullptr)
+	else if(AttachedSlot->GetOwningStructure() == nullptr)
 	{
 		// Other part previously not attached
-		AttachedSlot->OwningPart->TryInit(OwningPart->OwningStructure);
+		AttachedSlot->OwningPart->TryInit(GetOwningStructure());
 		AttachedSlot->OwningPart->AttachSlots();
 	}
 	
-	OwningPart->OwningStructure->UpdateLayoutInformation();
+	GetOwningStructure()->UpdateLayoutInformation();
 	return true;
 }
 
@@ -58,7 +84,7 @@ bool UStructurePartSlot::TryDetach()
 	
 	AttachedSlot->AttachedSlot = nullptr;
 	AttachedSlot = nullptr;
-	OwningPart->OwningStructure->UpdateLayoutInformation();
+	GetOwningStructure()->UpdateLayoutInformation();
 
 	return true;
 }
