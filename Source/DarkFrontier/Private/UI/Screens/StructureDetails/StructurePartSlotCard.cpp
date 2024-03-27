@@ -5,6 +5,7 @@
 #include "CommonTextBlock.h"
 #include "Components/ListViewBase.h"
 #include "Libraries/UIBlueprintLibrary.h"
+#include "Structures/StructurePart.h"
 #include "Structures/StructurePartSlot.h"
 #include "UI/Screens/StructureDetails/StructureDetails.h"
 
@@ -12,8 +13,6 @@ void UStructurePartSlotCard::NativeConstruct()
 {
 	Super::NativeConstruct();
 
-	CardButton->OnClicked().Clear();
-	CardButton->OnClicked().AddUObject<UStructurePartSlotCard>(this, &UStructurePartSlotCard::OnCardClicked);
 	AddButton->OnClicked().Clear();
 	AddButton->OnClicked().AddUObject<UStructurePartSlotCard>(this, &UStructurePartSlotCard::OnAddButtonClicked);
 }
@@ -31,26 +30,21 @@ void UStructurePartSlotCard::SetTarget(UStructurePartSlot* InTargetSlot)
 
 	if(TargetSlot == nullptr)
 	{
-		NameText->SetText(FText::FromString("None"));
+		TypeText->SetVisibility(ESlateVisibility::Collapsed);
+		NameText->SetText(FText::FromString("(None)"));
 	}
 	else
 	{
-		NameText->SetText(TargetSlot->GetSlotName());
-	}
-}
-
-void UStructurePartSlotCard::OnCardClicked() const
-{
-	if(TargetSlot != nullptr)
-	{
-		const UWidget* Widget = GetOwningListView();
-		if(Widget == nullptr)
+		TypeText->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+		NameText->SetText(FText::FromString(FString::Printf(TEXT("(%s)"), *TargetSlot->GetSlotName().ToString())));
+		if(InTargetSlot->GetAttachedSlot() == nullptr)
 		{
-			Widget = this;
+			TypeText->SetText(FText::FromString("None"));
 		}
-
-		UStructureDetails* Screen = UUIBlueprintLibrary::GetParentWidgetOfClass<UStructureDetails>(Widget);
-		Screen->Select(TargetSlot);
+		else
+		{
+			TypeText->SetText(InTargetSlot->GetAttachedSlot()->GetOwningPart()->GetTypeName());
+		}
 	}
 }
 
