@@ -46,8 +46,8 @@ void AStructureController::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
 
-	StructurePawn->MoveInput = MoveInput;
-	StructurePawn->RotateInput = (RotateAddInput + RotateOverrideInput).GetClampedToMaxSize(1);
+	StructurePawn->SetMoveInput(MoveInput);
+	StructurePawn->SetRotateInput(RotateAddInput + RotateOverrideInput);
 	
 	UpdateCamera();
 }
@@ -98,12 +98,14 @@ void AStructureController::UpdateCamera()
 	{
 		Bounds = GetViewBounds(LookTarget, true);
 	}
-	
-	StructurePawn->SpringArm->SetRelativeLocation(StructurePawn->GetTransform().InverseTransformPosition(LookTarget->GetActorLocation()));
-	StructurePawn->SpringArm->TargetArmLength = Bounds.SphereRadius * 2 * ZoomLevel;
 
-	StructurePawn->SpringArm->SetWorldRotation(LookTarget->GetActorRotation());
-	StructurePawn->SpringArm->AddLocalRotation(FRotator(LookRotation.Y, LookRotation.X, 0));
+	USpringArmComponent* SpringArm = StructurePawn->GetCameraSpringArm();
+	
+	SpringArm->SetRelativeLocation(StructurePawn->GetTransform().InverseTransformPosition(LookTarget->GetActorLocation()));
+	SpringArm->TargetArmLength = Bounds.SphereRadius * 2 * ZoomLevel;
+
+	SpringArm->SetWorldRotation(LookTarget->GetActorRotation());
+	SpringArm->AddLocalRotation(FRotator(LookRotation.Y, LookRotation.X, 0));
 }
 
 FBoxSphereBounds AStructureController::GetViewBounds(const AActor* Actor, const bool OnlyCollidingComponents)
@@ -129,6 +131,11 @@ FBoxSphereBounds AStructureController::GetStructureViewBounds(const AStructure* 
 		Bounds = Bounds + GetViewBounds(AttachedActor, OnlyCollidingComponents);
 	}
 	return Bounds;
+}
+
+FVector AStructureController::GetTurnIndicatorOffset() const
+{
+	return RotateAddInput;
 }
 
 void AStructureController::Move(const FInputActionInstance& Instance)

@@ -34,7 +34,7 @@ void UStructurePartCard::SetTarget(AStructurePart* InTargetPart)
 	}
 	else
 	{
-		TypeText->SetText(TargetPart->TypeName);
+		TypeText->SetText(TargetPart->GetTypeName());
 	}
 }
 

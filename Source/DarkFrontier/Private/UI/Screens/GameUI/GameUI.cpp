@@ -1,6 +1,6 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-#include "UI/GameUI.h"
+#include "UI/Screens/GameUI/GameUI.h"
 #include "AbilitySystemComponent.h"
 #include "ActiveGameplayEffectHandle.h"
 #include "CommonButtonBase.h"
@@ -29,7 +29,7 @@ void UGameUI::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 
 	if(const AStructureController* PlayerController = Cast<AStructureController>(GetWorld()->GetFirstPlayerController()))
 	{
-		const FVector ScaledRotateInput = PlayerController->RotateAddInput * 200;
+		const FVector ScaledRotateInput = PlayerController->GetTurnIndicatorOffset() * 200;
 		UWidgetLayoutLibrary::SlotAsCanvasSlot(TurnIndicator)->SetPosition(FVector2D(ScaledRotateInput.Z, ScaledRotateInput.Y));
 	}
 

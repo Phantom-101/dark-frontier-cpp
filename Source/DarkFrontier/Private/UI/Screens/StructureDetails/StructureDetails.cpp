@@ -81,7 +81,7 @@ void UStructureDetails::Edit(const FText& InName)
 	AStructurePart* Section = Cast<AStructurePart>(GetWorld()->SpawnActor(EditClass));
 	Section->GetSlot(InName)->TryAttach(EditSlot);
 	// Assume part layout invalidity is due to added section
-	if(!Section->OwningStructure->IsLayoutValid())
+	if(!Section->GetOwningStructure()->IsLayoutValid())
 	{
 		Section->DetachSlots();
 	}

@@ -14,15 +14,15 @@ void UStructurePartInfo::SetTarget(AStructurePart* InTargetPart)
 {
 	TargetPart = InTargetPart;
 
-	TypeText->SetText(TargetPart->TypeName);
-	StructureCard->SetTarget(TargetPart->OwningStructure);
+	TypeText->SetText(TargetPart->GetTypeName());
+	StructureCard->SetTarget(TargetPart->GetOwningStructure());
 	
 	float Hull = 0;
 	float Upkeep = 0;
 
-	if(TargetPart->PassiveEffect != nullptr)
+	if(TargetPart->GetPassiveEffect() != nullptr)
 	{
-		UGameplayEffect* Effect = TargetPart->PassiveEffect->GetDefaultObject<UGameplayEffect>();
+		UGameplayEffect* Effect = TargetPart->GetPassiveEffect()->GetDefaultObject<UGameplayEffect>();
 		for(FGameplayModifierInfo Modifier : Effect->Modifiers)
 		{
 			float Magnitude;
@@ -38,7 +38,7 @@ void UStructurePartInfo::SetTarget(AStructurePart* InTargetPart)
 	UpkeepField->SetContentFromFloat(Upkeep);
 
 	SlotCardList->ClearListItems();
-	for(UStructurePartSlot* PartSlot : TargetPart->Slots)
+	for(UStructurePartSlot* PartSlot : TargetPart->GetSlots())
 	{
 		SlotCardList->AddItem(PartSlot);
 	}

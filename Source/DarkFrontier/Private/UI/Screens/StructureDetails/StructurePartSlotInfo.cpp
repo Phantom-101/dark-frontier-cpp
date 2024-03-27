@@ -10,7 +10,7 @@ void UStructurePartSlotInfo::SetTarget(UStructurePartSlot* InTargetSlot)
 {
 	TargetSlot = InTargetSlot;
 
-	NameText->SetText(TargetSlot->SlotName);
-	PartCard->SetTarget(TargetSlot->OwningPart);
-	AttachedSlotCard->SetTarget(TargetSlot->AttachedSlot);
+	NameText->SetText(TargetSlot->GetSlotName());
+	PartCard->SetTarget(TargetSlot->GetOwningPart());
+	AttachedSlotCard->SetTarget(TargetSlot->GetAttachedSlot());
 }

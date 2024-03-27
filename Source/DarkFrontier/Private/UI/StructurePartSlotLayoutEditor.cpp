@@ -19,14 +19,14 @@ void UStructurePartSlotLayoutEditor::NativeOnListItemObjectSet(UObject* ListItem
 	PartSlot = Cast<UStructurePartSlot>(ListItemObject);
 	StructureBuilder = UUIBlueprintLibrary::GetParentWidgetOfClass<UStructureBuilder>(GetOwningListView());
 
-	NameText->SetText(PartSlot->SlotName);
-	if(PartSlot->AttachedSlot)
+	NameText->SetText(PartSlot->GetSlotName());
+	if(PartSlot->GetAttachedSlot())
 	{
-		TypeText->SetText(PartSlot->AttachedSlot->OwningPart->TypeName);
-		IdText->SetText(FText::FromString(FString::Printf(TEXT("#%i"), PartSlot->AttachedSlot->OwningPart->PartId)));
+		TypeText->SetText(PartSlot->GetAttachedSlot()->GetOwningPart()->GetTypeName());
+		IdText->SetText(FText::FromString(FString::Printf(TEXT("#%i"), PartSlot->GetAttachedSlot()->GetOwningPart()->GetPartId())));
 
 		AddButton->SetIsInteractionEnabled(false);
-		RemoveButton->SetIsInteractionEnabled(PartSlot->AttachedSlot->OwningPart != PartSlot->OwningPart->OwningStructure->GetRootPart());
+		RemoveButton->SetIsInteractionEnabled(PartSlot->GetAttachedSlot()->GetOwningPart() != PartSlot->GetOwningPart()->GetOwningStructure()->GetRootPart());
 		DisconnectButton->SetIsInteractionEnabled(true);
 		ViewButton->SetIsInteractionEnabled(true);
 	}
@@ -75,5 +75,5 @@ void UStructurePartSlotLayoutEditor::OnDisconnectButtonClicked() const
 
 void UStructurePartSlotLayoutEditor::OnViewButtonClicked() const
 {
-	GetWorld()->GetFirstPlayerController()->SetViewTarget(PartSlot->AttachedSlot->OwningPart);
+	GetWorld()->GetFirstPlayerController()->SetViewTarget(PartSlot->GetAttachedSlot()->GetOwningPart());
 }

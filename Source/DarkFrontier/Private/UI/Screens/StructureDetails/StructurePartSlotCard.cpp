@@ -1,14 +1,11 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "UI/Screens/StructureDetails/StructurePartSlotCard.h"
-
-#include "CommonBorder.h"
 #include "CommonButtonBase.h"
 #include "CommonTextBlock.h"
 #include "Components/ListViewBase.h"
 #include "Libraries/UIBlueprintLibrary.h"
 #include "Structures/StructurePartSlot.h"
-#include "Structures/StructurePartSlotType.h"
 #include "UI/Screens/StructureDetails/StructureDetails.h"
 
 void UStructurePartSlotCard::NativeConstruct()
@@ -35,20 +32,10 @@ void UStructurePartSlotCard::SetTarget(UStructurePartSlot* InTargetSlot)
 	if(TargetSlot == nullptr)
 	{
 		NameText->SetText(FText::FromString("None"));
-		SideColor->SetVisibility(ESlateVisibility::Collapsed);
 	}
 	else
 	{
-		NameText->SetText(TargetSlot->SlotName);
-		if(TargetSlot->SlotType == nullptr)
-		{
-			SideColor->SetVisibility(ESlateVisibility::Collapsed);
-		}
-		else
-		{
-			SideColor->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
-			SideColor->SetBrushColor(TargetSlot->SlotType->Color);
-		}
+		NameText->SetText(TargetSlot->GetSlotName());
 	}
 }
 
@@ -71,7 +58,7 @@ void UStructurePartSlotCard::OnAddButtonClicked() const
 {
 	if(TargetSlot != nullptr)
 	{
-		if(TargetSlot->AttachedSlot == nullptr)
+		if(TargetSlot->GetAttachedSlot() == nullptr)
 		{
 			const UWidget* Widget = GetOwningListView();
 			if(Widget == nullptr)

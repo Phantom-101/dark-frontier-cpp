@@ -4,22 +4,26 @@
 
 #include "CoreMinimal.h"
 #include "CommonUserWidget.h"
-#include "Blueprint/IUserObjectListEntry.h"
 #include "StructurePartSlotListView.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class DARKFRONTIER_API UStructurePartSlotListView : public UCommonUserWidget, public IUserObjectListEntry
+class DARKFRONTIER_API UStructurePartSlotListView : public UCommonUserWidget
 {
 	GENERATED_BODY()
 	
 protected:
 
 	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
+	TObjectPtr<class UCommonTextBlock> NameText;
+	
+	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
 	TObjectPtr<class UCommonListView> SlotList;
 
-	virtual void NativeOnListItemObjectSet(UObject* ListItemObject) override;
+public:
+
+	void Init(class AStructure* InTarget, class UStructurePartSlotType* InType) const;
 	
 };

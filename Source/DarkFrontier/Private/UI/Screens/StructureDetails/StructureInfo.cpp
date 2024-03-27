@@ -2,12 +2,29 @@
 
 #include "UI/Screens/StructureDetails/StructureInfo.h"
 #include "AbilitySystemComponent.h"
+#include "CommonButtonBase.h"
 #include "CommonListView.h"
 #include "CommonTextBlock.h"
+#include "Components/ScrollBox.h"
+#include "Components/WidgetSwitcher.h"
 #include "Structures/Structure.h"
 #include "Structures/StructureAttributeSet.h"
 #include "Structures/StructurePart.h"
+#include "Structures/StructurePartSlot.h"
+#include "Structures/StructurePartSlotType.h"
+#include "UI/Screens/StructureDetails/StructurePartSlotListView.h"
 #include "UI/Widgets/InfoField.h"
+
+void UStructureInfo::NativeConstruct()
+{
+	Super::NativeConstruct();
+
+	TypeModeButton->OnClicked().Clear();
+	TypeModeButton->OnClicked().AddUObject<UStructureInfo>(this, &UStructureInfo::TypeModeSelected);
+
+	ListModeButton->OnClicked().Clear();
+	ListModeButton->OnClicked().AddUObject<UStructureInfo>(this, &UStructureInfo::ListModeSelected);
+}
 
 void UStructureInfo::SetTarget(AStructure* InTargetStructure)
 {
@@ -57,6 +74,43 @@ void UStructureInfo::SetTarget(AStructure* InTargetStructure)
 	FormatArgs.Add(FStringFormatArg(ToString(AngularSpeed)));
 	FormatArgs.Add(FStringFormatArg(ToString(AngularAccel)));
 	AngularField->SetContentFromString(FString::Format(TEXT("{0}+{1}"), FormatArgs));
+
+	TypeModeSelected();
+}
+
+void UStructureInfo::TypeModeSelected()
+{
+	TypeModeButton->SetStyle(SelectedStyle);
+	ListModeButton->SetStyle(UnSelectedStyle);
+
+	PartListSwitcher->SetActiveWidget(TypeList);
+
+	TypeList->ClearChildren();
+	TArray<UStructurePartSlotType*> SlotTypes;
+	for(AStructurePart* Part : TargetStructure->GetParts())
+	{
+		for(const UStructurePartSlot* PartSlot : Part->GetSlots())
+		{
+			if(!SlotTypes.Contains(PartSlot->GetSlotType()))
+			{
+				SlotTypes.Add(PartSlot->GetSlotType());
+			}
+		}
+	}
+	for(UStructurePartSlotType* SlotType : SlotTypes)
+	{
+		UStructurePartSlotListView* View = CreateWidget<UStructurePartSlotListView>(this, ListViewClass);
+		TypeList->AddChild(View);
+		View->Init(TargetStructure, SlotType);
+	}
+}
+
+void UStructureInfo::ListModeSelected()
+{
+	TypeModeButton->SetStyle(UnSelectedStyle);
+	ListModeButton->SetStyle(SelectedStyle);
+
+	PartListSwitcher->SetActiveWidget(PartCardList);
 
 	PartCardList->ClearListItems();
 	for(AStructurePart* Part : TargetStructure->GetParts())
