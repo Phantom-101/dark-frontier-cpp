@@ -1,6 +1,8 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "Structures/StructurePartSlot.h"
+
+#include "Log.h"
 #include "Structures/StructurePart.h"
 #include "Structures/Structure.h"
 #include "Kismet/KismetMathLibrary.h"
@@ -30,7 +32,7 @@ UStructurePartSlotType* UStructurePartSlot::GetSlotType() const
 
 AStructure* UStructurePartSlot::GetOwningStructure() const
 {
-	checkf(OwningPart != nullptr, TEXT("Owning part should not be null"));
+	if(!IsValid(OwningPart)) return nullptr;
 	return OwningPart->GetOwningStructure();
 }
 
@@ -51,23 +53,49 @@ bool UStructurePartSlot::CanAttach(const UStructurePartSlot* Other) const
 
 bool UStructurePartSlot::TryAttach(UStructurePartSlot* NewSlot)
 {
-	if(NewSlot == nullptr) return false; // New slot must be non-null
-	if(AttachedSlot != nullptr || NewSlot->AttachedSlot != nullptr) return false; // Both slots must be detached
-	if(GetOwningStructure() == nullptr && NewSlot->GetOwningStructure() == nullptr) return false; // At least one slot must be part of an existing structure
-	if(!CanAttach(NewSlot)) return false;
+	if(!IsValid(NewSlot))
+	{
+		UE_LOG(LogStructure, Display, TEXT("New slot must be valid"));
+		return false;
+	}
+	
+	if(AttachedSlot || NewSlot->AttachedSlot)
+	{
+		UE_LOG(LogStructure, Display, TEXT("Both slots must be null for them to attach"));
+		return false;
+	}
+	
+	if(!IsValid(GetOwningStructure()) && !IsValid(NewSlot->GetOwningStructure()))
+	{
+		UE_LOG(LogStructure, Display, TEXT("Neither slot has valid owning structure"));
+		return false;
+	}
+
+	if((GetOwningStructure() && !IsValid(GetOwningStructure())) ||
+		(NewSlot->GetOwningStructure() && !IsValid(NewSlot->GetOwningStructure())))
+	{
+		UE_LOG(LogStructure, Display, TEXT("Cannot attach slot with non-valid owning structure"));
+		return false;
+	}
+	
+	if(!CanAttach(NewSlot))
+	{
+		UE_LOG(LogStructure, Log, TEXT("Slots are not compatible"));
+		return false;
+	}
 
 	AttachedSlot = NewSlot;
 	AttachedSlot->AttachedSlot = this;
 
 	MatchTransform(AttachedSlot);
 	
-	if(GetOwningStructure() == nullptr)
+	if(!GetOwningStructure())
 	{
 		// This part previously not attached
 		OwningPart->TryInit(AttachedSlot->GetOwningStructure());
 		OwningPart->AttachSlots();
 	}
-	else if(AttachedSlot->GetOwningStructure() == nullptr)
+	else if(!AttachedSlot->GetOwningStructure())
 	{
 		// Other part previously not attached
 		AttachedSlot->OwningPart->TryInit(GetOwningStructure());
@@ -80,7 +108,7 @@ bool UStructurePartSlot::TryAttach(UStructurePartSlot* NewSlot)
 
 bool UStructurePartSlot::TryDetach()
 {
-	if(AttachedSlot == nullptr) return true; // Slot already detached
+	if(!AttachedSlot) return true; // Slot already detached
 	
 	AttachedSlot->AttachedSlot = nullptr;
 	AttachedSlot = nullptr;

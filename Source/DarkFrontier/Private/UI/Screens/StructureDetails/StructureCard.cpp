@@ -27,22 +27,22 @@ void UStructureCard::SetTarget(AStructure* InTargetStructure)
 {
 	TargetStructure = InTargetStructure;
 
-	if(TargetStructure == nullptr)
+	if(IsValid(TargetStructure))
 	{
-		NameText->SetText(FText::FromString("None"));
+		NameText->SetText(FText::FromString(TargetStructure->GetName()));
 	}
 	else
 	{
-		NameText->SetText(FText::FromString(TargetStructure->GetName()));
+		NameText->SetText(FText::FromString("None"));
 	}
 }
 
 void UStructureCard::OnCardClicked() const
 {
-	if(TargetStructure != nullptr)
+	if(IsValid(TargetStructure))
 	{
 		const UWidget* Widget = GetOwningListView();
-		if(Widget == nullptr)
+		if(!Widget)
 		{
 			Widget = this;
 		}

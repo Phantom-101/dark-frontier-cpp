@@ -16,7 +16,7 @@ void APlanetSurfaceNode::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	if(Planet != nullptr)
+	if(IsValid(Planet))
 	{
 		UpdateLeafStatus();
 	}

@@ -13,7 +13,7 @@
 #include "Structures/StructurePart.h"
 #include "Structures/StructurePartSlot.h"
 #include "Structures/StructurePartSlotType.h"
-#include "UI/Screens/StructureDetails/StructurePartSlotListView.h"
+#include "UI/Screens/StructureDetails/StructurePartSlotCardList.h"
 #include "UI/Widgets/InfoField.h"
 
 void UStructureInfo::NativeConstruct()
@@ -27,7 +27,7 @@ void UStructureInfo::NativeConstruct()
 	ListModeButton->OnClicked().AddUObject<UStructureInfo>(this, &UStructureInfo::OnListModeSelected);
 
 	AStructureController* Controller = Cast<AStructureController>(GetWorld()->GetFirstPlayerController());
-	if(Controller != nullptr)
+	if(IsValid(Controller))
 	{
 		if(!OnLayoutChangedHandle.IsValid())
 		{
@@ -92,31 +92,50 @@ void UStructureInfo::SetTarget(AStructure* InTargetStructure)
 
 void UStructureInfo::RebuildTypeMode()
 {
-	// Collate existing types
-	TArray<UStructurePartSlotType*> SlotTypes;
+	if(!IsValid(TargetStructure)) return;
+	
+	// Collate slots
+	TMap<UStructurePartSlotType*, TArray<UStructurePartSlot*>> TypeMap;
+	TArray<UStructurePartSlot*> MiscSlots;
 	for(AStructurePart* Part : TargetStructure->GetParts())
 	{
-		for(const UStructurePartSlot* PartSlot : Part->GetSlots())
+		for(UStructurePartSlot* PartSlot : Part->GetSlots())
 		{
-			if(!SlotTypes.Contains(PartSlot->GetSlotType()))
+			if(!PartSlot->GetSlotType())
 			{
-				SlotTypes.Add(PartSlot->GetSlotType());
+				MiscSlots.Add(PartSlot);
+				continue;
 			}
+			
+			if(!TypeMap.Contains(PartSlot->GetSlotType()))
+			{
+				TypeMap.Add(PartSlot->GetSlotType(), TArray<UStructurePartSlot*>());
+			}
+			TypeMap[PartSlot->GetSlotType()].Add(PartSlot);
 		}
 	}
 
 	// Add to list
 	TypeList->ClearChildren();
-	for(const UStructurePartSlotType* SlotType : SlotTypes)
+	for(const TPair<UStructurePartSlotType*, TArray<UStructurePartSlot*>> Pair : TypeMap)
 	{
-		UStructurePartSlotListView* View = CreateWidget<UStructurePartSlotListView>(this, ListViewClass);
+		UStructurePartSlotCardList* View = CreateWidget<UStructurePartSlotCardList>(this, CardListClass);
 		TypeList->AddChild(View);
-		View->Init(TargetStructure, SlotType);
+		View->Init(Pair.Value, Pair.Key->TypeName, Pair.Key->Color);
+	}
+	
+	if(MiscSlots.Num() > 0)
+	{
+		UStructurePartSlotCardList* View = CreateWidget<UStructurePartSlotCardList>(this, CardListClass);
+		TypeList->AddChild(View);
+		View->Init(MiscSlots, FText::FromString("Miscellaneous"), FLinearColor::White);
 	}
 }
 
 void UStructureInfo::RebuildListMode() const
 {
+	if(!IsValid(TargetStructure)) return;
+	
 	PartCardList->ClearListItems();
 	for(AStructurePart* Part : TargetStructure->GetParts())
 	{

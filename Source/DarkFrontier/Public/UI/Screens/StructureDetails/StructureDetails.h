@@ -58,6 +58,8 @@ protected:
 	UPROPERTY(BlueprintReadOnly, EditInstanceOnly)
 	TSubclassOf<AStructurePart> EditClass;
 
+	FDelegateHandle OnLayoutChangedHandle;
+
 	virtual void NativeConstruct() override;
 
 	virtual TOptional<FUIInputConfig> GetDesiredInputConfig() const override;
@@ -83,5 +85,7 @@ public:
 protected:
 
 	void OnBackgroundClicked() const;
+
+	void OnLayoutChanged();
 	
 };

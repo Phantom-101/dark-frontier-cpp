@@ -33,6 +33,8 @@ protected:
 
 public:
 
+	UStructurePartSlot* GetTarget() const;
+
 	void SetTarget(UStructurePartSlot* InTargetSlot);
 	
 };

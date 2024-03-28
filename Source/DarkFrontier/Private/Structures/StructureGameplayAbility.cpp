@@ -44,7 +44,7 @@ bool UStructureGameplayAbility::CheckCost(const FGameplayAbilitySpecHandle Handl
 
 void UStructureGameplayAbility::ApplyCost(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo) const
 {
-	if(CostGameplayEffectClass == nullptr) return;
+	if(!CostGameplayEffectClass) return;
 	if(!HasAuthorityOrPredictionKey(ActorInfo, &ActivationInfo)) return;
 
 	const FGameplayEffectSpecHandle SpecHandle = MakeOutgoingGameplayEffectSpec(Handle, ActorInfo, ActivationInfo, CostGameplayEffectClass, GetAbilityLevel(Handle, ActorInfo));

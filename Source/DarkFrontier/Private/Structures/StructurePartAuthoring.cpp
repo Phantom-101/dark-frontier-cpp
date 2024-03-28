@@ -16,17 +16,17 @@ void UStructurePartAuthoring::BeginPlay()
 
 AStructurePart* UStructurePartAuthoring::GetAuthoredPart()
 {
-	if(AuthoredPart == nullptr)
+	if(!AuthoredPart)
 	{
 		AuthoredPart = GetWorld()->SpawnActor<AStructurePart>(PartClass);
 		
-		if(TargetPart == nullptr)
+		if(TargetPart)
 		{
-			Cast<AStructure>(GetOwner())->TryInit(AuthoredPart);
+			AuthoredPart->GetSlot(UseSlot)->TryAttach(TargetPart->GetAuthoredPart()->GetSlot(TargetSlot));
 		}
 		else
 		{
-			AuthoredPart->GetSlot(UseSlot)->TryAttach(TargetPart->GetAuthoredPart()->GetSlot(TargetSlot));
+			Cast<AStructure>(GetOwner())->TryInit(AuthoredPart);
 		}
 
 		DestroyComponent();

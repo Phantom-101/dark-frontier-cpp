@@ -35,34 +35,34 @@ void UStructurePartSlotCard::SetTarget(UStructurePartSlot* InTargetSlot)
 {
 	TargetSlot = InTargetSlot;
 
-	if(TargetSlot == nullptr)
-	{
-		TypeText->SetVisibility(ESlateVisibility::Collapsed);
-		NameText->SetText(FText::FromString("(None)"));
-	}
-	else
+	if(IsValid(TargetSlot))
 	{
 		TypeText->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 		NameText->SetText(FText::FromString(FString::Printf(TEXT("(%s)"), *TargetSlot->GetSlotName().ToString())));
-		if(InTargetSlot->GetAttachedSlot() == nullptr)
-		{
-			TypeText->SetText(FText::FromString("None"));
-		}
-		else
+		if(IsValid(InTargetSlot->GetAttachedSlot()))
 		{
 			TypeText->SetText(InTargetSlot->GetAttachedSlot()->GetOwningPart()->GetTypeName());
 		}
+		else
+		{
+			TypeText->SetText(FText::FromString("None"));
+		}
+	}
+	else
+	{
+		TypeText->SetVisibility(ESlateVisibility::Collapsed);
+		NameText->SetText(FText::FromString("(None)"));
 	}
 }
 
 void UStructurePartSlotCard::OnAddButtonClicked() const
 {
-	if(TargetSlot != nullptr)
+	if(IsValid(TargetSlot))
 	{
-		if(TargetSlot->GetAttachedSlot() == nullptr)
+		if(!TargetSlot->GetAttachedSlot())
 		{
 			const UWidget* Widget = GetOwningListView();
-			if(Widget == nullptr)
+			if(!Widget)
 			{
 				Widget = this;
 			}
@@ -81,7 +81,7 @@ void UStructurePartSlotCard::OnDetachButtonClicked() const
 void UStructurePartSlotCard::OnLookButtonClicked() const
 {
 	AStructureController* Controller = Cast<AStructureController>(GetWorld()->GetFirstPlayerController());
-	if(Controller != nullptr)
+	if(IsValid(Controller))
 	{
 		Controller->SetCameraTargetComponent(TargetSlot);
 	}

@@ -23,7 +23,7 @@ void UGameplayEffectIndicator::NativeOnListItemObjectSet(UObject* ListItemObject
 
 void UGameplayEffectIndicator::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 {
-	if(EffectHandle.IsValid() && EffectHandle.GetOwningAbilitySystemComponent() != nullptr)
+	if(EffectHandle.IsValid() && IsValid(EffectHandle.GetOwningAbilitySystemComponent()))
 	{
 		const UGameplayEffect* CDO = EffectHandle.GetOwningAbilitySystemComponent()->GetGameplayEffectCDO(EffectHandle);
 		if(CDO->DurationPolicy == EGameplayEffectDurationType::Infinite)

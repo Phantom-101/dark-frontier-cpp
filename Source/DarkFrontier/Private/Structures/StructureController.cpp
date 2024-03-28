@@ -94,16 +94,21 @@ void AStructureController::SetCameraTargetComponent(USceneComponent* InTarget)
 
 void AStructureController::UpdateCamera()
 {
-	if(StructurePawn == nullptr) return;
+	if(!IsValid(StructurePawn)) return;
 	
-	if(CameraTargetActor == nullptr)
+	if(!IsValid(CameraTargetActor))
 	{
 		CameraTargetActor = StructurePawn;
 	}
 
-	const FBoxSphereBounds Bounds = CameraTargetComponent == nullptr ? GetViewBounds(CameraTargetActor, true) : GetViewBounds(CameraTargetComponent->GetOwner(), true);
-	const FVector Location = CameraTargetComponent == nullptr ? CameraTargetActor->GetActorLocation() : CameraTargetComponent->GetComponentLocation();
-	const FRotator Rotation = CameraTargetComponent == nullptr ? CameraTargetActor->GetActorRotation() : CameraTargetComponent->GetComponentRotation();
+	if(!IsValid(CameraTargetComponent))
+	{
+		CameraTargetComponent = nullptr;
+	}
+
+	const FBoxSphereBounds Bounds = CameraTargetComponent ? GetViewBounds(CameraTargetComponent->GetOwner(), true) : GetViewBounds(CameraTargetActor, true);
+	const FVector Location = CameraTargetComponent ? CameraTargetComponent->GetComponentLocation() : CameraTargetActor->GetActorLocation();
+	const FRotator Rotation = CameraTargetComponent ? CameraTargetComponent->GetComponentRotation() : CameraTargetActor->GetActorRotation();
 	
 	USpringArmComponent* SpringArm = StructurePawn->GetCameraSpringArm();
 	
@@ -117,7 +122,7 @@ void AStructureController::UpdateCamera()
 FBoxSphereBounds AStructureController::GetViewBounds(const AActor* Actor, const bool OnlyCollidingComponents)
 {
 	const AStructure* Structure = Cast<AStructure>(Actor);
-	if(Structure != nullptr)
+	if(IsValid(Structure))
 	{
 		return GetStructureViewBounds(Structure, OnlyCollidingComponents);
 	}

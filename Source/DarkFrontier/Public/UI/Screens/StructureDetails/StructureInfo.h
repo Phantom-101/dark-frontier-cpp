@@ -53,7 +53,7 @@ protected:
 	TObjectPtr<class UCommonListView> PartCardList;
 
 	UPROPERTY(BlueprintReadOnly, EditAnywhere)
-	TSubclassOf<class UStructurePartSlotListView> ListViewClass;
+	TSubclassOf<class UStructurePartSlotCardList> CardListClass;
 
 	UPROPERTY(BlueprintReadOnly, EditAnywhere)
 	TSubclassOf<class UCommonButtonStyle> SelectedStyle;

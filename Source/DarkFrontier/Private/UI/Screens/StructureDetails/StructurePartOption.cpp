@@ -25,7 +25,7 @@ void UStructurePartOption::NativeOnListItemObjectSet(UObject* ListItemObject)
 void UStructurePartOption::OnOptionClicked() const
 {
 	const UWidget* Widget = GetOwningListView();
-	if(Widget == nullptr)
+	if(!Widget)
 	{
 		Widget = this;
 	}

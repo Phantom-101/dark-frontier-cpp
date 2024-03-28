@@ -34,11 +34,7 @@ void UStructurePartCard::SetTarget(AStructurePart* InTargetPart)
 {
 	TargetPart = InTargetPart;
 
-	if(TargetPart == nullptr)
-	{
-		TypeText->SetText(FText::FromString("None"));
-	}
-	else
+	if(IsValid(TargetPart))
 	{
 		TypeText->SetText(TargetPart->GetTypeName());
 		if(TargetPart->IsRootPart())
@@ -50,14 +46,18 @@ void UStructurePartCard::SetTarget(AStructurePart* InTargetPart)
 			RemoveButton->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 		}
 	}
+	else
+	{
+		TypeText->SetText(FText::FromString("None"));
+	}
 }
 
 void UStructurePartCard::OnCardClicked() const
 {
-	if(TargetPart != nullptr)
+	if(IsValid(TargetPart))
 	{
 		const UWidget* Widget = GetOwningListView();
-		if(Widget == nullptr)
+		if(!Widget)
 		{
 			Widget = this;
 		}
@@ -75,7 +75,7 @@ void UStructurePartCard::OnRemoveButtonClicked() const
 void UStructurePartCard::OnLookButtonClicked() const
 {
 	AStructureController* Controller = Cast<AStructureController>(GetWorld()->GetFirstPlayerController());
-	if(Controller != nullptr)
+	if(IsValid(Controller))
 	{
 		Controller->SetCameraTargetActor(TargetPart);
 	}
