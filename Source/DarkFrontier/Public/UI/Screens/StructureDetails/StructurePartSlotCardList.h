@@ -4,13 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "CommonUserWidget.h"
-#include "StructurePartSlotListView.generated.h"
+#include "StructurePartSlotCardList.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class DARKFRONTIER_API UStructurePartSlotListView : public UCommonUserWidget
+class DARKFRONTIER_API UStructurePartSlotCardList : public UCommonUserWidget
 {
 	GENERATED_BODY()
 	
@@ -24,6 +24,6 @@ protected:
 
 public:
 
-	void Init(class AStructure* InTarget, const class UStructurePartSlotType* InType) const;
+	void Init(TArray<class UStructurePartSlot*> InSlots, const FText& InHeader, FLinearColor InColor) const;
 	
 };

@@ -6,6 +6,11 @@
 #include "UI/Screens/StructureDetails/StructurePartCard.h"
 #include "UI/Screens/StructureDetails/StructurePartSlotCard.h"
 
+UStructurePartSlot* UStructurePartSlotInfo::GetTarget() const
+{
+	return TargetSlot;
+}
+
 void UStructurePartSlotInfo::SetTarget(UStructurePartSlot* InTargetSlot)
 {
 	TargetSlot = InTargetSlot;

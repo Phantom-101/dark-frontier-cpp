@@ -46,7 +46,7 @@ void AStructure::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	if(RootPart == nullptr) return;
+	if(!IsValid(RootPart)) return;
 	
 	const float LinearMaxSpeed = Attributes->GetLinearMaxSpeed();
 	const float LinearAccel = Attributes->GetLinearAcceleration();
@@ -67,8 +67,8 @@ void AStructure::PossessedBy(AController* NewController)
 
 bool AStructure::TryInit(AStructurePart* NewRoot)
 {
-	if(RootPart != nullptr) return false;
-	if(NewRoot->GetOwningStructure() != nullptr) return false;
+	if(RootPart) return false;
+	if(NewRoot->GetOwningStructure()) return false;
 	
 	NewRoot->TryInit(this);
 	RootPart = NewRoot;
@@ -149,7 +149,7 @@ void AStructure::UpdateLayoutInformation()
 	{
 		for(const UStructurePartSlot* Slot : NewParts[CurrentIndex]->GetSlots())
 		{
-			if(Slot->GetAttachedSlot() != nullptr && !NewParts.Contains(Slot->GetAttachedSlot()->GetOwningPart()))
+			if(IsValid(Slot->GetAttachedSlot()) && !NewParts.Contains(Slot->GetAttachedSlot()->GetOwningPart()))
 			{
 				NewParts.Add(Slot->GetAttachedSlot()->GetOwningPart());
 			}

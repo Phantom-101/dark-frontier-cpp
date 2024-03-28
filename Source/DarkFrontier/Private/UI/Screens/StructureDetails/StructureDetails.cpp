@@ -2,8 +2,10 @@
 
 #include "UI/Screens/StructureDetails/StructureDetails.h"
 #include "CommonButtonBase.h"
+#include "Log.h"
 #include "Components/WidgetSwitcher.h"
 #include "Structures/Structure.h"
+#include "Structures/StructureController.h"
 #include "Structures/StructurePart.h"
 #include "Structures/StructurePartSlot.h"
 #include "UI/Screens/StructureDetails/StructureInfo.h"
@@ -17,6 +19,15 @@ void UStructureDetails::NativeConstruct()
 	Super::NativeConstruct();
 
 	BackgroundButton->OnClicked().AddUObject<UStructureDetails>(this, &UStructureDetails::OnBackgroundClicked);
+
+	AStructureController* Controller = Cast<AStructureController>(GetWorld()->GetFirstPlayerController());
+	if(IsValid(Controller))
+	{
+		if(!OnLayoutChangedHandle.IsValid())
+		{
+			OnLayoutChangedHandle = Controller->OnLayoutChanged.AddUObject<UStructureDetails>(this, &UStructureDetails::OnLayoutChanged);
+		}
+	}
 }
 
 TOptional<FUIInputConfig> UStructureDetails::GetDesiredInputConfig() const
@@ -79,11 +90,18 @@ void UStructureDetails::Edit(const TSubclassOf<AStructurePart> InClass)
 void UStructureDetails::Edit(const FText& InName)
 {
 	AStructurePart* Section = Cast<AStructurePart>(GetWorld()->SpawnActor(EditClass));
-	Section->GetSlot(InName)->TryAttach(EditSlot);
-	// Assume part layout invalidity is due to added section
-	if(!Section->GetOwningStructure()->IsLayoutValid())
+	if(Section->GetSlot(InName)->TryAttach(EditSlot))
 	{
-		Section->DetachSlots();
+		// Assume part layout invalidity is due to added section
+		if(!Section->GetOwningStructure()->IsLayoutValid())
+		{
+			Section->DetachSlots();
+			UE_LOG(LogStructure, Display, TEXT("Part auto removed due to invalid layout, todo: keep layout but rollback changes once exited"));
+		}
+	}
+	else
+	{
+		Section->Destroy();
 	}
 	EditSlot = nullptr;
 	EditClass = nullptr;
@@ -93,4 +111,16 @@ void UStructureDetails::Edit(const FText& InName)
 void UStructureDetails::OnBackgroundClicked() const
 {
 	SelectorSwitcher->SetActiveWidget(NoSelector);
+}
+
+void UStructureDetails::OnLayoutChanged()
+{
+	if((InfoSwitcher->GetActiveWidget() == PartInfo && !IsValid(PartInfo->GetTarget())) ||
+		(InfoSwitcher->GetActiveWidget() == SlotInfo && !IsValid(SlotInfo->GetTarget())))
+	{
+		InfoSwitcher->SetActiveWidget(StructureInfo);
+		EditSlot = nullptr;
+		EditClass = nullptr;
+		SelectorSwitcher->SetActiveWidget(NoSelector);
+	}
 }

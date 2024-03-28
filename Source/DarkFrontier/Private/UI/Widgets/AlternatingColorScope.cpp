@@ -15,7 +15,7 @@ void UAlternatingColorScope::NativeTick(const FGeometry& MyGeometry, float InDel
 
 	SWidget* Current = MyWidget.Pin().Get();
 	int Depth = -1;
-	while(Current != nullptr)
+	while(Current)
 	{
 		FString Type = Current->GetTypeAsString();
 		if(Type == "SObjectWidget")

@@ -41,7 +41,7 @@ TSubclassOf<UGameplayEffect> AStructurePart::GetPassiveEffect() const
 
 bool AStructurePart::TryInit(AStructure* NewOwner)
 {
-	if(OwningStructure != nullptr) return false;
+	if(OwningStructure) return false;
 	
 	OwningStructure = NewOwner;
 	OwningStructure->RegisterPart(this);
@@ -72,7 +72,7 @@ AStructure* AStructurePart::GetOwningStructure() const
 
 bool AStructurePart::IsRootPart() const
 {
-	return OwningStructure != nullptr && OwningStructure->GetRootPart() == this;
+	return IsValid(OwningStructure) && OwningStructure->GetRootPart() == this;
 }
 
 bool AStructurePart::IsActiveInLayout()
@@ -136,7 +136,7 @@ void AStructurePart::AttachSlots()
 {
 	for(UStructurePartSlot* Slot : Slots)
 	{
-		if(Slot->GetAttachedSlot() == nullptr)
+		if(!Slot->GetAttachedSlot())
 		{
 			for(AStructurePart* Part : OwningStructure->GetParts())
 			{
@@ -157,14 +157,11 @@ void AStructurePart::AttachSlots()
 
 void AStructurePart::DetachSlots()
 {
-	if(OwningStructure->GetRootPart() != this)
+	for(UStructurePartSlot* Slot : Slots)
 	{
-		for(UStructurePartSlot* Slot : Slots)
-		{
-			Slot->TryDetach();
-		}
-		OwningStructure->UpdateLayoutInformation();
+		Slot->TryDetach();
 	}
+	OwningStructure->UpdateLayoutInformation();
 }
 
 void AStructurePart::UpdateDistance(const int32 Distance)
@@ -172,7 +169,7 @@ void AStructurePart::UpdateDistance(const int32 Distance)
 	RootDistance = Distance;
 	for(const UStructurePartSlot* Slot : Slots)
 	{
-		if(Slot->GetAttachedSlot() != nullptr && Slot->GetAttachedSlot()->GetOwningPart()->RootDistance == -1)
+		if(IsValid(Slot->GetAttachedSlot()) && Slot->GetAttachedSlot()->GetOwningPart()->RootDistance == -1)
 		{
 			Slot->GetAttachedSlot()->GetOwningPart()->UpdateDistance(Distance + 1);
 		}
@@ -303,7 +300,7 @@ void AStructurePart::DequeueCombatants()
 TArray<const UStructurePartSlot*> AStructurePart::GetSlots_CDO(TSubclassOf<AStructurePart> PartClass)
 {
 	const UBlueprintGeneratedClass* BPClass = Cast<UBlueprintGeneratedClass>(PartClass);
-	if(BPClass == nullptr) return TArray<const UStructurePartSlot*>();
+	if(!BPClass) return TArray<const UStructurePartSlot*>();
 
 	TArray<const UStructurePartSlot*> Slots;
 	TArray<USCS_Node*> Nodes = BPClass->SimpleConstructionScript->GetAllNodes();

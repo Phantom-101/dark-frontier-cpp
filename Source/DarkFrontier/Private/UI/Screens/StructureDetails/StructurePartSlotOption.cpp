@@ -24,7 +24,7 @@ void UStructurePartSlotOption::NativeOnListItemObjectSet(UObject* ListItemObject
 void UStructurePartSlotOption::OnOptionClicked() const
 {
 	const UWidget* Widget = GetOwningListView();
-	if(Widget == nullptr)
+	if(!Widget)
 	{
 		Widget = this;
 	}

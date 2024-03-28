@@ -29,7 +29,28 @@ protected:
 	TObjectPtr<UInfoField> UpkeepField;
 
 	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
+	TObjectPtr<class UCommonButtonBase> TypeModeButton;
+
+	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
+	TObjectPtr<UCommonButtonBase> ListModeButton;
+
+	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
+	TObjectPtr<class UWidgetSwitcher> SlotListSwitcher;
+
+	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
+	TObjectPtr<class UScrollBox> TypeList;
+
+	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
 	TObjectPtr<class UCommonListView> SlotCardList;
+
+	UPROPERTY(BlueprintReadOnly, EditAnywhere)
+	TSubclassOf<class UStructurePartSlotCardList> CardListClass;
+
+	UPROPERTY(BlueprintReadOnly, EditAnywhere)
+	TSubclassOf<class UCommonButtonStyle> SelectedStyle;
+
+	UPROPERTY(BlueprintReadOnly, EditAnywhere)
+	TSubclassOf<UCommonButtonStyle> UnSelectedStyle;
 
 	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly)
 	TObjectPtr<class UStructureDetails> Screen;
@@ -37,8 +58,26 @@ protected:
 	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly)
 	TObjectPtr<class AStructurePart> TargetPart;
 
+	FDelegateHandle OnLayoutChangedHandle;
+    
+	virtual void NativeConstruct() override;
+
 public:
 
+	AStructurePart* GetTarget() const;
+
 	void SetTarget(AStructurePart* InTargetPart);
+
+private:
+	
+	void RebuildTypeMode();
+
+	void RebuildListMode() const;
+
+	void OnTypeModeSelected() const;
+
+	void OnListModeSelected() const;
+
+	void OnLayoutChanged();
 	
 };

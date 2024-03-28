@@ -30,7 +30,7 @@ public:
 				{
 					return Cast<T>(CurrentOuter);
 				}
-				if(CurrentOuter == nullptr)
+				if(!CurrentOuter)
 				{
 					return nullptr;
 				}
@@ -51,7 +51,7 @@ public:
 				{
 					return Cast<UWidget>(CurrentOuter);
 				}
-				if(CurrentOuter == nullptr)
+				if(!CurrentOuter)
 				{
 					return nullptr;
 				}

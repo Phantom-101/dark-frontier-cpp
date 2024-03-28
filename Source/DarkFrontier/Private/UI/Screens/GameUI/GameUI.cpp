@@ -39,7 +39,7 @@ void UGameUI::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 		for(UObject* Object : GameplayEffectList->GetListItems())
 		{
 			UGameplayEffectIndicatorObject* Casted = Cast<UGameplayEffectIndicatorObject>(Object);
-			if(Casted->EffectHandle.IsValid() && Casted->EffectHandle.GetOwningAbilitySystemComponent() != nullptr)
+			if(Casted->EffectHandle.IsValid() && IsValid(Casted->EffectHandle.GetOwningAbilitySystemComponent()))
 			{
 				Existing.Add(Casted->EffectHandle);
 			}
