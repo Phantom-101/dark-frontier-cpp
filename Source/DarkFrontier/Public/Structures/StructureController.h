@@ -68,10 +68,13 @@ protected:
 	bool IsCursorUnlocked = false;
 
 	UPROPERTY(BlueprintReadOnly, EditInstanceOnly, Category="Camera")
-	TObjectPtr<AActor> LookTarget;
+	TObjectPtr<AActor> CameraTargetActor;
+
+	UPROPERTY(BlueprintReadOnly, EditInstanceOnly, Category="Camera")
+	TObjectPtr<USceneComponent> CameraTargetComponent;
 	
 	UPROPERTY(BlueprintReadOnly, EditInstanceOnly, Category="Camera")
-	FVector2D LookRotation;
+	FVector2D CameraRotation;
 
 	UPROPERTY(BlueprintReadOnly, EditInstanceOnly, Category="Camera")
 	float ZoomLevel = 2.5;
@@ -79,10 +82,14 @@ protected:
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly)
 	TArray<TSubclassOf<class AStructurePart>> AvailableParts;
 
-public:
-	
 	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly, Category="UI")
 	TObjectPtr<UUIBase> UIBaseWidget;
+
+	FDelegateHandle OnLayoutChangedHandle;
+
+	FDelegateHandle OnActionsChangedHandle;
+
+public:
 
 	FStructureStateChanged OnLayoutChanged;
 
@@ -100,6 +107,16 @@ protected:
 	
 	virtual void OnUnPossess() override;
 
+public:
+
+	UFUNCTION(BlueprintCallable, Category="Camera")
+	void SetCameraTargetActor(AActor* InTarget);
+
+	UFUNCTION(BlueprintCallable, Category="Camera")
+	void SetCameraTargetComponent(USceneComponent* InTarget);
+
+protected:
+
 	UFUNCTION(BlueprintCallable, Category="Camera")
 	void UpdateCamera();
 
@@ -107,9 +124,15 @@ protected:
 	FBoxSphereBounds GetViewBounds(const AActor* Actor, const bool OnlyCollidingComponents);
 
 	UFUNCTION(BlueprintCallable, Category="Camera")
+	FBoxSphereBounds GetObjectViewBounds(const AActor* Actor, const bool OnlyCollidingComponents);
+
+	UFUNCTION(BlueprintCallable, Category="Camera")
 	FBoxSphereBounds GetStructureViewBounds(const AStructure* Structure, const bool OnlyCollidingComponents);
 
 public:
+
+	UFUNCTION(BlueprintCallable, Category="UI")
+	UUIBase* GetUIBaseWidget() const;
 	
 	UFUNCTION(BlueprintCallable, Category="UI")
 	FVector GetTurnIndicatorOffset() const;
@@ -138,8 +161,8 @@ protected:
 	void EditStructure(const FInputActionInstance& Instance);
 
 	UFUNCTION()
-	void PropagateLayoutChange();
+	void PropagateLayoutChange() const;
 
 	UFUNCTION()
-	void PropagateActionsChange();
+	void PropagateActionsChange() const;
 };

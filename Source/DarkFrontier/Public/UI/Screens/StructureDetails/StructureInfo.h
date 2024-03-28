@@ -67,6 +67,8 @@ protected:
 	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly)
 	TObjectPtr<class AStructure> TargetStructure;
 
+	FDelegateHandle OnLayoutChangedHandle;
+
 	virtual void NativeConstruct() override;
 
 public:
@@ -75,9 +77,15 @@ public:
 
 private:
 
-	void TypeModeSelected();
+	void RebuildTypeMode();
 
-	void ListModeSelected();
+	void RebuildListMode() const;
+
+	void OnTypeModeSelected() const;
+
+	void OnListModeSelected() const;
+
+	void OnLayoutChanged();
 	
 	static inline FString ToString(float Value);
 

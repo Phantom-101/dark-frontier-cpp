@@ -46,5 +46,9 @@ public:
 private:
 
 	void OnAddButtonClicked() const;
+
+	void OnDetachButtonClicked() const;
+	
+	void OnLookButtonClicked() const;
 	
 };

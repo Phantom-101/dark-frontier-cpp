@@ -24,6 +24,6 @@ protected:
 
 public:
 
-	void Init(class AStructure* InTarget, class UStructurePartSlotType* InType) const;
+	void Init(class AStructure* InTarget, const class UStructurePartSlotType* InType) const;
 	
 };

@@ -62,8 +62,8 @@ void AStructureController::OnPossess(APawn* InPawn)
 	{
 		StructurePawn->GetAbilitySystemComponent()->InitAbilityActorInfo(StructurePawn, StructurePawn);
 		
-		StructurePawn->OnLayoutChanged.BindUObject<AStructureController>(this, &AStructureController::PropagateLayoutChange);
-		StructurePawn->OnActionsChanged.BindUObject<AStructureController>(this, &AStructureController::PropagateActionsChange);
+		OnLayoutChangedHandle = StructurePawn->OnLayoutChanged.AddUObject<AStructureController>(this, &AStructureController::PropagateLayoutChange);
+		OnActionsChangedHandle = StructurePawn->OnActionsChanged.AddUObject<AStructureController>(this, &AStructureController::PropagateActionsChange);
 	}
 }
 
@@ -73,42 +73,58 @@ void AStructureController::OnUnPossess()
 
 	if(StructurePawn)
 	{
-		StructurePawn->OnLayoutChanged.Unbind();
-		StructurePawn->OnActionsChanged.Unbind();
+		StructurePawn->OnLayoutChanged.Remove(OnLayoutChangedHandle);
+		StructurePawn->OnActionsChanged.Remove(OnActionsChangedHandle);
 	}
 
 	StructurePawn = nullptr;
+}
+
+void AStructureController::SetCameraTargetActor(AActor* InTarget)
+{
+	CameraTargetActor = InTarget;
+	CameraTargetComponent = nullptr;
+}
+
+void AStructureController::SetCameraTargetComponent(USceneComponent* InTarget)
+{
+	CameraTargetActor = nullptr;
+	CameraTargetComponent = InTarget;
 }
 
 void AStructureController::UpdateCamera()
 {
 	if(StructurePawn == nullptr) return;
 	
-	if(LookTarget == nullptr)
+	if(CameraTargetActor == nullptr)
 	{
-		LookTarget = StructurePawn;
-	}
-	
-	FBoxSphereBounds Bounds;
-	if(const AStructure* TargetStructure = Cast<AStructure>(LookTarget))
-	{
-		Bounds = GetStructureViewBounds(TargetStructure, true);
-	}
-	else
-	{
-		Bounds = GetViewBounds(LookTarget, true);
+		CameraTargetActor = StructurePawn;
 	}
 
+	const FBoxSphereBounds Bounds = CameraTargetComponent == nullptr ? GetViewBounds(CameraTargetActor, true) : GetViewBounds(CameraTargetComponent->GetOwner(), true);
+	const FVector Location = CameraTargetComponent == nullptr ? CameraTargetActor->GetActorLocation() : CameraTargetComponent->GetComponentLocation();
+	const FRotator Rotation = CameraTargetComponent == nullptr ? CameraTargetActor->GetActorRotation() : CameraTargetComponent->GetComponentRotation();
+	
 	USpringArmComponent* SpringArm = StructurePawn->GetCameraSpringArm();
 	
-	SpringArm->SetRelativeLocation(StructurePawn->GetTransform().InverseTransformPosition(LookTarget->GetActorLocation()));
+	SpringArm->SetRelativeLocation(StructurePawn->GetTransform().InverseTransformPosition(Location));
 	SpringArm->TargetArmLength = Bounds.SphereRadius * 2 * ZoomLevel;
 
-	SpringArm->SetWorldRotation(LookTarget->GetActorRotation());
-	SpringArm->AddLocalRotation(FRotator(LookRotation.Y, LookRotation.X, 0));
+	SpringArm->SetWorldRotation(Rotation);
+	SpringArm->AddLocalRotation(FRotator(CameraRotation.Y, CameraRotation.X, 0));
 }
 
 FBoxSphereBounds AStructureController::GetViewBounds(const AActor* Actor, const bool OnlyCollidingComponents)
+{
+	const AStructure* Structure = Cast<AStructure>(Actor);
+	if(Structure != nullptr)
+	{
+		return GetStructureViewBounds(Structure, OnlyCollidingComponents);
+	}
+	return GetObjectViewBounds(Actor, OnlyCollidingComponents);
+}
+
+FBoxSphereBounds AStructureController::GetObjectViewBounds(const AActor* Actor, const bool OnlyCollidingComponents)
 {
 	FBoxSphereBounds Bounds;
 	Actor->ForEachComponent<UPrimitiveComponent>(false, [&](const UPrimitiveComponent* InPrimComp)
@@ -131,6 +147,11 @@ FBoxSphereBounds AStructureController::GetStructureViewBounds(const AStructure* 
 		Bounds = Bounds + GetViewBounds(AttachedActor, OnlyCollidingComponents);
 	}
 	return Bounds;
+}
+
+UUIBase* AStructureController::GetUIBaseWidget() const
+{
+	return UIBaseWidget;
 }
 
 FVector AStructureController::GetTurnIndicatorOffset() const
@@ -156,7 +177,7 @@ void AStructureController::RotateOverride(const FInputActionInstance& Instance)
 void AStructureController::Look(const FInputActionInstance& Instance)
 {
 	const FVector Value = Instance.GetValue().Get<FVector>();
-	LookRotation = FVector2D(FMath::Fmod(LookRotation.X + Value.X, 360), FMath::Clamp(LookRotation.Y + Value.Y, -90, 90));
+	CameraRotation = FVector2D(FMath::Fmod(CameraRotation.X + Value.X, 360), FMath::Clamp(CameraRotation.Y + Value.Y, -90, 90));
 }
 
 void AStructureController::Zoom(const FInputActionInstance& Instance)
@@ -197,18 +218,12 @@ void AStructureController::EditStructure(const FInputActionInstance& Instance)
 	Details->Init(AvailableParts);
 }
 
-void AStructureController::PropagateLayoutChange()
+void AStructureController::PropagateLayoutChange() const
 {
-	if(OnLayoutChanged.IsBound())
-	{
-		OnLayoutChanged.Execute();
-	}
+	OnLayoutChanged.Broadcast();
 }
 
-void AStructureController::PropagateActionsChange()
+void AStructureController::PropagateActionsChange() const
 {
-	if(OnActionsChanged.IsBound())
-	{
-		OnActionsChanged.Execute();
-	}
+	OnActionsChanged.Broadcast();
 }

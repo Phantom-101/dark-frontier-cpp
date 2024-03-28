@@ -43,5 +43,9 @@ public:
 private:
 
 	void OnCardClicked() const;
+
+	void OnRemoveButtonClicked() const;
+
+	void OnLookButtonClicked() const;
 	
 };
