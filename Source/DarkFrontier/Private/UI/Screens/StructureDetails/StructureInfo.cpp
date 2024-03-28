@@ -9,6 +9,7 @@
 #include "Components/WidgetSwitcher.h"
 #include "Structures/Structure.h"
 #include "Structures/StructureAttributeSet.h"
+#include "Structures/StructureController.h"
 #include "Structures/StructurePart.h"
 #include "Structures/StructurePartSlot.h"
 #include "Structures/StructurePartSlotType.h"
@@ -20,10 +21,19 @@ void UStructureInfo::NativeConstruct()
 	Super::NativeConstruct();
 
 	TypeModeButton->OnClicked().Clear();
-	TypeModeButton->OnClicked().AddUObject<UStructureInfo>(this, &UStructureInfo::TypeModeSelected);
+	TypeModeButton->OnClicked().AddUObject<UStructureInfo>(this, &UStructureInfo::OnTypeModeSelected);
 
 	ListModeButton->OnClicked().Clear();
-	ListModeButton->OnClicked().AddUObject<UStructureInfo>(this, &UStructureInfo::ListModeSelected);
+	ListModeButton->OnClicked().AddUObject<UStructureInfo>(this, &UStructureInfo::OnListModeSelected);
+
+	AStructureController* Controller = Cast<AStructureController>(GetWorld()->GetFirstPlayerController());
+	if(Controller != nullptr)
+	{
+		if(!OnLayoutChangedHandle.IsValid())
+		{
+			OnLayoutChangedHandle = Controller->OnLayoutChanged.AddUObject<UStructureInfo>(this, &UStructureInfo::OnLayoutChanged);
+		}
+	}
 }
 
 void UStructureInfo::SetTarget(AStructure* InTargetStructure)
@@ -75,17 +85,14 @@ void UStructureInfo::SetTarget(AStructure* InTargetStructure)
 	FormatArgs.Add(FStringFormatArg(ToString(AngularAccel)));
 	AngularField->SetContentFromString(FString::Format(TEXT("{0}+{1}"), FormatArgs));
 
-	TypeModeSelected();
+	OnTypeModeSelected();
+	RebuildTypeMode();
+	RebuildListMode();
 }
 
-void UStructureInfo::TypeModeSelected()
+void UStructureInfo::RebuildTypeMode()
 {
-	TypeModeButton->SetStyle(SelectedStyle);
-	ListModeButton->SetStyle(UnSelectedStyle);
-
-	PartListSwitcher->SetActiveWidget(TypeList);
-
-	TypeList->ClearChildren();
+	// Collate existing types
 	TArray<UStructurePartSlotType*> SlotTypes;
 	for(AStructurePart* Part : TargetStructure->GetParts())
 	{
@@ -97,7 +104,10 @@ void UStructureInfo::TypeModeSelected()
 			}
 		}
 	}
-	for(UStructurePartSlotType* SlotType : SlotTypes)
+
+	// Add to list
+	TypeList->ClearChildren();
+	for(const UStructurePartSlotType* SlotType : SlotTypes)
 	{
 		UStructurePartSlotListView* View = CreateWidget<UStructurePartSlotListView>(this, ListViewClass);
 		TypeList->AddChild(View);
@@ -105,20 +115,37 @@ void UStructureInfo::TypeModeSelected()
 	}
 }
 
-void UStructureInfo::ListModeSelected()
+void UStructureInfo::RebuildListMode() const
 {
-	TypeModeButton->SetStyle(UnSelectedStyle);
-	ListModeButton->SetStyle(SelectedStyle);
-
-	PartListSwitcher->SetActiveWidget(PartCardList);
-
 	PartCardList->ClearListItems();
 	for(AStructurePart* Part : TargetStructure->GetParts())
 	{
 		PartCardList->AddItem(Part);
 	}
 	PartCardList->RegenerateAllEntries();
-	PartCardList->ScrollIndexIntoView(0);
+	// We don't need to scroll the first item into view as all elements are of fixed height
+}
+
+void UStructureInfo::OnTypeModeSelected() const
+{
+	TypeModeButton->SetStyle(SelectedStyle);
+	ListModeButton->SetStyle(UnSelectedStyle);
+
+	PartListSwitcher->SetActiveWidget(TypeList);
+}
+
+void UStructureInfo::OnListModeSelected() const
+{
+	TypeModeButton->SetStyle(UnSelectedStyle);
+	ListModeButton->SetStyle(SelectedStyle);
+
+	PartListSwitcher->SetActiveWidget(PartCardList);
+}
+
+void UStructureInfo::OnLayoutChanged()
+{
+	RebuildTypeMode();
+	RebuildListMode();
 }
 
 FString UStructureInfo::ToString(const float Value)

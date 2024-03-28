@@ -7,7 +7,7 @@
 #include "GameFramework/Pawn.h"
 #include "Structure.generated.h"
 
-DECLARE_DELEGATE(FStructureStateChanged)
+DECLARE_MULTICAST_DELEGATE(FStructureStateChanged)
 
 UCLASS()
 class DARKFRONTIER_API AStructure : public APawn, public IAbilitySystemInterface
@@ -85,10 +85,10 @@ public:
 	TArray<AStructurePart*> GetParts();
 
 	UFUNCTION(BlueprintCallable, Category="Layout")
-	void RegisterPart(AStructurePart* InPart);
+	void RegisterPart(AStructurePart* InPart, bool SuppressEvent = false);
 
 	UFUNCTION(BlueprintCallable, Category="Layout")
-	void UnregisterPart(AStructurePart* InPart);
+	void UnregisterPart(AStructurePart* InPart, bool SuppressEvent = false);
 
 	UFUNCTION(BlueprintCallable, Category="Layout")
 	bool IsLayoutValid();

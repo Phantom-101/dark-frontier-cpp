@@ -16,7 +16,7 @@ void UStructureBuilder::NativeConstruct()
 {
 	Super::NativeConstruct();
 
-	UIBase = Cast<AStructureController>(GetWorld()->GetFirstPlayerController())->UIBaseWidget;
+	UIBase = Cast<AStructureController>(GetWorld()->GetFirstPlayerController())->GetUIBaseWidget();
 
 	CloseButton->OnClicked().Clear();
 	CloseButton->OnClicked().AddUObject<UStructureBuilder>(this, &UStructureBuilder::OnCloseButtonClicked);

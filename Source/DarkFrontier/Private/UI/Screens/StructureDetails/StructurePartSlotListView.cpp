@@ -8,7 +8,7 @@
 #include "Structures/StructurePartSlot.h"
 #include "Structures/StructurePartSlotType.h"
 
-void UStructurePartSlotListView::Init(AStructure* InTarget, UStructurePartSlotType* InType) const
+void UStructurePartSlotListView::Init(AStructure* InTarget, const UStructurePartSlotType* InType) const
 {
 	if(InType == nullptr)
 	{

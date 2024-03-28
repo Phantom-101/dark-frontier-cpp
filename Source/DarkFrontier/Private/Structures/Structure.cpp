@@ -88,7 +88,7 @@ TArray<AStructurePart*> AStructure::GetParts()
 	return Parts;
 }
 
-void AStructure::RegisterPart(AStructurePart* InPart)
+void AStructure::RegisterPart(AStructurePart* InPart, const bool SuppressEvent)
 {
 	InPart->TryInitPartId(NextPartId);
 	NextPartId++;
@@ -96,20 +96,20 @@ void AStructure::RegisterPart(AStructurePart* InPart)
 	Parts.Add(InPart);
 	InPart->OnRegistered();
 	
-	if(OnLayoutChanged.IsBound())
+	if(!SuppressEvent)
 	{
-		OnLayoutChanged.Execute();
+		OnLayoutChanged.Broadcast();
 	}
 }
 
-void AStructure::UnregisterPart(AStructurePart* InPart)
+void AStructure::UnregisterPart(AStructurePart* InPart, const bool SuppressEvent)
 {
 	Parts.Remove(InPart);
 	InPart->OnUnRegistered();
-	
-	if(OnLayoutChanged.IsBound())
+
+	if(!SuppressEvent)
 	{
-		OnLayoutChanged.Execute();
+		OnLayoutChanged.Broadcast();
 	}
 }
 
@@ -162,7 +162,7 @@ void AStructure::UpdateLayoutInformation()
 	{
 		if(!Parts.Contains(Part))
 		{
-			RegisterPart(Part);
+			RegisterPart(Part, true);
 		}
 	}
 
@@ -171,9 +171,8 @@ void AStructure::UpdateLayoutInformation()
 	{
 		if(!NewParts.Contains(Parts[CurrentIndex]))
 		{
-			UnregisterPart(Parts[CurrentIndex]);
 			Parts[CurrentIndex]->Destroy();
-			Parts.RemoveAt(CurrentIndex);
+			UnregisterPart(Parts[CurrentIndex], true);
 		}
 		else
 		{
@@ -193,6 +192,8 @@ void AStructure::UpdateLayoutInformation()
 		Part->ResetRootDistance();
 	}
 	RootPart->UpdateDistance(0);
+
+	OnLayoutChanged.Broadcast();
 }
 
 float AStructure::GetUpkeep() const
