@@ -64,7 +64,7 @@ public:
 	TSubclassOf<UGameplayEffect> GetPassiveEffect() const;
 	
 	UFUNCTION(BlueprintCallable, Category="Lifetime")
-	bool TryInit(AStructure* NewOwner);
+	bool TryInit(AStructure* NewOwner, bool RegisterOnly = false);
 
 	UFUNCTION(BlueprintCallable, Category="Lifetime")
 	void OnRegistered();

@@ -39,12 +39,12 @@ TSubclassOf<UGameplayEffect> AStructurePart::GetPassiveEffect() const
 	return PassiveEffect;
 }
 
-bool AStructurePart::TryInit(AStructure* NewOwner)
+bool AStructurePart::TryInit(AStructure* NewOwner, const bool RegisterOnly)
 {
 	if(OwningStructure) return false;
 	
 	OwningStructure = NewOwner;
-	OwningStructure->RegisterPart(this);
+	OwningStructure->RegisterPart(this, RegisterOnly, RegisterOnly);
 	AttachToActor(OwningStructure, FAttachmentTransformRules(EAttachmentRule::KeepWorld, true));
 	OwningFaction = OwningStructure->GetOwningFaction();
 	
