@@ -55,7 +55,7 @@ public:
 	bool CanAttach(const UStructurePartSlot* Other) const;
 
 	UFUNCTION(BlueprintCallable, Category="Layout")
-	bool TryAttach(UStructurePartSlot* NewSlot);
+	bool TryAttach(UStructurePartSlot* NewSlot, bool SuppressUpdate = false);
 	
 	UFUNCTION(BlueprintCallable, Category="Layout")
 	bool TryDetach();

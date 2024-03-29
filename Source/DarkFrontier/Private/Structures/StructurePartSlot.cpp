@@ -51,58 +51,70 @@ bool UStructurePartSlot::CanAttach(const UStructurePartSlot* Other) const
 	return Filter->IsCompatible(Other) && Other->Filter->IsCompatible(this);
 }
 
-bool UStructurePartSlot::TryAttach(UStructurePartSlot* NewSlot)
+/**
+ * @note If both slots are already part of layout, the new slot will be moved with reference to the callee slot. This is not necessary when attaching nearby slots but required when loading from a layout object as parts were created without any prior connections/physical adjustments.
+ */
+bool UStructurePartSlot::TryAttach(UStructurePartSlot* NewSlot, bool SuppressUpdate)
 {
 	if(!IsValid(NewSlot))
 	{
-		UE_LOG(LogStructure, Display, TEXT("New slot must be valid"));
+		UE_LOG(LogStructure, Warning, TEXT("New slot must be valid"));
 		return false;
 	}
 	
 	if(AttachedSlot || NewSlot->AttachedSlot)
 	{
-		UE_LOG(LogStructure, Display, TEXT("Both slots must be null for them to attach"));
+		UE_LOG(LogStructure, Warning, TEXT("Both slots must be null for them to attach"));
 		return false;
 	}
 	
 	if(!IsValid(GetOwningStructure()) && !IsValid(NewSlot->GetOwningStructure()))
 	{
-		UE_LOG(LogStructure, Display, TEXT("Neither slot has valid owning structure"));
+		UE_LOG(LogStructure, Warning, TEXT("Neither slot has valid owning structure"));
 		return false;
 	}
 
 	if((GetOwningStructure() && !IsValid(GetOwningStructure())) ||
 		(NewSlot->GetOwningStructure() && !IsValid(NewSlot->GetOwningStructure())))
 	{
-		UE_LOG(LogStructure, Display, TEXT("Cannot attach slot with non-valid owning structure"));
+		UE_LOG(LogStructure, Warning, TEXT("Cannot attach slot with non-valid owning structure"));
 		return false;
 	}
 	
 	if(!CanAttach(NewSlot))
 	{
-		UE_LOG(LogStructure, Log, TEXT("Slots are not compatible"));
+		UE_LOG(LogStructure, Warning, TEXT("Slots are not compatible"));
 		return false;
 	}
 
 	AttachedSlot = NewSlot;
 	AttachedSlot->AttachedSlot = this;
 
-	MatchTransform(AttachedSlot);
-	
 	if(!GetOwningStructure())
 	{
 		// This part previously not attached
 		OwningPart->TryInit(AttachedSlot->GetOwningStructure());
+		MatchTransform(AttachedSlot);
 		OwningPart->AttachSlots();
 	}
 	else if(!AttachedSlot->GetOwningStructure())
 	{
 		// Other part previously not attached
 		AttachedSlot->OwningPart->TryInit(GetOwningStructure());
+		AttachedSlot->MatchTransform(this);
 		AttachedSlot->OwningPart->AttachSlots();
 	}
+	else
+	{
+		// Use other slot as reference
+		AttachedSlot->MatchTransform(this);
+	}
+
+	if(!SuppressUpdate)
+	{
+		GetOwningStructure()->UpdateLayoutInformation();
+	}
 	
-	GetOwningStructure()->UpdateLayoutInformation();
 	return true;
 }
 
@@ -120,7 +132,7 @@ bool UStructurePartSlot::TryDetach()
 void UStructurePartSlot::MatchTransform(UStructurePartSlot* Other)
 {
 	// Match part xy with other slot xy
-	OwningPart->SetActorRotation(UKismetMathLibrary::MakeRotFromXY(-Other->GetForwardVector(), Other->GetRightVector()));
+	OwningPart->SetActorRotation(UKismetMathLibrary::MakeRotFromXY(-Other->GetForwardVector(), -Other->GetRightVector()));
 	// Match current slot xy with other slot xy
 	OwningPart->AddActorLocalRotation(OwningPart->GetTransform().InverseTransformRotation(GetComponentRotation().Quaternion()).Rotator().GetInverse());
 	// Match current slot position with other slot position

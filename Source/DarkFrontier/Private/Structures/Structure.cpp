@@ -1,11 +1,14 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "Structures/Structure.h"
+
+#include "Log.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Structures/StructureAbilitySystemComponent.h"
 #include "Structures/StructureAttributeSet.h"
 #include "Structures/StructureGameplayAbility.h"
+#include "Structures/StructureLayout.h"
 #include "Structures/StructurePart.h"
 #include "Structures/StructurePartSlot.h"
 
@@ -65,12 +68,12 @@ void AStructure::PossessedBy(AController* NewController)
 	SetOwner(NewController); // For ASC mixed replication mode
 }
 
-bool AStructure::TryInit(AStructurePart* NewRoot)
+bool AStructure::TryInit(AStructurePart* NewRoot, const bool RegisterOnly)
 {
 	if(RootPart) return false;
 	if(NewRoot->GetOwningStructure()) return false;
 	
-	NewRoot->TryInit(this);
+	NewRoot->TryInit(this, RegisterOnly);
 	RootPart = NewRoot;
 	RootPart->SetActorRelativeLocation(FVector::ZeroVector);
 	RootPart->SetActorRelativeRotation(FRotator::ZeroRotator);
@@ -88,10 +91,25 @@ TArray<AStructurePart*> AStructure::GetParts()
 	return Parts;
 }
 
-void AStructure::RegisterPart(AStructurePart* InPart, const bool SuppressEvent)
+AStructurePart* AStructure::GetPart(const int32 InId)
 {
-	InPart->TryInitPartId(NextPartId);
-	NextPartId++;
+	for(AStructurePart* Part : Parts)
+	{
+		if(Part->GetPartId() == InId)
+		{
+			return Part;
+		}
+	}
+	return nullptr;
+}
+
+void AStructure::RegisterPart(AStructurePart* InPart, const bool SuppressEvent, bool KeepId)
+{
+	if(!KeepId)
+	{
+		InPart->TryInitPartId(NextPartId);
+		NextPartId++;
+	}
 	
 	Parts.Add(InPart);
 	InPart->OnRegistered();
@@ -136,6 +154,117 @@ bool AStructure::IsLayoutSelfIntersecting()
 bool AStructure::IsLayoutUpkeepOverloaded() const
 {
 	return GetUpkeep() > Attributes->GetMaxUpkeep();
+}
+
+bool AStructure::LoadLayout(FStructureLayout InLayout)
+{
+	if(RootPart) return false;
+
+	// If editor authoring, set all part ids here so validity checks do not fail later
+	for(int i = 0; i < InLayout.Parts.Num(); i++)
+	{
+		InLayout.Parts[i].PartId = NextPartId;
+		NextPartId++;
+	}
+	
+	// Assume first part data is for the root part
+	for(FStructureLayoutPart PartData : InLayout.Parts)
+	{
+		if(PartData.IsValid())
+		{
+			AStructurePart* Part = GetWorld()->SpawnActor<AStructurePart>(PartData.PartClass);
+			
+			if(RootPart)
+			{
+				if(Part->TryInit(this, true))
+				{
+					UE_LOG(LogStructure, Log, TEXT("Created layout part on %s with id %d"), *GetName(), PartData.PartId);
+				}
+				else
+				{
+					UE_LOG(LogStructure, Warning, TEXT("Failed to create layout part on %s with id %d"), *GetName(), PartData.PartId);
+				}
+			}
+			else
+			{
+				if(TryInit(Part, true))
+				{
+					UE_LOG(LogStructure, Log, TEXT("Created layout part as root on %s with id %d"), *GetName(), PartData.PartId);
+				}
+				else
+				{
+					UE_LOG(LogStructure, Warning, TEXT("Failed to create layout part as root on %s with id %d"), *GetName(), PartData.PartId);
+				}
+			}
+			
+			if(!Part->TryInitPartId(PartData.PartId))
+			{
+				UE_LOG(LogStructure, Warning, TEXT("Failed to set layout part on %s to target id %d"), *GetName(), PartData.PartId);
+			}
+			NextPartId = FMath::Max(NextPartId, PartData.PartId);
+
+			
+		}
+		else
+		{
+			if(PartData.PartClass == nullptr)
+			{
+				UE_LOG(LogStructure, Warning, TEXT("Invalid layout part on %s with invalid class"), *GetName());
+			}
+			else
+			{
+				UE_LOG(LogStructure, Warning, TEXT("Invalid layout part on %s with invalid id %d"), *GetName(), PartData.PartId);
+			}
+		}
+	}
+	NextPartId++;
+
+	if(!RootPart) return false;
+
+	for(FStructureLayoutConnection ConnectionData : InLayout.Connections)
+	{
+		if(ConnectionData.IsValid())
+		{
+			AStructurePart* PartA = GetPart(ConnectionData.PartAId);
+			AStructurePart* PartB = GetPart(ConnectionData.PartBId);
+
+			if(IsValid(PartA) && IsValid(PartB))
+			{
+				UStructurePartSlot* SlotA = PartA->GetSlot(ConnectionData.PartASlot);
+				UStructurePartSlot* SlotB = PartB->GetSlot(ConnectionData.PartBSlot);
+
+				if(IsValid(SlotA) && IsValid(SlotB))
+				{
+					// Suppress layout update to prevent deletion of parts not yet connected via connections
+					if(SlotA->TryAttach(SlotB, true))
+					{
+						UE_LOG(LogStructure, Log, TEXT("Created layout connection on %s between %d (%s), %d (%s)"), *GetName(), ConnectionData.PartAId, *ConnectionData.PartASlot.ToString(), ConnectionData.PartBId, *ConnectionData.PartBSlot.ToString());
+					}
+					else
+					{
+						UE_LOG(LogStructure, Warning, TEXT("Failed to create layout connection on %s between %d (%s), %d (%s)"), *GetName(), ConnectionData.PartAId, *ConnectionData.PartASlot.ToString(), ConnectionData.PartBId, *ConnectionData.PartBSlot.ToString());
+					}
+				}
+				else
+				{
+					UE_LOG(LogStructure, Warning, TEXT("Invalid layout connection on %s with missing/invalid slots(s)"), *GetName());
+				}
+			}
+			else
+			{
+				UE_LOG(LogStructure, Warning, TEXT("Invalid layout connection on %s with missing/invalid part(s)"), *GetName());
+			}
+		}
+		else
+		{
+			UE_LOG(LogStructure, Warning, TEXT("Invalid layout connection on %s with unset ids"), *GetName());
+		}
+	}
+
+	// All parts should be connected at this point
+	UpdateLayoutInformation();
+
+	return true;
 }
 
 void AStructure::UpdateLayoutInformation()

@@ -48,13 +48,13 @@ protected:
 	TArray<TObjectPtr<AStructurePart>> Parts;
 
 	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly, Category="Layout")
-	int32 NextPartId;
+	int32 NextPartId = 0;
 
 	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly, Category="Input")
-	FVector MoveInput;
+	FVector MoveInput = FVector::ZeroVector;
 
 	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly, Category="Input")
-	FVector RotateInput;
+	FVector RotateInput = FVector::ZeroVector;
 
 	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly, Category="Combat")
 	TObjectPtr<class AFaction> OwningFaction;
@@ -76,7 +76,7 @@ public:
 	virtual void PossessedBy(AController* NewController) override;
 
 	UFUNCTION(BlueprintCallable, Category="Lifetime")
-	bool TryInit(AStructurePart* NewRoot);
+	bool TryInit(AStructurePart* NewRoot, bool RegisterOnly = false);
 
 	UFUNCTION(BlueprintCallable, Category="Layout")
 	AStructurePart* GetRootPart() const;
@@ -85,7 +85,10 @@ public:
 	TArray<AStructurePart*> GetParts();
 
 	UFUNCTION(BlueprintCallable, Category="Layout")
-	void RegisterPart(AStructurePart* InPart, bool SuppressEvent = false);
+	AStructurePart* GetPart(int32 InId);
+
+	UFUNCTION(BlueprintCallable, Category="Layout")
+	void RegisterPart(AStructurePart* InPart, bool SuppressEvent = false, bool KeepId = false);
 
 	UFUNCTION(BlueprintCallable, Category="Layout")
 	void UnregisterPart(AStructurePart* InPart, bool SuppressEvent = false);
@@ -98,6 +101,9 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category="Layout")
 	bool IsLayoutUpkeepOverloaded() const;
+
+	UFUNCTION(BlueprintCallable, Category="Layout")
+	bool LoadLayout(struct FStructureLayout InLayout);
 
 	UFUNCTION(BlueprintCallable, Category="Layout")
 	void UpdateLayoutInformation();

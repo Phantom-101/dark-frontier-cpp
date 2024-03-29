@@ -1,3 +1,5 @@
+// Fill out your copyright notice in the Description page of Project Settings.
+
 #include "Structures/StructurePartAuthoring.h"
 #include "Structures/Structure.h"
 #include "Structures/StructurePart.h"
