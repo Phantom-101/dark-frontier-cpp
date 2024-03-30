@@ -47,9 +47,6 @@ protected:
 	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly, Category="Layout")
 	TArray<TObjectPtr<AStructurePart>> Parts;
 
-	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly, Category="Layout")
-	int32 NextPartId = 0;
-
 	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly, Category="Input")
 	FVector MoveInput = FVector::ZeroVector;
 
@@ -85,7 +82,7 @@ public:
 	TArray<AStructurePart*> GetParts();
 
 	UFUNCTION(BlueprintCallable, Category="Layout")
-	AStructurePart* GetPart(int32 InId);
+	AStructurePart* GetPart(FString InId);
 
 	UFUNCTION(BlueprintCallable, Category="Layout")
 	void RegisterPart(AStructurePart* InPart, bool SuppressEvent = false, bool KeepId = false);

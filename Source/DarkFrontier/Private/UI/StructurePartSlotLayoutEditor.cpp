@@ -23,7 +23,7 @@ void UStructurePartSlotLayoutEditor::NativeOnListItemObjectSet(UObject* ListItem
 	if(PartSlot->GetAttachedSlot())
 	{
 		TypeText->SetText(PartSlot->GetAttachedSlot()->GetOwningPart()->GetTypeName());
-		IdText->SetText(FText::FromString(FString::Printf(TEXT("#%i"), PartSlot->GetAttachedSlot()->GetOwningPart()->GetPartId())));
+		IdText->SetText(FText::FromString(FString::Printf(TEXT("%s"), *PartSlot->GetAttachedSlot()->GetOwningPart()->GetPartId())));
 
 		AddButton->SetIsInteractionEnabled(false);
 		RemoveButton->SetIsInteractionEnabled(PartSlot->GetAttachedSlot()->GetOwningPart() != PartSlot->GetOwningPart()->GetOwningStructure()->GetRootPart());

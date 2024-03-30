@@ -18,5 +18,5 @@ FStructureLayoutConnection::FStructureLayoutConnection(const UStructurePartSlot*
 
 bool FStructureLayoutConnection::IsValid() const
 {
-	return PartAId >= 0 && PartBId >= 0;
+	return !PartAId.IsEmpty() && !PartBId.IsEmpty();
 }

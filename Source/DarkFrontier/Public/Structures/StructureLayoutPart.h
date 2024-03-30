@@ -17,7 +17,7 @@ struct DARKFRONTIER_API FStructureLayoutPart
 	TSubclassOf<class AStructurePart> PartClass;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, SaveGame)
-	int32 PartId = -1;
+	FString PartId;
 
 	FStructureLayoutPart();
 

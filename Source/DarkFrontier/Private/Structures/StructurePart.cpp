@@ -81,14 +81,14 @@ bool AStructurePart::IsActiveInLayout()
 	return true;
 }
 
-int AStructurePart::GetPartId() const
+FString AStructurePart::GetPartId() const
 {
 	return PartId;
 }
 
-bool AStructurePart::TryInitPartId(const int InId)
+bool AStructurePart::TryInitPartId(FString InId)
 {
-	if(PartId != -1) return false;
+	if(!PartId.IsEmpty()) return false;
 	PartId = InId;
 	return true;
 }
