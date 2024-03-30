@@ -91,11 +91,11 @@ TArray<AStructurePart*> AStructure::GetParts()
 	return Parts;
 }
 
-AStructurePart* AStructure::GetPart(const int32 InId)
+AStructurePart* AStructure::GetPart(const FString InId)
 {
 	for(AStructurePart* Part : Parts)
 	{
-		if(Part->GetPartId() == InId)
+		if(Part->GetPartId().Equals(InId))
 		{
 			return Part;
 		}
@@ -107,8 +107,7 @@ void AStructure::RegisterPart(AStructurePart* InPart, const bool SuppressEvent, 
 {
 	if(!KeepId)
 	{
-		InPart->TryInitPartId(NextPartId);
-		NextPartId++;
+		InPart->TryInitPartId(FGuid::NewGuid().ToString());
 	}
 	
 	Parts.Add(InPart);
@@ -160,11 +159,13 @@ bool AStructure::LoadLayout(FStructureLayout InLayout)
 {
 	if(RootPart) return false;
 
-	// If editor authoring, set all part ids here so validity checks do not fail later
+	// If any layout part has an empty id, set it to a random guid
 	for(int i = 0; i < InLayout.Parts.Num(); i++)
 	{
-		InLayout.Parts[i].PartId = NextPartId;
-		NextPartId++;
+		if(InLayout.Parts[i].PartId.IsEmpty())
+		{
+			InLayout.Parts[i].PartId = FGuid::NewGuid().ToString();
+		}
 	}
 	
 	// Assume first part data is for the root part
@@ -176,48 +177,30 @@ bool AStructure::LoadLayout(FStructureLayout InLayout)
 			
 			if(RootPart)
 			{
-				if(Part->TryInit(this, true))
+				if(!Part->TryInit(this, true))
 				{
-					UE_LOG(LogStructure, Log, TEXT("Created layout part on %s with id %d"), *GetName(), PartData.PartId);
-				}
-				else
-				{
-					UE_LOG(LogStructure, Warning, TEXT("Failed to create layout part on %s with id %d"), *GetName(), PartData.PartId);
+					UE_LOG(LogStructure, Warning, TEXT("Failed to create layout part on %s with id %s"), *GetName(), *PartData.PartId);
 				}
 			}
 			else
 			{
-				if(TryInit(Part, true))
+				if(!TryInit(Part, true))
 				{
-					UE_LOG(LogStructure, Log, TEXT("Created layout part as root on %s with id %d"), *GetName(), PartData.PartId);
-				}
-				else
-				{
-					UE_LOG(LogStructure, Warning, TEXT("Failed to create layout part as root on %s with id %d"), *GetName(), PartData.PartId);
+					UE_LOG(LogStructure, Warning, TEXT("Failed to create layout part as root on %s with id %s"), *GetName(), *PartData.PartId);
 				}
 			}
 			
 			if(!Part->TryInitPartId(PartData.PartId))
 			{
-				UE_LOG(LogStructure, Warning, TEXT("Failed to set layout part on %s to target id %d"), *GetName(), PartData.PartId);
+				UE_LOG(LogStructure, Warning, TEXT("Failed to set layout part on %s to target id %s"), *GetName(), *PartData.PartId);
 			}
-			NextPartId = FMath::Max(NextPartId, PartData.PartId);
-
-			
 		}
 		else
 		{
-			if(PartData.PartClass == nullptr)
-			{
-				UE_LOG(LogStructure, Warning, TEXT("Invalid layout part on %s with invalid class"), *GetName());
-			}
-			else
-			{
-				UE_LOG(LogStructure, Warning, TEXT("Invalid layout part on %s with invalid id %d"), *GetName(), PartData.PartId);
-			}
+			// All layout part ids are valid as any empty ids were set to random guids by this point
+			UE_LOG(LogStructure, Warning, TEXT("Invalid layout part on %s with invalid class"), *GetName());
 		}
 	}
-	NextPartId++;
 
 	if(!RootPart) return false;
 
@@ -236,13 +219,9 @@ bool AStructure::LoadLayout(FStructureLayout InLayout)
 				if(IsValid(SlotA) && IsValid(SlotB))
 				{
 					// Suppress layout update to prevent deletion of parts not yet connected via connections
-					if(SlotA->TryAttach(SlotB, true))
+					if(!SlotA->TryAttach(SlotB, true))
 					{
-						UE_LOG(LogStructure, Log, TEXT("Created layout connection on %s between %d (%s), %d (%s)"), *GetName(), ConnectionData.PartAId, *ConnectionData.PartASlot.ToString(), ConnectionData.PartBId, *ConnectionData.PartBSlot.ToString());
-					}
-					else
-					{
-						UE_LOG(LogStructure, Warning, TEXT("Failed to create layout connection on %s between %d (%s), %d (%s)"), *GetName(), ConnectionData.PartAId, *ConnectionData.PartASlot.ToString(), ConnectionData.PartBId, *ConnectionData.PartBSlot.ToString());
+						UE_LOG(LogStructure, Warning, TEXT("Failed to create layout connection on %s between %s (%s), %s (%s)"), *GetName(), *ConnectionData.PartAId, *ConnectionData.PartASlot.ToString(), *ConnectionData.PartBId, *ConnectionData.PartBSlot.ToString());
 					}
 				}
 				else

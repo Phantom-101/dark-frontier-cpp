@@ -16,9 +16,6 @@ struct DARKFRONTIER_API FStructureLayout
 	GENERATED_BODY()
 
 	UPROPERTY(BlueprintReadOnly, EditAnywhere, SaveGame)
-	bool IsEditorAuthoring = true;
-
-	UPROPERTY(BlueprintReadOnly, EditAnywhere, SaveGame)
 	TArray<FStructureLayoutPart> Parts;
 
 	UPROPERTY(BlueprintReadOnly, EditAnywhere, SaveGame)

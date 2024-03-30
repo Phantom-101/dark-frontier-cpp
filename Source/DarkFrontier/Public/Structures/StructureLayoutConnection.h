@@ -15,14 +15,14 @@ struct DARKFRONTIER_API FStructureLayoutConnection
 
 	/** Id of the part which is used as the reference position when physically attaching. */
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, SaveGame)	
-	int32 PartAId = -1;
+	FString PartAId;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, SaveGame)	
 	FText PartASlot;
 
 	/** Id of the part which is moved with regards to the reference when physically attaching. */
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, SaveGame)
-	int32 PartBId = -1;
+	FString PartBId;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, SaveGame)	
 	FText PartBSlot;

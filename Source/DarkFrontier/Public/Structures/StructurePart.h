@@ -34,7 +34,7 @@ protected:
 	TArray<TObjectPtr<class UStructurePartSlot>> Slots;
 
 	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly, Category="Layout")
-	int32 PartId = -1;
+	FString PartId;
 
 	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly, Category="Layout")
 	int32 RootDistance = -1;
@@ -82,10 +82,10 @@ public:
 	bool IsActiveInLayout();
 	
 	UFUNCTION(BlueprintCallable, Category="Layout")
-	int GetPartId() const;
+	FString GetPartId() const;
 
 	UFUNCTION(BlueprintCallable, Category="Layout")
-	bool TryInitPartId(int InId);
+	bool TryInitPartId(FString InId);
 
 	UFUNCTION(BlueprintCallable, Category="Layout")
 	int GetRootDistance() const;

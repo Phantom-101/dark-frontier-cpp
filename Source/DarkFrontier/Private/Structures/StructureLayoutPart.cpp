@@ -15,5 +15,5 @@ FStructureLayoutPart::FStructureLayoutPart(const AStructurePart* InPart)
 
 bool FStructureLayoutPart::IsValid() const
 {
-	return PartClass != nullptr && PartId >= 0;
+	return PartClass != nullptr && !PartId.IsEmpty();
 }

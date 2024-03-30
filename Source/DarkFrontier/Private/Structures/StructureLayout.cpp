@@ -11,8 +11,6 @@ FStructureLayout::FStructureLayout()
 
 FStructureLayout::FStructureLayout(const AStructure* InStructure)
 {
-	IsEditorAuthoring = false;
-	
 	TQueue<AStructurePart*> Queue;
 	const TSet<AStructurePart*> Visited;
 	Queue.Enqueue(InStructure->GetRootPart());
