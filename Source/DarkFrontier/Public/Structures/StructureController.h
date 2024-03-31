@@ -87,13 +87,9 @@ protected:
 
 	FDelegateHandle OnLayoutChangedHandle;
 
-	FDelegateHandle OnActionsChangedHandle;
-
 public:
 
 	FStructureStateChanged OnLayoutChanged;
-
-	FStructureStateChanged OnActionsChanged;
 
 protected:
 
@@ -162,7 +158,5 @@ protected:
 
 	UFUNCTION()
 	void PropagateLayoutChange() const;
-
-	UFUNCTION()
-	void PropagateActionsChange() const;
+	
 };

@@ -11,6 +11,7 @@
 #include "Structures/StructureLayout.h"
 #include "Structures/StructurePart.h"
 #include "Structures/StructurePartSlot.h"
+#include "UI/Screens/GameUI/StructurePartAbilityClass.h"
 
 AStructure::AStructure()
 {
@@ -179,26 +180,26 @@ bool AStructure::LoadLayout(FStructureLayout InLayout)
 			{
 				if(!Part->TryInit(this, true))
 				{
-					UE_LOG(LogStructure, Warning, TEXT("Failed to create layout part on %s with id %s"), *GetName(), *PartData.PartId);
+					UE_LOG(LogDarkFrontier, Warning, TEXT("Failed to create layout part on %s with id %s"), *GetName(), *PartData.PartId);
 				}
 			}
 			else
 			{
 				if(!TryInit(Part, true))
 				{
-					UE_LOG(LogStructure, Warning, TEXT("Failed to create layout part as root on %s with id %s"), *GetName(), *PartData.PartId);
+					UE_LOG(LogDarkFrontier, Warning, TEXT("Failed to create layout part as root on %s with id %s"), *GetName(), *PartData.PartId);
 				}
 			}
 			
 			if(!Part->TryInitPartId(PartData.PartId))
 			{
-				UE_LOG(LogStructure, Warning, TEXT("Failed to set layout part on %s to target id %s"), *GetName(), *PartData.PartId);
+				UE_LOG(LogDarkFrontier, Warning, TEXT("Failed to set layout part on %s to target id %s"), *GetName(), *PartData.PartId);
 			}
 		}
 		else
 		{
 			// All layout part ids are valid as any empty ids were set to random guids by this point
-			UE_LOG(LogStructure, Warning, TEXT("Invalid layout part on %s with invalid class"), *GetName());
+			UE_LOG(LogDarkFrontier, Warning, TEXT("Invalid layout part on %s with invalid class"), *GetName());
 		}
 	}
 
@@ -221,22 +222,22 @@ bool AStructure::LoadLayout(FStructureLayout InLayout)
 					// Suppress layout update to prevent deletion of parts not yet connected via connections
 					if(!SlotA->TryAttach(SlotB, true))
 					{
-						UE_LOG(LogStructure, Warning, TEXT("Failed to create layout connection on %s between %s (%s), %s (%s)"), *GetName(), *ConnectionData.PartAId, *ConnectionData.PartASlot.ToString(), *ConnectionData.PartBId, *ConnectionData.PartBSlot.ToString());
+						UE_LOG(LogDarkFrontier, Warning, TEXT("Failed to create layout connection on %s between %s (%s), %s (%s)"), *GetName(), *ConnectionData.PartAId, *ConnectionData.PartASlot.ToString(), *ConnectionData.PartBId, *ConnectionData.PartBSlot.ToString());
 					}
 				}
 				else
 				{
-					UE_LOG(LogStructure, Warning, TEXT("Invalid layout connection on %s with missing/invalid slots(s)"), *GetName());
+					UE_LOG(LogDarkFrontier, Warning, TEXT("Invalid layout connection on %s with missing/invalid slots(s)"), *GetName());
 				}
 			}
 			else
 			{
-				UE_LOG(LogStructure, Warning, TEXT("Invalid layout connection on %s with missing/invalid part(s)"), *GetName());
+				UE_LOG(LogDarkFrontier, Warning, TEXT("Invalid layout connection on %s with missing/invalid part(s)"), *GetName());
 			}
 		}
 		else
 		{
-			UE_LOG(LogStructure, Warning, TEXT("Invalid layout connection on %s with unset ids"), *GetName());
+			UE_LOG(LogDarkFrontier, Warning, TEXT("Invalid layout connection on %s with unset ids"), *GetName());
 		}
 	}
 
@@ -314,6 +315,23 @@ bool AStructure::IsDetecting(AStructure* Other) const
 	return (GetActorLocation() - Other->GetActorLocation()).SquaredLength() <= Attributes->GetSensorStrength() * Other->Attributes->GetSignatureVisibility();
 }
 
+void AStructure::ActivateAbility(const UStructurePartAbilityClass* AbilityClassObj)
+{
+	if(AbilityClassObj->TargetStructure != this)
+	{
+		UE_LOG(LogDarkFrontier, Warning, TEXT("Tried activating ability %s on incorrect structure"), *AbilityClassObj->AbilityClass->GetDisplayNameText().ToString());
+		return;
+	}
+	
+	for(AStructurePart* Part : Parts)
+	{
+		if(Part->GetClass() == AbilityClassObj->PartClass)
+		{
+			Part->ActivateAbility(AbilityClassObj->AbilityClass);
+		}
+	}
+}
+
 UAbilitySystemComponent* AStructure::GetAbilitySystemComponent() const
 {
 	return AbilitySystemComponent;
@@ -337,11 +355,11 @@ FActiveGameplayEffectHandle AStructure::ApplyEffect(const TSubclassOf<UGameplayE
 	return FActiveGameplayEffectHandle();
 }
 
-FGameplayAbilitySpecHandle AStructure::GrantAbility(TSubclassOf<UStructureGameplayAbility> AbilityClass)
+FGameplayAbilitySpecHandle AStructure::GiveAbility(TSubclassOf<UStructureGameplayAbility> AbilityClass)
 {
 	if(HasAuthority() && AbilitySystemComponent && AbilityClass)
 	{
-		return AbilitySystemComponent->GiveAbility(FGameplayAbilitySpec(AbilityClass, 1, -1, this));
+		return AbilitySystemComponent->GiveAbility(FGameplayAbilitySpec(AbilityClass, 1, INDEX_NONE, AbilitySystemComponent));
 	}
 
 	return FGameplayAbilitySpecHandle();

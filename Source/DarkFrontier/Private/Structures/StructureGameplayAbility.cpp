@@ -9,6 +9,8 @@ UStructureGameplayAbility::UStructureGameplayAbility()
 
 bool UStructureGameplayAbility::CheckCost(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, FGameplayTagContainer* OptionalRelevantTags) const
 {
+	if(!GetCostGameplayEffect()) return true;
+	
 	FGameplayEffectSpec	Spec(GetCostGameplayEffect(), MakeEffectContext(Handle, ActorInfo), GetAbilityLevel(Handle, ActorInfo));
 	for(const TPair<FGameplayTag, float> Pair : CostSetByCallerMagnitudes)
 	{
@@ -44,7 +46,7 @@ bool UStructureGameplayAbility::CheckCost(const FGameplayAbilitySpecHandle Handl
 
 void UStructureGameplayAbility::ApplyCost(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo) const
 {
-	if(!CostGameplayEffectClass) return;
+	if(!GetCostGameplayEffect()) return;
 	if(!HasAuthorityOrPredictionKey(ActorInfo, &ActivationInfo)) return;
 
 	const FGameplayEffectSpecHandle SpecHandle = MakeOutgoingGameplayEffectSpec(Handle, ActorInfo, ActivationInfo, CostGameplayEffectClass, GetAbilityLevel(Handle, ActorInfo));

@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "ActiveGameplayEffectHandle.h"
+#include "GameplayAbilitySpecHandle.h"
 #include "GameFramework/Actor.h"
 #include "StructurePart.generated.h"
 
@@ -42,6 +43,9 @@ protected:
 	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly, Category="Gameplay")
 	FActiveGameplayEffectHandle PassiveEffectHandle;
 
+	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly, Category="Gameplay")
+	TArray<FGameplayAbilitySpecHandle> AbilityHandles;
+
 	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly, Category="Combat")
 	TObjectPtr<class AFaction> OwningFaction;
 	
@@ -62,6 +66,9 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category="Prototype")
 	TSubclassOf<UGameplayEffect> GetPassiveEffect() const;
+
+	UFUNCTION(BlueprintCallable, Category="Prototype")
+	TArray<TSubclassOf<class UStructureGameplayAbility>> GetAbilities() const;
 	
 	UFUNCTION(BlueprintCallable, Category="Lifetime")
 	bool TryInit(AStructure* NewOwner, bool RegisterOnly = false);
@@ -110,6 +117,9 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category="Layout")
 	void UpdateDistance(int32 Distance);
+
+	UFUNCTION(BlueprintCallable, Category="Layout")
+	virtual void ActivateAbility(TSubclassOf<UStructureGameplayAbility> AbilityClass);
 
 	UFUNCTION(BlueprintCallable, Category="Combat")
 	void TickCombatants();

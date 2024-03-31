@@ -58,32 +58,32 @@ bool UStructurePartSlot::TryAttach(UStructurePartSlot* NewSlot, bool SuppressUpd
 {
 	if(!IsValid(NewSlot))
 	{
-		UE_LOG(LogStructure, Warning, TEXT("New slot must be valid"));
+		UE_LOG(LogDarkFrontier, Warning, TEXT("New slot must be valid"));
 		return false;
 	}
 	
 	if(AttachedSlot || NewSlot->AttachedSlot)
 	{
-		UE_LOG(LogStructure, Warning, TEXT("Both slots must be null for them to attach"));
+		UE_LOG(LogDarkFrontier, Warning, TEXT("Both slots must be null for them to attach"));
 		return false;
 	}
 	
 	if(!IsValid(GetOwningStructure()) && !IsValid(NewSlot->GetOwningStructure()))
 	{
-		UE_LOG(LogStructure, Warning, TEXT("Neither slot has valid owning structure"));
+		UE_LOG(LogDarkFrontier, Warning, TEXT("Neither slot has valid owning structure"));
 		return false;
 	}
 
 	if((GetOwningStructure() && !IsValid(GetOwningStructure())) ||
 		(NewSlot->GetOwningStructure() && !IsValid(NewSlot->GetOwningStructure())))
 	{
-		UE_LOG(LogStructure, Warning, TEXT("Cannot attach slot with non-valid owning structure"));
+		UE_LOG(LogDarkFrontier, Warning, TEXT("Cannot attach slot with non-valid owning structure"));
 		return false;
 	}
 	
 	if(!CanAttach(NewSlot))
 	{
-		UE_LOG(LogStructure, Warning, TEXT("Slots are not compatible"));
+		UE_LOG(LogDarkFrontier, Warning, TEXT("Slots are not compatible"));
 		return false;
 	}
 

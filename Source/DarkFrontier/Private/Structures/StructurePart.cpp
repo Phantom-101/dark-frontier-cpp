@@ -8,6 +8,7 @@
 #include "Factions/Combatant.h"
 #include "Factions/Faction.h"
 #include "Structures/Structure.h"
+#include "Structures/StructureGameplayAbility.h"
 #include "Structures/StructurePartSlot.h"
 
 AStructurePart::AStructurePart()
@@ -39,6 +40,11 @@ TSubclassOf<UGameplayEffect> AStructurePart::GetPassiveEffect() const
 	return PassiveEffect;
 }
 
+TArray<TSubclassOf<UStructureGameplayAbility>> AStructurePart::GetAbilities() const
+{
+	return Abilities;
+}
+
 bool AStructurePart::TryInit(AStructure* NewOwner, const bool RegisterOnly)
 {
 	if(OwningStructure) return false;
@@ -54,6 +60,18 @@ bool AStructurePart::TryInit(AStructure* NewOwner, const bool RegisterOnly)
 void AStructurePart::OnRegistered()
 {
 	PassiveEffectHandle = OwningStructure->ApplyEffect(PassiveEffect);
+
+	for(TSubclassOf<UStructureGameplayAbility> Ability : Abilities)
+	{
+		if(Ability == nullptr)
+		{
+			AbilityHandles.Add(FGameplayAbilitySpecHandle());
+		}
+		else
+		{
+			AbilityHandles.Add(OwningStructure->GiveAbility(Ability));
+		}
+	}
 }
 
 void AStructurePart::OnUnRegistered()
@@ -63,6 +81,15 @@ void AStructurePart::OnUnRegistered()
 		OwningStructure->GetAbilitySystemComponent()->RemoveActiveGameplayEffect(PassiveEffectHandle);
 		PassiveEffectHandle = FActiveGameplayEffectHandle();
 	}
+
+	for(FGameplayAbilitySpecHandle AbilityHandle : AbilityHandles)
+	{
+		if(AbilityHandle.IsValid())
+		{
+			OwningStructure->GetAbilitySystemComponent()->ClearAbility(AbilityHandle);
+		}
+	}
+	AbilityHandles.Empty();
 }
 
 AStructure* AStructurePart::GetOwningStructure() const
@@ -173,6 +200,14 @@ void AStructurePart::UpdateDistance(const int32 Distance)
 		{
 			Slot->GetAttachedSlot()->GetOwningPart()->UpdateDistance(Distance + 1);
 		}
+	}
+}
+
+void AStructurePart::ActivateAbility(const TSubclassOf<UStructureGameplayAbility> AbilityClass)
+{
+	if(Abilities.Contains(AbilityClass))
+	{
+		OwningStructure->GetAbilitySystemComponent()->TryActivateAbility(AbilityHandles[Abilities.IndexOfByKey(AbilityClass)]);
 	}
 }
 

@@ -5,6 +5,7 @@
 #include "ActiveGameplayEffectHandle.h"
 #include "CommonButtonBase.h"
 #include "CommonListView.h"
+#include "Log.h"
 #include "Blueprint/WidgetLayoutLibrary.h"
 #include "Components/Image.h"
 #include "Components/CanvasPanelSlot.h"
@@ -12,6 +13,7 @@
 #include "Structures/StructureController.h"
 #include "UI/CustomGameplayEffectUIData.h"
 #include "UI/GameplayEffectIndicatorObject.h"
+#include "UI/Screens/GameUI/StructureAbilityButtonList.h"
 
 TOptional<FUIInputConfig> UGameUI::GetDesiredInputConfig() const
 {
@@ -21,6 +23,16 @@ TOptional<FUIInputConfig> UGameUI::GetDesiredInputConfig() const
 void UGameUI::NativeConstruct()
 {
 	Super::NativeConstruct();
+
+	if(AStructureController* Controller = Cast<AStructureController>(GetWorld()->GetFirstPlayerController()))
+	{
+		Controller->OnLayoutChanged.AddUObject<UGameUI>(this, &UGameUI::UpdateAbilities);
+		UpdateAbilities();
+	}
+	else
+	{
+		UE_LOG(LogDarkFrontier, Warning, TEXT("Structure controller not found"));
+	}
 }
 
 void UGameUI::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
@@ -58,5 +70,13 @@ void UGameUI::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 				GameplayEffectList->AddItem(Object);
 			}
 		}
+	}
+}
+
+void UGameUI::UpdateAbilities() const
+{
+	if(const AStructureController* Controller = Cast<AStructureController>(GetWorld()->GetFirstPlayerController()))
+	{
+		AbilityButtonList->UpdateButtons(Cast<AStructure>(Controller->GetPawn()));
 	}
 }
