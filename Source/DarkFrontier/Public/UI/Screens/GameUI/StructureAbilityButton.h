@@ -21,21 +21,17 @@ protected:
 	TObjectPtr<class UCommonButtonBase> AbilityButton;
 	
 	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
-	TObjectPtr<class UImage> RadialProgressBar;
+	TObjectPtr<class UMultiArc> MultiArc;
 
 	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
-	TObjectPtr<UImage> AbilityIcon;
-
-	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly)
-	TObjectPtr<UMaterialInterface> Material;
-
-	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly)
-	TObjectPtr<UMaterialInstance> MaterialInstance;
+	TObjectPtr<class UImage> AbilityIcon;
 
 	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly)
 	TObjectPtr<class UStructurePartAbilityClass> AbilityClassObj;
 
 	virtual void NativeOnListItemObjectSet(UObject* ListItemObject) override;
+
+	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
 
 private:
 

@@ -3,6 +3,7 @@
 #include "Structures/StructureController.h"
 #include "AbilitySystemComponent.h"
 #include "EnhancedInputComponent.h"
+#include "Log.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Input/CommonUIActionRouterBase.h"
 #include "Structures/Structure.h"
@@ -45,6 +46,8 @@ void AStructureController::SetupInputComponent()
 void AStructureController::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
+
+	if(!IsValid(StructurePawn)) return;
 
 	StructurePawn->SetMoveInput(MoveInput);
 	StructurePawn->SetRotateInput(RotateAddInput + RotateOverrideInput);
@@ -216,6 +219,8 @@ void AStructureController::ToggleUnlock(const FInputActionInstance& Instance)
 
 void AStructureController::EditStructure(const FInputActionInstance& Instance)
 {
+	if(!IsValid(StructurePawn)) return;
+	
 	UStructureDetails* Details = UIBaseWidget->PushGame<UStructureDetails>(StructureDetailsUIClass);
 	Details->Select(StructurePawn);
 	Details->Init(AvailableParts);

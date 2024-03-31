@@ -12,6 +12,8 @@
 #include "Structures/StructurePart.h"
 #include "Structures/StructurePartSlot.h"
 #include "UI/Screens/GameUI/StructurePartAbilityClass.h"
+#include "UI/Widgets/Arc.h"
+#include "UI/Widgets/MultiArc.h"
 
 AStructure::AStructure()
 {
@@ -51,14 +53,17 @@ void AStructure::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 	if(!IsValid(RootPart)) return;
-	
-	const float LinearMaxSpeed = Attributes->GetLinearMaxSpeed();
-	const float LinearAccel = Attributes->GetLinearAcceleration();
-	StaticMesh->AddImpulse(CalculateImpulse(StaticMesh->GetPhysicsLinearVelocity(), MoveInput, LinearMaxSpeed, LinearAccel, DeltaTime), NAME_None, true);
 
-	const float AngularMaxSpeed = Attributes->GetAngularMaxSpeed();
-	const float AngularAccel = Attributes->GetAngularAcceleration();
-	StaticMesh->AddAngularImpulseInDegrees(CalculateImpulse(StaticMesh->GetPhysicsAngularVelocityInDegrees(), RotateInput, AngularMaxSpeed, AngularAccel, DeltaTime), NAME_None, true);
+	if(GetActorEnableCollision())
+	{
+		const float LinearMaxSpeed = Attributes->GetLinearMaxSpeed();
+		const float LinearAccel = Attributes->GetLinearAcceleration();
+		StaticMesh->AddImpulse(CalculateImpulse(StaticMesh->GetPhysicsLinearVelocity(), MoveInput, LinearMaxSpeed, LinearAccel, DeltaTime), NAME_None, true);
+
+		const float AngularMaxSpeed = Attributes->GetAngularMaxSpeed();
+		const float AngularAccel = Attributes->GetAngularAcceleration();
+		StaticMesh->AddAngularImpulseInDegrees(CalculateImpulse(StaticMesh->GetPhysicsAngularVelocityInDegrees(), RotateInput, AngularMaxSpeed, AngularAccel, DeltaTime), NAME_None, true);
+	}
 }
 
 void AStructure::PossessedBy(AController* NewController)
@@ -78,6 +83,20 @@ bool AStructure::TryInit(AStructurePart* NewRoot, const bool RegisterOnly)
 	RootPart = NewRoot;
 	RootPart->SetActorRelativeLocation(FVector::ZeroVector);
 	RootPart->SetActorRelativeRotation(FRotator::ZeroRotator);
+
+	return true;
+}
+
+bool AStructure::TryDestroy()
+{
+	if(!IsValid(RootPart)) return false;
+	
+	RootPart->DetachSlots();
+	UpdateLayoutInformation();
+
+	RootPart->Destroy();
+
+	Destroy();
 
 	return true;
 }
@@ -313,6 +332,34 @@ float AStructure::GetUpkeep() const
 bool AStructure::IsDetecting(AStructure* Other) const
 {
 	return (GetActorLocation() - Other->GetActorLocation()).SquaredLength() <= Attributes->GetSensorStrength() * Other->Attributes->GetSignatureVisibility();
+}
+
+void AStructure::UpdateButtonMultiArc(const UStructurePartAbilityClass* AbilityClassObj, UMultiArc* MultiArc)
+{
+	int NumArcs = 0;
+	for(const AStructurePart* Part : Parts)
+	{
+		if(Part->GetClass() == AbilityClassObj->PartClass)
+		{
+			NumArcs++;
+		}
+	}
+
+	const float ArcLength = 1.0 / NumArcs;
+	const float Padding = FMath::Min(ArcLength * 0.1, 0.025);
+	
+	MultiArc->ClearArcs();
+	int Current = 0;
+	for(AStructurePart* Part : Parts)
+	{
+		if(Part->GetClass() == AbilityClassObj->PartClass)
+		{
+			UArc* Arc = MultiArc->AddArc();
+			Arc->SetLength(ArcLength * Current + Padding, ArcLength * Part->GetArcLength(AbilityClassObj->AbilityClass) - 2 * Padding);
+			Arc->SetColor(Part->GetArcColor(AbilityClassObj->AbilityClass));
+			Current++;
+		}
+	}
 }
 
 void AStructure::ActivateAbility(const UStructurePartAbilityClass* AbilityClassObj)

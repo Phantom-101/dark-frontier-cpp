@@ -2,7 +2,6 @@
 
 #include "UI/Screens/GameUI/StructureAbilityButton.h"
 #include "CommonButtonBase.h"
-#include "Components/Image.h"
 #include "Structures/Structure.h"
 #include "UI/Screens/GameUI/StructurePartAbilityClass.h"
 
@@ -12,19 +11,23 @@ void UStructureAbilityButton::NativeOnListItemObjectSet(UObject* ListItemObject)
 
 	AbilityClassObj = Cast<UStructurePartAbilityClass>(ListItemObject);
 
-	if(MaterialInstance == nullptr)
-	{
-		MaterialInstance = UMaterialInstanceDynamic::Create(Material, this);
-		RadialProgressBar->SetBrushFromMaterial(MaterialInstance);
-	}
-
 	AbilityButton->OnClicked().Clear();
 	AbilityButton->OnClicked().AddUObject<UStructureAbilityButton>(this, &UStructureAbilityButton::OnAbilityButtonClicked);
 }
 
+void UStructureAbilityButton::NativeTick(const FGeometry& MyGeometry, const float InDeltaTime)
+{
+	Super::NativeTick(MyGeometry, InDeltaTime);
+	
+	if(IsValid(AbilityClassObj->TargetStructure))
+	{
+		AbilityClassObj->TargetStructure->UpdateButtonMultiArc(AbilityClassObj, MultiArc);
+	}
+}
+
 void UStructureAbilityButton::OnAbilityButtonClicked() const
 {
-	if(IsValid(AbilityClassObj->TargetStructure.Get()))
+	if(IsValid(AbilityClassObj->TargetStructure))
 	{
 		AbilityClassObj->TargetStructure->ActivateAbility(AbilityClassObj);
 	}

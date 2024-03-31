@@ -118,7 +118,13 @@ public:
 	UFUNCTION(BlueprintCallable, Category="Layout")
 	void UpdateDistance(int32 Distance);
 
-	UFUNCTION(BlueprintCallable, Category="Layout")
+	UFUNCTION(BlueprintCallable, Category="Gameplay")
+	virtual float GetArcLength(TSubclassOf<UStructureGameplayAbility> AbilityClass);
+
+	UFUNCTION(BlueprintCallable, Category="Gameplay")
+	virtual FLinearColor GetArcColor(TSubclassOf<UStructureGameplayAbility> AbilityClass);
+
+	UFUNCTION(BlueprintCallable, Category="Gameplay")
 	virtual void ActivateAbility(TSubclassOf<UStructureGameplayAbility> AbilityClass);
 
 	UFUNCTION(BlueprintCallable, Category="Combat")

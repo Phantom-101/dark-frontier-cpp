@@ -6,6 +6,7 @@
 #include "Components/WidgetSwitcher.h"
 #include "Structures/Structure.h"
 #include "Structures/StructureController.h"
+#include "Structures/StructureLayout.h"
 #include "Structures/StructurePart.h"
 #include "Structures/StructurePartSlot.h"
 #include "UI/Screens/StructureDetails/StructureInfo.h"
@@ -18,7 +19,12 @@ void UStructureDetails::NativeConstruct()
 {
 	Super::NativeConstruct();
 
+	BackgroundButton->OnClicked().Clear();
 	BackgroundButton->OnClicked().AddUObject<UStructureDetails>(this, &UStructureDetails::OnBackgroundClicked);
+	ApplyButton->OnClicked().Clear();
+	ApplyButton->OnClicked().AddUObject<UStructureDetails>(this, &UStructureDetails::OnApplyButtonClicked);
+	ExitButton->OnClicked().Clear();
+	ExitButton->OnClicked().AddUObject<UStructureDetails>(this, &UStructureDetails::OnExitButtonClicked);
 
 	AStructureController* Controller = Cast<AStructureController>(GetWorld()->GetFirstPlayerController());
 	if(IsValid(Controller))
@@ -27,6 +33,20 @@ void UStructureDetails::NativeConstruct()
 		{
 			OnLayoutChangedHandle = Controller->OnLayoutChanged.AddUObject<UStructureDetails>(this, &UStructureDetails::OnLayoutChanged);
 		}
+	}
+}
+
+void UStructureDetails::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
+{
+	Super::NativeTick(MyGeometry, InDeltaTime);
+
+	if(IsValid(TargetStructure))
+	{
+		ApplyButton->SetIsEnabled(TargetStructure->IsLayoutValid());
+	}
+	else
+	{
+		ApplyButton->SetIsEnabled(false);
 	}
 }
 
@@ -47,8 +67,12 @@ void UStructureDetails::Init(const TArray<TSubclassOf<AStructurePart>>& InClasse
 
 void UStructureDetails::Select(AStructure* InStructure)
 {
+	TargetStructure = InStructure;
+
+	SavedLayout = FStructureLayout(InStructure);
+	
 	InfoSwitcher->SetActiveWidget(StructureInfo);
-	StructureInfo->SetTarget(InStructure);
+	StructureInfo->SetTarget(TargetStructure);
 	EditSlot = nullptr;
 	EditClass = nullptr;
 	SelectorSwitcher->SetActiveWidget(NoSelector);
@@ -90,19 +114,8 @@ void UStructureDetails::Edit(const TSubclassOf<AStructurePart> InClass)
 void UStructureDetails::Edit(const FText& InName)
 {
 	AStructurePart* Section = Cast<AStructurePart>(GetWorld()->SpawnActor(EditClass));
-	if(Section->GetSlot(InName)->TryAttach(EditSlot))
-	{
-		// Assume part layout invalidity is due to added section
-		if(!Section->GetOwningStructure()->IsLayoutValid())
-		{
-			Section->DetachSlots();
-			UE_LOG(LogDarkFrontier, Warning, TEXT("Part auto removed due to invalid layout, todo: keep layout but rollback changes once exited"));
-		}
-	}
-	else
-	{
-		Section->Destroy();
-	}
+	Section->GetSlot(InName)->TryAttach(EditSlot);
+	
 	EditSlot = nullptr;
 	EditClass = nullptr;
 	SelectorSwitcher->SetActiveWidget(NoSelector);
@@ -123,4 +136,42 @@ void UStructureDetails::OnLayoutChanged()
 		EditClass = nullptr;
 		SelectorSwitcher->SetActiveWidget(NoSelector);
 	}
+}
+
+void UStructureDetails::OnApplyButtonClicked()
+{
+	if(!TargetStructure->IsLayoutValid()) return;
+
+	DeactivateWidget();
+}
+
+void UStructureDetails::OnExitButtonClicked()
+{
+	if(StructureClass == nullptr)
+	{
+		UE_LOG(LogDarkFrontier, Error, TEXT("Structure class is null"));
+		return;
+	}
+	
+	FActorSpawnParameters Parameters;
+	Parameters.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+	AStructure* NewStructure = GetWorld()->SpawnActor<AStructure>(StructureClass, Parameters);
+	
+	if(NewStructure == nullptr)
+	{
+		UE_LOG(LogDarkFrontier, Error, TEXT("Structure details new structure is null"));
+		return;
+	}
+	
+	NewStructure->LoadLayout(SavedLayout);
+	
+	AStructureController* Controller = Cast<AStructureController>(GetWorld()->GetFirstPlayerController());
+	if(IsValid(Controller) && Controller->GetPawn() == TargetStructure)
+	{
+		Controller->Possess(NewStructure);
+	}
+
+	TargetStructure->TryDestroy();
+	
+	DeactivateWidget();
 }
