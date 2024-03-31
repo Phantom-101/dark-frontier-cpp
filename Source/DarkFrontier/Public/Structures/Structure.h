@@ -73,6 +73,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category="Lifetime")
 	bool TryInit(AStructurePart* NewRoot, bool RegisterOnly = false);
 
+	UFUNCTION(BlueprintCallable, Category="Lifetime")
+	bool TryDestroy();
+
 	UFUNCTION(BlueprintCallable, Category="Layout")
 	AStructurePart* GetRootPart() const;
 
@@ -108,6 +111,9 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category="Gameplay")
 	bool IsDetecting(AStructure* Other) const;
+
+	UFUNCTION(BlueprintCallable, Category="Gameplay")
+	void UpdateButtonMultiArc(const class UStructurePartAbilityClass* AbilityClassObj, class UMultiArc* MultiArc);
 
 	UFUNCTION(BlueprintCallable, Category="Gameplay")
 	void ActivateAbility(const class UStructurePartAbilityClass* AbilityClassObj);

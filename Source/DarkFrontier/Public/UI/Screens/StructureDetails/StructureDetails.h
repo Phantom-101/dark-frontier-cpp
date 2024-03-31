@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "CommonActivatableWidget.h"
+#include "Structures/StructureLayout.h"
 #include "StructureDetails.generated.h"
 
 /**
@@ -48,9 +49,18 @@ protected:
 
 	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
 	TObjectPtr<UCommonButtonBase> ExitButton;
+	
+	UPROPERTY(BlueprintReadOnly, EditAnywhere)
+	TSubclassOf<class AStructure> StructureClass;
 
 	UPROPERTY(BlueprintReadOnly, EditInstanceOnly)
 	TArray<TSubclassOf<class AStructurePart>> AvailableParts;
+
+	UPROPERTY(BlueprintReadOnly, EditInstanceOnly)
+	TObjectPtr<AStructure> TargetStructure;
+
+	UPROPERTY(BlueprintReadOnly, EditInstanceOnly)
+	FStructureLayout SavedLayout;
 	
 	UPROPERTY(BlueprintReadOnly, EditInstanceOnly)
 	TObjectPtr<class UStructurePartSlot> EditSlot;
@@ -61,6 +71,8 @@ protected:
 	FDelegateHandle OnLayoutChangedHandle;
 
 	virtual void NativeConstruct() override;
+
+	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
 
 	virtual TOptional<FUIInputConfig> GetDesiredInputConfig() const override;
 	
@@ -87,5 +99,9 @@ protected:
 	void OnBackgroundClicked() const;
 
 	void OnLayoutChanged();
+
+	void OnApplyButtonClicked();
+
+	void OnExitButtonClicked();
 	
 };

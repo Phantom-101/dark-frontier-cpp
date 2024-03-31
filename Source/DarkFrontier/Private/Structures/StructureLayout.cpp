@@ -12,8 +12,9 @@ FStructureLayout::FStructureLayout()
 FStructureLayout::FStructureLayout(const AStructure* InStructure)
 {
 	TQueue<AStructurePart*> Queue;
-	const TSet<AStructurePart*> Visited;
+	TSet<AStructurePart*> Visited;
 	Queue.Enqueue(InStructure->GetRootPart());
+	Visited.Add(InStructure->GetRootPart());
 
 	AStructurePart* Current;
 	while(!Queue.IsEmpty())
@@ -30,6 +31,7 @@ FStructureLayout::FStructureLayout(const AStructure* InStructure)
 				if(IsValid(Other) && !Visited.Contains(Other))
 				{
 					Queue.Enqueue(Other);
+					Visited.Add(Other);
 
 					Connections.Add(FStructureLayoutConnection(PartSlot, PartSlot->GetAttachedSlot()));
 				}

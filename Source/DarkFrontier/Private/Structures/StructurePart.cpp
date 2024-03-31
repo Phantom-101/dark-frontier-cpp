@@ -203,6 +203,16 @@ void AStructurePart::UpdateDistance(const int32 Distance)
 	}
 }
 
+float AStructurePart::GetArcLength(TSubclassOf<UStructureGameplayAbility> AbilityClass)
+{
+	return 1;
+}
+
+FLinearColor AStructurePart::GetArcColor(TSubclassOf<UStructureGameplayAbility> AbilityClass)
+{
+	return FLinearColor::White;
+}
+
 void AStructurePart::ActivateAbility(const TSubclassOf<UStructureGameplayAbility> AbilityClass)
 {
 	if(Abilities.Contains(AbilityClass))
