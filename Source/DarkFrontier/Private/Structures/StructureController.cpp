@@ -63,7 +63,6 @@ void AStructureController::OnPossess(APawn* InPawn)
 		StructurePawn->GetAbilitySystemComponent()->InitAbilityActorInfo(StructurePawn, StructurePawn);
 		
 		OnLayoutChangedHandle = StructurePawn->OnLayoutChanged.AddUObject<AStructureController>(this, &AStructureController::PropagateLayoutChange);
-		OnActionsChangedHandle = StructurePawn->OnActionsChanged.AddUObject<AStructureController>(this, &AStructureController::PropagateActionsChange);
 	}
 }
 
@@ -74,7 +73,6 @@ void AStructureController::OnUnPossess()
 	if(StructurePawn)
 	{
 		StructurePawn->OnLayoutChanged.Remove(OnLayoutChangedHandle);
-		StructurePawn->OnActionsChanged.Remove(OnActionsChangedHandle);
 	}
 
 	StructurePawn = nullptr;
@@ -226,9 +224,4 @@ void AStructureController::EditStructure(const FInputActionInstance& Instance)
 void AStructureController::PropagateLayoutChange() const
 {
 	OnLayoutChanged.Broadcast();
-}
-
-void AStructureController::PropagateActionsChange() const
-{
-	OnActionsChanged.Broadcast();
 }

@@ -96,7 +96,7 @@ void UStructureDetails::Edit(const FText& InName)
 		if(!Section->GetOwningStructure()->IsLayoutValid())
 		{
 			Section->DetachSlots();
-			UE_LOG(LogStructure, Warning, TEXT("Part auto removed due to invalid layout, todo: keep layout but rollback changes once exited"));
+			UE_LOG(LogDarkFrontier, Warning, TEXT("Part auto removed due to invalid layout, todo: keep layout but rollback changes once exited"));
 		}
 	}
 	else

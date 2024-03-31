@@ -5,20 +5,23 @@
 #include "CoreMinimal.h"
 #include "CommonUserWidget.h"
 #include "Blueprint/IUserObjectListEntry.h"
-#include "StructureGameplayAbilityListView.generated.h"
+#include "StructurePartAbilityButtonList.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class DARKFRONTIER_API UStructureGameplayAbilityListView : public UCommonUserWidget, public IUserObjectListEntry
+class DARKFRONTIER_API UStructurePartAbilityButtonList : public UCommonUserWidget, public IUserObjectListEntry
 {
 	GENERATED_BODY()
 
 protected:
-
+	
 	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
-	TObjectPtr<class UCommonListView> AbilityList;
+	TObjectPtr<class UCommonListView> ButtonList;
+
+	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly)
+	TObjectPtr<class UStructurePartClass> ClassObj;
 
 	virtual void NativeOnListItemObjectSet(UObject* ListItemObject) override;
 	

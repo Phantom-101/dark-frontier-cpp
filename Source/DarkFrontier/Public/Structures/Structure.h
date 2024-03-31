@@ -60,8 +60,6 @@ public:
 
 	FStructureStateChanged OnLayoutChanged;
 
-	FStructureStateChanged OnActionsChanged;
-	
 protected:
 
 	virtual void BeginPlay() override;
@@ -112,13 +110,16 @@ public:
 	bool IsDetecting(AStructure* Other) const;
 
 	UFUNCTION(BlueprintCallable, Category="Gameplay")
+	void ActivateAbility(const class UStructurePartAbilityClass* AbilityClassObj);
+
+	UFUNCTION(BlueprintCallable, Category="Gameplay")
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 
 	UFUNCTION(BlueprintCallable, Category="Gameplay")
 	struct FActiveGameplayEffectHandle ApplyEffect(TSubclassOf<class UGameplayEffect> EffectClass);
 
 	UFUNCTION(BlueprintCallable, Category="Gameplay")
-	struct FGameplayAbilitySpecHandle GrantAbility(TSubclassOf<class UStructureGameplayAbility> AbilityClass);
+	struct FGameplayAbilitySpecHandle GiveAbility(TSubclassOf<class UStructureGameplayAbility> AbilityClass);
 
 	UFUNCTION(BlueprintCallable, Category="Input")
 	void SetMoveInput(FVector InInput);
