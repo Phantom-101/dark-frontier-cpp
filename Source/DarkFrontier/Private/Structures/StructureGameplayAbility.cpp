@@ -22,9 +22,9 @@ bool UStructureGameplayAbility::CheckCost(const FGameplayAbilitySpecHandle Handl
 		const FModifierSpec& ModSpec = Spec.Modifiers[ModIdx];
 	
 		// It only makes sense to check additive operators
-		if (ModDef.ModifierOp == EGameplayModOp::Additive)
+		if(ModDef.ModifierOp == EGameplayModOp::Additive)
 		{
-			if (!ModDef.Attribute.IsValid())
+			if(!ModDef.Attribute.IsValid())
 			{
 				continue;
 			}
@@ -32,7 +32,7 @@ bool UStructureGameplayAbility::CheckCost(const FGameplayAbilitySpecHandle Handl
 			const float CurrentValue = ModDef.Attribute.GetNumericValueChecked(Set);
 			const float CostValue = ModSpec.GetEvaluatedMagnitude();
 
-			if (CurrentValue + CostValue < 0.f)
+			if(CurrentValue + CostValue < 0.f)
 			{
 				return false;
 			}
@@ -47,7 +47,7 @@ void UStructureGameplayAbility::ApplyCost(const FGameplayAbilitySpecHandle Handl
 	if(!HasAuthorityOrPredictionKey(ActorInfo, &ActivationInfo)) return;
 
 	const FGameplayEffectSpecHandle SpecHandle = MakeOutgoingGameplayEffectSpec(Handle, ActorInfo, ActivationInfo, CostGameplayEffectClass, GetAbilityLevel(Handle, ActorInfo));
-	if (SpecHandle.IsValid())
+	if(SpecHandle.IsValid())
 	{
 		SpecHandle.Data.Get()->SetByCallerTagMagnitudes = CostMagnitudes;
 		(void)ApplyGameplayEffectSpecToOwner(Handle, ActorInfo, ActivationInfo, SpecHandle);

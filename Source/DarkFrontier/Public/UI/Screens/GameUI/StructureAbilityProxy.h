@@ -17,7 +17,7 @@ class DARKFRONTIER_API UStructureAbilityProxy : public UObject
 public:
 
 	UFUNCTION()
-	virtual struct FGameplayAbilitySpecHandle GetAbilityHandle();
+	virtual void TryActivate();
 
 	UFUNCTION()
 	virtual float GetArcLength();

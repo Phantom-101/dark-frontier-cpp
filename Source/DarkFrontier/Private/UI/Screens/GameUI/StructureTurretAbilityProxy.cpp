@@ -3,9 +3,9 @@
 #include "UI/Screens/GameUI/StructureTurretAbilityProxy.h"
 #include "Structures/StructureTurret.h"
 
-FGameplayAbilitySpecHandle UStructureTurretAbilityProxy::GetAbilityHandle()
+void UStructureTurretAbilityProxy::TryActivate()
 {
-	return AbilityHandle;
+	Turret->TryActivate();
 }
 
 float UStructureTurretAbilityProxy::GetArcLength()

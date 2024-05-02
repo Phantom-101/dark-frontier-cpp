@@ -110,8 +110,6 @@ void AStructureController::UpdateCamera()
 	const FBoxSphereBounds Bounds = CameraTargetComponent ? GetViewBounds(CameraTargetComponent->GetOwner(), true) : GetViewBounds(CameraTargetActor, true);
 	const FVector Location = CameraTargetComponent ? CameraTargetComponent->GetComponentLocation() : CameraTargetActor->GetActorLocation();
 	const FRotator Rotation = CameraTargetComponent ? CameraTargetComponent->GetComponentRotation() : CameraTargetActor->GetActorRotation();
-
-	UE_LOG(LogDarkFrontier, Display, TEXT("Calculated bounds radius is %f"), Bounds.SphereRadius);
 	
 	USpringArmComponent* SpringArm = StructurePawn->GetCameraSpringArm();
 	

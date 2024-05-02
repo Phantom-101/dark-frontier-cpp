@@ -52,10 +52,7 @@ void UStructureAbilityButton::OnAbilityButtonClicked() const
 	{
 		for(UStructureAbilityProxy* Proxy : ProxyGroup->Proxies)
 		{
-			if(Proxy->GetAbilityHandle().IsValid())
-			{
-				ProxyGroup->TargetStructure->GetAbilitySystemComponent()->TryActivateAbility(Proxy->GetAbilityHandle());
-			}
+			Proxy->TryActivate();
 		}
 	}
 }
