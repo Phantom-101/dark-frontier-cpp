@@ -202,16 +202,6 @@ void AStructurePart::ApplyDamage(FStructureDamage InDamage) const
 {
 	// todo damage structure part
 	
-	if(OwningStructure->GetShield() > 0)
-	{
-		const FStructureDamage ShieldPostMitigation = OwningStructure->GetShieldPostMitigationDamage(InDamage);
-		const float ShieldAbsorbedPercent = FMath::Min(OwningStructure->GetShield() / ShieldPostMitigation.Sum(), 1);
-		OwningStructure->SetShield(OwningStructure->GetShield() - ShieldPostMitigation.Sum() * ShieldAbsorbedPercent);
-		InDamage = InDamage.Scale(1 - ShieldAbsorbedPercent);
-	}
-	
-	const FStructureDamage HullPostMitigation = OwningStructure->GetHullPostMitigationDamage(InDamage);
-	OwningStructure->SetHull(OwningStructure->GetHull() - HullPostMitigation.Sum());
 }
 
 void AStructurePart::AddAbilitiesToProxyGroups(TArray<UStructureAbilityProxyGroup*>& ProxyGroups)

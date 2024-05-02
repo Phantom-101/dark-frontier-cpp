@@ -28,12 +28,19 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, Category="Setup")
 	FText Description;
-	
-	UPROPERTY(EditDefaultsOnly, Category="Costs")
-	TMap<FGameplayTag, float> CostSetByCallerMagnitudes;
+
+	/** Applied to cost effects in addition to effect magnitudes */
+	UPROPERTY(EditDefaultsOnly, Category="Setup")
+	TMap<FGameplayTag, float> CostMagnitudes;
+
+	/** Applied to all outgoing gameplay effect specs, including cost effects */
+	UPROPERTY(EditDefaultsOnly, Category="Setup")
+	TMap<FGameplayTag, float> EffectMagnitudes;
 
 	virtual bool CheckCost(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, FGameplayTagContainer* OptionalRelevantTags) const override;
 
 	virtual void ApplyCost(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo) const override;
+
+	virtual FGameplayEffectSpecHandle MakeOutgoingGameplayEffectSpec(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, TSubclassOf<UGameplayEffect> GameplayEffectClass, float Level) const override;
 	
 };

@@ -8,6 +8,24 @@ UStructureAttributeSet::UStructureAttributeSet()
 {
 }
 
+void UStructureAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data)
+{
+	Super::PostGameplayEffectExecute(Data);
+
+	if(Data.EvaluatedData.Attribute == GetHullAttribute())
+	{
+		Hull.SetBaseValue(FMath::Clamp(Hull.GetBaseValue(), 0, GetMaxHull()));
+	}
+	else if (Data.EvaluatedData.Attribute == GetShieldAttribute())
+	{
+		Shield.SetBaseValue(FMath::Clamp(Shield.GetBaseValue(), 0, GetMaxShield()));
+	}
+	else if (Data.EvaluatedData.Attribute == GetEnergyAttribute())
+	{
+		Energy.SetBaseValue(FMath::Clamp(Energy.GetBaseValue(), 0, GetMaxEnergy()));
+	}
+}
+
 void UStructureAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
@@ -37,24 +55,6 @@ void UStructureAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty
 	DOREPLIFETIME_CONDITION_NOTIFY(UStructureAttributeSet, AngularMaxSpeed, COND_None, REPNOTIFY_OnChanged);
 	DOREPLIFETIME_CONDITION_NOTIFY(UStructureAttributeSet, SensorStrength, COND_None, REPNOTIFY_OnChanged);
 	DOREPLIFETIME_CONDITION_NOTIFY(UStructureAttributeSet, SignatureVisibility, COND_None, REPNOTIFY_OnChanged);
-}
-
-void UStructureAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data)
-{
-	Super::PostGameplayEffectExecute(Data);
-
-	if(Data.EvaluatedData.Attribute == GetHullAttribute())
-	{
-		SetHull(FMath::Clamp(GetHull(), 0, GetMaxHull()));
-	}
-	else if (Data.EvaluatedData.Attribute == GetShieldAttribute())
-	{
-		SetShield(FMath::Clamp(GetShield(), 0, GetMaxShield()));
-	}
-	else if (Data.EvaluatedData.Attribute == GetEnergyAttribute())
-	{
-		SetEnergy(FMath::Clamp(GetEnergy(), 0, GetMaxEnergy()));
-	}
 }
 
 void UStructureAttributeSet::OnRep_MaxHull(const FGameplayAttributeData& OldMaxHull)

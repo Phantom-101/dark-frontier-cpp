@@ -12,10 +12,7 @@ bool UStructureGameplayAbility::CheckCost(const FGameplayAbilitySpecHandle Handl
 	if(!GetCostGameplayEffect()) return true;
 	
 	FGameplayEffectSpec	Spec(GetCostGameplayEffect(), MakeEffectContext(Handle, ActorInfo), GetAbilityLevel(Handle, ActorInfo));
-	for(const TPair<FGameplayTag, float> Pair : CostSetByCallerMagnitudes)
-	{
-		Spec.SetSetByCallerMagnitude(Pair.Key, Pair.Value);
-	}
+	Spec.SetByCallerTagMagnitudes = CostMagnitudes;
 
 	Spec.CalculateModifierMagnitudes();
 	
@@ -52,10 +49,14 @@ void UStructureGameplayAbility::ApplyCost(const FGameplayAbilitySpecHandle Handl
 	const FGameplayEffectSpecHandle SpecHandle = MakeOutgoingGameplayEffectSpec(Handle, ActorInfo, ActivationInfo, CostGameplayEffectClass, GetAbilityLevel(Handle, ActorInfo));
 	if (SpecHandle.IsValid())
 	{
-		for(const TPair<FGameplayTag, float> Pair : CostSetByCallerMagnitudes)
-		{
-			SpecHandle.Data.Get()->SetSetByCallerMagnitude(Pair.Key, Pair.Value);
-		}
+		SpecHandle.Data.Get()->SetByCallerTagMagnitudes = CostMagnitudes;
 		(void)ApplyGameplayEffectSpecToOwner(Handle, ActorInfo, ActivationInfo, SpecHandle);
 	}
+}
+
+FGameplayEffectSpecHandle UStructureGameplayAbility::MakeOutgoingGameplayEffectSpec(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, TSubclassOf<UGameplayEffect> GameplayEffectClass, float Level) const
+{
+	const FGameplayEffectSpecHandle EffectHandle = Super::MakeOutgoingGameplayEffectSpec(Handle, ActorInfo, ActivationInfo, GameplayEffectClass, Level);
+	EffectHandle.Data.Get()->SetByCallerTagMagnitudes = EffectMagnitudes;
+	return EffectHandle;
 }
