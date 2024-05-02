@@ -32,5 +32,7 @@ struct DARKFRONTIER_API FStructureDamage
 	float Sum() const;
 
 	FStructureDamage Scale(float InFactor) const;
+
+	void SetMagnitudes(TSubclassOf<class UStructureDamageTags> Tags, const struct FGameplayEffectSpecHandle& SpecHandle) const;
 	
 };
