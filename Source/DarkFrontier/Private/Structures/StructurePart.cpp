@@ -8,8 +8,12 @@
 #include "Factions/Combatant.h"
 #include "Factions/Faction.h"
 #include "Structures/Structure.h"
+#include "Structures/StructureAttributeSet.h"
+#include "Structures/StructureDamage.h"
 #include "Structures/StructureGameplayAbility.h"
 #include "Structures/StructurePartSlot.h"
+#include "UI/Screens/GameUI/StructureAbilityProxy.h"
+#include "UI/Screens/GameUI/StructureAbilityProxyGroup.h"
 
 AStructurePart::AStructurePart()
 {
@@ -40,11 +44,6 @@ TSubclassOf<UGameplayEffect> AStructurePart::GetPassiveEffect() const
 	return PassiveEffect;
 }
 
-TArray<TSubclassOf<UStructureGameplayAbility>> AStructurePart::GetAbilities() const
-{
-	return Abilities;
-}
-
 bool AStructurePart::TryInit(AStructure* NewOwner, const bool RegisterOnly)
 {
 	if(OwningStructure) return false;
@@ -59,18 +58,23 @@ bool AStructurePart::TryInit(AStructure* NewOwner, const bool RegisterOnly)
 
 void AStructurePart::OnRegistered()
 {
-	PassiveEffectHandle = OwningStructure->ApplyEffect(PassiveEffect);
-
-	for(TSubclassOf<UStructureGameplayAbility> Ability : Abilities)
+	if(PassiveEffect)
 	{
-		if(Ability == nullptr)
+		PassiveEffectHandle = OwningStructure->ApplyEffect(PassiveEffect);
+
+		float Hull = 0;
+		
+		UGameplayEffect* Effect = PassiveEffect->GetDefaultObject<UGameplayEffect>();
+		for(FGameplayModifierInfo Modifier : Effect->Modifiers)
 		{
-			AbilityHandles.Add(FGameplayAbilitySpecHandle());
+			float Magnitude;
+			if(Modifier.ModifierMagnitude.GetStaticMagnitudeIfPossible(1, Magnitude))
+			{
+				if(Modifier.Attribute == UStructureAttributeSet::GetMaxHullAttribute()) Hull += Magnitude;
+			}
 		}
-		else
-		{
-			AbilityHandles.Add(OwningStructure->GiveAbility(Ability));
-		}
+
+		OwningStructure->SetHull(OwningStructure->GetHull() + Hull);
 	}
 }
 
@@ -81,15 +85,6 @@ void AStructurePart::OnUnRegistered()
 		OwningStructure->GetAbilitySystemComponent()->RemoveActiveGameplayEffect(PassiveEffectHandle);
 		PassiveEffectHandle = FActiveGameplayEffectHandle();
 	}
-
-	for(FGameplayAbilitySpecHandle AbilityHandle : AbilityHandles)
-	{
-		if(AbilityHandle.IsValid())
-		{
-			OwningStructure->GetAbilitySystemComponent()->ClearAbility(AbilityHandle);
-		}
-	}
-	AbilityHandles.Empty();
 }
 
 AStructure* AStructurePart::GetOwningStructure() const
@@ -203,22 +198,40 @@ void AStructurePart::UpdateDistance(const int32 Distance)
 	}
 }
 
-float AStructurePart::GetArcLength(TSubclassOf<UStructureGameplayAbility> AbilityClass)
+void AStructurePart::ApplyDamage(FStructureDamage InDamage) const
 {
-	return 1;
-}
-
-FLinearColor AStructurePart::GetArcColor(TSubclassOf<UStructureGameplayAbility> AbilityClass)
-{
-	return FLinearColor::White;
-}
-
-void AStructurePart::ActivateAbility(const TSubclassOf<UStructureGameplayAbility> AbilityClass)
-{
-	if(Abilities.Contains(AbilityClass))
+	// todo damage structure part
+	
+	if(OwningStructure->GetShield() > 0)
 	{
-		OwningStructure->GetAbilitySystemComponent()->TryActivateAbility(AbilityHandles[Abilities.IndexOfByKey(AbilityClass)]);
+		const FStructureDamage ShieldPostMitigation = OwningStructure->GetShieldPostMitigationDamage(InDamage);
+		const float ShieldAbsorbedPercent = FMath::Min(OwningStructure->GetShield() / ShieldPostMitigation.Sum(), 1);
+		OwningStructure->SetShield(OwningStructure->GetShield() - ShieldPostMitigation.Sum() * ShieldAbsorbedPercent);
+		InDamage = InDamage.Scale(1 - ShieldAbsorbedPercent);
 	}
+	
+	const FStructureDamage HullPostMitigation = OwningStructure->GetHullPostMitigationDamage(InDamage);
+	OwningStructure->SetHull(OwningStructure->GetHull() - HullPostMitigation.Sum());
+}
+
+void AStructurePart::AddAbilitiesToProxyGroups(TArray<UStructureAbilityProxyGroup*>& ProxyGroups)
+{
+}
+
+void AStructurePart::AddAbilityToProxyGroups(TArray<UStructureAbilityProxyGroup*>& ProxyGroups, TSubclassOf<class UStructureGameplayAbility> AbilityClass, UStructureAbilityProxy* Proxy) const
+{
+	for(UStructureAbilityProxyGroup* ProxyGroup : ProxyGroups)
+	{
+		if(ProxyGroup->AbilityClass == AbilityClass)
+		{
+			ProxyGroup->Proxies.Add(Proxy);
+			return;
+		}
+	}
+
+	UStructureAbilityProxyGroup* ProxyGroup = OwningStructure->GetNewAbilityProxyGroup(AbilityClass);
+	ProxyGroup->Proxies.Add(Proxy);
+	ProxyGroups.Add(ProxyGroup);
 }
 
 void AStructurePart::TickCombatants()
@@ -359,7 +372,7 @@ TArray<const UStructurePartSlot*> AStructurePart::GetSlots_CDO(TSubclassOf<AStru
 	return Slots;
 }
 
-TArray<const UStructurePartSlot*> AStructurePart::GetCompatibleSlots_CDO(TSubclassOf<AStructurePart> PartClass, const UStructurePartSlot* Other)
+TArray<const UStructurePartSlot*> AStructurePart::GetCompatibleSlots_CDO(const TSubclassOf<AStructurePart> PartClass, const UStructurePartSlot* Other)
 {
 	TArray<const UStructurePartSlot*> CDOSlots = GetSlots_CDO(PartClass);
 	TArray<const UStructurePartSlot*> Ret;
@@ -371,7 +384,7 @@ TArray<const UStructurePartSlot*> AStructurePart::GetCompatibleSlots_CDO(TSubcla
 	return Ret;
 }
 
-const UStructurePartSlot* AStructurePart::GetSlot_CDO(TSubclassOf<AStructurePart> PartClass, FText InName)
+const UStructurePartSlot* AStructurePart::GetSlot_CDO(const TSubclassOf<AStructurePart> PartClass, const FText& InName)
 {
 	for(const UStructurePartSlot* Slot : GetSlots_CDO(PartClass))
 	{

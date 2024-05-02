@@ -4,7 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "ActiveGameplayEffectHandle.h"
-#include "GameplayAbilitySpecHandle.h"
 #include "GameFramework/Actor.h"
 #include "StructurePart.generated.h"
 
@@ -25,9 +24,6 @@ protected:
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category="Setup")
 	TSubclassOf<class UGameplayEffect> PassiveEffect;
 
-	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category="Setup")
-	TArray<TSubclassOf<class UStructureGameplayAbility>> Abilities;
-
 	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly, Category="Layout")
 	TObjectPtr<class AStructure> OwningStructure;
 
@@ -42,9 +38,6 @@ protected:
 
 	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly, Category="Gameplay")
 	FActiveGameplayEffectHandle PassiveEffectHandle;
-
-	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly, Category="Gameplay")
-	TArray<FGameplayAbilitySpecHandle> AbilityHandles;
 
 	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly, Category="Combat")
 	TObjectPtr<class AFaction> OwningFaction;
@@ -66,18 +59,15 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category="Prototype")
 	TSubclassOf<UGameplayEffect> GetPassiveEffect() const;
-
-	UFUNCTION(BlueprintCallable, Category="Prototype")
-	TArray<TSubclassOf<class UStructureGameplayAbility>> GetAbilities() const;
 	
 	UFUNCTION(BlueprintCallable, Category="Lifetime")
 	bool TryInit(AStructure* NewOwner, bool RegisterOnly = false);
 
 	UFUNCTION(BlueprintCallable, Category="Lifetime")
-	void OnRegistered();
+	virtual void OnRegistered();
 
 	UFUNCTION(BlueprintCallable, Category="Lifetime")
-	void OnUnRegistered();
+	virtual void OnUnRegistered();
 
 	UFUNCTION(BlueprintCallable, Category="Layout")
 	AStructure* GetOwningStructure() const;
@@ -119,13 +109,13 @@ public:
 	void UpdateDistance(int32 Distance);
 
 	UFUNCTION(BlueprintCallable, Category="Gameplay")
-	virtual float GetArcLength(TSubclassOf<UStructureGameplayAbility> AbilityClass);
+	void ApplyDamage(struct FStructureDamage InDamage) const;
 
 	UFUNCTION(BlueprintCallable, Category="Gameplay")
-	virtual FLinearColor GetArcColor(TSubclassOf<UStructureGameplayAbility> AbilityClass);
+	virtual void AddAbilitiesToProxyGroups(TArray<class UStructureAbilityProxyGroup*>& ProxyGroups);
 
 	UFUNCTION(BlueprintCallable, Category="Gameplay")
-	virtual void ActivateAbility(TSubclassOf<UStructureGameplayAbility> AbilityClass);
+	void AddAbilityToProxyGroups(TArray<UStructureAbilityProxyGroup*>& ProxyGroups, TSubclassOf<class UStructureGameplayAbility> AbilityClass, class UStructureAbilityProxy* Proxy) const;
 
 	UFUNCTION(BlueprintCallable, Category="Combat")
 	void TickCombatants();
@@ -137,6 +127,6 @@ public:
 
 	static TArray<const UStructurePartSlot*> GetCompatibleSlots_CDO(TSubclassOf<AStructurePart> PartClass, const UStructurePartSlot* Other);
 
-	static const UStructurePartSlot* GetSlot_CDO(TSubclassOf<AStructurePart> PartClass, FText InName);
+	static const UStructurePartSlot* GetSlot_CDO(TSubclassOf<AStructurePart> PartClass, const FText& InName);
 
 };

@@ -1,19 +1,17 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "Structures/Structure.h"
-
 #include "Log.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Structures/StructureAbilitySystemComponent.h"
 #include "Structures/StructureAttributeSet.h"
+#include "Structures/StructureDamage.h"
 #include "Structures/StructureGameplayAbility.h"
 #include "Structures/StructureLayout.h"
 #include "Structures/StructurePart.h"
 #include "Structures/StructurePartSlot.h"
-#include "UI/Screens/GameUI/StructurePartAbilityClass.h"
-#include "UI/Widgets/Arc.h"
-#include "UI/Widgets/MultiArc.h"
+#include "UI/Screens/GameUI/StructureAbilityProxyGroup.h"
 
 AStructure::AStructure()
 {
@@ -41,11 +39,7 @@ void AStructure::BeginPlay()
 
 	AbilitySystemComponent->InitAbilityActorInfo(this, this);
 	
-	ApplyEffect(DefaultAttributes);
-	for(const TSubclassOf<UGameplayEffect> PassiveEffectClass : PassiveEffectClasses)
-	{
-		ApplyEffect(PassiveEffectClass);
-	}
+	TryInitGameplay();
 }
 
 void AStructure::Tick(float DeltaTime)
@@ -78,6 +72,8 @@ bool AStructure::TryInit(AStructurePart* NewRoot, const bool RegisterOnly)
 {
 	if(RootPart) return false;
 	if(NewRoot->GetOwningStructure()) return false;
+
+	TryInitGameplay();
 	
 	NewRoot->TryInit(this, RegisterOnly);
 	RootPart = NewRoot;
@@ -123,7 +119,7 @@ AStructurePart* AStructure::GetPart(const FString InId)
 	return nullptr;
 }
 
-void AStructure::RegisterPart(AStructurePart* InPart, const bool SuppressEvent, bool KeepId)
+void AStructure::RegisterPart(AStructurePart* InPart, const bool SuppressEvent, const bool KeepId)
 {
 	if(!KeepId)
 	{
@@ -324,9 +320,59 @@ void AStructure::UpdateLayoutInformation()
 	OnLayoutChanged.Broadcast();
 }
 
+float AStructure::GetMaxHull() const
+{
+	return Attributes->GetMaxHull() == 0 ? 1 : Attributes->GetMaxHull();
+}
+
+float AStructure::GetHull() const
+{
+	return Attributes->GetHull();
+}
+
+void AStructure::SetHull(const float InHull) const
+{
+	Attributes->SetHull(FMath::Clamp(InHull, 0, Attributes->GetMaxHull()));
+}
+
+float AStructure::GetMaxShield() const
+{
+	return Attributes->GetMaxShield() == 0 ? 1 : Attributes->GetMaxShield();
+}
+
+float AStructure::GetShield() const
+{
+	return Attributes->GetShield();
+}
+
+void AStructure::SetShield(const float InShield) const
+{
+	Attributes->SetShield(FMath::Clamp(InShield, 0, Attributes->GetMaxShield()));
+}
+
+float AStructure::GetMaxEnergy() const
+{
+	return Attributes->GetMaxEnergy() == 0 ? 1 : Attributes->GetMaxEnergy();
+}
+
+float AStructure::GetEnergy() const
+{
+	return Attributes->GetEnergy();
+}
+
 float AStructure::GetUpkeep() const
 {
 	return Attributes->GetUpkeep() / (Attributes->GetUpkeepReduction() + 1);
+}
+
+float AStructure::GetLinearMaxSpeed() const
+{
+	return Attributes->GetLinearMaxSpeed() == 0 ? 1 : Attributes->GetLinearMaxSpeed();
+}
+
+float AStructure::GetLinearSpeed() const
+{
+	return StaticMesh->GetPhysicsLinearVelocity().Length();
 }
 
 bool AStructure::IsDetecting(AStructure* Other) const
@@ -334,49 +380,24 @@ bool AStructure::IsDetecting(AStructure* Other) const
 	return (GetActorLocation() - Other->GetActorLocation()).SquaredLength() <= Attributes->GetSensorStrength() * Other->Attributes->GetSignatureVisibility();
 }
 
-void AStructure::UpdateButtonMultiArc(const UStructurePartAbilityClass* AbilityClassObj, UMultiArc* MultiArc)
+FStructureDamage AStructure::GetHullPostMitigationDamage(const FStructureDamage& PreMitigationDamage) const
 {
-	int NumArcs = 0;
-	for(const AStructurePart* Part : Parts)
-	{
-		if(Part->GetClass() == AbilityClassObj->PartClass)
-		{
-			NumArcs++;
-		}
-	}
-
-	const float ArcLength = 1.0 / NumArcs;
-	const float Padding = FMath::Min(ArcLength * 0.1, 0.025);
-	
-	MultiArc->ClearArcs();
-	int Current = 0;
-	for(AStructurePart* Part : Parts)
-	{
-		if(Part->GetClass() == AbilityClassObj->PartClass)
-		{
-			UArc* Arc = MultiArc->AddArc();
-			Arc->SetLength(ArcLength * Current + Padding, ArcLength * Part->GetArcLength(AbilityClassObj->AbilityClass) - 2 * Padding);
-			Arc->SetColor(Part->GetArcColor(AbilityClassObj->AbilityClass));
-			Current++;
-		}
-	}
+	return FStructureDamage(
+		PreMitigationDamage.Kinetic / (1 + Attributes->GetHullKineticDamageReduction()),
+		PreMitigationDamage.Explosive / (1 + Attributes->GetHullExplosiveDamageReduction()),
+		PreMitigationDamage.Beam / (1 + Attributes->GetHullBeamDamageReduction()),
+		PreMitigationDamage.Field / (1 + Attributes->GetHullFieldDamageReduction())
+	);
 }
 
-void AStructure::ActivateAbility(const UStructurePartAbilityClass* AbilityClassObj)
+FStructureDamage AStructure::GetShieldPostMitigationDamage(const FStructureDamage& PreMitigationDamage) const
 {
-	if(AbilityClassObj->TargetStructure != this)
-	{
-		UE_LOG(LogDarkFrontier, Warning, TEXT("Tried activating ability %s on incorrect structure"), *AbilityClassObj->AbilityClass->GetDisplayNameText().ToString());
-		return;
-	}
-	
-	for(AStructurePart* Part : Parts)
-	{
-		if(Part->GetClass() == AbilityClassObj->PartClass)
-		{
-			Part->ActivateAbility(AbilityClassObj->AbilityClass);
-		}
-	}
+	return FStructureDamage(
+		PreMitigationDamage.Kinetic / (1 + Attributes->GetShieldKineticDamageReduction()),
+		PreMitigationDamage.Explosive / (1 + Attributes->GetShieldExplosiveDamageReduction()),
+		PreMitigationDamage.Beam / (1 + Attributes->GetShieldBeamDamageReduction()),
+		PreMitigationDamage.Field / (1 + Attributes->GetShieldFieldDamageReduction())
+	);
 }
 
 UAbilitySystemComponent* AStructure::GetAbilitySystemComponent() const
@@ -384,7 +405,23 @@ UAbilitySystemComponent* AStructure::GetAbilitySystemComponent() const
 	return AbilitySystemComponent;
 }
 
-FActiveGameplayEffectHandle AStructure::ApplyEffect(const TSubclassOf<UGameplayEffect> EffectClass)
+bool AStructure::TryInitGameplay()
+{
+	if(!IsGameplayInitialized)
+	{
+		FActiveGameplayEffectHandle DefaultAttributesHandle = ApplyEffect(DefaultAttributes);
+		for(const TSubclassOf<UGameplayEffect> PassiveEffectClass : PassiveEffectClasses)
+		{
+			FActiveGameplayEffectHandle PassiveEffectHandle = ApplyEffect(PassiveEffectClass);
+		}
+
+		IsGameplayInitialized = true;
+		return true;
+	}
+	return false;
+}
+
+FActiveGameplayEffectHandle AStructure::ApplyEffect(const TSubclassOf<UGameplayEffect> EffectClass) const
 {
 	if(AbilitySystemComponent && EffectClass)
 	{
@@ -395,14 +432,16 @@ FActiveGameplayEffectHandle AStructure::ApplyEffect(const TSubclassOf<UGameplayE
 
 		if(SpecHandle.IsValid())
 		{
-			return AbilitySystemComponent->ApplyGameplayEffectSpecToSelf(*SpecHandle.Data.Get());
+			const FActiveGameplayEffectHandle EffectHandle = AbilitySystemComponent->ApplyGameplayEffectSpecToSelf(*SpecHandle.Data.Get());
+			UE_LOG(LogDarkFrontier, Log, TEXT("Applied effect %s"), *EffectClass->GetName());
+			return EffectHandle;
 		}
 	}
 
 	return FActiveGameplayEffectHandle();
 }
 
-FGameplayAbilitySpecHandle AStructure::GiveAbility(TSubclassOf<UStructureGameplayAbility> AbilityClass)
+FGameplayAbilitySpecHandle AStructure::GiveAbility(const TSubclassOf<UStructureGameplayAbility> AbilityClass) const
 {
 	if(HasAuthority() && AbilitySystemComponent && AbilityClass)
 	{
@@ -410,6 +449,35 @@ FGameplayAbilitySpecHandle AStructure::GiveAbility(TSubclassOf<UStructureGamepla
 	}
 
 	return FGameplayAbilitySpecHandle();
+}
+
+TArray<UStructureAbilityProxyGroup*> AStructure::GetAbilityProxyGroups()
+{
+	TArray<UStructureAbilityProxyGroup*> ProxyGroups;
+
+	for(AStructurePart* Part : GetParts())
+	{
+		Part->AddAbilitiesToProxyGroups(ProxyGroups);
+	}
+	
+	return ProxyGroups;
+}
+
+UStructureAbilityProxyGroup* AStructure::GetNewAbilityProxyGroup(const TSubclassOf<UStructureGameplayAbility> AbilityClass)
+{
+	// TODO replace ability class with gameplay tag
+	UStructureAbilityProxyGroup* ProxyGroup = NewObject<UStructureAbilityProxyGroup>();
+	ProxyGroup->TargetStructure = this;
+	ProxyGroup->AbilityClass = AbilityClass;
+	return ProxyGroup;
+}
+
+void AStructure::ClearAbility(const FGameplayAbilitySpecHandle AbilityHandle) const
+{
+	if(HasAuthority() && AbilitySystemComponent && AbilityHandle.IsValid())
+	{
+		AbilitySystemComponent->ClearAbility(AbilityHandle);
+	}
 }
 
 void AStructure::SetMoveInput(const FVector InInput)

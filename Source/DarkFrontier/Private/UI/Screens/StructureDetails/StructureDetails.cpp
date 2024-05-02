@@ -162,15 +162,16 @@ void UStructureDetails::OnExitButtonClicked()
 		UE_LOG(LogDarkFrontier, Error, TEXT("Structure details new structure is null"));
 		return;
 	}
-	
-	NewStructure->LoadLayout(SavedLayout);
-	
+
 	AStructureController* Controller = Cast<AStructureController>(GetWorld()->GetFirstPlayerController());
 	if(IsValid(Controller) && Controller->GetPawn() == TargetStructure)
 	{
 		Controller->Possess(NewStructure);
 	}
 
+	// Load layout after switching pawns to make sure layout change subscribers fetch the correct pawn
+	NewStructure->LoadLayout(SavedLayout);
+	
 	TargetStructure->TryDestroy();
 	
 	DeactivateWidget();
