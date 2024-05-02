@@ -8,17 +8,17 @@ void AStructureTurret::OnRegistered()
 {
 	Super::OnRegistered();
 
-	AbilityHandle = OwningStructure->GiveAbility(Ability);
+	TurretAbilityHandle = OwningStructure->GiveAbility(TurretAbilityClass);
 }
 
 void AStructureTurret::OnUnRegistered()
 {
 	Super::OnUnRegistered();
 
-	if(AbilityHandle.IsValid())
+	if(TurretAbilityHandle.IsValid())
 	{
-		OwningStructure->ClearAbility(AbilityHandle);
-		AbilityHandle = FGameplayAbilitySpecHandle();
+		OwningStructure->ClearAbility(TurretAbilityHandle);
+		TurretAbilityHandle = FGameplayAbilitySpecHandle();
 	}
 }
 
@@ -28,8 +28,8 @@ void AStructureTurret::AddAbilitiesToProxyGroups(TArray<UStructureAbilityProxyGr
 
 	UStructureTurretAbilityProxy* Proxy = NewObject<UStructureTurretAbilityProxy>();
 	Proxy->Turret = this;
-	Proxy->AbilityHandle = AbilityHandle;
-	AddAbilityToProxyGroups(ProxyGroups, Ability, Proxy);
+	Proxy->AbilityHandle = TurretAbilityHandle;
+	AddAbilityToProxyGroups(ProxyGroups, TurretAbilityClass, Proxy);
 }
 
 float AStructureTurret::GetAbilityArcLength()

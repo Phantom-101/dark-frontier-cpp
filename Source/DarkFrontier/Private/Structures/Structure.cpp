@@ -48,6 +48,33 @@ void AStructure::Tick(float DeltaTime)
 
 	if(!IsValid(RootPart)) return;
 
+	// Apply damage buffers
+	
+	FStructureDamage Damage = FStructureDamage(
+		Attributes->GetKineticDamageTaken(),
+		Attributes->GetExplosiveDamageTaken(),
+		Attributes->GetBeamDamageTaken(),
+		Attributes->GetFieldDamageTaken()
+	);
+	
+	if(GetShield() > 0)
+	{
+		const FStructureDamage ShieldPostMitigation = GetShieldPostMitigationDamage(Damage);
+		const float ShieldAbsorbedPercent = FMath::Min(GetShield() / ShieldPostMitigation.Sum(), 1);
+		SetShield(GetShield() - ShieldPostMitigation.Sum() * ShieldAbsorbedPercent);
+		Damage = Damage.Scale(1 - ShieldAbsorbedPercent);
+	}
+	
+	const FStructureDamage HullPostMitigation = GetHullPostMitigationDamage(Damage);
+	SetHull(GetHull() - HullPostMitigation.Sum());
+
+	Attributes->SetKineticDamageTaken(0);
+	Attributes->SetExplosiveDamageTaken(0);
+	Attributes->SetBeamDamageTaken(0);
+	Attributes->SetFieldDamageTaken(0);
+
+	// Apply thrusts
+
 	if(GetActorEnableCollision())
 	{
 		const float LinearMaxSpeed = Attributes->GetLinearMaxSpeed();

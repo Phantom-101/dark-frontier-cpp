@@ -23,183 +23,200 @@ class DARKFRONTIER_API UStructureAttributeSet : public UAttributeSet
 
 public:
 
-	UStructureAttributeSet();
-
-	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
-
-	virtual void PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data) override;
-
 	UPROPERTY(BlueprintReadOnly, Category="Attributes", ReplicatedUsing=OnRep_MaxHull)
 	FGameplayAttributeData MaxHull;
+	
+	UPROPERTY(BlueprintReadOnly, Category="Attributes", ReplicatedUsing=OnRep_Hull)
+	FGameplayAttributeData Hull;
+	
+	UPROPERTY(BlueprintReadOnly, Category="Attributes", ReplicatedUsing=OnRep_HullKineticDamageReduction)
+	FGameplayAttributeData HullKineticDamageReduction;
+	
+	UPROPERTY(BlueprintReadOnly, Category="Attributes", ReplicatedUsing=OnRep_HullExplosiveDamageReduction)
+	FGameplayAttributeData HullExplosiveDamageReduction;
+	
+	UPROPERTY(BlueprintReadOnly, Category="Attributes", ReplicatedUsing=OnRep_HullBeamDamageReduction)
+	FGameplayAttributeData HullBeamDamageReduction;
+	
+	UPROPERTY(BlueprintReadOnly, Category="Attributes", ReplicatedUsing=OnRep_HullFieldDamageReduction)
+	FGameplayAttributeData HullFieldDamageReduction;
+	
+	UPROPERTY(BlueprintReadOnly, Category="Attributes", ReplicatedUsing=OnRep_MaxShield)
+	FGameplayAttributeData MaxShield;
+	
+	UPROPERTY(BlueprintReadOnly, Category="Attributes", ReplicatedUsing=OnRep_Shield)
+	FGameplayAttributeData Shield;
+	
+	UPROPERTY(BlueprintReadOnly, Category="Attributes", ReplicatedUsing=OnRep_ShieldRegen)
+	FGameplayAttributeData ShieldRegen;
+	
+	UPROPERTY(BlueprintReadOnly, Category="Attributes", ReplicatedUsing=OnRep_ShieldKineticDamageReduction)
+	FGameplayAttributeData ShieldKineticDamageReduction;
+	
+	UPROPERTY(BlueprintReadOnly, Category="Attributes", ReplicatedUsing=OnRep_ShieldExplosiveDamageReduction)
+	FGameplayAttributeData ShieldExplosiveDamageReduction;
+	
+	UPROPERTY(BlueprintReadOnly, Category="Attributes", ReplicatedUsing=OnRep_ShieldBeamDamageReduction)
+	FGameplayAttributeData ShieldBeamDamageReduction;
+	
+	UPROPERTY(BlueprintReadOnly, Category="Attributes", ReplicatedUsing=OnRep_ShieldFieldDamageReduction)
+	FGameplayAttributeData ShieldFieldDamageReduction;
+
+	UPROPERTY(BlueprintReadOnly, Category="Attributes")
+	FGameplayAttributeData KineticDamageTaken;
+	
+	UPROPERTY(BlueprintReadOnly, Category="Attributes")
+	FGameplayAttributeData ExplosiveDamageTaken;
+	
+	UPROPERTY(BlueprintReadOnly, Category="Attributes")
+	FGameplayAttributeData BeamDamageTaken;
+	
+	UPROPERTY(BlueprintReadOnly, Category="Attributes")
+	FGameplayAttributeData FieldDamageTaken;
+	
+	UPROPERTY(BlueprintReadOnly, Category="Attributes", ReplicatedUsing=OnRep_MaxEnergy)
+	FGameplayAttributeData MaxEnergy;
+
+	UPROPERTY(BlueprintReadOnly, Category="Attributes", ReplicatedUsing=OnRep_Energy)
+	FGameplayAttributeData Energy;
+	
+	UPROPERTY(BlueprintReadOnly, Category="Attributes", ReplicatedUsing=OnRep_EnergyRegen)
+	FGameplayAttributeData EnergyRegen;
+	
+	UPROPERTY(BlueprintReadOnly, Category="Attributes", ReplicatedUsing=OnRep_MaxUpkeep)
+	FGameplayAttributeData MaxUpkeep;
+
+	UPROPERTY(BlueprintReadOnly, Category="Attributes", ReplicatedUsing=OnRep_Upkeep)
+	FGameplayAttributeData Upkeep;
+	
+	UPROPERTY(BlueprintReadOnly, Category="Attributes", ReplicatedUsing=OnRep_UpkeepReduction)
+	FGameplayAttributeData UpkeepReduction;
+	
+	UPROPERTY(BlueprintReadOnly, Category="Attributes", ReplicatedUsing=OnRep_LinearAcceleration)
+	FGameplayAttributeData LinearAcceleration;
+
+	UPROPERTY(BlueprintReadOnly, Category="Attributes", ReplicatedUsing=OnRep_LinearMaxSpeed)
+	FGameplayAttributeData LinearMaxSpeed;
+	
+	UPROPERTY(BlueprintReadOnly, Category="Attributes", ReplicatedUsing=OnRep_AngularAcceleration)
+	FGameplayAttributeData AngularAcceleration;
+
+	UPROPERTY(BlueprintReadOnly, Category="Attributes", ReplicatedUsing=OnRep_AngularMaxSpeed)
+	FGameplayAttributeData AngularMaxSpeed;
+
+	UPROPERTY(BlueprintReadOnly, Category="Attributes", ReplicatedUsing=OnRep_SensorStrength)
+	FGameplayAttributeData SensorStrength;
+	
+	UPROPERTY(BlueprintReadOnly, Category="Attributes", ReplicatedUsing=OnRep_SignatureVisibility)
+	FGameplayAttributeData SignatureVisibility;
+
+	UStructureAttributeSet();
+
 	ATTRIBUTE_ACCESSORS(UStructureAttributeSet, MaxHull);
+	ATTRIBUTE_ACCESSORS(UStructureAttributeSet, Hull);
+	ATTRIBUTE_ACCESSORS(UStructureAttributeSet, HullKineticDamageReduction);
+	ATTRIBUTE_ACCESSORS(UStructureAttributeSet, HullExplosiveDamageReduction);
+	ATTRIBUTE_ACCESSORS(UStructureAttributeSet, HullBeamDamageReduction);
+	ATTRIBUTE_ACCESSORS(UStructureAttributeSet, HullFieldDamageReduction);
+	ATTRIBUTE_ACCESSORS(UStructureAttributeSet, MaxShield);
+	ATTRIBUTE_ACCESSORS(UStructureAttributeSet, Shield);
+	ATTRIBUTE_ACCESSORS(UStructureAttributeSet, ShieldRegen);
+	ATTRIBUTE_ACCESSORS(UStructureAttributeSet, ShieldKineticDamageReduction);
+	ATTRIBUTE_ACCESSORS(UStructureAttributeSet, ShieldExplosiveDamageReduction);
+	ATTRIBUTE_ACCESSORS(UStructureAttributeSet, ShieldBeamDamageReduction);
+	ATTRIBUTE_ACCESSORS(UStructureAttributeSet, ShieldFieldDamageReduction);
+	ATTRIBUTE_ACCESSORS(UStructureAttributeSet, KineticDamageTaken);
+	ATTRIBUTE_ACCESSORS(UStructureAttributeSet, ExplosiveDamageTaken);
+	ATTRIBUTE_ACCESSORS(UStructureAttributeSet, BeamDamageTaken);
+	ATTRIBUTE_ACCESSORS(UStructureAttributeSet, FieldDamageTaken);
+	ATTRIBUTE_ACCESSORS(UStructureAttributeSet, MaxEnergy);
+	ATTRIBUTE_ACCESSORS(UStructureAttributeSet, Energy);
+	ATTRIBUTE_ACCESSORS(UStructureAttributeSet, EnergyRegen);
+	ATTRIBUTE_ACCESSORS(UStructureAttributeSet, MaxUpkeep);
+	ATTRIBUTE_ACCESSORS(UStructureAttributeSet, Upkeep);
+	ATTRIBUTE_ACCESSORS(UStructureAttributeSet, UpkeepReduction);
+	ATTRIBUTE_ACCESSORS(UStructureAttributeSet, LinearAcceleration);
+	ATTRIBUTE_ACCESSORS(UStructureAttributeSet, LinearMaxSpeed);
+	ATTRIBUTE_ACCESSORS(UStructureAttributeSet, AngularAcceleration);
+	ATTRIBUTE_ACCESSORS(UStructureAttributeSet, AngularMaxSpeed);
+	ATTRIBUTE_ACCESSORS(UStructureAttributeSet, SensorStrength);
+	ATTRIBUTE_ACCESSORS(UStructureAttributeSet, SignatureVisibility);
+	
+	virtual void PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data) override;
+
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
 	UFUNCTION()
 	virtual void OnRep_MaxHull(const FGameplayAttributeData& OldMaxHull);
 
-	UPROPERTY(BlueprintReadOnly, Category="Attributes", ReplicatedUsing=OnRep_Hull)
-	FGameplayAttributeData Hull;
-	ATTRIBUTE_ACCESSORS(UStructureAttributeSet, Hull);
-
 	UFUNCTION()
 	virtual void OnRep_Hull(const FGameplayAttributeData& OldHull);
-
-	UPROPERTY(BlueprintReadOnly, Category="Attributes", ReplicatedUsing=OnRep_HullKineticDamageReduction)
-	FGameplayAttributeData HullKineticDamageReduction;
-	ATTRIBUTE_ACCESSORS(UStructureAttributeSet, HullKineticDamageReduction);
 
 	UFUNCTION()
 	virtual void OnRep_HullKineticDamageReduction(const FGameplayAttributeData& OldHullKineticDamageReduction);
 
-	UPROPERTY(BlueprintReadOnly, Category="Attributes", ReplicatedUsing=OnRep_HullExplosiveDamageReduction)
-	FGameplayAttributeData HullExplosiveDamageReduction;
-	ATTRIBUTE_ACCESSORS(UStructureAttributeSet, HullExplosiveDamageReduction);
-
 	UFUNCTION()
 	virtual void OnRep_HullExplosiveDamageReduction(const FGameplayAttributeData& OldHullExplosiveDamageReduction);
-
-	UPROPERTY(BlueprintReadOnly, Category="Attributes", ReplicatedUsing=OnRep_HullBeamDamageReduction)
-	FGameplayAttributeData HullBeamDamageReduction;
-	ATTRIBUTE_ACCESSORS(UStructureAttributeSet, HullBeamDamageReduction);
 
 	UFUNCTION()
 	virtual void OnRep_HullBeamDamageReduction(const FGameplayAttributeData& OldHullBeamDamageReduction);
 
-	UPROPERTY(BlueprintReadOnly, Category="Attributes", ReplicatedUsing=OnRep_HullFieldDamageReduction)
-	FGameplayAttributeData HullFieldDamageReduction;
-	ATTRIBUTE_ACCESSORS(UStructureAttributeSet, HullFieldDamageReduction);
-
 	UFUNCTION()
 	virtual void OnRep_HullFieldDamageReduction(const FGameplayAttributeData& OldHullFieldDamageReduction);
-	
-	UPROPERTY(BlueprintReadOnly, Category="Attributes", ReplicatedUsing=OnRep_MaxShield)
-	FGameplayAttributeData MaxShield;
-	ATTRIBUTE_ACCESSORS(UStructureAttributeSet, MaxShield);
 
 	UFUNCTION()
 	virtual void OnRep_MaxShield(const FGameplayAttributeData& OldMaxShield);
 
-	UPROPERTY(BlueprintReadOnly, Category="Attributes", ReplicatedUsing=OnRep_Shield)
-	FGameplayAttributeData Shield;
-	ATTRIBUTE_ACCESSORS(UStructureAttributeSet, Shield);
-
 	UFUNCTION()
 	virtual void OnRep_Shield(const FGameplayAttributeData& OldShield);
-
-	UPROPERTY(BlueprintReadOnly, Category="Attributes", ReplicatedUsing=OnRep_ShieldRegen)
-	FGameplayAttributeData ShieldRegen;
-	ATTRIBUTE_ACCESSORS(UStructureAttributeSet, ShieldRegen);
 
 	UFUNCTION()
 	virtual void OnRep_ShieldRegen(const FGameplayAttributeData& OldShieldRegen);
 
-	UPROPERTY(BlueprintReadOnly, Category="Attributes", ReplicatedUsing=OnRep_ShieldKineticDamageReduction)
-	FGameplayAttributeData ShieldKineticDamageReduction;
-	ATTRIBUTE_ACCESSORS(UStructureAttributeSet, ShieldKineticDamageReduction);
-
 	UFUNCTION()
 	virtual void OnRep_ShieldKineticDamageReduction(const FGameplayAttributeData& OldShieldKineticDamageReduction);
 
-	UPROPERTY(BlueprintReadOnly, Category="Attributes", ReplicatedUsing=OnRep_ShieldExplosiveDamageReduction)
-	FGameplayAttributeData ShieldExplosiveDamageReduction;
-	ATTRIBUTE_ACCESSORS(UStructureAttributeSet, ShieldExplosiveDamageReduction);
-
 	UFUNCTION()
 	virtual void OnRep_ShieldExplosiveDamageReduction(const FGameplayAttributeData& OldShieldExplosiveDamageReduction);
-
-	UPROPERTY(BlueprintReadOnly, Category="Attributes", ReplicatedUsing=OnRep_ShieldBeamDamageReduction)
-	FGameplayAttributeData ShieldBeamDamageReduction;
-	ATTRIBUTE_ACCESSORS(UStructureAttributeSet, ShieldBeamDamageReduction);
-
+	
 	UFUNCTION()
 	virtual void OnRep_ShieldBeamDamageReduction(const FGameplayAttributeData& OldShieldBeamDamageReduction);
-
-	UPROPERTY(BlueprintReadOnly, Category="Attributes", ReplicatedUsing=OnRep_ShieldFieldDamageReduction)
-	FGameplayAttributeData ShieldFieldDamageReduction;
-	ATTRIBUTE_ACCESSORS(UStructureAttributeSet, ShieldFieldDamageReduction);
-
+	
 	UFUNCTION()
 	virtual void OnRep_ShieldFieldDamageReduction(const FGameplayAttributeData& OldShieldFieldDamageReduction);
-
-	UPROPERTY(BlueprintReadOnly, Category="Attributes", ReplicatedUsing=OnRep_MaxEnergy)
-	FGameplayAttributeData MaxEnergy;
-	ATTRIBUTE_ACCESSORS(UStructureAttributeSet, MaxEnergy);
-
+	
 	UFUNCTION()
 	virtual void OnRep_MaxEnergy(const FGameplayAttributeData& OldMaxEnergy);
-
-	UPROPERTY(BlueprintReadOnly, Category="Attributes", ReplicatedUsing=OnRep_Energy)
-	FGameplayAttributeData Energy;
-	ATTRIBUTE_ACCESSORS(UStructureAttributeSet, Energy);
-
+	
 	UFUNCTION()
 	virtual void OnRep_Energy(const FGameplayAttributeData& OldEnergy);
-
-	UPROPERTY(BlueprintReadOnly, Category="Attributes", ReplicatedUsing=OnRep_EnergyRegen)
-	FGameplayAttributeData EnergyRegen;
-	ATTRIBUTE_ACCESSORS(UStructureAttributeSet, EnergyRegen);
-
+	
 	UFUNCTION()
 	virtual void OnRep_EnergyRegen(const FGameplayAttributeData& OldEnergyRegen);
-
-	UPROPERTY(BlueprintReadOnly, Category="Attributes", ReplicatedUsing=OnRep_MaxUpkeep)
-	FGameplayAttributeData MaxUpkeep;
-	ATTRIBUTE_ACCESSORS(UStructureAttributeSet, MaxUpkeep);
-
+	
 	UFUNCTION()
 	virtual void OnRep_MaxUpkeep(const FGameplayAttributeData& OldMaxUpkeep);
-
-	UPROPERTY(BlueprintReadOnly, Category="Attributes", ReplicatedUsing=OnRep_Upkeep)
-	FGameplayAttributeData Upkeep;
-	ATTRIBUTE_ACCESSORS(UStructureAttributeSet, Upkeep);
-
+	
 	UFUNCTION()
 	virtual void OnRep_Upkeep(const FGameplayAttributeData& OldUpkeep);
-
-	UPROPERTY(BlueprintReadOnly, Category="Attributes", ReplicatedUsing=OnRep_UpkeepReduction)
-	FGameplayAttributeData UpkeepReduction;
-	ATTRIBUTE_ACCESSORS(UStructureAttributeSet, UpkeepReduction);
-
+	
 	UFUNCTION()
 	virtual void OnRep_UpkeepReduction(const FGameplayAttributeData& OldUpkeepReduction);
 	
-	UPROPERTY(BlueprintReadOnly, Category="Attributes", ReplicatedUsing=OnRep_LinearAcceleration)
-	FGameplayAttributeData LinearAcceleration;
-	ATTRIBUTE_ACCESSORS(UStructureAttributeSet, LinearAcceleration);
-
 	UFUNCTION()
 	virtual void OnRep_LinearAcceleration(const FGameplayAttributeData& OldLinearAcceleration);
-
-	UPROPERTY(BlueprintReadOnly, Category="Attributes", ReplicatedUsing=OnRep_LinearMaxSpeed)
-	FGameplayAttributeData LinearMaxSpeed;
-	ATTRIBUTE_ACCESSORS(UStructureAttributeSet, LinearMaxSpeed);
-
+	
 	UFUNCTION()
 	virtual void OnRep_LinearMaxSpeed(const FGameplayAttributeData& OldLinearMaxSpeed);
-
-	UPROPERTY(BlueprintReadOnly, Category="Attributes", ReplicatedUsing=OnRep_AngularAcceleration)
-	FGameplayAttributeData AngularAcceleration;
-	ATTRIBUTE_ACCESSORS(UStructureAttributeSet, AngularAcceleration);
-
+	
 	UFUNCTION()
 	virtual void OnRep_AngularAcceleration(const FGameplayAttributeData& OldAngularAcceleration);
-
-	UPROPERTY(BlueprintReadOnly, Category="Attributes", ReplicatedUsing=OnRep_AngularMaxSpeed)
-	FGameplayAttributeData AngularMaxSpeed;
-	ATTRIBUTE_ACCESSORS(UStructureAttributeSet, AngularMaxSpeed);
-
+	
 	UFUNCTION()
 	virtual void OnRep_AngularMaxSpeed(const FGameplayAttributeData& OldAngularMaxSpeed);
 
-	UPROPERTY(BlueprintReadOnly, Category="Attributes", ReplicatedUsing=OnRep_SensorStrength)
-	FGameplayAttributeData SensorStrength;
-	ATTRIBUTE_ACCESSORS(UStructureAttributeSet, SensorStrength);
-
 	UFUNCTION()
 	virtual void OnRep_SensorStrength(const FGameplayAttributeData& OldSensorStrength);
-
-	UPROPERTY(BlueprintReadOnly, Category="Attributes", ReplicatedUsing=OnRep_SignatureVisibility)
-	FGameplayAttributeData SignatureVisibility;
-	ATTRIBUTE_ACCESSORS(UStructureAttributeSet, SignatureVisibility);
 
 	UFUNCTION()
 	virtual void OnRep_SignatureVisibility(const FGameplayAttributeData& OldSignatureVisibility);

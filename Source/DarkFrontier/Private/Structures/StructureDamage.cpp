@@ -8,10 +8,10 @@ FStructureDamage::FStructureDamage()
 
 FStructureDamage::FStructureDamage(const float InKinetic, const float InExplosive, const float InBeam, const float InField)
 {
-	Kinetic = InKinetic;
-	Explosive = InExplosive;
-	Beam = InBeam;
-	Field = InField;
+	Kinetic = abs(InKinetic);
+	Explosive = abs(InExplosive);
+	Beam = abs(InBeam);
+	Field = abs(InField);
 }
 
 float FStructureDamage::Sum() const
