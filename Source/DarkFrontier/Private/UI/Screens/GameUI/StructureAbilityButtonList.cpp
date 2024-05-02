@@ -4,29 +4,18 @@
 #include "CommonListView.h"
 #include "Log.h"
 #include "Structures/Structure.h"
-#include "Structures/StructurePart.h"
-#include "UI/Screens/GameUI/StructurePartClass.h"
+#include "UI/Screens/GameUI/StructureAbilityProxyGroup.h"
 
 void UStructureAbilityButtonList::UpdateButtons(AStructure* InStructure) const
 {
-	TArray<TSubclassOf<AStructurePart>> PartClasses;
-	for(const AStructurePart* Part : InStructure->GetParts())
-	{
-		if(!PartClasses.Contains(Part->GetClass()))
-		{
-			PartClasses.Add(Part->GetClass());
-		}
-	}
+	TArray<UStructureAbilityProxyGroup*> ProxyGroups = InStructure->GetAbilityProxyGroups();
 
-	UE_LOG(LogDarkFrontier, Log, TEXT("Updating structure ability buttons with %d unique part types"), PartClasses.Num());
+	UE_LOG(LogDarkFrontier, Log, TEXT("Updating structure ability buttons with %d ability proxy groups"), ProxyGroups.Num());
 
 	PartList->ClearListItems();
-	for(const TSubclassOf<AStructurePart> PartClass : PartClasses)
+	for(UStructureAbilityProxyGroup* ProxyGroup : ProxyGroups)
 	{
-		UStructurePartClass* ClassObj = NewObject<UStructurePartClass>();
-		ClassObj->TargetStructure = InStructure;
-		ClassObj->PartClass = PartClass;
-		PartList->AddItem(ClassObj);
+		PartList->AddItem(ProxyGroup);
 	}
 	PartList->RegenerateAllEntries();
 }

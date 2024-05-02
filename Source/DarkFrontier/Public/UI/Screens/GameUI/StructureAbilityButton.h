@@ -27,7 +27,10 @@ protected:
 	TObjectPtr<class UImage> AbilityIcon;
 
 	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly)
-	TObjectPtr<class UStructurePartAbilityClass> AbilityClassObj;
+	TObjectPtr<class UStructureAbilityProxyGroup> ProxyGroup;
+
+	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly)
+	TArray<TObjectPtr<class UArc>> Arcs;
 
 	virtual void NativeOnListItemObjectSet(UObject* ListItemObject) override;
 

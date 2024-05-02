@@ -110,6 +110,8 @@ void AStructureController::UpdateCamera()
 	const FBoxSphereBounds Bounds = CameraTargetComponent ? GetViewBounds(CameraTargetComponent->GetOwner(), true) : GetViewBounds(CameraTargetActor, true);
 	const FVector Location = CameraTargetComponent ? CameraTargetComponent->GetComponentLocation() : CameraTargetActor->GetActorLocation();
 	const FRotator Rotation = CameraTargetComponent ? CameraTargetComponent->GetComponentRotation() : CameraTargetActor->GetActorRotation();
+
+	UE_LOG(LogDarkFrontier, Display, TEXT("Calculated bounds radius is %f"), Bounds.SphereRadius);
 	
 	USpringArmComponent* SpringArm = StructurePawn->GetCameraSpringArm();
 	
@@ -132,12 +134,12 @@ FBoxSphereBounds AStructureController::GetViewBounds(const AActor* Actor, const 
 
 FBoxSphereBounds AStructureController::GetObjectViewBounds(const AActor* Actor, const bool OnlyCollidingComponents)
 {
-	FBoxSphereBounds Bounds;
+	FBoxSphereBounds Bounds(ForceInit);
 	Actor->ForEachComponent<UPrimitiveComponent>(false, [&](const UPrimitiveComponent* InPrimComp)
 	{
 		if (InPrimComp->IsRegistered() && (!OnlyCollidingComponents || InPrimComp->IsCollisionEnabled()))
 		{
-			Bounds = Bounds + InPrimComp->Bounds;
+			Bounds = Bounds + InPrimComp->GetLocalBounds();
 		}
 	});
 	return Bounds;
@@ -145,7 +147,7 @@ FBoxSphereBounds AStructureController::GetObjectViewBounds(const AActor* Actor, 
 
 FBoxSphereBounds AStructureController::GetStructureViewBounds(const AStructure* Structure, const bool OnlyCollidingComponents)
 {
-	FBoxSphereBounds Bounds;
+	FBoxSphereBounds Bounds(ForceInit);
 	TArray<AActor*> AttachedActors;
 	Structure->GetAttachedActors(AttachedActors);
 	for (const AActor* AttachedActor : AttachedActors)
@@ -197,9 +199,9 @@ void AStructureController::ToggleUnlock(const FInputActionInstance& Instance)
 	
 	if(const ULocalPlayer* LocalPlayer = Cast<ULocalPlayer>(Player))
 	{
-		if (UCommonUIActionRouterBase* Router = LocalPlayer->GetSubsystem<UCommonUIActionRouterBase>())
+		if(UCommonUIActionRouterBase* Router = LocalPlayer->GetSubsystem<UCommonUIActionRouterBase>())
 		{
-			if (Router)
+			if(Router)
 			{
 				if(IsCursorUnlocked)
 				{

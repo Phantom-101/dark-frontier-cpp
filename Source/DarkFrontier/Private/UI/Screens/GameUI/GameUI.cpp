@@ -14,6 +14,7 @@
 #include "UI/CustomGameplayEffectUIData.h"
 #include "UI/GameplayEffectIndicatorObject.h"
 #include "UI/Screens/GameUI/StructureAbilityButtonList.h"
+#include "UI/Widgets/Arc.h"
 
 TOptional<FUIInputConfig> UGameUI::GetDesiredInputConfig() const
 {
@@ -41,6 +42,14 @@ void UGameUI::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 
 	if(const AStructureController* PlayerController = Cast<AStructureController>(GetWorld()->GetFirstPlayerController()))
 	{
+		if(const AStructure* Structure = Cast<AStructure>(PlayerController->GetPawn()))
+		{
+			HullArc->SetLength(Structure->GetHull() / Structure->GetMaxHull() * 0.25);
+			ShieldArc->SetLength(Structure->GetShield() / Structure->GetMaxShield() * 0.2);
+			EnergyArc->SetLength(Structure->GetEnergy() / Structure->GetMaxEnergy() * 0.25);
+			SpeedArc->SetLength(Structure->GetLinearSpeed() / Structure->GetLinearMaxSpeed() * 0.2);
+		}
+		
 		const FVector ScaledRotateInput = PlayerController->GetTurnIndicatorOffset() * 200;
 		UWidgetLayoutLibrary::SlotAsCanvasSlot(TurnIndicator)->SetPosition(FVector2D(ScaledRotateInput.Z, ScaledRotateInput.Y));
 	}

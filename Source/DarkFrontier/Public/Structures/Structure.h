@@ -47,6 +47,9 @@ protected:
 	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly, Category="Layout")
 	TArray<TObjectPtr<AStructurePart>> Parts;
 
+	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly, Category="Gameplay")
+	bool IsGameplayInitialized = false;
+
 	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly, Category="Input")
 	FVector MoveInput = FVector::ZeroVector;
 
@@ -105,27 +108,69 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category="Layout")
 	void UpdateLayoutInformation();
+	
+	UFUNCTION(BlueprintCallable, Category="Gameplay")
+	float GetMaxHull() const;
 
+	UFUNCTION(BlueprintCallable, Category="Gameplay")
+	float GetHull() const;
+
+	UFUNCTION(BlueprintCallable, Category="Gameplay")
+	void SetHull(float InHull) const;
+
+	UFUNCTION(BlueprintCallable, Category="Gameplay")
+	float GetMaxShield() const;
+
+	UFUNCTION(BlueprintCallable, Category="Gameplay")
+	float GetShield() const;
+
+	UFUNCTION(BlueprintCallable, Category="Gameplay")
+	void SetShield(float InShield) const;
+
+	UFUNCTION(BlueprintCallable, Category="Gameplay")
+	float GetMaxEnergy() const;
+	
+	UFUNCTION(BlueprintCallable, Category="Gameplay")
+	float GetEnergy() const;
+	
 	UFUNCTION(BlueprintCallable, Category="Gameplay")
 	float GetUpkeep() const;
 
 	UFUNCTION(BlueprintCallable, Category="Gameplay")
+	float GetLinearMaxSpeed() const;
+	
+	UFUNCTION(BlueprintCallable, Category="Gameplay")
+	float GetLinearSpeed() const;
+	
+	UFUNCTION(BlueprintCallable, Category="Gameplay")
 	bool IsDetecting(AStructure* Other) const;
 
 	UFUNCTION(BlueprintCallable, Category="Gameplay")
-	void UpdateButtonMultiArc(const class UStructurePartAbilityClass* AbilityClassObj, class UMultiArc* MultiArc);
-
+	struct FStructureDamage GetHullPostMitigationDamage(const FStructureDamage& PreMitigationDamage) const;
+	
 	UFUNCTION(BlueprintCallable, Category="Gameplay")
-	void ActivateAbility(const class UStructurePartAbilityClass* AbilityClassObj);
+	FStructureDamage GetShieldPostMitigationDamage(const FStructureDamage& PreMitigationDamage) const;
 
 	UFUNCTION(BlueprintCallable, Category="Gameplay")
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 
 	UFUNCTION(BlueprintCallable, Category="Gameplay")
-	struct FActiveGameplayEffectHandle ApplyEffect(TSubclassOf<class UGameplayEffect> EffectClass);
+	bool TryInitGameplay();
+	
+	UFUNCTION(BlueprintCallable, Category="Gameplay")
+	struct FActiveGameplayEffectHandle ApplyEffect(TSubclassOf<class UGameplayEffect> EffectClass) const;
 
 	UFUNCTION(BlueprintCallable, Category="Gameplay")
-	struct FGameplayAbilitySpecHandle GiveAbility(TSubclassOf<class UStructureGameplayAbility> AbilityClass);
+	struct FGameplayAbilitySpecHandle GiveAbility(TSubclassOf<class UStructureGameplayAbility> AbilityClass) const;
+
+	UFUNCTION(BlueprintCallable, Category="Gameplay")
+	TArray<class UStructureAbilityProxyGroup*> GetAbilityProxyGroups();
+
+	UFUNCTION(BlueprintCallable, Category="Gameplay")
+	UStructureAbilityProxyGroup* GetNewAbilityProxyGroup(TSubclassOf<class UStructureGameplayAbility> AbilityClass);
+
+	UFUNCTION(BlueprintCallable, Category="Gameplay")
+	void ClearAbility(FGameplayAbilitySpecHandle AbilityHandle) const;
 
 	UFUNCTION(BlueprintCallable, Category="Input")
 	void SetMoveInput(FVector InInput);

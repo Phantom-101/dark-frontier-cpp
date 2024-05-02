@@ -23,10 +23,13 @@ protected:
 	TObjectPtr<UMaterialInterface> ArcMaterial;
 
 	UPROPERTY(BlueprintReadOnly, EditAnywhere)
-	float ArcStart;
+	float ArcThickness = 0.1;
 
 	UPROPERTY(BlueprintReadOnly, EditAnywhere)
-	float ArcLength;
+	float ArcStart = 0;
+
+	UPROPERTY(BlueprintReadOnly, EditAnywhere)
+	float ArcLength = 0.25;
 
 	UPROPERTY(BlueprintReadOnly, EditAnywhere)
 	FLinearColor ArcColor;
@@ -40,7 +43,9 @@ protected:
 
 public:
 
-	void SetLength(float Start, float Length);
+	void SetLength(float Length);
+
+	void SetStartAndLength(float Start, float Length);
 
 	void SetEndpoints(float Start, float End);
 
