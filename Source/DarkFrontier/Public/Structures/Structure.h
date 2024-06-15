@@ -4,6 +4,7 @@
 
 #include "AbilitySystemInterface.h"
 #include "CoreMinimal.h"
+#include "GameplayTagContainer.h"
 #include "GameFramework/Pawn.h"
 #include "Structure.generated.h"
 
@@ -47,8 +48,17 @@ protected:
 	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly, Category="Layout")
 	TArray<TObjectPtr<AStructurePart>> Parts;
 
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category="Gameplay")
+	FGameplayTag HullDamageCueTag;
+	
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category="Gameplay")
+	FGameplayTag ShieldDamageCueTag;
+
 	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly, Category="Gameplay")
 	bool IsGameplayInitialized = false;
+
+	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly, Category="Gameplay")
+	FVector DamageLocation = FVector::ZeroVector;
 
 	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly, Category="Input")
 	FVector MoveInput = FVector::ZeroVector;
@@ -56,8 +66,11 @@ protected:
 	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly, Category="Input")
 	FVector RotateInput = FVector::ZeroVector;
 
-	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly, Category="Combat")
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category="Combat")
 	TObjectPtr<class AFaction> OwningFaction;
+
+	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly, Category="Combat")
+	TObjectPtr<AStructure> Target;
 
 public:
 
@@ -146,6 +159,9 @@ public:
 	bool IsDetecting(AStructure* Other) const;
 
 	UFUNCTION(BlueprintCallable, Category="Gameplay")
+	void SetDamageLocation(FVector InLocation);
+
+	UFUNCTION(BlueprintCallable, Category="Gameplay")
 	struct FStructureDamage GetHullPostMitigationDamage(const FStructureDamage& PreMitigationDamage) const;
 	
 	UFUNCTION(BlueprintCallable, Category="Gameplay")
@@ -161,13 +177,13 @@ public:
 	struct FActiveGameplayEffectHandle ApplyEffect(TSubclassOf<class UGameplayEffect> EffectClass) const;
 
 	UFUNCTION(BlueprintCallable, Category="Gameplay")
-	struct FGameplayAbilitySpecHandle GiveAbility(TSubclassOf<class UStructureGameplayAbility> AbilityClass) const;
+	struct FGameplayAbilitySpecHandle GiveAbility(TSubclassOf<class UStructureAbility> AbilityClass) const;
 
 	UFUNCTION(BlueprintCallable, Category="Gameplay")
 	TArray<class UStructureAbilityProxyGroup*> GetAbilityProxyGroups();
 
 	UFUNCTION(BlueprintCallable, Category="Gameplay")
-	UStructureAbilityProxyGroup* GetNewAbilityProxyGroup(TSubclassOf<class UStructureGameplayAbility> AbilityClass);
+	UStructureAbilityProxyGroup* GetNewAbilityProxyGroup(TSubclassOf<class UStructureAbility> AbilityClass);
 
 	UFUNCTION(BlueprintCallable, Category="Gameplay")
 	void ClearAbility(FGameplayAbilitySpecHandle AbilityHandle) const;
@@ -183,6 +199,12 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category="Combat")
 	void SetOwningFaction(AFaction* InFaction);
+
+	UFUNCTION(BlueprintCallable, Category="Combat")
+	AStructure* GetTarget() const;
+
+	UFUNCTION(BlueprintCallable, Category="Combat")
+	void SetTarget(AStructure* InTarget);
 	
 	UFUNCTION(BlueprintCallable, Category="Camera")
 	USpringArmComponent* GetCameraSpringArm() const;

@@ -16,7 +16,7 @@ class DARKFRONTIER_API UStructureAbilityProxyGroup : public UObject
 public:
 	
 	UPROPERTY()
-	TSubclassOf<class UStructureGameplayAbility> AbilityClass;
+	TSubclassOf<class UStructureAbility> AbilityClass;
 
 	UPROPERTY()
 	TObjectPtr<class AStructure> TargetStructure;

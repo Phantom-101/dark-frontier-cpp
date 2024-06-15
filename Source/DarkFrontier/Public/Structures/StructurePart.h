@@ -74,9 +74,6 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category="Layout")
 	bool IsRootPart() const;
-
-	UFUNCTION(BlueprintCallable, Category="Layout")
-	bool IsActiveInLayout();
 	
 	UFUNCTION(BlueprintCallable, Category="Layout")
 	FString GetPartId() const;
@@ -89,6 +86,9 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category="Layout")
 	void ResetRootDistance();
+
+	UFUNCTION(BlueprintCallable, Category="Layout")
+	void UpdateRootDistance(int32 Distance);
 	
 	UFUNCTION(BlueprintCallable, Category="Layout")
 	TArray<UStructurePartSlot*> GetSlots();
@@ -105,17 +105,11 @@ public:
 	UFUNCTION(BlueprintCallable, Category="Layout")
 	void DetachSlots();
 
-	UFUNCTION(BlueprintCallable, Category="Layout")
-	void UpdateDistance(int32 Distance);
-
-	UFUNCTION(BlueprintCallable, Category="Gameplay")
-	void ApplyDamage(struct FStructureDamage InDamage) const;
-
 	UFUNCTION(BlueprintCallable, Category="Gameplay")
 	virtual void AddAbilitiesToProxyGroups(TArray<class UStructureAbilityProxyGroup*>& ProxyGroups);
 
 	UFUNCTION(BlueprintCallable, Category="Gameplay")
-	void AddAbilityToProxyGroups(TArray<UStructureAbilityProxyGroup*>& ProxyGroups, TSubclassOf<class UStructureGameplayAbility> AbilityClass, class UStructureAbilityProxy* Proxy) const;
+	void AddAbilityToProxyGroups(TArray<UStructureAbilityProxyGroup*>& ProxyGroups, TSubclassOf<class UStructureAbility> AbilityClass, class UStructureAbilityProxy* Proxy) const;
 
 	UFUNCTION(BlueprintCallable, Category="Combat")
 	void TickCombatants();

@@ -17,8 +17,5 @@ public:
 
 	UPROPERTY()
 	TSubclassOf<class AStructurePart> PartClass;
-
-	UFUNCTION()
-	void Init(TSubclassOf<AStructurePart> InClass);
 	
 };

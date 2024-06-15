@@ -17,8 +17,5 @@ public:
 
 	UPROPERTY()
 	FText SlotName;
-
-	UFUNCTION()
-	void Init(const FText& InName);
 	
 };

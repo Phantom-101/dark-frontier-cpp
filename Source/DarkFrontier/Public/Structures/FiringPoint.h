@@ -14,13 +14,13 @@ class DARKFRONTIER_API UFiringPoint : public USceneComponent
 protected:
 
 	UPROPERTY(BlueprintReadOnly)
-	TObjectPtr<class AStructureTurret> OwningTurret;
+	TObjectPtr<class ATurret> OwningTurret;
 
 	virtual void BeginPlay() override;
 
 public:
 
 	UFUNCTION(BlueprintCallable, Category="Turret")
-	AStructureTurret* GetTurret() const;
+	ATurret* GetOwningTurret() const;
 	
 };

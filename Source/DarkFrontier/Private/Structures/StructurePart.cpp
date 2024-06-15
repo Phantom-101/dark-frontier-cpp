@@ -10,7 +10,7 @@
 #include "Structures/Structure.h"
 #include "Structures/StructureAttributeSet.h"
 #include "Structures/StructureDamage.h"
-#include "Structures/StructureGameplayAbility.h"
+#include "..\..\Public\Structures\StructureAbility.h"
 #include "Structures/StructurePartSlot.h"
 #include "UI/Screens/GameUI/StructureAbilityProxy.h"
 #include "UI/Screens/GameUI/StructureAbilityProxyGroup.h"
@@ -97,12 +97,6 @@ bool AStructurePart::IsRootPart() const
 	return IsValid(OwningStructure) && OwningStructure->GetRootPart() == this;
 }
 
-bool AStructurePart::IsActiveInLayout()
-{
-	// Add hp to structure parts
-	return true;
-}
-
 FString AStructurePart::GetPartId() const
 {
 	return PartId;
@@ -123,6 +117,18 @@ int AStructurePart::GetRootDistance() const
 void AStructurePart::ResetRootDistance()
 {
 	RootDistance = -1;
+}
+
+void AStructurePart::UpdateRootDistance(const int32 Distance)
+{
+	RootDistance = Distance;
+	for(const UStructurePartSlot* Slot : Slots)
+	{
+		if(IsValid(Slot->GetAttachedSlot()) && Slot->GetAttachedSlot()->GetOwningPart()->RootDistance == -1)
+		{
+			Slot->GetAttachedSlot()->GetOwningPart()->UpdateRootDistance(Distance + 1);
+		}
+	}
 }
 
 TArray<UStructurePartSlot*> AStructurePart::GetSlots()
@@ -186,29 +192,11 @@ void AStructurePart::DetachSlots()
 	OwningStructure->UpdateLayoutInformation();
 }
 
-void AStructurePart::UpdateDistance(const int32 Distance)
-{
-	RootDistance = Distance;
-	for(const UStructurePartSlot* Slot : Slots)
-	{
-		if(IsValid(Slot->GetAttachedSlot()) && Slot->GetAttachedSlot()->GetOwningPart()->RootDistance == -1)
-		{
-			Slot->GetAttachedSlot()->GetOwningPart()->UpdateDistance(Distance + 1);
-		}
-	}
-}
-
-void AStructurePart::ApplyDamage(FStructureDamage InDamage) const
-{
-	// todo damage structure part
-	
-}
-
 void AStructurePart::AddAbilitiesToProxyGroups(TArray<UStructureAbilityProxyGroup*>& ProxyGroups)
 {
 }
 
-void AStructurePart::AddAbilityToProxyGroups(TArray<UStructureAbilityProxyGroup*>& ProxyGroups, TSubclassOf<class UStructureGameplayAbility> AbilityClass, UStructureAbilityProxy* Proxy) const
+void AStructurePart::AddAbilityToProxyGroups(TArray<UStructureAbilityProxyGroup*>& ProxyGroups, TSubclassOf<class UStructureAbility> AbilityClass, UStructureAbilityProxy* Proxy) const
 {
 	for(UStructureAbilityProxyGroup* ProxyGroup : ProxyGroups)
 	{
