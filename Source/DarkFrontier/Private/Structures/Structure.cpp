@@ -7,7 +7,7 @@
 #include "Structures/StructureAbilitySystemComponent.h"
 #include "Structures/StructureAttributeSet.h"
 #include "Structures/StructureDamage.h"
-#include "Structures/StructureGameplayAbility.h"
+#include "..\..\Public\Structures\StructureAbility.h"
 #include "Structures/StructureLayout.h"
 #include "Structures/StructurePart.h"
 #include "Structures/StructurePartSlot.h"
@@ -57,16 +57,30 @@ void AStructure::Tick(float DeltaTime)
 		Attributes->GetFieldDamageTaken()
 	);
 	
-	if(GetShield() > 0)
+	if(Damage.Sum() > 0 && GetShield() > 0)
 	{
 		const FStructureDamage ShieldPostMitigation = GetShieldPostMitigationDamage(Damage);
 		const float ShieldAbsorbedPercent = FMath::Min(GetShield() / ShieldPostMitigation.Sum(), 1);
-		SetShield(GetShield() - ShieldPostMitigation.Sum() * ShieldAbsorbedPercent);
+		const float ShieldDamage = ShieldPostMitigation.Sum() * ShieldAbsorbedPercent;
+		SetShield(GetShield() - ShieldDamage);
 		Damage = Damage.Scale(1 - ShieldAbsorbedPercent);
+
+		FGameplayCueParameters Parameters;
+		Parameters.Location = DamageLocation;
+		Parameters.RawMagnitude = ShieldDamage;
+		AbilitySystemComponent->ExecuteGameplayCueLocal(ShieldDamageCueTag, Parameters);
 	}
-	
-	const FStructureDamage HullPostMitigation = GetHullPostMitigationDamage(Damage);
-	SetHull(GetHull() - HullPostMitigation.Sum());
+
+	if(Damage.Sum() > 0 && GetHull() > 0)
+	{
+		const FStructureDamage HullPostMitigation = GetHullPostMitigationDamage(Damage);
+		SetHull(GetHull() - HullPostMitigation.Sum());
+
+		FGameplayCueParameters Parameters;
+		Parameters.Location = DamageLocation;
+		Parameters.RawMagnitude = HullPostMitigation.Sum();
+		AbilitySystemComponent->ExecuteGameplayCueLocal(HullDamageCueTag, Parameters);
+	}
 
 	Attributes->SetKineticDamageTaken(0);
 	Attributes->SetExplosiveDamageTaken(0);
@@ -342,7 +356,7 @@ void AStructure::UpdateLayoutInformation()
 	{
 		Part->ResetRootDistance();
 	}
-	RootPart->UpdateDistance(0);
+	RootPart->UpdateRootDistance(0);
 
 	OnLayoutChanged.Broadcast();
 }
@@ -407,6 +421,11 @@ bool AStructure::IsDetecting(AStructure* Other) const
 	return (GetActorLocation() - Other->GetActorLocation()).SquaredLength() <= Attributes->GetSensorStrength() * Other->Attributes->GetSignatureVisibility();
 }
 
+void AStructure::SetDamageLocation(const FVector InLocation)
+{
+	DamageLocation = InLocation;
+}
+
 FStructureDamage AStructure::GetHullPostMitigationDamage(const FStructureDamage& PreMitigationDamage) const
 {
 	return FStructureDamage(
@@ -436,10 +455,10 @@ bool AStructure::TryInitGameplay()
 {
 	if(!IsGameplayInitialized)
 	{
-		FActiveGameplayEffectHandle DefaultAttributesHandle = ApplyEffect(DefaultAttributes);
+		(void)ApplyEffect(DefaultAttributes);
 		for(const TSubclassOf<UGameplayEffect> PassiveEffectClass : PassiveEffectClasses)
 		{
-			FActiveGameplayEffectHandle PassiveEffectHandle = ApplyEffect(PassiveEffectClass);
+			(void)ApplyEffect(PassiveEffectClass);
 		}
 
 		IsGameplayInitialized = true;
@@ -468,7 +487,7 @@ FActiveGameplayEffectHandle AStructure::ApplyEffect(const TSubclassOf<UGameplayE
 	return FActiveGameplayEffectHandle();
 }
 
-FGameplayAbilitySpecHandle AStructure::GiveAbility(const TSubclassOf<UStructureGameplayAbility> AbilityClass) const
+FGameplayAbilitySpecHandle AStructure::GiveAbility(const TSubclassOf<UStructureAbility> AbilityClass) const
 {
 	if(HasAuthority() && AbilitySystemComponent && AbilityClass)
 	{
@@ -490,7 +509,7 @@ TArray<UStructureAbilityProxyGroup*> AStructure::GetAbilityProxyGroups()
 	return ProxyGroups;
 }
 
-UStructureAbilityProxyGroup* AStructure::GetNewAbilityProxyGroup(const TSubclassOf<UStructureGameplayAbility> AbilityClass)
+UStructureAbilityProxyGroup* AStructure::GetNewAbilityProxyGroup(const TSubclassOf<UStructureAbility> AbilityClass)
 {
 	// TODO replace ability class with gameplay tag
 	UStructureAbilityProxyGroup* ProxyGroup = NewObject<UStructureAbilityProxyGroup>();
@@ -525,6 +544,16 @@ AFaction* AStructure::GetOwningFaction() const
 void AStructure::SetOwningFaction(AFaction* InFaction)
 {
 	OwningFaction = InFaction;
+}
+
+AStructure* AStructure::GetTarget() const
+{
+	return Target;
+}
+
+void AStructure::SetTarget(AStructure* InTarget)
+{
+	Target = InTarget;
 }
 
 USpringArmComponent* AStructure::GetCameraSpringArm() const

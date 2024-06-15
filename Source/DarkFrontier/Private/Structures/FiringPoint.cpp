@@ -1,16 +1,16 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "Structures/FiringPoint.h"
-#include "Structures/StructureTurret.h"
+#include "Structures/Turret.h"
 
 void UFiringPoint::BeginPlay()
 {
 	Super::BeginPlay();
 
-	OwningTurret = GetOwner<AStructureTurret>();
+	OwningTurret = GetOwner<ATurret>();
 }
 
-AStructureTurret* UFiringPoint::GetTurret() const
+ATurret* UFiringPoint::GetOwningTurret() const
 {
 	return OwningTurret;
 }

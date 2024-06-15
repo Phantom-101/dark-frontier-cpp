@@ -14,6 +14,9 @@ void UStructurePartSlotCard::NativeConstruct()
 {
 	Super::NativeConstruct();
 
+	CardButton->OnClicked().Clear();
+	CardButton->OnClicked().AddUObject<UStructurePartSlotCard>(this, &UStructurePartSlotCard::OnCardClicked);
+
 	AddButton->OnClicked().Clear();
 	AddButton->OnClicked().AddUObject<UStructurePartSlotCard>(this, &UStructurePartSlotCard::OnAddButtonClicked);
 
@@ -52,6 +55,21 @@ void UStructurePartSlotCard::SetTarget(UStructurePartSlot* InTargetSlot)
 	{
 		TypeText->SetVisibility(ESlateVisibility::Collapsed);
 		NameText->SetText(FText::FromString("(None)"));
+	}
+}
+
+void UStructurePartSlotCard::OnCardClicked() const
+{
+	if(IsValid(TargetSlot) && IsValid(TargetSlot->GetOwningPart()))
+	{
+		const UWidget* Widget = GetOwningListView();
+		if(!Widget)
+		{
+			Widget = this;
+		}
+
+		UStructureDetails* Screen = UUIBlueprintLibrary::GetParentWidgetOfClass<UStructureDetails>(Widget);
+		Screen->Select(TargetSlot->GetOwningPart());
 	}
 }
 

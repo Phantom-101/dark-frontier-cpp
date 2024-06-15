@@ -14,7 +14,7 @@ void UStructurePartSelector::PopulateOptions(TArray<TSubclassOf<AStructurePart>>
 		if(AStructurePart::GetCompatibleSlots_CDO(Option, InSlot).Num() > 0)
 		{
 			UStructurePartOptionObject* Object = NewObject<UStructurePartOptionObject>();
-			Object->Init(Option);
+			Object->PartClass = Option;
 			OptionList->AddItem(Object);
 		}
 	}

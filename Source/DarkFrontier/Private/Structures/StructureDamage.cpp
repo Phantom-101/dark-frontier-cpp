@@ -1,9 +1,6 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "Structures/StructureDamage.h"
-#include "GameplayEffect.h"
-#include "GameplayEffectTypes.h"
-#include "Structures/StructureDamageTags.h"
 
 FStructureDamage::FStructureDamage()
 {
@@ -25,18 +22,9 @@ float FStructureDamage::Sum() const
 FStructureDamage FStructureDamage::Scale(const float InFactor) const
 {
 	return FStructureDamage(
-		Kinetic * InFactor,
-		Explosive * InFactor,
-		Beam * InFactor,
-		Field * InFactor
+		Kinetic * abs(InFactor),
+		Explosive * abs(InFactor),
+		Beam * abs(InFactor),
+		Field * abs(InFactor)
 	);
-}
-
-void FStructureDamage::SetMagnitudes(const TSubclassOf<UStructureDamageTags> Tags, const FGameplayEffectSpecHandle& SpecHandle) const
-{
-	const UStructureDamageTags* CDO = Tags.GetDefaultObject();
-	SpecHandle.Data.Get()->SetSetByCallerMagnitude(CDO->KineticTag, Kinetic);
-	SpecHandle.Data.Get()->SetSetByCallerMagnitude(CDO->ExplosiveTag, Explosive);
-	SpecHandle.Data.Get()->SetSetByCallerMagnitude(CDO->BeamTag, Beam);
-	SpecHandle.Data.Get()->SetSetByCallerMagnitude(CDO->FieldTag, Field);
 }
