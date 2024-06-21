@@ -18,19 +18,17 @@ class DARKFRONTIER_API ATurret : public AStructurePart
 
 protected:
 
-	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly, Category="Turret")
-	TArray<TObjectPtr<class UFiringPoint>> FiringPoints;
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category="Turret")
+	TArray<TObjectPtr<USceneComponent>> SourceTransforms;
 
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category="Gameplay")
-	TSubclassOf<class UStructureAbility> AbilityClass;
+	TSubclassOf<class UTurretAbility> Ability;
 
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category="Gameplay")
-	FGameplayTag PayloadEventTag;
+	FGameplayTag PayloadTag;
 
-	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly, Category="Gameplay")
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category="Gameplay")
 	FGameplayAbilitySpecHandle AbilityHandle;
-
-	virtual void BeginPlay() override;
 
 public:
 
@@ -39,29 +37,20 @@ public:
 	virtual void OnUnRegistered() override;
 
 	UFUNCTION(BlueprintCallable, Category="Gameplay")
-	virtual struct FStructureDamage GetDamage();
+	int TryActivate();
+
+protected:
 
 	UFUNCTION(BlueprintCallable, Category="Gameplay")
-	virtual void ActivateAll();
+	virtual void OnActivated(int Activated);
 
 	UFUNCTION(BlueprintCallable, Category="Gameplay")
-	virtual void OnActivatedAll();
+	virtual bool CanActivateSource(USceneComponent* SourceTransform);
 
 	UFUNCTION(BlueprintCallable, Category="Gameplay")
-	virtual void Activate(UFiringPoint* FiringPoint);
+	virtual void ActivateSource(USceneComponent* SourceTransform);
 
 	UFUNCTION(BlueprintCallable, Category="Gameplay")
-	virtual void OnActivated(UFiringPoint* FiringPoint);
-
-	UFUNCTION(BlueprintCallable, Category="Gameplay")
-	virtual void SendPayload(UObject* PayloadObject);
-
-	virtual void AddAbilitiesToProxyGroups(TArray<UStructureAbilityProxyGroup*>& ProxyGroups) override;
-	
-	UFUNCTION(BlueprintCallable, Category="Gameplay")
-	virtual void TryActivate();
-
-	UFUNCTION(BlueprintCallable, Category="Gameplay")
-	virtual float GetAbilityArcLength();
+	void SendPayload(FGameplayTag Tag, UObject* Obj) const;
 	
 };

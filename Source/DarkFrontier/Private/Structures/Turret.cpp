@@ -4,24 +4,16 @@
 #include "AbilitySystemBlueprintLibrary.h"
 #include "AbilitySystemComponent.h"
 #include "Abilities/GameplayAbilityTypes.h"
-#include "Structures/FiringPoint.h"
 #include "Structures/Structure.h"
-#include "Structures/StructureDamage.h"
+#include "Structures/TurretAbility.h"
 #include "Structures/TurretPayload.h"
 #include "UI/Screens/GameUI/TurretAbilityProxy.h"
-
-void ATurret::BeginPlay()
-{
-	Super::BeginPlay();
-
-	GetComponents<UFiringPoint>(FiringPoints);
-}
 
 void ATurret::OnRegistered()
 {
 	Super::OnRegistered();
 
-	AbilityHandle = OwningStructure->GiveAbility(AbilityClass);
+	AbilityHandle = OwningStructure->GiveAbility(Ability);
 }
 
 void ATurret::OnUnRegistered()
@@ -35,67 +27,52 @@ void ATurret::OnUnRegistered()
 	}
 }
 
-FStructureDamage ATurret::GetDamage()
+int ATurret::TryActivate()
 {
-	return FStructureDamage();
-}
+	int Activated = 0;
 
-void ATurret::ActivateAll()
-{
-	if(!IsValid(GetOwningStructure()->GetTarget())) return;
-	
-	for(UFiringPoint* FiringPoint : FiringPoints)
+	// Activate each source transform
+	for(USceneComponent* SourceTransform : SourceTransforms)
 	{
-		Activate(FiringPoint);
+		if(CanActivateSource(SourceTransform))
+		{
+			ActivateSource(SourceTransform);
+			Activated++;
+		}
 	}
-	OnActivatedAll();
+
+	// Call event function with number of sources successfully activated
+	OnActivated(Activated);
+
+	return Activated;
 }
 
-void ATurret::OnActivatedAll()
+void ATurret::OnActivated(int Activated)
 {
 }
 
-void ATurret::Activate(UFiringPoint* FiringPoint)
+bool ATurret::CanActivateSource(USceneComponent* SourceTransform)
 {
-	if(!IsValid(GetOwningStructure()->GetTarget())) return;
-	
+	return IsValid(GetOwningStructure()->GetTarget());
+}
+
+void ATurret::ActivateSource(USceneComponent* SourceTransform)
+{
 	if(GetOwningStructure()->GetAbilitySystemComponent()->TryActivateAbility(AbilityHandle))
 	{
-		OnActivated(FiringPoint);
+		UTurretPayload* Payload = NewObject<UTurretPayload>();
+		Payload->Instigator = GetOwningStructure();
+		Payload->Turret = this;
+		Payload->SourceTransform = SourceTransform;
+		Payload->Target = GetOwningStructure()->GetTarget();
+		SendPayload(PayloadTag, Payload);
 	}
 }
 
-void ATurret::OnActivated(UFiringPoint* FiringPoint)
-{
-	UTurretPayload* Payload = NewObject<UTurretPayload>(this);
-	Payload->Damage = GetDamage();
-	Payload->FiringPoint = FiringPoint;
-	Payload->Target = GetOwningStructure()->GetTarget();
-	SendPayload(Payload);
-}
-
-void ATurret::SendPayload(UObject* PayloadObject)
+void ATurret::SendPayload(const FGameplayTag Tag, UObject* Obj) const
 {
 	FGameplayEventData Payload;
 	Payload.Instigator = GetOwningStructure();
-	Payload.OptionalObject = PayloadObject;
-	UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(GetOwningStructure(), PayloadEventTag, Payload);
-}
-
-void ATurret::AddAbilitiesToProxyGroups(TArray<UStructureAbilityProxyGroup*>& ProxyGroups)
-{
-	Super::AddAbilitiesToProxyGroups(ProxyGroups);
-
-	UTurretAbilityProxy* Proxy = NewObject<UTurretAbilityProxy>();
-	Proxy->Turret = this;
-	AddAbilityToProxyGroups(ProxyGroups, AbilityClass, Proxy);
-}
-
-void ATurret::TryActivate()
-{
-}
-
-float ATurret::GetAbilityArcLength()
-{
-	return 1;
+	Payload.OptionalObject = Obj;
+	UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(GetOwningStructure(), Tag, Payload);
 }

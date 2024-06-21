@@ -16,9 +16,6 @@ class DARKFRONTIER_API UGameUI : public UCommonActivatableWidget
 
 protected:
 
-	UPROPERTY(BlueprintReadOnly)
-	bool IsActionsCollapsed;
-
 	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
 	TObjectPtr<class UArc> HullArc;
 
@@ -45,6 +42,9 @@ protected:
 
 	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
 	TObjectPtr<class UStructureAbilityButtonList> AbilityButtonList;
+
+	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
+	TObjectPtr<class UScrollBox> PartIndicators;
 
 	virtual TOptional<FUIInputConfig> GetDesiredInputConfig() const override;
 

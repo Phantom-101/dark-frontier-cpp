@@ -30,7 +30,7 @@ protected:
 	TObjectPtr<class UStructurePartSelector> PartSelector;
 
 	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
-	TObjectPtr<class UStructurePartSlotSelector> SlotSelector;
+	TObjectPtr<class UStructureSlotSelector> SlotSelector;
 	
 	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
 	TObjectPtr<UWidgetSwitcher> InfoSwitcher;
@@ -42,7 +42,7 @@ protected:
 	TObjectPtr<class UStructurePartInfo> PartInfo;
 
 	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
-	TObjectPtr<class UStructurePartSlotInfo> SlotInfo;
+	TObjectPtr<class UStructureSlotInfo> SlotInfo;
 
 	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
 	TObjectPtr<UCommonButtonBase> ApplyButton;
@@ -63,10 +63,10 @@ protected:
 	FStructureLayout SavedLayout;
 	
 	UPROPERTY(BlueprintReadOnly, EditInstanceOnly)
-	TObjectPtr<class UStructurePartSlot> EditSlot;
+	TObjectPtr<class UStructureSlot> BaseSlot;
 
 	UPROPERTY(BlueprintReadOnly, EditInstanceOnly)
-	TSubclassOf<AStructurePart> EditClass;
+	TSubclassOf<AStructurePart> PartType;
 
 	FDelegateHandle OnLayoutChangedHandle;
 
@@ -78,21 +78,23 @@ protected:
 	
 public:
 
-	void Init();
+	void ClearAvailableParts();
 
-	void Init(const TArray<TSubclassOf<AStructurePart>>& InClasses);
+	void SetAvailableParts(const TArray<TSubclassOf<AStructurePart>>& InTypes);
 
-	void Select(class AStructure* InStructure);
+	void InitStructure(class AStructure* InStructure);
 
-	void Select(AStructurePart* InPart);
+	void SelectStructure();
 
-	void Select(UStructurePartSlot* InSlot);
+	void SelectPart(AStructurePart* InPart);
 
-	void Edit(UStructurePartSlot* InSlot);
+	void SelectSlot(UStructureSlot* InSlot);
 
-	void Edit(TSubclassOf<AStructurePart> InClass);
+	void SetBaseSlot(UStructureSlot* InSlot);
 
-	void Edit(const FText& InName);
+	void SetPartType(TSubclassOf<AStructurePart> InClass);
+
+	void AttachWithSlotName(const FText& InName);
 
 protected:
 

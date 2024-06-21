@@ -21,6 +21,6 @@ protected:
 
 public:
 
-	void PopulateOptions(TArray<TSubclassOf<class AStructurePart>> InOptions, const class UStructurePartSlot* InSlot) const;
+	void PopulateOptions(TArray<TSubclassOf<class AStructurePart>> InOptions, const class UStructureSlot* InSlot) const;
 	
 };

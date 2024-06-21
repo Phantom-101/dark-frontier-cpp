@@ -3,7 +3,7 @@
 #include "Structures/StructurePartAuthoring.h"
 #include "Structures/Structure.h"
 #include "Structures/StructurePart.h"
-#include "Structures/StructurePartSlot.h"
+#include "Structures/StructureSlot.h"
 
 UStructurePartAuthoring::UStructurePartAuthoring()
 {
@@ -20,7 +20,7 @@ AStructurePart* UStructurePartAuthoring::GetAuthoredPart()
 {
 	if(!AuthoredPart)
 	{
-		AuthoredPart = GetWorld()->SpawnActor<AStructurePart>(PartClass);
+		AuthoredPart = GetWorld()->SpawnActor<AStructurePart>(PartType);
 		
 		if(TargetPart)
 		{

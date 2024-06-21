@@ -2,13 +2,13 @@
 
 #include "Structures/StructureLayoutConnection.h"
 #include "Structures/StructurePart.h"
-#include "Structures/StructurePartSlot.h"
+#include "Structures/StructureSlot.h"
 
 FStructureLayoutConnection::FStructureLayoutConnection()
 {
 }
 
-FStructureLayoutConnection::FStructureLayoutConnection(const UStructurePartSlot* SlotA, const UStructurePartSlot* SlotB)
+FStructureLayoutConnection::FStructureLayoutConnection(const UStructureSlot* SlotA, const UStructureSlot* SlotB)
 {
 	PartAId = SlotA->GetOwningPart()->GetPartId();
 	PartASlot = SlotA->GetSlotName();

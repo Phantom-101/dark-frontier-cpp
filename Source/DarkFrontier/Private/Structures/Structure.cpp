@@ -7,10 +7,10 @@
 #include "Structures/StructureAbilitySystemComponent.h"
 #include "Structures/StructureAttributeSet.h"
 #include "Structures/StructureDamage.h"
-#include "..\..\Public\Structures\StructureAbility.h"
+#include "Structures/StructureAbility.h"
 #include "Structures/StructureLayout.h"
 #include "Structures/StructurePart.h"
-#include "Structures/StructurePartSlot.h"
+#include "Structures/StructureSlot.h"
 #include "UI/Screens/GameUI/StructureAbilityProxyGroup.h"
 
 AStructure::AStructure()
@@ -33,13 +33,16 @@ AStructure::AStructure()
 	Attributes = CreateDefaultSubobject<UStructureAttributeSet>("Attributes");
 }
 
+void AStructure::PostInitializeComponents()
+{
+	TryInitGameplay();
+	
+	Super::PostInitializeComponents();
+}
+
 void AStructure::BeginPlay()
 {
 	Super::BeginPlay();
-
-	AbilitySystemComponent->InitAbilityActorInfo(this, this);
-	
-	TryInitGameplay();
 }
 
 void AStructure::Tick(float DeltaTime)
@@ -114,6 +117,7 @@ bool AStructure::TryInit(AStructurePart* NewRoot, const bool RegisterOnly)
 	if(RootPart) return false;
 	if(NewRoot->GetOwningStructure()) return false;
 
+	// Ensure ability system component is ensured as part will apply passive effects once registered
 	TryInitGameplay();
 	
 	NewRoot->TryInit(this, RegisterOnly);
@@ -230,7 +234,7 @@ bool AStructure::LoadLayout(FStructureLayout InLayout)
 	{
 		if(PartData.IsValid())
 		{
-			AStructurePart* Part = GetWorld()->SpawnActor<AStructurePart>(PartData.PartClass);
+			AStructurePart* Part = GetWorld()->SpawnActor<AStructurePart>(PartData.PartType);
 			
 			if(RootPart)
 			{
@@ -270,8 +274,8 @@ bool AStructure::LoadLayout(FStructureLayout InLayout)
 
 			if(IsValid(PartA) && IsValid(PartB))
 			{
-				UStructurePartSlot* SlotA = PartA->GetSlot(ConnectionData.PartASlot);
-				UStructurePartSlot* SlotB = PartB->GetSlot(ConnectionData.PartBSlot);
+				UStructureSlot* SlotA = PartA->GetSlot(ConnectionData.PartASlot);
+				UStructureSlot* SlotB = PartB->GetSlot(ConnectionData.PartBSlot);
 
 				if(IsValid(SlotA) && IsValid(SlotB))
 				{
@@ -312,7 +316,7 @@ void AStructure::UpdateLayoutInformation()
 	int CurrentIndex = 0;
 	while(CurrentIndex < NewParts.Num())
 	{
-		for(const UStructurePartSlot* Slot : NewParts[CurrentIndex]->GetSlots())
+		for(const UStructureSlot* Slot : NewParts[CurrentIndex]->GetSlots())
 		{
 			if(IsValid(Slot->GetAttachedSlot()) && !NewParts.Contains(Slot->GetAttachedSlot()->GetOwningPart()))
 			{
@@ -455,7 +459,10 @@ bool AStructure::TryInitGameplay()
 {
 	if(!IsGameplayInitialized)
 	{
+		AbilitySystemComponent->InitAbilityActorInfo(this, this);
+		
 		(void)ApplyEffect(DefaultAttributes);
+		
 		for(const TSubclassOf<UGameplayEffect> PassiveEffectClass : PassiveEffectClasses)
 		{
 			(void)ApplyEffect(PassiveEffectClass);

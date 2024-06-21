@@ -9,11 +9,14 @@
 #include "Blueprint/WidgetLayoutLibrary.h"
 #include "Components/Image.h"
 #include "Components/CanvasPanelSlot.h"
+#include "Components/ScrollBox.h"
 #include "Structures/Structure.h"
 #include "Structures/StructureController.h"
+#include "Structures/StructurePart.h"
 #include "UI/CustomGameplayEffectUIData.h"
 #include "UI/GameplayEffectIndicatorObject.h"
 #include "UI/Screens/GameUI/StructureAbilityButtonList.h"
+#include "UI/Screens/GameUI/StructurePartIndicator.h"
 #include "UI/Widgets/Arc.h"
 
 TOptional<FUIInputConfig> UGameUI::GetDesiredInputConfig() const
@@ -40,6 +43,12 @@ void UGameUI::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 {  
 	Super::NativeTick(MyGeometry, InDeltaTime);
 
+	if(!IsValid(GetOwningPlayerPawn()))
+	{
+		UE_LOG(LogDarkFrontier, Warning, TEXT("Game UI pawn is invalid, skipping tick"));
+		return;
+	}
+
 	if(const AStructureController* PlayerController = Cast<AStructureController>(GetWorld()->GetFirstPlayerController()))
 	{
 		if(const AStructure* Structure = Cast<AStructure>(PlayerController->GetPawn()))
@@ -57,6 +66,7 @@ void UGameUI::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 	if(const AStructure* PlayerStructure = Cast<AStructure>(GetOwningPlayerPawn()))
 	{
 		TArray<FActiveGameplayEffectHandle> Existing;
+		TArray<UGameplayEffectIndicatorObject*> ToRemove;
 		for(UObject* Object : GameplayEffectList->GetListItems())
 		{
 			UGameplayEffectIndicatorObject* Casted = Cast<UGameplayEffectIndicatorObject>(Object);
@@ -66,8 +76,13 @@ void UGameUI::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 			}
 			else
 			{
-				GameplayEffectList->RemoveItem(Casted);
+				ToRemove.Add(Casted);
 			}
+		}
+
+		for(UGameplayEffectIndicatorObject* Obj : ToRemove)
+		{
+			GameplayEffectList->RemoveItem(Obj);
 		}
 		
 		for(FActiveGameplayEffectHandle Handle : PlayerStructure->GetAbilitySystemComponent()->GetActiveGameplayEffects().GetAllActiveEffectHandles())
@@ -77,6 +92,43 @@ void UGameUI::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 				UGameplayEffectIndicatorObject* Object = NewObject<UGameplayEffectIndicatorObject>();
 				Object->Init(Handle);
 				GameplayEffectList->AddItem(Object);
+			}
+		}
+	}
+
+	if(AStructure* PlayerStructure = Cast<AStructure>(GetOwningPlayerPawn()))
+	{
+		TArray<AStructurePart*> Existing;
+		for(UWidget* Widget : PartIndicators->GetAllChildren())
+		{
+			UStructurePartIndicator* Indicator = Cast<UStructurePartIndicator>(Widget);
+			if(IsValid(Indicator))
+			{
+				if(IsValid(Indicator->GetPart()))
+				{
+					Existing.Add(Indicator->GetPart());
+				}
+				else
+				{
+					PartIndicators->RemoveChild(Indicator);
+				}
+			}
+			else
+			{
+				UE_LOG(LogDarkFrontier, Warning, TEXT("Non indicator widget of type %s found in indicators list, removing"), *Widget->GetClass()->GetDisplayNameText().ToString())
+				PartIndicators->RemoveChild(Widget);
+			}
+		}
+
+		for(AStructurePart* Part : PlayerStructure->GetParts())
+		{
+			if(!Existing.Contains(Part))
+			{
+				UStructurePartIndicator* Indicator = Part->CreateIndicator();
+				if(Indicator != nullptr)
+				{
+					PartIndicators->AddChild(Indicator);
+				}
 			}
 		}
 	}

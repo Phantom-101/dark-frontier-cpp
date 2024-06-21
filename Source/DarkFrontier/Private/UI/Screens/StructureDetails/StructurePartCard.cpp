@@ -4,7 +4,7 @@
 #include "CommonButtonBase.h"
 #include "CommonTextBlock.h"
 #include "Components/ListViewBase.h"
-#include "Libraries/UIBlueprintLibrary.h"
+#include "Libraries/UIBlueprintFunctionLibrary.h"
 #include "Structures/StructureController.h"
 #include "Structures/StructurePart.h"
 #include "UI/Screens/StructureDetails/StructureDetails.h"
@@ -62,8 +62,8 @@ void UStructurePartCard::OnCardClicked() const
 			Widget = this;
 		}
 
-		UStructureDetails* Screen = UUIBlueprintLibrary::GetParentWidgetOfClass<UStructureDetails>(Widget);
-		Screen->Select(TargetPart);
+		UStructureDetails* Screen = UUIBlueprintFunctionLibrary::GetParentWidgetOfClass<UStructureDetails>(Widget);
+		Screen->SelectPart(TargetPart);
 	}
 }
 

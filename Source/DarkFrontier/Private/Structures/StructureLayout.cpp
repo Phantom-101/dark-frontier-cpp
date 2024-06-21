@@ -1,9 +1,10 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "Structures/StructureLayout.h"
+#include "Log.h"
 #include "Structures/Structure.h"
 #include "Structures/StructurePart.h"
-#include "Structures/StructurePartSlot.h"
+#include "Structures/StructureSlot.h"
 
 FStructureLayout::FStructureLayout()
 {
@@ -11,10 +12,17 @@ FStructureLayout::FStructureLayout()
 
 FStructureLayout::FStructureLayout(const AStructure* InStructure)
 {
+	AStructurePart* Root = InStructure->GetRootPart();
+	if(!IsValid(Root))
+	{
+		UE_LOG(LogDarkFrontier, Error, TEXT("Attempted layout creation for structure with invalid root part"));
+		return;
+	}
+	
 	TQueue<AStructurePart*> Queue;
 	TSet<AStructurePart*> Visited;
-	Queue.Enqueue(InStructure->GetRootPart());
-	Visited.Add(InStructure->GetRootPart());
+	Queue.Enqueue(Root);
+	Visited.Add(Root);
 
 	AStructurePart* Current;
 	while(!Queue.IsEmpty())
@@ -23,7 +31,7 @@ FStructureLayout::FStructureLayout(const AStructure* InStructure)
 
 		Parts.Add(FStructureLayoutPart(Current));
 
-		for(const UStructurePartSlot* PartSlot : Current->GetSlots())
+		for(const UStructureSlot* PartSlot : Current->GetSlots())
 		{
 			if(IsValid(PartSlot->GetAttachedSlot()))
 			{

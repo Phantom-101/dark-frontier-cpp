@@ -1,11 +1,10 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "UI/Screens/StructureDetails/StructurePartOption.h"
-
 #include "CommonButtonBase.h"
 #include "CommonTextBlock.h"
 #include "Components/ListViewBase.h"
-#include "Libraries/UIBlueprintLibrary.h"
+#include "Libraries/UIBlueprintFunctionLibrary.h"
 #include "Structures/StructurePart.h"
 #include "UI/Screens/StructureDetails/StructureDetails.h"
 #include "UI/Screens/StructureDetails/StructurePartOptionObject.h"
@@ -30,6 +29,6 @@ void UStructurePartOption::OnOptionClicked() const
 		Widget = this;
 	}
 
-	UStructureDetails* Screen = UUIBlueprintLibrary::GetParentWidgetOfClass<UStructureDetails>(Widget);
-	Screen->Edit(PartClass);
+	UStructureDetails* Screen = UUIBlueprintFunctionLibrary::GetParentWidgetOfClass<UStructureDetails>(Widget);
+	Screen->SetPartType(PartClass);
 }

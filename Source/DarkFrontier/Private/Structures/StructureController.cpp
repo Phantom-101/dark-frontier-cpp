@@ -6,6 +6,7 @@
 #include "Log.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Input/CommonUIActionRouterBase.h"
+#include "Libraries/BoundsBlueprintFunctionLibrary.h"
 #include "Structures/Structure.h"
 #include "UI/StructureBuilder.h"
 #include "UI/Screens/StructureDetails/StructureDetails.h"
@@ -107,52 +108,19 @@ void AStructureController::UpdateCamera()
 		CameraTargetComponent = nullptr;
 	}
 
-	const FBoxSphereBounds Bounds = CameraTargetComponent ? GetViewBounds(CameraTargetComponent->GetOwner(), true) : GetViewBounds(CameraTargetActor, true);
+	const FBoxSphereBounds Bounds = UBoundsBlueprintFunctionLibrary::GetBounds(CameraTargetComponent ? CameraTargetComponent->GetOwner() : CameraTargetActor, true);
 	const FVector Location = CameraTargetComponent ? CameraTargetComponent->GetComponentLocation() : CameraTargetActor->GetActorLocation();
 	const FRotator Rotation = CameraTargetComponent ? CameraTargetComponent->GetComponentRotation() : CameraTargetActor->GetActorRotation();
+
+	const float TargetArmLength = Bounds.SphereRadius * 2 * ZoomLevel;
 	
 	USpringArmComponent* SpringArm = StructurePawn->GetCameraSpringArm();
 	
 	SpringArm->SetRelativeLocation(StructurePawn->GetTransform().InverseTransformPosition(Location));
-	SpringArm->TargetArmLength = Bounds.SphereRadius * 2 * ZoomLevel;
+	SpringArm->TargetArmLength = TargetArmLength;
 
 	SpringArm->SetWorldRotation(Rotation);
 	SpringArm->AddLocalRotation(FRotator(CameraRotation.Y, CameraRotation.X, 0));
-}
-
-FBoxSphereBounds AStructureController::GetViewBounds(const AActor* Actor, const bool OnlyCollidingComponents)
-{
-	const AStructure* Structure = Cast<AStructure>(Actor);
-	if(IsValid(Structure))
-	{
-		return GetStructureViewBounds(Structure, OnlyCollidingComponents);
-	}
-	return GetObjectViewBounds(Actor, OnlyCollidingComponents);
-}
-
-FBoxSphereBounds AStructureController::GetObjectViewBounds(const AActor* Actor, const bool OnlyCollidingComponents)
-{
-	FBoxSphereBounds Bounds(ForceInit);
-	Actor->ForEachComponent<UPrimitiveComponent>(false, [&](const UPrimitiveComponent* InPrimComp)
-	{
-		if (InPrimComp->IsRegistered() && (!OnlyCollidingComponents || InPrimComp->IsCollisionEnabled()))
-		{
-			Bounds = Bounds + InPrimComp->GetLocalBounds();
-		}
-	});
-	return Bounds;
-}
-
-FBoxSphereBounds AStructureController::GetStructureViewBounds(const AStructure* Structure, const bool OnlyCollidingComponents)
-{
-	FBoxSphereBounds Bounds(ForceInit);
-	TArray<AActor*> AttachedActors;
-	Structure->GetAttachedActors(AttachedActors);
-	for (const AActor* AttachedActor : AttachedActors)
-	{
-		Bounds = Bounds + GetViewBounds(AttachedActor, OnlyCollidingComponents);
-	}
-	return Bounds;
 }
 
 UUIBase* AStructureController::GetUIBaseWidget() const
@@ -222,8 +190,9 @@ void AStructureController::EditStructure(const FInputActionInstance& Instance)
 	if(!IsValid(StructurePawn)) return;
 	
 	UStructureDetails* Details = UIBaseWidget->PushGame<UStructureDetails>(StructureDetailsUIClass);
-	Details->Select(StructurePawn);
-	Details->Init(AvailableParts);
+	Details->InitStructure(StructurePawn);
+	Details->SelectStructure();
+	Details->SetAvailableParts(AvailableParts);
 }
 
 void AStructureController::PropagateLayoutChange() const

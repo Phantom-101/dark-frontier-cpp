@@ -1,7 +1,6 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "Structures/StructurePart.h"
-#include "AbilitySystemComponent.h"
 #include "GameplayEffect.h"
 #include "Engine/SCS_Node.h"
 #include "Engine/SimpleConstructionScript.h"
@@ -9,10 +8,8 @@
 #include "Factions/Faction.h"
 #include "Structures/Structure.h"
 #include "Structures/StructureAttributeSet.h"
-#include "Structures/StructureDamage.h"
-#include "..\..\Public\Structures\StructureAbility.h"
-#include "Structures/StructurePartSlot.h"
-#include "UI/Screens/GameUI/StructureAbilityProxy.h"
+#include "Structures/StructureAbility.h"
+#include "Structures/StructureSlot.h"
 #include "UI/Screens/GameUI/StructureAbilityProxyGroup.h"
 
 AStructurePart::AStructurePart()
@@ -24,7 +21,7 @@ void AStructurePart::BeginPlay()
 {
 	Super::BeginPlay();
 
-	GetComponents<UStructurePartSlot>(Slots);
+	GetComponents<UStructureSlot>(Slots);
 }
 
 void AStructurePart::Tick(float DeltaTime)
@@ -122,7 +119,7 @@ void AStructurePart::ResetRootDistance()
 void AStructurePart::UpdateRootDistance(const int32 Distance)
 {
 	RootDistance = Distance;
-	for(const UStructurePartSlot* Slot : Slots)
+	for(const UStructureSlot* Slot : Slots)
 	{
 		if(IsValid(Slot->GetAttachedSlot()) && Slot->GetAttachedSlot()->GetOwningPart()->RootDistance == -1)
 		{
@@ -131,25 +128,25 @@ void AStructurePart::UpdateRootDistance(const int32 Distance)
 	}
 }
 
-TArray<UStructurePartSlot*> AStructurePart::GetSlots()
+TArray<UStructureSlot*> AStructurePart::GetSlots()
 {
 	return Slots;
 }
 
-TArray<UStructurePartSlot*> AStructurePart::GetCompatibleSlots(const UStructurePartSlot* Other)
+TArray<UStructureSlot*> AStructurePart::GetCompatibleSlots(const UStructureSlot* Other)
 {
-	TArray<UStructurePartSlot*> Ret;
+	TArray<UStructureSlot*> Ret;
 	Ret.Reserve(Slots.Num());
-	for(UStructurePartSlot* Slot : Slots)
+	for(UStructureSlot* Slot : Slots)
 	{
 		if(Slot->CanAttach(Other)) Ret.Add(Slot);
 	}
 	return Ret;
 }
 
-UStructurePartSlot* AStructurePart::GetSlot(const FText InName)
+UStructureSlot* AStructurePart::GetSlot(const FText InName)
 {
-	for(UStructurePartSlot* Slot : Slots)
+	for(UStructureSlot* Slot : Slots)
 	{
 		if(Slot->GetSlotName().EqualTo(InName))
 		{
@@ -162,7 +159,7 @@ UStructurePartSlot* AStructurePart::GetSlot(const FText InName)
 
 void AStructurePart::AttachSlots()
 {
-	for(UStructurePartSlot* Slot : Slots)
+	for(UStructureSlot* Slot : Slots)
 	{
 		if(!Slot->GetAttachedSlot())
 		{
@@ -170,7 +167,7 @@ void AStructurePart::AttachSlots()
 			{
 				if(Part != this)
 				{
-					for(UStructurePartSlot* Other : Part->Slots)
+					for(UStructureSlot* Other : Part->Slots)
 					{
 						if((Other->GetComponentLocation() - Slot->GetComponentLocation()).IsNearlyZero(1))
 						{
@@ -185,7 +182,7 @@ void AStructurePart::AttachSlots()
 
 void AStructurePart::DetachSlots()
 {
-	for(UStructurePartSlot* Slot : Slots)
+	for(UStructureSlot* Slot : Slots)
 	{
 		Slot->TryDetach();
 	}
@@ -333,38 +330,43 @@ void AStructurePart::DequeueCombatants()
 	QueuedCombatants.Empty();
 }
 
-TArray<const UStructurePartSlot*> AStructurePart::GetSlots_CDO(TSubclassOf<AStructurePart> PartClass)
+UStructurePartIndicator* AStructurePart::CreateIndicator()
+{
+	return nullptr;
+}
+
+TArray<const UStructureSlot*> AStructurePart::GetSlots_CDO(TSubclassOf<AStructurePart> PartClass)
 {
 	const UBlueprintGeneratedClass* BPClass = Cast<UBlueprintGeneratedClass>(PartClass);
-	if(!BPClass) return TArray<const UStructurePartSlot*>();
+	if(!BPClass) return TArray<const UStructureSlot*>();
 
-	TArray<const UStructurePartSlot*> Slots;
+	TArray<const UStructureSlot*> Slots;
 	TArray<USCS_Node*> Nodes = BPClass->SimpleConstructionScript->GetAllNodes();
 	for (const USCS_Node* Node : Nodes)
 	{
-		if (Node->ComponentClass == UStructurePartSlot::StaticClass())
+		if (Node->ComponentClass == UStructureSlot::StaticClass())
 		{
-			Slots.Add(Cast<UStructurePartSlot>(Node->ComponentTemplate));
+			Slots.Add(Cast<UStructureSlot>(Node->ComponentTemplate));
 		}
 	}
 	return Slots;
 }
 
-TArray<const UStructurePartSlot*> AStructurePart::GetCompatibleSlots_CDO(const TSubclassOf<AStructurePart> PartClass, const UStructurePartSlot* Other)
+TArray<const UStructureSlot*> AStructurePart::GetCompatibleSlots_CDO(const TSubclassOf<AStructurePart> PartClass, const UStructureSlot* Other)
 {
-	TArray<const UStructurePartSlot*> CDOSlots = GetSlots_CDO(PartClass);
-	TArray<const UStructurePartSlot*> Ret;
+	TArray<const UStructureSlot*> CDOSlots = GetSlots_CDO(PartClass);
+	TArray<const UStructureSlot*> Ret;
 	Ret.Reserve(CDOSlots.Num());
-	for(const UStructurePartSlot* Slot : CDOSlots)
+	for(const UStructureSlot* Slot : CDOSlots)
 	{
 		if(Slot->CanAttach(Other)) Ret.Add(Slot);
 	}
 	return Ret;
 }
 
-const UStructurePartSlot* AStructurePart::GetSlot_CDO(const TSubclassOf<AStructurePart> PartClass, const FText& InName)
+const UStructureSlot* AStructurePart::GetSlot_CDO(const TSubclassOf<AStructurePart> PartClass, const FText& InName)
 {
-	for(const UStructurePartSlot* Slot : GetSlots_CDO(PartClass))
+	for(const UStructureSlot* Slot : GetSlots_CDO(PartClass))
 	{
 		if(Slot->GetSlotName().EqualTo(InName))
 		{

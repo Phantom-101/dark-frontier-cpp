@@ -9,11 +9,11 @@ FStructureLayoutPart::FStructureLayoutPart()
 
 FStructureLayoutPart::FStructureLayoutPart(const AStructurePart* InPart)
 {
-	PartClass = InPart->GetClass();
+	PartType = InPart->GetClass();
 	PartId = InPart->GetPartId();
 }
 
 bool FStructureLayoutPart::IsValid() const
 {
-	return PartClass != nullptr && !PartId.IsEmpty();
+	return PartType != nullptr && !PartId.IsEmpty();
 }

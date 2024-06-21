@@ -5,15 +5,15 @@
 #include "CommonListView.h"
 #include "UI/StructureBuilder.h"
 #include "Structures/StructurePart.h"
-#include "Structures/StructurePartSlot.h"
-#include "Libraries/UIBlueprintLibrary.h"
+#include "Structures/StructureSlot.h"
+#include "Libraries/UIBlueprintFunctionLibrary.h"
 #include "UI/CompatibleStructurePartEntryObject.h"
 
 void UCompatibleStructurePartSelect::NativeConstruct()
 {
 	Super::NativeConstruct();
 
-	StructureBuilder = UUIBlueprintLibrary::GetParentWidgetOfClass<UStructureBuilder>(this);
+	StructureBuilder = UUIBlueprintFunctionLibrary::GetParentWidgetOfClass<UStructureBuilder>(this);
 
 	CloseButton->OnClicked().Clear();
 	CloseButton->OnClicked().AddUObject<UCompatibleStructurePartSelect>(this, &UCompatibleStructurePartSelect::OnCloseButtonClicked);
@@ -22,7 +22,7 @@ void UCompatibleStructurePartSelect::NativeConstruct()
 void UCompatibleStructurePartSelect::UpdateView() const
 {
 	TypeList->ClearListItems();
-	if(const UStructurePartSlot* PartSlot = StructureBuilder->GetSelectedPartSlot())
+	if(const UStructureSlot* PartSlot = StructureBuilder->GetSelectedSlot())
 	{
 		for(TSubclassOf<AStructurePart> Type : StructureBuilder->GetAvailableParts())
 		{
@@ -42,5 +42,5 @@ void UCompatibleStructurePartSelect::UpdateView() const
 
 void UCompatibleStructurePartSelect::OnCloseButtonClicked() const
 {
-	StructureBuilder->SetSelectedPartSlot(nullptr);
+	StructureBuilder->SetSelectedSlot(nullptr);
 }
