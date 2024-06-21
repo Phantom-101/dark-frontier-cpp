@@ -29,7 +29,7 @@ struct DARKFRONTIER_API FStructureLayoutConnection
 	
 	FStructureLayoutConnection();
 
-	FStructureLayoutConnection(const class UStructurePartSlot* SlotA, const UStructurePartSlot* SlotB);
+	FStructureLayoutConnection(const class UStructureSlot* SlotA, const UStructureSlot* SlotB);
 
 	bool IsValid() const;
 	

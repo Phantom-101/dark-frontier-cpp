@@ -1,7 +1,6 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "UI/Screens/GameUI/StructureAbilityButton.h"
-#include "AbilitySystemComponent.h"
 #include "CommonButtonBase.h"
 #include "Structures/Structure.h"
 #include "UI/Screens/GameUI/StructureAbilityProxy.h"

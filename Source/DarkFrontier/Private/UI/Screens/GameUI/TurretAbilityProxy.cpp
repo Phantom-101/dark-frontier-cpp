@@ -10,5 +10,5 @@ void UTurretAbilityProxy::TryActivate()
 
 float UTurretAbilityProxy::GetArcLength()
 {
-	return Turret->GetAbilityArcLength();
+	return 1;
 }

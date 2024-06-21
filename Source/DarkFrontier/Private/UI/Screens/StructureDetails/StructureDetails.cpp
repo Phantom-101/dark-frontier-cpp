@@ -8,12 +8,12 @@
 #include "Structures/StructureController.h"
 #include "Structures/StructureLayout.h"
 #include "Structures/StructurePart.h"
-#include "Structures/StructurePartSlot.h"
+#include "Structures/StructureSlot.h"
 #include "UI/Screens/StructureDetails/StructureInfo.h"
 #include "UI/Screens/StructureDetails/StructurePartInfo.h"
 #include "UI/Screens/StructureDetails/StructurePartSelector.h"
-#include "UI/Screens/StructureDetails/StructurePartSlotInfo.h"
-#include "UI/Screens/StructureDetails/StructurePartSlotSelector.h"
+#include "UI/Screens/StructureDetails/StructureSlotInfo.h"
+#include "UI/Screens/StructureDetails/StructureSlotSelector.h"
 
 void UStructureDetails::NativeConstruct()
 {
@@ -55,69 +55,73 @@ TOptional<FUIInputConfig> UStructureDetails::GetDesiredInputConfig() const
 	return FUIInputConfig(ECommonInputMode::All, EMouseCaptureMode::CaptureDuringRightMouseDown);
 }
 
-void UStructureDetails::Init()
+void UStructureDetails::ClearAvailableParts()
 {
 	AvailableParts.Empty();
 }
 
-void UStructureDetails::Init(const TArray<TSubclassOf<AStructurePart>>& InClasses)
+void UStructureDetails::SetAvailableParts(const TArray<TSubclassOf<AStructurePart>>& InTypes)
 {
-	AvailableParts = InClasses;
+	AvailableParts = InTypes;
 }
 
-void UStructureDetails::Select(AStructure* InStructure)
+void UStructureDetails::InitStructure(AStructure* InStructure)
 {
 	TargetStructure = InStructure;
-
 	SavedLayout = FStructureLayout(InStructure);
-	
+
+	UE_LOG(LogDarkFrontier, Log, TEXT("Initialized structure details view for %s"), *InStructure->GetFullName());
+}
+
+void UStructureDetails::SelectStructure()
+{
 	InfoSwitcher->SetActiveWidget(StructureInfo);
 	StructureInfo->SetTarget(TargetStructure);
-	EditSlot = nullptr;
-	EditClass = nullptr;
+	BaseSlot = nullptr;
+	PartType = nullptr;
 	SelectorSwitcher->SetActiveWidget(NoSelector);
 }
 
-void UStructureDetails::Select(AStructurePart* InPart)
+void UStructureDetails::SelectPart(AStructurePart* InPart)
 {
 	InfoSwitcher->SetActiveWidget(PartInfo);
 	PartInfo->SetTarget(InPart);
-	EditSlot = nullptr;
-	EditClass = nullptr;
+	BaseSlot = nullptr;
+	PartType = nullptr;
 	SelectorSwitcher->SetActiveWidget(NoSelector);
 }
 
-void UStructureDetails::Select(UStructurePartSlot* InSlot)
+void UStructureDetails::SelectSlot(UStructureSlot* InSlot)
 {
 	InfoSwitcher->SetActiveWidget(SlotInfo);
 	SlotInfo->SetTarget(InSlot);
-	EditSlot = nullptr;
-	EditClass = nullptr;
+	BaseSlot = nullptr;
+	PartType = nullptr;
 	SelectorSwitcher->SetActiveWidget(NoSelector);
 }
 
-void UStructureDetails::Edit(UStructurePartSlot* InSlot)
+void UStructureDetails::SetBaseSlot(UStructureSlot* InSlot)
 {
-	EditSlot = InSlot;
-	EditClass = nullptr;
-	PartSelector->PopulateOptions(AvailableParts, EditSlot);
+	BaseSlot = InSlot;
+	PartType = nullptr;
+	PartSelector->PopulateOptions(AvailableParts, BaseSlot);
 	SelectorSwitcher->SetActiveWidget(PartSelector);
 }
 
-void UStructureDetails::Edit(const TSubclassOf<AStructurePart> InClass)
+void UStructureDetails::SetPartType(const TSubclassOf<AStructurePart> InClass)
 {
-	EditClass = InClass;
-	SlotSelector->PopulateOptions(EditClass, EditSlot);
+	PartType = InClass;
+	SlotSelector->PopulateOptions(PartType, BaseSlot);
 	SelectorSwitcher->SetActiveWidget(SlotSelector);
 }
 
-void UStructureDetails::Edit(const FText& InName)
+void UStructureDetails::AttachWithSlotName(const FText& InName)
 {
-	AStructurePart* Section = Cast<AStructurePart>(GetWorld()->SpawnActor(EditClass));
-	Section->GetSlot(InName)->TryAttach(EditSlot);
+	AStructurePart* Section = Cast<AStructurePart>(GetWorld()->SpawnActor(PartType));
+	Section->GetSlot(InName)->TryAttach(BaseSlot);
 	
-	EditSlot = nullptr;
-	EditClass = nullptr;
+	BaseSlot = nullptr;
+	PartType = nullptr;
 	SelectorSwitcher->SetActiveWidget(NoSelector);
 }
 
@@ -132,8 +136,8 @@ void UStructureDetails::OnLayoutChanged()
 		(InfoSwitcher->GetActiveWidget() == SlotInfo && !IsValid(SlotInfo->GetTarget())))
 	{
 		InfoSwitcher->SetActiveWidget(StructureInfo);
-		EditSlot = nullptr;
-		EditClass = nullptr;
+		BaseSlot = nullptr;
+		PartType = nullptr;
 		SelectorSwitcher->SetActiveWidget(NoSelector);
 	}
 }

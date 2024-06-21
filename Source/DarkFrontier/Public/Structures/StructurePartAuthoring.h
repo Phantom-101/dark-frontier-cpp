@@ -16,7 +16,7 @@ public:
 	UStructurePartAuthoring();
 
 	UPROPERTY(EditAnywhere)
-	TSubclassOf<class AStructurePart> PartClass;
+	TSubclassOf<class AStructurePart> PartType;
 
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<UStructurePartAuthoring> TargetPart;

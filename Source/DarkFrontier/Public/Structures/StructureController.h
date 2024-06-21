@@ -116,15 +116,6 @@ protected:
 	UFUNCTION(BlueprintCallable, Category="Camera")
 	void UpdateCamera();
 
-	UFUNCTION(BlueprintCallable, Category="Camera")
-	FBoxSphereBounds GetViewBounds(const AActor* Actor, const bool OnlyCollidingComponents);
-
-	UFUNCTION(BlueprintCallable, Category="Camera")
-	FBoxSphereBounds GetObjectViewBounds(const AActor* Actor, const bool OnlyCollidingComponents);
-
-	UFUNCTION(BlueprintCallable, Category="Camera")
-	FBoxSphereBounds GetStructureViewBounds(const AStructure* Structure, const bool OnlyCollidingComponents);
-
 public:
 
 	UFUNCTION(BlueprintCallable, Category="UI")

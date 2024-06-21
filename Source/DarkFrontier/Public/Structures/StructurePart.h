@@ -28,7 +28,7 @@ protected:
 	TObjectPtr<class AStructure> OwningStructure;
 
 	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly, Category="Layout")
-	TArray<TObjectPtr<class UStructurePartSlot>> Slots;
+	TArray<TObjectPtr<class UStructureSlot>> Slots;
 
 	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly, Category="Layout")
 	FString PartId;
@@ -37,16 +37,16 @@ protected:
 	int32 RootDistance = -1;
 
 	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly, Category="Gameplay")
-	FActiveGameplayEffectHandle PassiveEffectHandle;
-
-	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly, Category="Combat")
 	TObjectPtr<class AFaction> OwningFaction;
-	
-	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category="Combat")
+
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category="Gameplay")
 	TArray<TObjectPtr<class UCombatant>> Combatants;
 
-	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category="Combat")
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category="Gameplay")
 	TArray<TObjectPtr<UCombatant>> QueuedCombatants;
+
+	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly, Category="Gameplay")
+	FActiveGameplayEffectHandle PassiveEffectHandle;
 
 	virtual void BeginPlay() override;
 
@@ -91,13 +91,13 @@ public:
 	void UpdateRootDistance(int32 Distance);
 	
 	UFUNCTION(BlueprintCallable, Category="Layout")
-	TArray<UStructurePartSlot*> GetSlots();
+	TArray<UStructureSlot*> GetSlots();
 
 	UFUNCTION(BlueprintCallable, Category="Layout")
-	TArray<UStructurePartSlot*> GetCompatibleSlots(const UStructurePartSlot* Other);
+	TArray<UStructureSlot*> GetCompatibleSlots(const UStructureSlot* Other);
 
 	UFUNCTION(BlueprintCallable, Category="Layout")
-	UStructurePartSlot* GetSlot(FText InName);
+	UStructureSlot* GetSlot(FText InName);
 
 	UFUNCTION(BlueprintCallable, Category="Layout")
 	void AttachSlots();
@@ -111,16 +111,19 @@ public:
 	UFUNCTION(BlueprintCallable, Category="Gameplay")
 	void AddAbilityToProxyGroups(TArray<UStructureAbilityProxyGroup*>& ProxyGroups, TSubclassOf<class UStructureAbility> AbilityClass, class UStructureAbilityProxy* Proxy) const;
 
-	UFUNCTION(BlueprintCallable, Category="Combat")
+	UFUNCTION(BlueprintCallable, Category="Gameplay")
 	void TickCombatants();
 
-	UFUNCTION(BlueprintCallable, Category="Combat")
+	UFUNCTION(BlueprintCallable, Category="Gameplay")
 	void DequeueCombatants();
 
-	static TArray<const UStructurePartSlot*> GetSlots_CDO(TSubclassOf<AStructurePart> PartClass);
+	UFUNCTION(BlueprintCallable, Category="UI")
+	virtual class UStructurePartIndicator* CreateIndicator();
 
-	static TArray<const UStructurePartSlot*> GetCompatibleSlots_CDO(TSubclassOf<AStructurePart> PartClass, const UStructurePartSlot* Other);
+	static TArray<const UStructureSlot*> GetSlots_CDO(TSubclassOf<AStructurePart> PartClass);
 
-	static const UStructurePartSlot* GetSlot_CDO(TSubclassOf<AStructurePart> PartClass, const FText& InName);
+	static TArray<const UStructureSlot*> GetCompatibleSlots_CDO(TSubclassOf<AStructurePart> PartClass, const UStructureSlot* Other);
+
+	static const UStructureSlot* GetSlot_CDO(TSubclassOf<AStructurePart> PartClass, const FText& InName);
 
 };

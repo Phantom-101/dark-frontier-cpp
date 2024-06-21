@@ -21,7 +21,7 @@ public:
 protected:
 
 	UPROPERTY(EditDefaultsOnly, Category="Setup")
-	TObjectPtr<UTexture> Icon;
+	TObjectPtr<UTexture2D> Icon;
 
 	UPROPERTY(EditDefaultsOnly, Category="Setup")
 	FText Name;

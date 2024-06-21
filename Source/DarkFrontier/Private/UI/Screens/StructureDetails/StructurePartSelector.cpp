@@ -3,10 +3,9 @@
 #include "UI/Screens/StructureDetails/StructurePartSelector.h"
 #include "CommonListView.h"
 #include "Structures/StructurePart.h"
-#include "Structures/StructurePartSlot.h"
 #include "UI/Screens/StructureDetails/StructurePartOptionObject.h"
 
-void UStructurePartSelector::PopulateOptions(TArray<TSubclassOf<AStructurePart>> InOptions, const UStructurePartSlot* InSlot) const
+void UStructurePartSelector::PopulateOptions(TArray<TSubclassOf<AStructurePart>> InOptions, const UStructureSlot* InSlot) const
 {
 	OptionList->ClearListItems();
 	for(const TSubclassOf<AStructurePart> Option : InOptions)

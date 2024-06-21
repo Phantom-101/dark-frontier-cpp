@@ -2,13 +2,13 @@
 
 #include "UI/StructureBuilder.h"
 #include "CommonButtonBase.h"
-#include "Libraries/UIBlueprintLibrary.h"
+#include "Libraries/UIBlueprintFunctionLibrary.h"
 #include "Structures/Structure.h"
 #include "Structures/StructureController.h"
 #include "UI/CompatibleStructurePartSelect.h"
 #include "UI/StructureLayoutEditor.h"
 #include "Structures/StructurePart.h"
-#include "Structures/StructurePartSlot.h"
+#include "Structures/StructureSlot.h"
 #include "UI/ConfirmationModal.h"
 #include "UI/Screens/UIBase.h"
 
@@ -21,7 +21,7 @@ void UStructureBuilder::NativeConstruct()
 	CloseButton->OnClicked().Clear();
 	CloseButton->OnClicked().AddUObject<UStructureBuilder>(this, &UStructureBuilder::OnCloseButtonClicked);
 
-	SetSelectedPartSlot(nullptr);
+	SetSelectedSlot(nullptr);
 }
 
 void UStructureBuilder::NativeOnActivated()
@@ -58,15 +58,15 @@ TArray<TSubclassOf<AStructurePart>> UStructureBuilder::GetAvailableParts()
 	return AvailableParts;
 }
 
-UStructurePartSlot* UStructureBuilder::GetSelectedPartSlot() const
+UStructureSlot* UStructureBuilder::GetSelectedSlot() const
 {
-	return SelectedPartSlot;
+	return SelectedSlot;
 }
 
-void UStructureBuilder::SetSelectedPartSlot(UStructurePartSlot* NewSlot)
+void UStructureBuilder::SetSelectedSlot(UStructureSlot* NewSlot)
 {
-	SelectedPartSlot = NewSlot;
-	if(SelectedPartSlot)
+	SelectedSlot = NewSlot;
+	if(SelectedSlot)
 	{
 		PartSelect->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 		PartSelect->UpdateView();
@@ -77,26 +77,26 @@ void UStructureBuilder::SetSelectedPartSlot(UStructurePartSlot* NewSlot)
 	}
 }
 
-void UStructureBuilder::AttachPartOfType(const TSubclassOf<AStructurePart> PartClass, const FText SlotName)
+void UStructureBuilder::AttachPart(const TSubclassOf<AStructurePart> PartType, const FText SlotName)
 {
-	AStructurePart* Section = Cast<AStructurePart>(GetWorld()->SpawnActor(PartClass));
-	Section->GetSlot(SlotName)->TryAttach(SelectedPartSlot);
+	AStructurePart* Section = Cast<AStructurePart>(GetWorld()->SpawnActor(PartType));
+	Section->GetSlot(SlotName)->TryAttach(SelectedSlot);
 	// Assume part layout invalidity is due to added section
 	if(!Section->GetOwningStructure()->IsLayoutValid())
 	{
 		Section->DetachSlots();
 	}
-	SetSelectedPartSlot(nullptr);
+	SetSelectedSlot(nullptr);
 	UpdateView();
 }
 
-void UStructureBuilder::RemoveAttachedPart(UStructurePartSlot* Target) const
+void UStructureBuilder::RemovePart(UStructureSlot* Target) const
 {
 	Target->GetAttachedSlot()->GetOwningPart()->DetachSlots();
 	UpdateView();
 }
 
-void UStructureBuilder::DisconnectAttachedPart(UStructurePartSlot* Target) const
+void UStructureBuilder::DisconnectPart(UStructureSlot* Target) const
 {
 	Target->TryDetach();
 	UpdateView();

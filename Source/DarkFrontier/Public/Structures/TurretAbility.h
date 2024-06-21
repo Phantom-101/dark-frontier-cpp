@@ -17,20 +17,15 @@ class DARKFRONTIER_API UTurretAbility : public UStructureAbility
 protected:
 
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category="Gameplay")
-	TEnumAsByte<ECollisionChannel> TraceChannel = ECC_PhysicsBody;
+	FGameplayTag PayloadTag;
 
-	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category="Gameplay")
-	FGameplayTag PayloadEventTag;
-
-	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly, Category="Gameplay")
-	TObjectPtr<class UAbilityTask_WaitGameplayEvent> WaitEventTask;
-
-	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category="Gameplay")
-	FGameplayTag CueTag;
-	
 	virtual void ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData) override;
 
+	virtual void Activate(class UTurretPayload* Payload);
+	
+private:
+
 	UFUNCTION()
-	void HandleEventDataReceived(FGameplayEventData Payload);
+	void HandlePayloadReceived(FGameplayEventData Payload);
 	
 };

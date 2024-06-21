@@ -5,7 +5,7 @@
 #include "CommonTextBlock.h"
 #include "Structures/StructurePart.h"
 #include "Structures/Structure.h"
-#include "Structures/StructurePartSlot.h"
+#include "Structures/StructureSlot.h"
 
 void UStructurePartLayoutEditor::NativeOnListItemObjectSet(UObject* ListItemObject)
 {
@@ -18,7 +18,7 @@ void UStructurePartLayoutEditor::NativeOnListItemObjectSet(UObject* ListItemObje
 	RootSectionText->SetVisibility(Part == Part->GetOwningStructure()->GetRootPart() ? ESlateVisibility::SelfHitTestInvisible : ESlateVisibility::Collapsed);
 
 	PartSlotList->ClearListItems();
-	for(UStructurePartSlot* PartSlot : Part->GetSlots())
+	for(UStructureSlot* PartSlot : Part->GetSlots())
 	{
 		PartSlotList->AddItem(PartSlot);
 	}

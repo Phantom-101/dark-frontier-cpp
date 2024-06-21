@@ -11,9 +11,9 @@
 #include "Structures/StructureAttributeSet.h"
 #include "Structures/StructureController.h"
 #include "Structures/StructurePart.h"
-#include "Structures/StructurePartSlot.h"
-#include "Structures/StructurePartSlotType.h"
-#include "UI/Screens/StructureDetails/StructurePartSlotCardList.h"
+#include "Structures/StructureSlot.h"
+#include "Structures/StructureSlotType.h"
+#include "UI/Screens/StructureDetails/StructureSlotCardList.h"
 #include "UI/Widgets/InfoField.h"
 
 void UStructureInfo::NativeConstruct()
@@ -95,11 +95,11 @@ void UStructureInfo::RebuildTypeMode()
 	if(!IsValid(TargetStructure)) return;
 	
 	// Collate slots
-	TMap<UStructurePartSlotType*, TArray<UStructurePartSlot*>> TypeMap;
-	TArray<UStructurePartSlot*> MiscSlots;
+	TMap<UStructureSlotType*, TArray<UStructureSlot*>> TypeMap;
+	TArray<UStructureSlot*> MiscSlots;
 	for(AStructurePart* Part : TargetStructure->GetParts())
 	{
-		for(UStructurePartSlot* PartSlot : Part->GetSlots())
+		for(UStructureSlot* PartSlot : Part->GetSlots())
 		{
 			if(!PartSlot->GetSlotType())
 			{
@@ -109,7 +109,7 @@ void UStructureInfo::RebuildTypeMode()
 			
 			if(!TypeMap.Contains(PartSlot->GetSlotType()))
 			{
-				TypeMap.Add(PartSlot->GetSlotType(), TArray<UStructurePartSlot*>());
+				TypeMap.Add(PartSlot->GetSlotType(), TArray<UStructureSlot*>());
 			}
 			TypeMap[PartSlot->GetSlotType()].Add(PartSlot);
 		}
@@ -117,16 +117,16 @@ void UStructureInfo::RebuildTypeMode()
 
 	// Add to list
 	TypeList->ClearChildren();
-	for(const TPair<UStructurePartSlotType*, TArray<UStructurePartSlot*>> Pair : TypeMap)
+	for(const TPair<UStructureSlotType*, TArray<UStructureSlot*>> Pair : TypeMap)
 	{
-		UStructurePartSlotCardList* View = CreateWidget<UStructurePartSlotCardList>(this, CardListClass);
+		UStructureSlotCardList* View = CreateWidget<UStructureSlotCardList>(this, CardListClass);
 		TypeList->AddChild(View);
 		View->Init(Pair.Value, Pair.Key->TypeName, Pair.Key->Color);
 	}
 	
 	if(MiscSlots.Num() > 0)
 	{
-		UStructurePartSlotCardList* View = CreateWidget<UStructurePartSlotCardList>(this, CardListClass);
+		UStructureSlotCardList* View = CreateWidget<UStructureSlotCardList>(this, CardListClass);
 		TypeList->AddChild(View);
 		View->Init(MiscSlots, FText::FromString("Miscellaneous"), FLinearColor::White);
 	}

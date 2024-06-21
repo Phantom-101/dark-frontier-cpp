@@ -3,7 +3,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "StructureDamage.h"
 #include "TurretPayload.generated.h"
 
 /**
@@ -16,13 +15,16 @@ class DARKFRONTIER_API UTurretPayload : public UObject
 
 public:
 
-	UPROPERTY()
-	FStructureDamage Damage;
+	UPROPERTY(BlueprintReadWrite)
+	TObjectPtr<class AStructure> Instigator;
 
-	UPROPERTY()
-	class UFiringPoint* FiringPoint;
+	UPROPERTY(BlueprintReadWrite)
+	TObjectPtr<class ATurret> Turret;
 
-	UPROPERTY()
-	class AStructure* Target;
+	UPROPERTY(BlueprintReadWrite)
+	TObjectPtr<USceneComponent> SourceTransform;
+
+	UPROPERTY(BlueprintReadWrite)
+	TObjectPtr<AStructure> Target;
 	
 };

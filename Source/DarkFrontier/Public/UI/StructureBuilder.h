@@ -24,7 +24,7 @@ protected:
 	TObjectPtr<class AStructure> TargetStructure;
 	
 	UPROPERTY(BlueprintReadOnly)
-	TObjectPtr<class UStructurePartSlot> SelectedPartSlot;
+	TObjectPtr<class UStructureSlot> SelectedSlot;
 
 	UPROPERTY(BlueprintReadOnly)
 	TArray<TSubclassOf<class AStructurePart>> AvailableParts;
@@ -61,19 +61,19 @@ public:
 	TArray<TSubclassOf<AStructurePart>> GetAvailableParts();
 
 	UFUNCTION(BlueprintCallable)
-	UStructurePartSlot* GetSelectedPartSlot() const;
+	UStructureSlot* GetSelectedSlot() const;
 	
 	UFUNCTION(BlueprintCallable)
-	void SetSelectedPartSlot(UStructurePartSlot* NewSlot);
+	void SetSelectedSlot(UStructureSlot* NewSlot);
 
 	UFUNCTION(BlueprintCallable)
-	void AttachPartOfType(TSubclassOf<AStructurePart> PartClass, FText SlotName);
+	void AttachPart(TSubclassOf<AStructurePart> PartType, FText SlotName);
 	
 	UFUNCTION(BlueprintCallable)
-	void RemoveAttachedPart(UStructurePartSlot* Target) const;
+	void RemovePart(UStructureSlot* Target) const;
 
 	UFUNCTION(BlueprintCallable)
-	void DisconnectAttachedPart(UStructurePartSlot* Target) const;
+	void DisconnectPart(UStructureSlot* Target) const;
 
 private:
 
