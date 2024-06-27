@@ -13,30 +13,14 @@
 #include "Structures/Structure.h"
 #include "Structures/StructureController.h"
 #include "Structures/StructurePart.h"
-#include "UI/CustomGameplayEffectUIData.h"
-#include "UI/GameplayEffectIndicatorObject.h"
-#include "UI/Screens/GameUI/StructureAbilityButtonList.h"
+#include "UI/Widgets/CustomGameplayEffectUIData.h"
+#include "UI/Widgets/GameplayEffectIndicatorObject.h"
 #include "UI/Screens/GameUI/StructurePartIndicator.h"
 #include "UI/Widgets/Arc.h"
 
 TOptional<FUIInputConfig> UGameUI::GetDesiredInputConfig() const
 {
 	return FUIInputConfig(ECommonInputMode::Game, EMouseCaptureMode::CapturePermanently);
-}
-
-void UGameUI::NativeConstruct()
-{
-	Super::NativeConstruct();
-
-	if(AStructureController* Controller = Cast<AStructureController>(GetWorld()->GetFirstPlayerController()))
-	{
-		Controller->OnLayoutChanged.AddUObject<UGameUI>(this, &UGameUI::UpdateAbilities);
-		UpdateAbilities();
-	}
-	else
-	{
-		UE_LOG(LogDarkFrontier, Warning, TEXT("Structure controller not found"));
-	}
 }
 
 void UGameUI::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
@@ -90,7 +74,7 @@ void UGameUI::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 			if(!Existing.Contains(Handle) && Cast<UCustomGameplayEffectUIData>(Handle.GetOwningAbilitySystemComponent()->GetGameplayEffectCDO(Handle)->UIData))
 			{
 				UGameplayEffectIndicatorObject* Object = NewObject<UGameplayEffectIndicatorObject>();
-				Object->Init(Handle);
+				Object->EffectHandle = Handle;
 				GameplayEffectList->AddItem(Object);
 			}
 		}
@@ -131,13 +115,5 @@ void UGameUI::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 				}
 			}
 		}
-	}
-}
-
-void UGameUI::UpdateAbilities() const
-{
-	if(const AStructureController* Controller = Cast<AStructureController>(GetWorld()->GetFirstPlayerController()))
-	{
-		AbilityButtonList->UpdateButtons(Cast<AStructure>(Controller->GetPawn()));
 	}
 }

@@ -7,7 +7,6 @@
 #include "Structures/Structure.h"
 #include "Structures/TurretAbility.h"
 #include "Structures/TurretPayload.h"
-#include "UI/Screens/GameUI/TurretAbilityProxy.h"
 
 void ATurret::OnRegistered()
 {

@@ -31,6 +31,9 @@ protected:
 	TObjectPtr<UStaticMeshComponent> StaticMesh;
 
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category="Components")
+	TObjectPtr<class UWidgetComponent> Indicator;
+
+	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category="Components")
 	TObjectPtr<class USpringArmComponent> SpringArm;
 
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category="Components")
@@ -41,6 +44,9 @@ protected:
 
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category="Setup")
 	TArray<TSubclassOf<UGameplayEffect>> PassiveEffectClasses;
+
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category="Setup")
+	TSubclassOf<class UStructureSelector> SelectorClass;
 
 	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly, Category="Layout")
 	TObjectPtr<class AStructurePart> RootPart;
@@ -56,9 +62,6 @@ protected:
 
 	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly, Category="Gameplay")
 	bool IsGameplayInitialized = false;
-
-	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly, Category="Gameplay")
-	FVector DamageLocation = FVector::ZeroVector;
 
 	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly, Category="Input")
 	FVector MoveInput = FVector::ZeroVector;
@@ -123,6 +126,9 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category="Layout")
 	void UpdateLayoutInformation();
+
+	UFUNCTION(BlueprintCallable, Category="Gameplay")
+	bool TryInitGameplay();
 	
 	UFUNCTION(BlueprintCallable, Category="Gameplay")
 	float GetMaxHull() const;
@@ -161,19 +167,16 @@ public:
 	bool IsDetecting(AStructure* Other) const;
 
 	UFUNCTION(BlueprintCallable, Category="Gameplay")
-	void SetDamageLocation(FVector InLocation);
+	void ApplyDamage(struct FStructureDamage Damage, AStructurePart* HitPart, FVector HitLocation);
 
 	UFUNCTION(BlueprintCallable, Category="Gameplay")
-	struct FStructureDamage GetHullPostMitigationDamage(const FStructureDamage& PreMitigationDamage) const;
-	
+	FStructureDamage ProcessDamage(struct FStructureDamage Damage);
+
+	UFUNCTION(BlueprintCallable, Category="Gameplay")
+	FStructureDamage GetHullPostMitigationDamage(const FStructureDamage& PreMitigationDamage) const;
+
 	UFUNCTION(BlueprintCallable, Category="Gameplay")
 	FStructureDamage GetShieldPostMitigationDamage(const FStructureDamage& PreMitigationDamage) const;
-
-	UFUNCTION(BlueprintCallable, Category="Gameplay")
-	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
-
-	UFUNCTION(BlueprintCallable, Category="Gameplay")
-	bool TryInitGameplay();
 	
 	UFUNCTION(BlueprintCallable, Category="Gameplay")
 	struct FActiveGameplayEffectHandle ApplyEffect(TSubclassOf<class UGameplayEffect> EffectClass) const;
@@ -182,13 +185,10 @@ public:
 	struct FGameplayAbilitySpecHandle GiveAbility(TSubclassOf<class UStructureAbility> AbilityClass) const;
 
 	UFUNCTION(BlueprintCallable, Category="Gameplay")
-	TArray<class UStructureAbilityProxyGroup*> GetAbilityProxyGroups();
-
-	UFUNCTION(BlueprintCallable, Category="Gameplay")
-	UStructureAbilityProxyGroup* GetNewAbilityProxyGroup(TSubclassOf<class UStructureAbility> AbilityClass);
-
-	UFUNCTION(BlueprintCallable, Category="Gameplay")
 	void ClearAbility(FGameplayAbilitySpecHandle AbilityHandle) const;
+
+	UFUNCTION(BlueprintCallable, Category="Gameplay")
+	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 
 	UFUNCTION(BlueprintCallable, Category="Input")
 	void SetMoveInput(FVector InInput);

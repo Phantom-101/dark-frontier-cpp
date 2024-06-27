@@ -3,6 +3,7 @@
 #include "Structures/Structure.h"
 #include "Log.h"
 #include "Camera/CameraComponent.h"
+#include "Components/WidgetComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Structures/StructureAbilitySystemComponent.h"
 #include "Structures/StructureAttributeSet.h"
@@ -11,7 +12,7 @@
 #include "Structures/StructureLayout.h"
 #include "Structures/StructurePart.h"
 #include "Structures/StructureSlot.h"
-#include "UI/Screens/GameUI/StructureAbilityProxyGroup.h"
+#include "UI/Screens/GameUI/StructureSelector.h"
 
 AStructure::AStructure()
 {
@@ -19,6 +20,10 @@ AStructure::AStructure()
 	
 	StaticMesh = CreateDefaultSubobject<UStaticMeshComponent>("StaticMesh");
 	SetRootComponent(StaticMesh);
+
+	Indicator = CreateDefaultSubobject<UWidgetComponent>("Indicator");
+	Indicator->SetupAttachment(StaticMesh);
+	Indicator->SetWidgetClass(SelectorClass);
 	
 	SpringArm = CreateDefaultSubobject<USpringArmComponent>("CameraArm");
 	SpringArm->SetupAttachment(StaticMesh);
@@ -43,6 +48,10 @@ void AStructure::PostInitializeComponents()
 void AStructure::BeginPlay()
 {
 	Super::BeginPlay();
+
+	Indicator->InitWidget();
+	UStructureSelector* Selector = Cast<UStructureSelector>(Indicator->GetWidget());
+	Selector->Target = this;
 }
 
 void AStructure::Tick(float DeltaTime)
@@ -51,47 +60,7 @@ void AStructure::Tick(float DeltaTime)
 
 	if(!IsValid(RootPart)) return;
 
-	// Apply damage buffers
-	
-	FStructureDamage Damage = FStructureDamage(
-		Attributes->GetKineticDamageTaken(),
-		Attributes->GetExplosiveDamageTaken(),
-		Attributes->GetBeamDamageTaken(),
-		Attributes->GetFieldDamageTaken()
-	);
-	
-	if(Damage.Sum() > 0 && GetShield() > 0)
-	{
-		const FStructureDamage ShieldPostMitigation = GetShieldPostMitigationDamage(Damage);
-		const float ShieldAbsorbedPercent = FMath::Min(GetShield() / ShieldPostMitigation.Sum(), 1);
-		const float ShieldDamage = ShieldPostMitigation.Sum() * ShieldAbsorbedPercent;
-		SetShield(GetShield() - ShieldDamage);
-		Damage = Damage.Scale(1 - ShieldAbsorbedPercent);
-
-		FGameplayCueParameters Parameters;
-		Parameters.Location = DamageLocation;
-		Parameters.RawMagnitude = ShieldDamage;
-		AbilitySystemComponent->ExecuteGameplayCueLocal(ShieldDamageCueTag, Parameters);
-	}
-
-	if(Damage.Sum() > 0 && GetHull() > 0)
-	{
-		const FStructureDamage HullPostMitigation = GetHullPostMitigationDamage(Damage);
-		SetHull(GetHull() - HullPostMitigation.Sum());
-
-		FGameplayCueParameters Parameters;
-		Parameters.Location = DamageLocation;
-		Parameters.RawMagnitude = HullPostMitigation.Sum();
-		AbilitySystemComponent->ExecuteGameplayCueLocal(HullDamageCueTag, Parameters);
-	}
-
-	Attributes->SetKineticDamageTaken(0);
-	Attributes->SetExplosiveDamageTaken(0);
-	Attributes->SetBeamDamageTaken(0);
-	Attributes->SetFieldDamageTaken(0);
-
 	// Apply thrusts
-
 	if(GetActorEnableCollision())
 	{
 		const float LinearMaxSpeed = Attributes->GetLinearMaxSpeed();
@@ -365,6 +334,25 @@ void AStructure::UpdateLayoutInformation()
 	OnLayoutChanged.Broadcast();
 }
 
+bool AStructure::TryInitGameplay()
+{
+	if(!IsGameplayInitialized)
+	{
+		AbilitySystemComponent->InitAbilityActorInfo(this, this);
+		
+		(void)ApplyEffect(DefaultAttributes);
+		
+		for(const TSubclassOf<UGameplayEffect> PassiveEffectClass : PassiveEffectClasses)
+		{
+			(void)ApplyEffect(PassiveEffectClass);
+		}
+
+		IsGameplayInitialized = true;
+		return true;
+	}
+	return false;
+}
+
 float AStructure::GetMaxHull() const
 {
 	return Attributes->GetMaxHull() == 0 ? 1 : Attributes->GetMaxHull();
@@ -425,9 +413,39 @@ bool AStructure::IsDetecting(AStructure* Other) const
 	return (GetActorLocation() - Other->GetActorLocation()).SquaredLength() <= Attributes->GetSensorStrength() * Other->Attributes->GetSignatureVisibility();
 }
 
-void AStructure::SetDamageLocation(const FVector InLocation)
+void AStructure::ApplyDamage(FStructureDamage Damage, AStructurePart* HitPart, FVector HitLocation)
 {
-	DamageLocation = InLocation;
+	Damage = ProcessDamage(Damage);
+	
+	if(Damage.Sum() > 0 && GetShield() > 0)
+	{
+		const FStructureDamage ShieldPostMitigation = GetShieldPostMitigationDamage(Damage);
+		const float ShieldAbsorbedPercent = FMath::Min(GetShield() / ShieldPostMitigation.Sum(), 1);
+		const float ShieldDamage = ShieldPostMitigation.Sum() * ShieldAbsorbedPercent;
+		SetShield(GetShield() - ShieldDamage);
+		Damage = Damage.Scale(1 - ShieldAbsorbedPercent);
+
+		FGameplayCueParameters Parameters;
+		Parameters.Location = HitLocation;
+		Parameters.RawMagnitude = ShieldDamage;
+		AbilitySystemComponent->ExecuteGameplayCueLocal(ShieldDamageCueTag, Parameters);
+	}
+
+	if(Damage.Sum() > 0 && GetHull() > 0)
+	{
+		const FStructureDamage HullPostMitigation = GetHullPostMitigationDamage(Damage);
+		SetHull(GetHull() - HullPostMitigation.Sum());
+
+		FGameplayCueParameters Parameters;
+		Parameters.Location = HitLocation;
+		Parameters.RawMagnitude = HullPostMitigation.Sum();
+		AbilitySystemComponent->ExecuteGameplayCueLocal(HullDamageCueTag, Parameters);
+	}
+}
+
+FStructureDamage AStructure::ProcessDamage(FStructureDamage Damage)
+{
+	return Damage;
 }
 
 FStructureDamage AStructure::GetHullPostMitigationDamage(const FStructureDamage& PreMitigationDamage) const
@@ -448,30 +466,6 @@ FStructureDamage AStructure::GetShieldPostMitigationDamage(const FStructureDamag
 		PreMitigationDamage.Beam / (1 + Attributes->GetShieldBeamDamageReduction()),
 		PreMitigationDamage.Field / (1 + Attributes->GetShieldFieldDamageReduction())
 	);
-}
-
-UAbilitySystemComponent* AStructure::GetAbilitySystemComponent() const
-{
-	return AbilitySystemComponent;
-}
-
-bool AStructure::TryInitGameplay()
-{
-	if(!IsGameplayInitialized)
-	{
-		AbilitySystemComponent->InitAbilityActorInfo(this, this);
-		
-		(void)ApplyEffect(DefaultAttributes);
-		
-		for(const TSubclassOf<UGameplayEffect> PassiveEffectClass : PassiveEffectClasses)
-		{
-			(void)ApplyEffect(PassiveEffectClass);
-		}
-
-		IsGameplayInitialized = true;
-		return true;
-	}
-	return false;
 }
 
 FActiveGameplayEffectHandle AStructure::ApplyEffect(const TSubclassOf<UGameplayEffect> EffectClass) const
@@ -504,33 +498,17 @@ FGameplayAbilitySpecHandle AStructure::GiveAbility(const TSubclassOf<UStructureA
 	return FGameplayAbilitySpecHandle();
 }
 
-TArray<UStructureAbilityProxyGroup*> AStructure::GetAbilityProxyGroups()
-{
-	TArray<UStructureAbilityProxyGroup*> ProxyGroups;
-
-	for(AStructurePart* Part : GetParts())
-	{
-		Part->AddAbilitiesToProxyGroups(ProxyGroups);
-	}
-	
-	return ProxyGroups;
-}
-
-UStructureAbilityProxyGroup* AStructure::GetNewAbilityProxyGroup(const TSubclassOf<UStructureAbility> AbilityClass)
-{
-	// TODO replace ability class with gameplay tag
-	UStructureAbilityProxyGroup* ProxyGroup = NewObject<UStructureAbilityProxyGroup>();
-	ProxyGroup->TargetStructure = this;
-	ProxyGroup->AbilityClass = AbilityClass;
-	return ProxyGroup;
-}
-
 void AStructure::ClearAbility(const FGameplayAbilitySpecHandle AbilityHandle) const
 {
 	if(HasAuthority() && AbilitySystemComponent && AbilityHandle.IsValid())
 	{
 		AbilitySystemComponent->ClearAbility(AbilityHandle);
 	}
+}
+
+UAbilitySystemComponent* AStructure::GetAbilitySystemComponent() const
+{
+	return AbilitySystemComponent;
 }
 
 void AStructure::SetMoveInput(const FVector InInput)

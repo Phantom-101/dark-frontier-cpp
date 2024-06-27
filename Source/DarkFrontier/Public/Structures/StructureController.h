@@ -77,7 +77,7 @@ protected:
 	FVector2D CameraRotation;
 
 	UPROPERTY(BlueprintReadOnly, EditInstanceOnly, Category="Camera")
-	float ZoomLevel = 2.5;
+	float ZoomLevel = 2;
 
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly)
 	TArray<TSubclassOf<class AStructurePart>> AvailableParts;

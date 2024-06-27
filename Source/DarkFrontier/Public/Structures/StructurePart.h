@@ -106,10 +106,7 @@ public:
 	void DetachSlots();
 
 	UFUNCTION(BlueprintCallable, Category="Gameplay")
-	virtual void AddAbilitiesToProxyGroups(TArray<class UStructureAbilityProxyGroup*>& ProxyGroups);
-
-	UFUNCTION(BlueprintCallable, Category="Gameplay")
-	void AddAbilityToProxyGroups(TArray<UStructureAbilityProxyGroup*>& ProxyGroups, TSubclassOf<class UStructureAbility> AbilityClass, class UStructureAbilityProxy* Proxy) const;
+	void ApplyDamage(struct FStructureDamage Damage, FVector HitLocation);
 
 	UFUNCTION(BlueprintCallable, Category="Gameplay")
 	void TickCombatants();

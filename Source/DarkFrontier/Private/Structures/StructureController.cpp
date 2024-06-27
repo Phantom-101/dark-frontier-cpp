@@ -3,12 +3,10 @@
 #include "Structures/StructureController.h"
 #include "AbilitySystemComponent.h"
 #include "EnhancedInputComponent.h"
-#include "Log.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Input/CommonUIActionRouterBase.h"
 #include "Libraries/BoundsBlueprintFunctionLibrary.h"
 #include "Structures/Structure.h"
-#include "UI/StructureBuilder.h"
 #include "UI/Screens/StructureDetails/StructureDetails.h"
 #include "UI/Screens/UIBase.h"
 
@@ -156,7 +154,7 @@ void AStructureController::Look(const FInputActionInstance& Instance)
 
 void AStructureController::Zoom(const FInputActionInstance& Instance)
 {
-	ZoomLevel = FMath::Clamp(ZoomLevel + Instance.GetValue().Get<float>(), 1.5, 10);
+	ZoomLevel = FMath::Clamp(ZoomLevel + Instance.GetValue().Get<float>() * 0.5, 1, 10);
 }
 
 void AStructureController::ToggleUnlock(const FInputActionInstance& Instance)
