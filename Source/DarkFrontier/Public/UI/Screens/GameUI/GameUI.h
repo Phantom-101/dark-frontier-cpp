@@ -41,19 +41,10 @@ protected:
 	TObjectPtr<class UCommonListView> GameplayEffectList;
 
 	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
-	TObjectPtr<class UStructureAbilityButtonList> AbilityButtonList;
-
-	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
 	TObjectPtr<class UScrollBox> PartIndicators;
 
 	virtual TOptional<FUIInputConfig> GetDesiredInputConfig() const override;
-
-	virtual void NativeConstruct() override;
 	
 	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
-
-private:
-
-	void UpdateAbilities() const;
 	
 };

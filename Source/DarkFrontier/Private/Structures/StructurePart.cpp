@@ -8,9 +8,8 @@
 #include "Factions/Faction.h"
 #include "Structures/Structure.h"
 #include "Structures/StructureAttributeSet.h"
-#include "Structures/StructureAbility.h"
+#include "Structures/StructureDamage.h"
 #include "Structures/StructureSlot.h"
-#include "UI/Screens/GameUI/StructureAbilityProxyGroup.h"
 
 AStructurePart::AStructurePart()
 {
@@ -189,24 +188,9 @@ void AStructurePart::DetachSlots()
 	OwningStructure->UpdateLayoutInformation();
 }
 
-void AStructurePart::AddAbilitiesToProxyGroups(TArray<UStructureAbilityProxyGroup*>& ProxyGroups)
+void AStructurePart::ApplyDamage(const FStructureDamage Damage, const FVector HitLocation)
 {
-}
-
-void AStructurePart::AddAbilityToProxyGroups(TArray<UStructureAbilityProxyGroup*>& ProxyGroups, TSubclassOf<class UStructureAbility> AbilityClass, UStructureAbilityProxy* Proxy) const
-{
-	for(UStructureAbilityProxyGroup* ProxyGroup : ProxyGroups)
-	{
-		if(ProxyGroup->AbilityClass == AbilityClass)
-		{
-			ProxyGroup->Proxies.Add(Proxy);
-			return;
-		}
-	}
-
-	UStructureAbilityProxyGroup* ProxyGroup = OwningStructure->GetNewAbilityProxyGroup(AbilityClass);
-	ProxyGroup->Proxies.Add(Proxy);
-	ProxyGroups.Add(ProxyGroup);
+	OwningStructure->ApplyDamage(Damage, this, HitLocation);
 }
 
 void AStructurePart::TickCombatants()

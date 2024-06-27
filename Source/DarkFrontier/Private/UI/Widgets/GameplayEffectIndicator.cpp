@@ -1,12 +1,11 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-#include "UI/GameplayEffectIndicator.h"
-
+#include "UI/Widgets/GameplayEffectIndicator.h"
 #include "AbilitySystemComponent.h"
 #include "CommonTextBlock.h"
 #include "Components/Image.h"
-#include "UI/CustomGameplayEffectUIData.h"
-#include "UI/GameplayEffectIndicatorObject.h"
+#include "UI/Widgets/CustomGameplayEffectUIData.h"
+#include "UI/Widgets/GameplayEffectIndicatorObject.h"
 
 void UGameplayEffectIndicator::NativeOnListItemObjectSet(UObject* ListItemObject)
 {

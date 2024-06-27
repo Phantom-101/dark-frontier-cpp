@@ -62,18 +62,6 @@ public:
 	UPROPERTY(BlueprintReadOnly, Category="Attributes", ReplicatedUsing=OnRep_ShieldFieldDamageReduction)
 	FGameplayAttributeData ShieldFieldDamageReduction;
 
-	UPROPERTY(BlueprintReadOnly, Category="Attributes")
-	FGameplayAttributeData KineticDamageTaken;
-	
-	UPROPERTY(BlueprintReadOnly, Category="Attributes")
-	FGameplayAttributeData ExplosiveDamageTaken;
-	
-	UPROPERTY(BlueprintReadOnly, Category="Attributes")
-	FGameplayAttributeData BeamDamageTaken;
-	
-	UPROPERTY(BlueprintReadOnly, Category="Attributes")
-	FGameplayAttributeData FieldDamageTaken;
-	
 	UPROPERTY(BlueprintReadOnly, Category="Attributes", ReplicatedUsing=OnRep_MaxEnergy)
 	FGameplayAttributeData MaxEnergy;
 
@@ -125,10 +113,6 @@ public:
 	ATTRIBUTE_ACCESSORS(UStructureAttributeSet, ShieldExplosiveDamageReduction);
 	ATTRIBUTE_ACCESSORS(UStructureAttributeSet, ShieldBeamDamageReduction);
 	ATTRIBUTE_ACCESSORS(UStructureAttributeSet, ShieldFieldDamageReduction);
-	ATTRIBUTE_ACCESSORS(UStructureAttributeSet, KineticDamageTaken);
-	ATTRIBUTE_ACCESSORS(UStructureAttributeSet, ExplosiveDamageTaken);
-	ATTRIBUTE_ACCESSORS(UStructureAttributeSet, BeamDamageTaken);
-	ATTRIBUTE_ACCESSORS(UStructureAttributeSet, FieldDamageTaken);
 	ATTRIBUTE_ACCESSORS(UStructureAttributeSet, MaxEnergy);
 	ATTRIBUTE_ACCESSORS(UStructureAttributeSet, Energy);
 	ATTRIBUTE_ACCESSORS(UStructureAttributeSet, EnergyRegen);

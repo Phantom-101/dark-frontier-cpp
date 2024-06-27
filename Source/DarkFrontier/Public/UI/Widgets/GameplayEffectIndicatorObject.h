@@ -16,10 +16,7 @@ class DARKFRONTIER_API UGameplayEffectIndicatorObject : public UObject
 
 public:
 
-	UPROPERTY()
+	UPROPERTY(BlueprintReadWrite)
 	FActiveGameplayEffectHandle EffectHandle;
-
-	UFUNCTION()
-	void Init(FActiveGameplayEffectHandle Handle);
 	
 };
