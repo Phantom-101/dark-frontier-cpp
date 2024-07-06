@@ -314,7 +314,7 @@ void AStructurePart::DequeueCombatants()
 	QueuedCombatants.Empty();
 }
 
-UStructurePartIndicator* AStructurePart::CreateIndicator()
+UStructurePartIndicator* AStructurePart::CreateIndicator(UWidget* WidgetOwner)
 {
 	return nullptr;
 }

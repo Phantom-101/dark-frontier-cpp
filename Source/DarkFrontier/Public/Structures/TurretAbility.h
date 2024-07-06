@@ -9,7 +9,7 @@
 /**
  * 
  */
-UCLASS()
+UCLASS(Abstract)
 class DARKFRONTIER_API UTurretAbility : public UStructureAbility
 {
 	GENERATED_BODY()
@@ -21,7 +21,7 @@ protected:
 
 	virtual void ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData) override;
 
-	virtual void Activate(class UTurretPayload* Payload);
+	virtual void OnActivate(class UTurretPayload* Payload);
 	
 private:
 

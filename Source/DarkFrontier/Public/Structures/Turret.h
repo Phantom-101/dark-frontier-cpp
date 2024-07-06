@@ -8,6 +8,9 @@
 #include "Structures/StructurePart.h"
 #include "Turret.generated.h"
 
+class UTurretSource;
+class UTurretAbility;
+
 /**
  * 
  */
@@ -18,17 +21,16 @@ class DARKFRONTIER_API ATurret : public AStructurePart
 
 protected:
 
-	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category="Turret")
-	TArray<TObjectPtr<USceneComponent>> SourceTransforms;
-
-	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category="Gameplay")
-	TSubclassOf<class UTurretAbility> Ability;
-
+	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly, Category="Turret")
+	TArray<TObjectPtr<UTurretSource>> Sources;
+	
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category="Gameplay")
 	FGameplayTag PayloadTag;
 
-	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category="Gameplay")
+	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly, Category="Gameplay")
 	FGameplayAbilitySpecHandle AbilityHandle;
+
+	virtual void BeginPlay() override;
 
 public:
 
@@ -37,18 +39,21 @@ public:
 	virtual void OnUnRegistered() override;
 
 	UFUNCTION(BlueprintCallable, Category="Gameplay")
-	int TryActivate();
+	virtual TSubclassOf<UTurretAbility> GetAbilityClass();
+
+	UFUNCTION(BlueprintCallable, Category="Gameplay")
+	virtual bool CanActivate();
+
+	UFUNCTION(BlueprintCallable, Category="Gameplay")
+	virtual void TryActivate();
 
 protected:
 
 	UFUNCTION(BlueprintCallable, Category="Gameplay")
-	virtual void OnActivated(int Activated);
+	virtual bool CanActivateSource(UTurretSource* Source);
 
 	UFUNCTION(BlueprintCallable, Category="Gameplay")
-	virtual bool CanActivateSource(USceneComponent* SourceTransform);
-
-	UFUNCTION(BlueprintCallable, Category="Gameplay")
-	virtual void ActivateSource(USceneComponent* SourceTransform);
+	virtual bool TryActivateSource(UTurretSource* Source);
 
 	UFUNCTION(BlueprintCallable, Category="Gameplay")
 	void SendPayload(FGameplayTag Tag, UObject* Obj) const;

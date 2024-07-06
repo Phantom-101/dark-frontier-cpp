@@ -111,8 +111,11 @@ void UStructureDetails::SetBaseSlot(UStructureSlot* InSlot)
 void UStructureDetails::SetPartType(const TSubclassOf<AStructurePart> InClass)
 {
 	PartType = InClass;
-	SlotSelector->PopulateOptions(PartType, BaseSlot);
 	SelectorSwitcher->SetActiveWidget(SlotSelector);
+
+	// Call this after active widget change as populate options will automatically call attach with slot name
+	// in the event that only one slot is compatible, in which case the active widget will be set to no selector
+	SlotSelector->PopulateOptions(PartType, BaseSlot);
 }
 
 void UStructureDetails::AttachWithSlotName(const FText& InName)
