@@ -3,7 +3,6 @@
 #include "Structures/Structure.h"
 #include "Log.h"
 #include "Camera/CameraComponent.h"
-#include "Components/WidgetComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Structures/StructureAbilitySystemComponent.h"
 #include "Structures/StructureAttributeSet.h"
@@ -12,7 +11,6 @@
 #include "Structures/StructureLayout.h"
 #include "Structures/StructurePart.h"
 #include "Structures/StructureSlot.h"
-#include "UI/Screens/GameUI/StructureSelector.h"
 
 AStructure::AStructure()
 {
@@ -21,10 +19,6 @@ AStructure::AStructure()
 	StaticMesh = CreateDefaultSubobject<UStaticMeshComponent>("StaticMesh");
 	SetRootComponent(StaticMesh);
 
-	Indicator = CreateDefaultSubobject<UWidgetComponent>("Indicator");
-	Indicator->SetupAttachment(StaticMesh);
-	Indicator->SetWidgetClass(SelectorClass);
-	
 	SpringArm = CreateDefaultSubobject<USpringArmComponent>("CameraArm");
 	SpringArm->SetupAttachment(StaticMesh);
 	
@@ -43,15 +37,6 @@ void AStructure::PostInitializeComponents()
 	TryInitGameplay();
 	
 	Super::PostInitializeComponents();
-}
-
-void AStructure::BeginPlay()
-{
-	Super::BeginPlay();
-
-	Indicator->InitWidget();
-	UStructureSelector* Selector = Cast<UStructureSelector>(Indicator->GetWidget());
-	Selector->Target = this;
 }
 
 void AStructure::Tick(float DeltaTime)
@@ -509,6 +494,11 @@ void AStructure::ClearAbility(const FGameplayAbilitySpecHandle AbilityHandle) co
 UAbilitySystemComponent* AStructure::GetAbilitySystemComponent() const
 {
 	return AbilitySystemComponent;
+}
+
+TArray<UStructureIndication*> AStructure::GetIndications()
+{
+	return Indications;
 }
 
 void AStructure::SetMoveInput(const FVector InInput)

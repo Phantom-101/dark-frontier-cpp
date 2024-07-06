@@ -16,6 +16,7 @@
 #include "UI/Widgets/CustomGameplayEffectUIData.h"
 #include "UI/Widgets/GameplayEffectIndicatorObject.h"
 #include "UI/Screens/GameUI/StructurePartIndicator.h"
+#include "UI/Screens/GameUI/StructureSelectionLayer.h"
 #include "UI/Widgets/Arc.h"
 
 TOptional<FUIInputConfig> UGameUI::GetDesiredInputConfig() const
@@ -80,6 +81,8 @@ void UGameUI::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 		}
 	}
 
+	SelectionLayer->UpdateSelectors();
+
 	if(AStructure* PlayerStructure = Cast<AStructure>(GetOwningPlayerPawn()))
 	{
 		TArray<AStructurePart*> Existing;
@@ -108,7 +111,7 @@ void UGameUI::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 		{
 			if(!Existing.Contains(Part))
 			{
-				UStructurePartIndicator* Indicator = Part->CreateIndicator();
+				UStructurePartIndicator* Indicator = Part->CreateIndicator(PartIndicators);
 				if(Indicator != nullptr)
 				{
 					PartIndicators->AddChild(Indicator);

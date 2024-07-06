@@ -5,6 +5,10 @@
 #include "CoreMinimal.h"
 #include "TurretPayload.generated.h"
 
+class AStructure;
+class ATurret;
+class UTurretSource;
+
 /**
  * 
  */
@@ -16,13 +20,13 @@ class DARKFRONTIER_API UTurretPayload : public UObject
 public:
 
 	UPROPERTY(BlueprintReadWrite)
-	TObjectPtr<class AStructure> Instigator;
+	TObjectPtr<AStructure> Instigator;
 
 	UPROPERTY(BlueprintReadWrite)
-	TObjectPtr<class ATurret> Turret;
+	TObjectPtr<ATurret> Turret;
 
 	UPROPERTY(BlueprintReadWrite)
-	TObjectPtr<USceneComponent> SourceTransform;
+	TObjectPtr<UTurretSource> Source;
 
 	UPROPERTY(BlueprintReadWrite)
 	TObjectPtr<AStructure> Target;

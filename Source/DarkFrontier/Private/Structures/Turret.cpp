@@ -7,12 +7,23 @@
 #include "Structures/Structure.h"
 #include "Structures/TurretAbility.h"
 #include "Structures/TurretPayload.h"
+#include "Structures/TurretSource.h"
+
+void ATurret::BeginPlay()
+{
+	Super::BeginPlay();
+
+	GetComponents<UTurretSource>(Sources);
+}
 
 void ATurret::OnRegistered()
 {
 	Super::OnRegistered();
 
-	AbilityHandle = OwningStructure->GiveAbility(Ability);
+	if(GetAbilityClass() != nullptr)
+	{
+		AbilityHandle = OwningStructure->GiveAbility(GetAbilityClass());
+	}
 }
 
 void ATurret::OnUnRegistered()
@@ -26,46 +37,54 @@ void ATurret::OnUnRegistered()
 	}
 }
 
-int ATurret::TryActivate()
+TSubclassOf<UTurretAbility> ATurret::GetAbilityClass()
 {
-	int Activated = 0;
+	return nullptr;
+}
 
-	// Activate each source transform
-	for(USceneComponent* SourceTransform : SourceTransforms)
+bool ATurret::CanActivate()
+{
+	for(UTurretSource* SourceTransform : Sources)
 	{
 		if(CanActivateSource(SourceTransform))
 		{
-			ActivateSource(SourceTransform);
-			Activated++;
+			return true;
 		}
 	}
-
-	// Call event function with number of sources successfully activated
-	OnActivated(Activated);
-
-	return Activated;
+	return false;
 }
 
-void ATurret::OnActivated(int Activated)
+void ATurret::TryActivate()
 {
+	// Activate each source transform
+	for(UTurretSource* SourceTransform : Sources)
+	{
+		if(CanActivateSource(SourceTransform))
+		{
+			TryActivateSource(SourceTransform);
+		}
+	}
 }
 
-bool ATurret::CanActivateSource(USceneComponent* SourceTransform)
+bool ATurret::CanActivateSource(UTurretSource* Source)
 {
-	return IsValid(GetOwningStructure()->GetTarget());
+	const FGameplayAbilityActorInfo* ActorInfo = GetOwningStructure()->GetAbilitySystemComponent()->AbilityActorInfo.Get();
+	return IsValid(GetOwningStructure()->GetTarget()) && GetAbilityClass() != nullptr && GetAbilityClass()->GetDefaultObject<UTurretAbility>()->CanActivateAbility(AbilityHandle, ActorInfo);
 }
 
-void ATurret::ActivateSource(USceneComponent* SourceTransform)
+bool ATurret::TryActivateSource(UTurretSource* Source)
 {
 	if(GetOwningStructure()->GetAbilitySystemComponent()->TryActivateAbility(AbilityHandle))
 	{
 		UTurretPayload* Payload = NewObject<UTurretPayload>();
 		Payload->Instigator = GetOwningStructure();
 		Payload->Turret = this;
-		Payload->SourceTransform = SourceTransform;
+		Payload->Source = Source;
 		Payload->Target = GetOwningStructure()->GetTarget();
 		SendPayload(PayloadTag, Payload);
+		return true;
 	}
+	return false;
 }
 
 void ATurret::SendPayload(const FGameplayTag Tag, UObject* Obj) const

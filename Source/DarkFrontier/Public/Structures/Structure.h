@@ -8,6 +8,18 @@
 #include "GameFramework/Pawn.h"
 #include "Structure.generated.h"
 
+class UStructureAbilitySystemComponent;
+class UStructureAttributeSet;
+class USpringArmComponent;
+class UCameraComponent;
+class UGameplayEffect;
+class AStructurePart;
+class AFaction;
+class UStructureIndication;
+struct FStructureDamage;
+struct FActiveGameplayEffectHandle;
+struct FGameplayAbilitySpecHandle;
+
 DECLARE_MULTICAST_DELEGATE(FStructureStateChanged)
 
 UCLASS()
@@ -22,34 +34,28 @@ public:
 protected:
 
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category="Components")
-	TObjectPtr<class UStructureAbilitySystemComponent> AbilitySystemComponent;
+	TObjectPtr<UStructureAbilitySystemComponent> AbilitySystemComponent;
 	
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category="Components")
-	TObjectPtr<class UStructureAttributeSet> Attributes;
+	TObjectPtr<UStructureAttributeSet> Attributes;
 
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category="Components")
 	TObjectPtr<UStaticMeshComponent> StaticMesh;
 
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category="Components")
-	TObjectPtr<class UWidgetComponent> Indicator;
+	TObjectPtr<USpringArmComponent> SpringArm;
 
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category="Components")
-	TObjectPtr<class USpringArmComponent> SpringArm;
-
-	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category="Components")
-	TObjectPtr<class UCameraComponent> Camera;
+	TObjectPtr<UCameraComponent> Camera;
 
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category="Setup")
-	TSubclassOf<class UGameplayEffect> DefaultAttributes;
+	TSubclassOf<UGameplayEffect> DefaultAttributes;
 
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category="Setup")
 	TArray<TSubclassOf<UGameplayEffect>> PassiveEffectClasses;
 
-	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category="Setup")
-	TSubclassOf<class UStructureSelector> SelectorClass;
-
 	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly, Category="Layout")
-	TObjectPtr<class AStructurePart> RootPart;
+	TObjectPtr<AStructurePart> RootPart;
 
 	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly, Category="Layout")
 	TArray<TObjectPtr<AStructurePart>> Parts;
@@ -63,6 +69,9 @@ protected:
 	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly, Category="Gameplay")
 	bool IsGameplayInitialized = false;
 
+	UPROPERTY(BlueprintReadOnly, EditInstanceOnly, Category="Gameplay")
+	TArray<TObjectPtr<UStructureIndication>> Indications;
+
 	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly, Category="Input")
 	FVector MoveInput = FVector::ZeroVector;
 
@@ -70,7 +79,7 @@ protected:
 	FVector RotateInput = FVector::ZeroVector;
 
 	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category="Combat")
-	TObjectPtr<class AFaction> OwningFaction;
+	TObjectPtr<AFaction> OwningFaction;
 
 	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly, Category="Combat")
 	TObjectPtr<AStructure> Target;
@@ -83,8 +92,6 @@ protected:
 
 	virtual void PostInitializeComponents() override;
 
-	virtual void BeginPlay() override;
-	
 	virtual void Tick(float DeltaTime) override;
 	
 public:
@@ -167,10 +174,10 @@ public:
 	bool IsDetecting(AStructure* Other) const;
 
 	UFUNCTION(BlueprintCallable, Category="Gameplay")
-	void ApplyDamage(struct FStructureDamage Damage, AStructurePart* HitPart, FVector HitLocation);
+	void ApplyDamage(FStructureDamage Damage, AStructurePart* HitPart, FVector HitLocation);
 
 	UFUNCTION(BlueprintCallable, Category="Gameplay")
-	FStructureDamage ProcessDamage(struct FStructureDamage Damage);
+	FStructureDamage ProcessDamage(FStructureDamage Damage);
 
 	UFUNCTION(BlueprintCallable, Category="Gameplay")
 	FStructureDamage GetHullPostMitigationDamage(const FStructureDamage& PreMitigationDamage) const;
@@ -179,16 +186,19 @@ public:
 	FStructureDamage GetShieldPostMitigationDamage(const FStructureDamage& PreMitigationDamage) const;
 	
 	UFUNCTION(BlueprintCallable, Category="Gameplay")
-	struct FActiveGameplayEffectHandle ApplyEffect(TSubclassOf<class UGameplayEffect> EffectClass) const;
+	FActiveGameplayEffectHandle ApplyEffect(TSubclassOf<class UGameplayEffect> EffectClass) const;
 
 	UFUNCTION(BlueprintCallable, Category="Gameplay")
-	struct FGameplayAbilitySpecHandle GiveAbility(TSubclassOf<class UStructureAbility> AbilityClass) const;
+	FGameplayAbilitySpecHandle GiveAbility(TSubclassOf<class UStructureAbility> AbilityClass) const;
 
 	UFUNCTION(BlueprintCallable, Category="Gameplay")
 	void ClearAbility(FGameplayAbilitySpecHandle AbilityHandle) const;
 
 	UFUNCTION(BlueprintCallable, Category="Gameplay")
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
+
+	UFUNCTION(BlueprintCallable, Category="Gameplay")
+	TArray<UStructureIndication*> GetIndications();
 
 	UFUNCTION(BlueprintCallable, Category="Input")
 	void SetMoveInput(FVector InInput);

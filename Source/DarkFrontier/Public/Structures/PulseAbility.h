@@ -3,24 +3,27 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Structures/HitscanAbility.h"
+#include "TurretAbility.h"
 #include "PulseAbility.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class DARKFRONTIER_API UPulseAbility : public UHitscanAbility
+class DARKFRONTIER_API UPulseAbility : public UTurretAbility
 {
 	GENERATED_BODY()
 
 public:
 
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category="Gameplay")
+	TEnumAsByte<ECollisionChannel> TraceChannel = ECC_PhysicsBody;
+
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category="Gameplay")
 	FGameplayTag CueTag;
 
 protected:
 
-	virtual void OnHit(UHitscanResult* Result) override;
+	virtual void OnActivate(UTurretPayload* Payload) override;
 	
 };

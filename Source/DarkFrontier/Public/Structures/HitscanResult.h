@@ -22,6 +22,6 @@ public:
 	TObjectPtr<class AStructurePart> HitPart;
 
 	UPROPERTY(BlueprintReadWrite)
-	FHitResult Hit;
+	FHitResult HitResult;
 	
 };

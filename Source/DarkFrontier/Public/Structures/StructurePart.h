@@ -7,6 +7,8 @@
 #include "GameFramework/Actor.h"
 #include "StructurePart.generated.h"
 
+class UWidget;
+
 UCLASS()
 class DARKFRONTIER_API AStructurePart : public AActor
 {
@@ -115,7 +117,7 @@ public:
 	void DequeueCombatants();
 
 	UFUNCTION(BlueprintCallable, Category="UI")
-	virtual class UStructurePartIndicator* CreateIndicator();
+	virtual class UStructurePartIndicator* CreateIndicator(UWidget* WidgetOwner);
 
 	static TArray<const UStructureSlot*> GetSlots_CDO(TSubclassOf<AStructurePart> PartClass);
 
