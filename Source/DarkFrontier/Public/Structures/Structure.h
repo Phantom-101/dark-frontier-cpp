@@ -5,9 +5,11 @@
 #include "AbilitySystemInterface.h"
 #include "CoreMinimal.h"
 #include "GameplayTagContainer.h"
+#include "StructureTickLevel.h"
 #include "GameFramework/Pawn.h"
 #include "Structure.generated.h"
 
+class UInventory;
 class UStructureAbilitySystemComponent;
 class UStructureAttributeSet;
 class USpringArmComponent;
@@ -16,11 +18,14 @@ class UGameplayEffect;
 class AStructurePart;
 class AFaction;
 class UStructureIndication;
+class ASector;
+class UStructureDock;
 struct FStructureDamage;
 struct FActiveGameplayEffectHandle;
 struct FGameplayAbilitySpecHandle;
 
 DECLARE_MULTICAST_DELEGATE(FStructureStateChanged)
+DECLARE_MULTICAST_DELEGATE_OneParam(FStructureIndicationChanged, UStructureIndication*)
 
 UCLASS()
 class DARKFRONTIER_API AStructure : public APawn, public IAbilitySystemInterface
@@ -32,12 +37,6 @@ public:
 	AStructure();
 
 protected:
-
-	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category="Components")
-	TObjectPtr<UStructureAbilitySystemComponent> AbilitySystemComponent;
-	
-	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category="Components")
-	TObjectPtr<UStructureAttributeSet> Attributes;
 
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category="Components")
 	TObjectPtr<UStaticMeshComponent> StaticMesh;
@@ -60,6 +59,30 @@ protected:
 	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly, Category="Layout")
 	TArray<TObjectPtr<AStructurePart>> Parts;
 
+	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly, Category="Docking")
+	TObjectPtr<UStructureDock> Dock;
+
+	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly, Category="Sector")
+	EStructureTickLevel TickLevel = EStructureTickLevel::Invalid;
+
+	UPROPERTY(BlueprintReadOnly, EditInstanceOnly, Category="Sector")
+	TObjectPtr<ASector> CurrentSector;
+
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Instanced, Category="Inventory")
+	TObjectPtr<UInventory> Inventory;
+
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category="Combat")
+	TObjectPtr<AFaction> OwningFaction;
+
+	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly, Category="Combat")
+	TObjectPtr<AStructure> Target;
+
+	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category="Gameplay")
+	TObjectPtr<UStructureAbilitySystemComponent> AbilitySystemComponent;
+	
+	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category="Gameplay")
+	TObjectPtr<UStructureAttributeSet> Attributes;
+
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category="Gameplay")
 	FGameplayTag HullDamageCueTag;
 	
@@ -78,15 +101,13 @@ protected:
 	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly, Category="Input")
 	FVector RotateInput = FVector::ZeroVector;
 
-	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category="Combat")
-	TObjectPtr<AFaction> OwningFaction;
-
-	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly, Category="Combat")
-	TObjectPtr<AStructure> Target;
-
 public:
 
 	FStructureStateChanged OnLayoutChanged;
+
+	FStructureIndicationChanged OnIndicationAdded;
+
+	FStructureIndicationChanged OnIndicationRemoved;
 
 protected:
 
@@ -133,6 +154,42 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category="Layout")
 	void UpdateLayoutInformation();
+
+	UFUNCTION(BlueprintCallable, Category="Docking")
+	UStructureDock* GetDock();
+
+	UFUNCTION(BlueprintCallable, Category="Docking")
+	void DockAt(UStructureDock* InDock);
+
+	UFUNCTION(BlueprintCallable, Category="Docking")
+	void UnDock();
+	
+	UFUNCTION(BlueprintCallable, Category="Sector")
+	EStructureTickLevel GetTickLevel();
+
+	UFUNCTION(BlueprintCallable, Category="Sector")
+	bool SetTickLevel(EStructureTickLevel InLevel);
+
+	UFUNCTION(BlueprintCallable, Category="Sector")
+	void UpdateTickLevel();
+
+	UFUNCTION(BlueprintCallable, Category="Sector")
+	bool TryEnterSector(ASector* InSector);
+
+	UFUNCTION(BlueprintCallable, Category="Inventory")
+	UInventory* GetInventory() const;
+
+	UFUNCTION(BlueprintCallable, Category="Combat")
+	AFaction* GetOwningFaction() const;
+
+	UFUNCTION(BlueprintCallable, Category="Combat")
+	void SetOwningFaction(AFaction* InFaction);
+
+	UFUNCTION(BlueprintCallable, Category="Combat")
+	AStructure* GetTarget() const;
+
+	UFUNCTION(BlueprintCallable, Category="Combat")
+	void SetTarget(AStructure* InTarget);
 
 	UFUNCTION(BlueprintCallable, Category="Gameplay")
 	bool TryInitGameplay();
@@ -200,23 +257,17 @@ public:
 	UFUNCTION(BlueprintCallable, Category="Gameplay")
 	TArray<UStructureIndication*> GetIndications();
 
+	UFUNCTION(BlueprintCallable, Category="Gameplay")
+	UStructureIndication* AddIndication(TSubclassOf<UStructureIndication> IndicationClass);
+
+	UFUNCTION(BlueprintCallable, Category="Gameplay")
+	void RemoveIndication(UStructureIndication* Indication);
+
 	UFUNCTION(BlueprintCallable, Category="Input")
 	void SetMoveInput(FVector InInput);
 
 	UFUNCTION(BlueprintCallable, Category="Input")
 	void SetRotateInput(FVector InInput);
-	
-	UFUNCTION(BlueprintCallable, Category="Combat")
-	AFaction* GetOwningFaction() const;
-
-	UFUNCTION(BlueprintCallable, Category="Combat")
-	void SetOwningFaction(AFaction* InFaction);
-
-	UFUNCTION(BlueprintCallable, Category="Combat")
-	AStructure* GetTarget() const;
-
-	UFUNCTION(BlueprintCallable, Category="Combat")
-	void SetTarget(AStructure* InTarget);
 	
 	UFUNCTION(BlueprintCallable, Category="Camera")
 	USpringArmComponent* GetCameraSpringArm() const;

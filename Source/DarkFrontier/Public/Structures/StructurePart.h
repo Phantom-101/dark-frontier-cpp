@@ -7,6 +7,10 @@
 #include "GameFramework/Actor.h"
 #include "StructurePart.generated.h"
 
+class UStructureSlot;
+class UStructureDock;
+class UStructureFacility;
+class AFaction;
 class UWidget;
 
 UCLASS()
@@ -30,7 +34,7 @@ protected:
 	TObjectPtr<class AStructure> OwningStructure;
 
 	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly, Category="Layout")
-	TArray<TObjectPtr<class UStructureSlot>> Slots;
+	TArray<TObjectPtr<UStructureSlot>> Slots;
 
 	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly, Category="Layout")
 	FString PartId;
@@ -38,14 +42,11 @@ protected:
 	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly, Category="Layout")
 	int32 RootDistance = -1;
 
-	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly, Category="Gameplay")
-	TObjectPtr<class AFaction> OwningFaction;
+	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly, Category="Docking")
+	TArray<TObjectPtr<UStructureDock>> Docks;
 
-	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category="Gameplay")
-	TArray<TObjectPtr<class UCombatant>> Combatants;
-
-	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category="Gameplay")
-	TArray<TObjectPtr<UCombatant>> QueuedCombatants;
+	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly, Category="Inventory")
+	TArray<TObjectPtr<UStructureFacility>> Facilities;
 
 	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly, Category="Gameplay")
 	FActiveGameplayEffectHandle PassiveEffectHandle;
@@ -110,14 +111,8 @@ public:
 	UFUNCTION(BlueprintCallable, Category="Gameplay")
 	void ApplyDamage(struct FStructureDamage Damage, FVector HitLocation);
 
-	UFUNCTION(BlueprintCallable, Category="Gameplay")
-	void TickCombatants();
-
-	UFUNCTION(BlueprintCallable, Category="Gameplay")
-	void DequeueCombatants();
-
 	UFUNCTION(BlueprintCallable, Category="UI")
-	virtual class UStructurePartIndicator* CreateIndicator(UWidget* WidgetOwner);
+	virtual class UStructurePartControl* CreateControl(UWidget* WidgetOwner);
 
 	static TArray<const UStructureSlot*> GetSlots_CDO(TSubclassOf<AStructurePart> PartClass);
 

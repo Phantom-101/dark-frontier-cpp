@@ -14,15 +14,15 @@ void UStructureAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModC
 
 	if(Data.EvaluatedData.Attribute == GetHullAttribute())
 	{
-		Hull.SetBaseValue(FMath::Clamp(Hull.GetBaseValue(), 0, GetMaxHull()));
+		SetHull(FMath::Clamp(GetHull(), 0, GetMaxHull()));
 	}
 	else if (Data.EvaluatedData.Attribute == GetShieldAttribute())
 	{
-		Shield.SetBaseValue(FMath::Clamp(Shield.GetBaseValue(), 0, GetMaxShield()));
+		SetShield(FMath::Clamp(GetShield(), 0, GetMaxShield()));
 	}
 	else if (Data.EvaluatedData.Attribute == GetEnergyAttribute())
 	{
-		Energy.SetBaseValue(FMath::Clamp(Energy.GetBaseValue(), 0, GetMaxEnergy()));
+		SetEnergy(FMath::Clamp(GetEnergy(), 0, GetMaxEnergy()));
 	}
 }
 

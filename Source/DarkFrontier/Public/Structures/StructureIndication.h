@@ -5,8 +5,9 @@
 #include "CoreMinimal.h"
 #include "StructureIndication.generated.h"
 
+class UStructureIndicatorGroup;
 class UStructureIndicator;
-class UWidget;
+class AStructure;
 
 /**
  * 
@@ -16,8 +17,25 @@ class DARKFRONTIER_API UStructureIndication : public UObject
 {
 	GENERATED_BODY()
 
+protected:
+
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly)
+	TSubclassOf<UStructureIndicatorGroup> IndicatorGroupClass;
+
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly)
+	TSubclassOf<UStructureIndicator> IndicatorClass;
+
+	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly)
+	TObjectPtr<AStructure> Structure;
+
 public:
 
-	virtual UStructureIndicator* CreateIndicator(UWidget* Owner);
+	TSubclassOf<UStructureIndicatorGroup> GetIndicatorGroupClass() const;
+	
+	TSubclassOf<UStructureIndicator> GetIndicatorClass() const;
+
+	bool TryInit(AStructure* InStructure);
+
+	AStructure* GetStructure() const;
 	
 };

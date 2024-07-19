@@ -7,7 +7,7 @@
 #include "PulseTurret.generated.h"
 
 class UPulseAbility;
-class UPulseTurretIndicator;
+class UPulseTurretControl;
 
 UCLASS()
 class DARKFRONTIER_API APulseTurret : public ATurret
@@ -20,7 +20,7 @@ protected:
 	TSubclassOf<UPulseAbility> AbilityClass;
 
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly)
-	TSubclassOf<UPulseTurretIndicator> IndicatorClass;
+	TSubclassOf<UPulseTurretControl> ControlClass;
 
 public:
 
@@ -28,6 +28,6 @@ public:
 
 	virtual TSubclassOf<UTurretAbility> GetAbilityClass() override;
 
-	virtual UStructurePartIndicator* CreateIndicator(UWidget* WidgetOwner) override;
+	virtual UStructurePartControl* CreateControl(UWidget* WidgetOwner) override;
 
 };

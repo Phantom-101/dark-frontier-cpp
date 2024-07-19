@@ -6,8 +6,7 @@
 #include "Components/CanvasPanelSlot.h"
 #include "Components/Overlay.h"
 #include "Structures/Structure.h"
-#include "Structures/StructureIndication.h"
-#include "UI/Screens/GameUI/StructureIndicator.h"
+#include "UI/Screens/GameUI/StructureIndicators.h"
 
 void UStructureSelector::NativeConstruct()
 {
@@ -48,35 +47,32 @@ void UStructureSelector::NativeTick(const FGeometry& MyGeometry, float InDeltaTi
 			SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 		}
 	}
+}
 
-	// Create indicators
-	TArray<UStructureIndication*> Existing;
-	TArray<UWidget*> ToRemove;
-	for(UWidget* Widget : IndicatorOverlay->GetAllChildren())
+bool UStructureSelector::TryInit(AStructure* InTarget)
+{
+	if(Target != nullptr)
 	{
-		const UStructureIndicator* Indicator = Cast<UStructureIndicator>(Widget);
-		if(IsValid(Indicator) && IsValid(Indicator->GetIndication()))
-		{
-			Existing.Add(Indicator->GetIndication());
-		}
-		else
-		{
-			ToRemove.Add(Widget);
-		}
+		return false;
 	}
 
-	for(UWidget* Widget : ToRemove)
-	{
-		IndicatorOverlay->RemoveChild(Widget);
-	}
+	Target = InTarget;
 
+	// Manually sync indications as existing indications are not broadcast to new selector
 	for(UStructureIndication* Indication : Target->GetIndications())
 	{
-		if(!Existing.Contains(Indication))
-		{
-			IndicatorOverlay->AddChildToOverlay(Indication->CreateIndicator(this));
-		}
+		Indicators->AddIndicator(Indication);
 	}
+
+	Target->OnIndicationAdded.AddUObject<UStructureSelector>(this, &UStructureSelector::OnIndicationAdded);
+	Target->OnIndicationRemoved.AddUObject<UStructureSelector>(this, &UStructureSelector::OnIndicationRemoved);
+
+	return true;
+}
+
+AStructure* UStructureSelector::GetTarget() const
+{
+	return Target;
 }
 
 void UStructureSelector::OnClicked() const
@@ -86,4 +82,14 @@ void UStructureSelector::OnClicked() const
 	{
 		Player->SetTarget(Target);
 	}
+}
+
+void UStructureSelector::OnIndicationAdded(UStructureIndication* Indication) const
+{
+	Indicators->AddIndicator(Indication);
+}
+
+void UStructureSelector::OnIndicationRemoved(UStructureIndication* Indication) const
+{
+	Indicators->RemoveIndicator(Indication);
 }

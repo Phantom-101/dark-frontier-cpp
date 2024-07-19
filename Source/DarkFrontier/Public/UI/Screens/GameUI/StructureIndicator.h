@@ -16,8 +16,15 @@ class DARKFRONTIER_API UStructureIndicator : public UCommonUserWidget
 {
 	GENERATED_BODY()
 
+protected:
+
+	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly)
+	TObjectPtr<UStructureIndication> Indication;
+
 public:
 
-	virtual UStructureIndication* GetIndication() const;
+	bool TryInit(UStructureIndication* InIndication);
+
+	UStructureIndication* GetIndication() const;
 	
 };

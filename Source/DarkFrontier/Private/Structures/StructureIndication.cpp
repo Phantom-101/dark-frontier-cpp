@@ -2,7 +2,28 @@
 
 #include "Structures/StructureIndication.h"
 
-UStructureIndicator* UStructureIndication::CreateIndicator(UWidget* Owner)
+TSubclassOf<UStructureIndicatorGroup> UStructureIndication::GetIndicatorGroupClass() const
 {
-	return nullptr;
+	return IndicatorGroupClass;
+}
+
+TSubclassOf<UStructureIndicator> UStructureIndication::GetIndicatorClass() const
+{
+	return IndicatorClass;
+}
+
+bool UStructureIndication::TryInit(AStructure* InStructure)
+{
+	if(Structure != nullptr)
+	{
+		return false;
+	}
+
+	Structure = InStructure;
+	return true;
+}
+
+AStructure* UStructureIndication::GetStructure() const
+{
+	return Structure;
 }

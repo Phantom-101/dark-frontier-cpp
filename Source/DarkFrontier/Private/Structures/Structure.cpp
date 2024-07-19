@@ -4,10 +4,14 @@
 #include "Log.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "Items/Inventory.h"
+#include "Sectors/Sector.h"
 #include "Structures/StructureAbilitySystemComponent.h"
 #include "Structures/StructureAttributeSet.h"
 #include "Structures/StructureDamage.h"
 #include "Structures/StructureAbility.h"
+#include "Structures/StructureDock.h"
+#include "Structures/StructureIndication.h"
 #include "Structures/StructureLayout.h"
 #include "Structures/StructurePart.h"
 #include "Structures/StructureSlot.h"
@@ -24,6 +28,8 @@ AStructure::AStructure()
 	
 	Camera = CreateDefaultSubobject<UCameraComponent>("Camera");
 	Camera->SetupAttachment(SpringArm);
+
+	Inventory = CreateDefaultSubobject<UInventory>("Inventory");
 
 	AbilitySystemComponent = CreateDefaultSubobject<UStructureAbilitySystemComponent>("AbilitySystemComp");
 	AbilitySystemComponent->SetIsReplicated(true);
@@ -45,8 +51,9 @@ void AStructure::Tick(float DeltaTime)
 
 	if(!IsValid(RootPart)) return;
 
-	// Apply thrusts
-	if(GetActorEnableCollision())
+	UpdateTickLevel();
+
+	if(TickLevel == EStructureTickLevel::Full)
 	{
 		const float LinearMaxSpeed = Attributes->GetLinearMaxSpeed();
 		const float LinearAccel = Attributes->GetLinearAcceleration();
@@ -55,6 +62,15 @@ void AStructure::Tick(float DeltaTime)
 		const float AngularMaxSpeed = Attributes->GetAngularMaxSpeed();
 		const float AngularAccel = Attributes->GetAngularAcceleration();
 		StaticMesh->AddAngularImpulseInDegrees(CalculateImpulse(StaticMesh->GetPhysicsAngularVelocityInDegrees(), RotateInput, AngularMaxSpeed, AngularAccel, DeltaTime), NAME_None, true);
+	}
+	else if(TickLevel == EStructureTickLevel::Limited)
+	{
+		const FVector ScaledMoveInput = MoveInput * Attributes->GetLinearMaxSpeed();
+		SetActorLocation(GetActorLocation() + ScaledMoveInput);
+
+		const FVector ScaledRotateInput = RotateInput * Attributes->GetAngularMaxSpeed();
+		const FRotator Rotation = FRotator(ScaledRotateInput.X, ScaledRotateInput.Z, ScaledRotateInput.Y);
+		SetActorRotation(GetActorRotation() + Rotation);
 	}
 }
 
@@ -71,15 +87,20 @@ bool AStructure::TryInit(AStructurePart* NewRoot, const bool RegisterOnly)
 	if(RootPart) return false;
 	if(NewRoot->GetOwningStructure()) return false;
 
-	// Ensure ability system component is ensured as part will apply passive effects once registered
+	// Ensure ability system component is initialized as part will apply passive effects once registered
 	TryInitGameplay();
-	
-	NewRoot->TryInit(this, RegisterOnly);
-	RootPart = NewRoot;
-	RootPart->SetActorRelativeLocation(FVector::ZeroVector);
-	RootPart->SetActorRelativeRotation(FRotator::ZeroRotator);
 
-	return true;
+	if(NewRoot->TryInit(this, RegisterOnly))
+	{
+		RootPart = NewRoot;
+		RootPart->SetActorRelativeLocation(FVector::ZeroVector);
+		RootPart->SetActorRelativeRotation(FRotator::ZeroRotator);
+
+		TryEnterSector(CurrentSector);
+		
+		return true;
+	}
+	return false;
 }
 
 bool AStructure::TryDestroy()
@@ -120,6 +141,9 @@ AStructurePart* AStructure::GetPart(const FString InId)
 
 void AStructure::RegisterPart(AStructurePart* InPart, const bool SuppressEvent, const bool KeepId)
 {
+	// Keep default id, such as when loading from layout
+	// Part id may be set to desired value after registration is complete
+	// Initializing id now will block that later step
 	if(!KeepId)
 	{
 		InPart->TryInitPartId(FGuid::NewGuid().ToString());
@@ -158,6 +182,7 @@ bool AStructure::IsLayoutSelfIntersecting()
 		{
 			if(Parts[i]->IsOverlappingActor(Parts[j]))
 			{
+				UE_LOG(LogDarkFrontier, Warning, TEXT("Self intersecting layout"))
 				return true;
 			}
 		}
@@ -167,7 +192,12 @@ bool AStructure::IsLayoutSelfIntersecting()
 
 bool AStructure::IsLayoutUpkeepOverloaded() const
 {
-	return GetUpkeep() > Attributes->GetMaxUpkeep();
+	const bool IsOverloaded = GetUpkeep() > Attributes->GetMaxUpkeep();
+	if(IsOverloaded)
+	{
+		UE_LOG(LogDarkFrontier, Warning, TEXT("Upkeep overloaded"))
+	}
+	return IsOverloaded;
 }
 
 bool AStructure::LoadLayout(FStructureLayout InLayout)
@@ -317,6 +347,113 @@ void AStructure::UpdateLayoutInformation()
 	RootPart->UpdateRootDistance(0);
 
 	OnLayoutChanged.Broadcast();
+}
+
+UStructureDock* AStructure::GetDock()
+{
+	return Dock;
+}
+
+void AStructure::DockAt(UStructureDock* InDock)
+{
+	Dock = InDock;
+
+	AttachToActor(Dock->GetOwner(), FAttachmentTransformRules(EAttachmentRule::KeepWorld, true));
+}
+
+void AStructure::UnDock()
+{
+	DetachFromActor(FDetachmentTransformRules(EDetachmentRule::KeepWorld, false));
+	
+	Dock = nullptr;
+}
+
+EStructureTickLevel AStructure::GetTickLevel()
+{
+	return TickLevel;
+}
+
+bool AStructure::SetTickLevel(EStructureTickLevel InLevel)
+{
+	if(TickLevel == InLevel) return false;
+
+	TickLevel = InLevel;
+
+	// Set visibility and collision
+	if(TickLevel == EStructureTickLevel::Full)
+	{
+		SetActorHiddenInGame(false);
+		SetActorEnableCollision(true);
+	}
+	else
+	{
+		SetActorHiddenInGame(true);
+		SetActorEnableCollision(false);
+	}
+
+	return true;
+}
+
+void AStructure::UpdateTickLevel()
+{
+	const AStructure* Player = Cast<AStructure>(GetWorld()->GetFirstPlayerController()->GetPawn());
+	if(IsValid(Player))
+	{
+		if(CurrentSector == Player->CurrentSector)
+		{
+			SetTickLevel(EStructureTickLevel::Full);
+		}
+		else
+		{
+			SetTickLevel(EStructureTickLevel::Limited);
+		}
+	}
+	else
+	{
+		SetTickLevel(EStructureTickLevel::None);
+	}
+}
+
+bool AStructure::TryEnterSector(ASector* InSector)
+{
+	if(!IsValid(InSector) || CurrentSector == InSector) return false;
+
+	if(IsValid(CurrentSector))
+	{
+		CurrentSector->UnregisterStructure(this);
+	}
+
+	CurrentSector = InSector;
+	CurrentSector->RegisterStructure(this);
+
+	UpdateTickLevel();
+	
+	return true;
+}
+
+UInventory* AStructure::GetInventory() const
+{
+	return Inventory;
+}
+
+AFaction* AStructure::GetOwningFaction() const
+{
+	return OwningFaction;
+}
+
+void AStructure::SetOwningFaction(AFaction* InFaction)
+{
+	OwningFaction = InFaction;
+}
+
+AStructure* AStructure::GetTarget() const
+{
+	return Target;
+}
+
+void AStructure::SetTarget(AStructure* InTarget)
+{
+	Target = InTarget;
 }
 
 bool AStructure::TryInitGameplay()
@@ -501,6 +638,26 @@ TArray<UStructureIndication*> AStructure::GetIndications()
 	return Indications;
 }
 
+UStructureIndication* AStructure::AddIndication(TSubclassOf<UStructureIndication> IndicationClass)
+{
+	UStructureIndication* Indication = NewObject<UStructureIndication>(this, IndicationClass);
+	Indication->TryInit(this);
+	
+	Indications.Add(Indication);
+	OnIndicationAdded.Broadcast(Indication);
+	
+	return Indication;
+}
+
+void AStructure::RemoveIndication(UStructureIndication* Indication)
+{
+	if(Indications.Contains(Indication))
+	{
+		Indications.Remove(Indication);
+		OnIndicationRemoved.Broadcast(Indication);
+	}
+}
+
 void AStructure::SetMoveInput(const FVector InInput)
 {
 	MoveInput = InInput.GetClampedToMaxSize(1);
@@ -509,26 +666,6 @@ void AStructure::SetMoveInput(const FVector InInput)
 void AStructure::SetRotateInput(const FVector InInput)
 {
 	RotateInput = InInput.GetClampedToMaxSize(1);
-}
-
-AFaction* AStructure::GetOwningFaction() const
-{
-	return OwningFaction;
-}
-
-void AStructure::SetOwningFaction(AFaction* InFaction)
-{
-	OwningFaction = InFaction;
-}
-
-AStructure* AStructure::GetTarget() const
-{
-	return Target;
-}
-
-void AStructure::SetTarget(AStructure* InTarget)
-{
-	Target = InTarget;
 }
 
 USpringArmComponent* AStructure::GetCameraSpringArm() const

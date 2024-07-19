@@ -3,14 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "UI/Screens/GameUI/ProgressIndicator.h"
+#include "UI/Screens/GameUI/StructureIndicator.h"
 #include "HitscanIndicator.generated.h"
 
 /**
  * 
  */
-UCLASS()
-class DARKFRONTIER_API UHitscanIndicator : public UProgressIndicator
+UCLASS(Abstract)
+class DARKFRONTIER_API UHitscanIndicator : public UStructureIndicator
 {
 	GENERATED_BODY()
 

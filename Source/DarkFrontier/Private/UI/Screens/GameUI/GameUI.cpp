@@ -15,8 +15,8 @@
 #include "Structures/StructurePart.h"
 #include "UI/Widgets/CustomGameplayEffectUIData.h"
 #include "UI/Widgets/GameplayEffectIndicatorObject.h"
-#include "UI/Screens/GameUI/StructurePartIndicator.h"
-#include "UI/Screens/GameUI/StructureSelectionLayer.h"
+#include "UI/Screens/GameUI/StructurePartControl.h"
+#include "UI/Screens/GameUI/StructureSelectors.h"
 #include "UI/Widgets/Arc.h"
 
 TOptional<FUIInputConfig> UGameUI::GetDesiredInputConfig() const
@@ -81,29 +81,29 @@ void UGameUI::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 		}
 	}
 
-	SelectionLayer->UpdateSelectors();
+	Selectors->UpdateSelectors();
 
 	if(AStructure* PlayerStructure = Cast<AStructure>(GetOwningPlayerPawn()))
 	{
 		TArray<AStructurePart*> Existing;
-		for(UWidget* Widget : PartIndicators->GetAllChildren())
+		for(UWidget* Widget : PartControls->GetAllChildren())
 		{
-			UStructurePartIndicator* Indicator = Cast<UStructurePartIndicator>(Widget);
-			if(IsValid(Indicator))
+			UStructurePartControl* Control = Cast<UStructurePartControl>(Widget);
+			if(IsValid(Control))
 			{
-				if(IsValid(Indicator->GetPart()))
+				if(IsValid(Control->GetPart()))
 				{
-					Existing.Add(Indicator->GetPart());
+					Existing.Add(Control->GetPart());
 				}
 				else
 				{
-					PartIndicators->RemoveChild(Indicator);
+					PartControls->RemoveChild(Control);
 				}
 			}
 			else
 			{
-				UE_LOG(LogDarkFrontier, Warning, TEXT("Non indicator widget of type %s found in indicators list, removing"), *Widget->GetClass()->GetDisplayNameText().ToString())
-				PartIndicators->RemoveChild(Widget);
+				UE_LOG(LogDarkFrontier, Warning, TEXT("Unknown widget of type %s found in controls list, removing"), *Widget->GetClass()->GetDisplayNameText().ToString())
+				PartControls->RemoveChild(Widget);
 			}
 		}
 
@@ -111,10 +111,10 @@ void UGameUI::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 		{
 			if(!Existing.Contains(Part))
 			{
-				UStructurePartIndicator* Indicator = Part->CreateIndicator(PartIndicators);
-				if(Indicator != nullptr)
+				UStructurePartControl* Control = Part->CreateControl(PartControls);
+				if(Control != nullptr)
 				{
-					PartIndicators->AddChild(Indicator);
+					PartControls->AddChild(Control);
 				}
 			}
 		}

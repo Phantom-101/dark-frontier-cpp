@@ -26,12 +26,9 @@ public:
 	FText Description;
 
 	UPROPERTY(BlueprintReadOnly, EditAnywhere)
-	double Volume = 0;
+	float Volume = 0;
 
 	UPROPERTY(BlueprintReadOnly, EditAnywhere)
-	double Mass = 0;
-
-	UPROPERTY(BlueprintReadOnly, EditAnywhere)
-	double Value = 0;
+	float Mass = 0;
 	
 };

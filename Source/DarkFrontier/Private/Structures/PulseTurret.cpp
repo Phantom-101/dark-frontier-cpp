@@ -3,7 +3,7 @@
 #include "Structures/PulseTurret.h"
 #include "Blueprint/UserWidget.h"
 #include "Structures/PulseAbility.h"
-#include "UI/Screens/GameUI/PulseTurretIndicator.h"
+#include "UI/Screens/GameUI/PulseTurretControl.h"
 
 APulseTurret::APulseTurret()
 {
@@ -15,9 +15,9 @@ TSubclassOf<UTurretAbility> APulseTurret::GetAbilityClass()
 	return AbilityClass;
 }
 
-UStructurePartIndicator* APulseTurret::CreateIndicator(UWidget* WidgetOwner)
+UStructurePartControl* APulseTurret::CreateControl(UWidget* WidgetOwner)
 {
-	UPulseTurretIndicator* Indicator = CreateWidget<UPulseTurretIndicator>(WidgetOwner, IndicatorClass);
-	Indicator->Turret = this;
-	return Indicator;
+	UPulseTurretControl* Control = CreateWidget<UPulseTurretControl>(WidgetOwner, ControlClass);
+	Control->Turret = this;
+	return Control;
 }

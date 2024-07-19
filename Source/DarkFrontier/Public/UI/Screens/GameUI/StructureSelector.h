@@ -6,6 +6,8 @@
 #include "CommonUserWidget.h"
 #include "StructureSelector.generated.h"
 
+class UStructureIndication;
+
 /**
  * 
  */
@@ -14,25 +16,33 @@ class DARKFRONTIER_API UStructureSelector : public UCommonUserWidget
 {
 	GENERATED_BODY()
 
-public:
+protected:
 
 	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
 	TObjectPtr<class UCommonButtonBase> SelectorButton;
 
 	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
-	TObjectPtr<class UOverlay> IndicatorOverlay;
+	TObjectPtr<class UStructureIndicators> Indicators;
 
 	UPROPERTY(BlueprintReadWrite, EditInstanceOnly)
 	TObjectPtr<class AStructure> Target;
 	
-protected:
-
 	virtual void NativeConstruct() override;
 
 	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
 
+public:
+
+	bool TryInit(AStructure* InTarget);
+
+	AStructure* GetTarget() const;
+
 private:
 
 	void OnClicked() const;
+
+	void OnIndicationAdded(UStructureIndication* Indication) const;
+
+	void OnIndicationRemoved(UStructureIndication* Indication) const;
 	
 };
