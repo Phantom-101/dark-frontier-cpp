@@ -20,6 +20,7 @@ class AFaction;
 class UStructureIndication;
 class ASector;
 class UStructureDock;
+class UHullIndication;
 struct FStructureDamage;
 struct FActiveGameplayEffectHandle;
 struct FGameplayAbilitySpecHandle;
@@ -89,11 +90,11 @@ protected:
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category="Gameplay")
 	FGameplayTag ShieldDamageCueTag;
 
-	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly, Category="Gameplay")
-	bool IsGameplayInitialized = false;
-
 	UPROPERTY(BlueprintReadOnly, EditInstanceOnly, Category="Gameplay")
 	TArray<TObjectPtr<UStructureIndication>> Indications;
+
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category="Gameplay")
+	TSubclassOf<UHullIndication> HullIndicationClass;
 
 	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly, Category="Input")
 	FVector MoveInput = FVector::ZeroVector;
@@ -112,6 +113,8 @@ public:
 protected:
 
 	virtual void PostInitializeComponents() override;
+
+	virtual void BeginPlay() override;
 
 	virtual void Tick(float DeltaTime) override;
 	
@@ -192,7 +195,7 @@ public:
 	void SetTarget(AStructure* InTarget);
 
 	UFUNCTION(BlueprintCallable, Category="Gameplay")
-	bool TryInitGameplay();
+	void InitGameplay();
 	
 	UFUNCTION(BlueprintCallable, Category="Gameplay")
 	float GetMaxHull() const;

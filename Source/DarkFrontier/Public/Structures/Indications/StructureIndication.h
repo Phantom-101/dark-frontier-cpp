@@ -17,7 +17,7 @@ class DARKFRONTIER_API UStructureIndication : public UObject
 {
 	GENERATED_BODY()
 
-protected:
+public:
 
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly)
 	TSubclassOf<UStructureIndicatorGroup> IndicatorGroupClass;
@@ -25,14 +25,12 @@ protected:
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly)
 	TSubclassOf<UStructureIndicator> IndicatorClass;
 
+protected:
+
 	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly)
 	TObjectPtr<AStructure> Structure;
 
 public:
-
-	TSubclassOf<UStructureIndicatorGroup> GetIndicatorGroupClass() const;
-	
-	TSubclassOf<UStructureIndicator> GetIndicatorClass() const;
 
 	bool TryInit(AStructure* InStructure);
 

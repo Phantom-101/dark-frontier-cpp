@@ -3,13 +3,13 @@
 #include "Structures/PulseAbility.h"
 #include "Abilities/Tasks/AbilityTask_WaitDelay.h"
 #include "Gameplay/Tasks/HitscanTask.h"
-#include "Structures/HitscanIndication.h"
 #include "Structures/HitscanResult.h"
 #include "Structures/Structure.h"
 #include "Structures/StructureAbilitySystemComponent.h"
 #include "Structures/StructurePart.h"
 #include "Structures/TurretPayload.h"
 #include "Structures/TurretSource.h"
+#include "Structures/Indications/TimerIndication.h"
 
 void UPulseAbility::OnActivate(UTurretPayload* Payload)
 {
@@ -33,9 +33,8 @@ void UPulseAbility::OnActivate(UTurretPayload* Payload)
 
 	if(CommitAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo))
 	{
-		UHitscanIndication* Indication = Cast<UHitscanIndication>(Payload->Instigator->AddIndication(IndicationClass));
-		Indication->MaxTime = Delay;
-		Indication->CurrentTime = Delay;
+		UTimerIndication* Indication = Cast<UTimerIndication>(Payload->Instigator->AddIndication(IndicationClass));
+		Indication->Init(Delay);
 
 		CurrentPayload = Payload;
 		CurrentTask = HitscanTask;

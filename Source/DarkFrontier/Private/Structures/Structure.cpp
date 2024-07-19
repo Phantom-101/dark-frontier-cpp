@@ -11,10 +11,11 @@
 #include "Structures/StructureDamage.h"
 #include "Structures/StructureAbility.h"
 #include "Structures/StructureDock.h"
-#include "Structures/StructureIndication.h"
 #include "Structures/StructureLayout.h"
 #include "Structures/StructurePart.h"
 #include "Structures/StructureSlot.h"
+#include "Structures/Indications/HullIndication.h"
+#include "Structures/Indications/StructureIndication.h"
 
 AStructure::AStructure()
 {
@@ -40,9 +41,25 @@ AStructure::AStructure()
 
 void AStructure::PostInitializeComponents()
 {
-	TryInitGameplay();
+	InitGameplay();
 	
 	Super::PostInitializeComponents();
+}
+
+void AStructure::BeginPlay()
+{
+	Super::BeginPlay();
+
+	InitGameplay();
+
+	(void)ApplyEffect(DefaultAttributes);
+		
+	for(const TSubclassOf<UGameplayEffect> PassiveEffectClass : PassiveEffectClasses)
+	{
+		(void)ApplyEffect(PassiveEffectClass);
+	}
+
+	AddIndication(HullIndicationClass);
 }
 
 void AStructure::Tick(float DeltaTime)
@@ -88,7 +105,7 @@ bool AStructure::TryInit(AStructurePart* NewRoot, const bool RegisterOnly)
 	if(NewRoot->GetOwningStructure()) return false;
 
 	// Ensure ability system component is initialized as part will apply passive effects once registered
-	TryInitGameplay();
+	InitGameplay();
 
 	if(NewRoot->TryInit(this, RegisterOnly))
 	{
@@ -456,23 +473,9 @@ void AStructure::SetTarget(AStructure* InTarget)
 	Target = InTarget;
 }
 
-bool AStructure::TryInitGameplay()
+void AStructure::InitGameplay()
 {
-	if(!IsGameplayInitialized)
-	{
-		AbilitySystemComponent->InitAbilityActorInfo(this, this);
-		
-		(void)ApplyEffect(DefaultAttributes);
-		
-		for(const TSubclassOf<UGameplayEffect> PassiveEffectClass : PassiveEffectClasses)
-		{
-			(void)ApplyEffect(PassiveEffectClass);
-		}
-
-		IsGameplayInitialized = true;
-		return true;
-	}
-	return false;
+	AbilitySystemComponent->InitAbilityActorInfo(this, this);
 }
 
 float AStructure::GetMaxHull() const

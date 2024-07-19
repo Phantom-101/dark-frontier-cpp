@@ -6,7 +6,7 @@
 #include "TurretAbility.h"
 #include "PulseAbility.generated.h"
 
-class UHitscanIndication;
+class UTimerIndication;
 class UHitscanTask;
 
 /**
@@ -26,7 +26,7 @@ protected:
 	float Delay = 3;
 
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category="Gameplay")
-	TSubclassOf<UHitscanIndication> IndicationClass;
+	TSubclassOf<UTimerIndication> IndicationClass;
 
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category="Gameplay")
 	FGameplayTag CueTag;
