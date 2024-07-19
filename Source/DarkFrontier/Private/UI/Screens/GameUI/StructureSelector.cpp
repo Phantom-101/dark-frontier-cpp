@@ -6,7 +6,7 @@
 #include "Components/CanvasPanelSlot.h"
 #include "Components/Overlay.h"
 #include "Structures/Structure.h"
-#include "UI/Screens/GameUI/StructureIndicators.h"
+#include "UI/Screens/GameUI/Indicators/StructureIndicators.h"
 
 void UStructureSelector::NativeConstruct()
 {

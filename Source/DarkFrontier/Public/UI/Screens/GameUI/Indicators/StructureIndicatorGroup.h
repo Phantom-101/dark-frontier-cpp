@@ -20,7 +20,7 @@ class DARKFRONTIER_API UStructureIndicatorGroup : public UCommonUserWidget
 protected:
 
 	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
-	TObjectPtr<class UPanelWidget> PanelWidget;
+	TObjectPtr<UPanelWidget> PanelWidget;
 
 public:
 

@@ -3,27 +3,25 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "UI/Screens/GameUI/StructureIndicator.h"
-#include "HitscanIndicator.generated.h"
+#include "StructureIndicator.h"
+#include "HullIndicator.generated.h"
 
 /**
  * 
  */
 UCLASS(Abstract)
-class DARKFRONTIER_API UHitscanIndicator : public UStructureIndicator
+class DARKFRONTIER_API UHullIndicator : public UStructureIndicator
 {
 	GENERATED_BODY()
 
 protected:
 
 	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
-	TObjectPtr<class USizeBox> SizeBox;
+	TObjectPtr<class UImage> Icon;
 
 	UPROPERTY(BlueprintReadOnly, EditAnywhere)
-	float MaxSize = 100;
-
-	virtual void NativePreConstruct() override;
-
+	TObjectPtr<UCurveLinearColor> ColorCurve;
+	
 	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
 	
 };

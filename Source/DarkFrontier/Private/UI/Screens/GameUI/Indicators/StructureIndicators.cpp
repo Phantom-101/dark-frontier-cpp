@@ -1,9 +1,9 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-#include "UI/Screens/GameUI/StructureIndicators.h"
+#include "UI/Screens/GameUI/Indicators/StructureIndicators.h"
 #include "Components/CanvasPanel.h"
-#include "Structures/StructureIndication.h"
-#include "UI/Screens/GameUI/StructureIndicatorGroup.h"
+#include "Structures/Indications/StructureIndication.h"
+#include "UI/Screens/GameUI/Indicators/StructureIndicatorGroup.h"
 
 void UStructureIndicators::AddIndicator(UStructureIndication* Indication)
 {
@@ -29,7 +29,7 @@ UStructureIndicatorGroup* UStructureIndicators::GetIndicatorGroup(UStructureIndi
 {
 	for(UWidget* Widget : IndicatorCanvas->GetAllChildren())
 	{
-		if(Widget->GetClass() == Indication->GetIndicatorGroupClass())
+		if(Widget->GetClass() == Indication->IndicatorGroupClass)
 		{
 			return Cast<UStructureIndicatorGroup>(Widget);
 		}

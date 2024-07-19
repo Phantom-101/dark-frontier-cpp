@@ -1,8 +1,8 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-#include "UI/Screens/GameUI/HitscanIndicator.h"
+#include "UI/Screens/GameUI/Indicators/HitscanIndicator.h"
 #include "Components/SizeBox.h"
-#include "Structures/HitscanIndication.h"
+#include "Structures/Indications/TimerIndication.h"
 #include "Structures/Structure.h"
 
 void UHitscanIndicator::NativePreConstruct()
@@ -20,15 +20,12 @@ void UHitscanIndicator::NativeTick(const FGeometry& MyGeometry, float InDeltaTim
 {
 	Super::NativeTick(MyGeometry, InDeltaTime);
 
-	UHitscanIndication* HitscanIndication = Cast<UHitscanIndication>(Indication);
-
-	HitscanIndication->CurrentTime -= InDeltaTime;
-
-	const float Multiplier = FMath::Clamp(HitscanIndication->CurrentTime / HitscanIndication->MaxTime, 0, 1);
-
+	UTimerIndication* Timer = Cast<UTimerIndication>(Indication);
+	const float Multiplier = 1 - Timer->GetElapsedPercent();
+	
 	if(Multiplier == 0)
 	{
-		HitscanIndication->GetStructure()->RemoveIndication(HitscanIndication);
+		Timer->GetStructure()->RemoveIndication(Timer);
 	}
 	else
 	{

@@ -1,10 +1,9 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-#include "UI/Screens/GameUI/StructureIndicatorGroup.h"
-
+#include "UI/Screens/GameUI/Indicators/StructureIndicatorGroup.h"
 #include "Components/PanelWidget.h"
-#include "Structures/StructureIndication.h"
-#include "UI/Screens/GameUI/StructureIndicator.h"
+#include "Structures/Indications/StructureIndication.h"
+#include "UI/Screens/GameUI/Indicators/StructureIndicator.h"
 
 UStructureIndicator* UStructureIndicatorGroup::GetIndicator(UStructureIndication* Indication)
 {
@@ -22,9 +21,9 @@ UStructureIndicator* UStructureIndicatorGroup::GetIndicator(UStructureIndication
 
 void UStructureIndicatorGroup::AddIndicator(UStructureIndication* Indication)
 {
-	if(GetClass() == Indication->GetIndicatorGroupClass() && GetIndicator(Indication) == nullptr)
+	if(GetClass() == Indication->IndicatorGroupClass && GetIndicator(Indication) == nullptr)
 	{
-		UStructureIndicator* Indicator = CreateWidget<UStructureIndicator>(this, Indication->GetIndicatorClass());
+		UStructureIndicator* Indicator = CreateWidget<UStructureIndicator>(this, Indication->IndicatorClass);
 		Indicator->TryInit(Indication);
 		PanelWidget->AddChild(Indicator);
 	}
