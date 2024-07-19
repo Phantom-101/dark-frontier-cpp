@@ -41,10 +41,10 @@ protected:
 	TObjectPtr<class UCommonListView> GameplayEffectList;
 
 	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
-	TObjectPtr<class UStructureSelectionLayer> SelectionLayer;
+	TObjectPtr<class UStructureSelectors> Selectors;
 
 	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
-	TObjectPtr<class UScrollBox> PartIndicators;
+	TObjectPtr<class UScrollBox> PartControls;
 
 	virtual TOptional<FUIInputConfig> GetDesiredInputConfig() const override;
 	

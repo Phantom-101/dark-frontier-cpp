@@ -8,10 +8,7 @@
 
 void UTurretAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
 {
-	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
-
 	UAbilityTask_WaitGameplayEvent* WaitEventTask = UAbilityTask_WaitGameplayEvent::WaitGameplayEvent(this, PayloadTag, nullptr, true);
-	WaitEventTask->EventReceived.Clear();
 	WaitEventTask->EventReceived.AddDynamic(this, &UTurretAbility::HandlePayloadReceived);
 	WaitEventTask->Activate();
 }

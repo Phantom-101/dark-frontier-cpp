@@ -101,7 +101,7 @@ void UStructureInfo::RebuildTypeMode()
 	{
 		for(UStructureSlot* PartSlot : Part->GetSlots())
 		{
-			if(!PartSlot->GetSlotType())
+			if(PartSlot->GetSlotType() == nullptr)
 			{
 				MiscSlots.Add(PartSlot);
 				continue;

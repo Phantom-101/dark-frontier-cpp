@@ -2,7 +2,18 @@
 
 #include "UI/Screens/GameUI/StructureIndicator.h"
 
+bool UStructureIndicator::TryInit(UStructureIndication* InIndication)
+{
+	if(Indication != nullptr)
+	{
+		return false;
+	}
+
+	Indication = InIndication;
+	return true;
+}
+
 UStructureIndication* UStructureIndicator::GetIndication() const
 {
-	return nullptr;
+	return Indication;
 }

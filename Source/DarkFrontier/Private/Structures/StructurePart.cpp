@@ -4,11 +4,11 @@
 #include "GameplayEffect.h"
 #include "Engine/SCS_Node.h"
 #include "Engine/SimpleConstructionScript.h"
-#include "Factions/Combatant.h"
-#include "Factions/Faction.h"
 #include "Structures/Structure.h"
 #include "Structures/StructureAttributeSet.h"
 #include "Structures/StructureDamage.h"
+#include "Structures/StructureDock.h"
+#include "Structures/StructureFacility.h"
 #include "Structures/StructureSlot.h"
 
 AStructurePart::AStructurePart()
@@ -21,6 +21,8 @@ void AStructurePart::BeginPlay()
 	Super::BeginPlay();
 
 	GetComponents<UStructureSlot>(Slots);
+	GetComponents<UStructureDock>(Docks);
+	GetComponents<UStructureFacility>(Facilities);
 }
 
 void AStructurePart::Tick(float DeltaTime)
@@ -47,7 +49,6 @@ bool AStructurePart::TryInit(AStructure* NewOwner, const bool RegisterOnly)
 	OwningStructure = NewOwner;
 	OwningStructure->RegisterPart(this, RegisterOnly, RegisterOnly);
 	AttachToActor(OwningStructure, FAttachmentTransformRules(EAttachmentRule::KeepWorld, true));
-	OwningFaction = OwningStructure->GetOwningFaction();
 	
 	return true;
 }
@@ -193,128 +194,7 @@ void AStructurePart::ApplyDamage(const FStructureDamage Damage, const FVector Hi
 	OwningStructure->ApplyDamage(Damage, this, HitLocation);
 }
 
-void AStructurePart::TickCombatants()
-{
-	// Remove depleted armies
-	for(int i = Combatants.Num() - 1; i >= 0; i--)
-	{
-		if(Combatants[i]->Count <= 0)
-		{
-			Combatants.RemoveAt(i);
-		}
-	}
-	
-	// Tabulate combatants on both sides
-	TArray<UCombatant*> DefenderCombatants;
-	TArray<UCombatant*> AttackerCombatants;
-
-	// Calculate strengths based on attacker attack and defender defense
-	double DefenderStrength = 0;
-	double AttackerStrength = 0;
-
-	for(UCombatant* Combatant : Combatants)
-	{
-		Combatant->BuffMultiplier = 1;
-		const double Relation = Combatant->OwningFaction->GetRelation(OwningStructure->GetOwningFaction());
-		if(Relation == 1)
-		{
-			DefenderCombatants.Add(Combatant);
-			DefenderStrength += Combatant->Defense * Combatant->Count;
-		}
-		else if (Relation == -1)
-		{
-			AttackerCombatants.Add(Combatant);
-			AttackerStrength += Combatant->Attack * Combatant->Count;
-		}
-	}
-
-	if(DefenderCombatants.Num() == 0)
-	{
-		// Garrison defeated
-
-		if(AttackerCombatants.Num() > 0)
-		{
-			OwningFaction = AttackerCombatants[0]->OwningFaction;
-
-			if(this == OwningStructure->GetRootPart())
-			{
-				OwningStructure->SetOwningFaction(OwningFaction);
-				// todo process ai changes
-				// Do not send attacker combatants because they are now the defenders
-			}
-			else
-			{
-				// Send attacker combatants to the connected part that is closest to the root part
-				if(Slots.Num() > 0)
-				{
-					AStructurePart* Target = Slots[0]->GetAttachedSlot()->GetOwningPart();
-					int32 MinDistance = Target->RootDistance;
-					for(int i = 1; i < Slots.Num(); i++)
-					{
-						AStructurePart* Part = Slots[i]->GetAttachedSlot()->GetOwningPart();
-						if(Part->RootDistance < MinDistance)
-						{
-							Target = Part;
-							MinDistance = Part->RootDistance;
-						}
-					}
-					// Combatants are added to a list to be added after all parts have had their combat ticks
-					// This is to avoid timing issues where results of ticks can change depending on whether neighboring parts have sent attacker combatants already
-					for(UCombatant* Combatant : AttackerCombatants)
-					{
-						Target->QueuedCombatants.Add(Combatant);
-						Combatants.Remove(Combatant);
-					}
-				}
-			}
-		}
-	}
-	else
-	{
-		if(AttackerCombatants.Num() != 0)
-		{
-			// Give 1.5x effectiveness buff to the side with the greater strength
-			const bool DefenderHasAdvantage = DefenderStrength >= AttackerStrength;
-
-			constexpr double BuffValue = 1.5;
-			const double DefenderBuff = DefenderHasAdvantage ? BuffValue : 1;
-			const double AttackerBuff = !DefenderHasAdvantage ? BuffValue : 1;
-
-			// Pre set defender army buffs so subsequent damage calculations are correct
-			for(UCombatant* Combatant : DefenderCombatants)
-			{
-				Combatant->BuffMultiplier = DefenderBuff;
-			}
-
-			// Each attacker army deals attack and takes counterattack
-			for(UCombatant* Combatant : AttackerCombatants)
-			{
-				Combatant->BuffMultiplier = AttackerBuff;
-				Combatant->AttackTarget(Combatant->GetPreferredTarget(DefenderCombatants));
-			}
-
-			// Defender armies attack second
-			for(UCombatant* Combatant : DefenderCombatants)
-			{
-				if(Combatant->Count > 0)
-				{
-					Combatant->AttackTarget(Combatant->GetPreferredTarget(AttackerCombatants));
-				}
-			}
-		}
-	}
-}
-
-void AStructurePart::DequeueCombatants()
-{
-	for(UCombatant* Combatant : QueuedCombatants)
-	{
-		Combatants.Add(Combatant);
-	}
-	QueuedCombatants.Empty();
-}
-
-UStructurePartIndicator* AStructurePart::CreateIndicator(UWidget* WidgetOwner)
+UStructurePartControl* AStructurePart::CreateControl(UWidget* WidgetOwner)
 {
 	return nullptr;
 }
