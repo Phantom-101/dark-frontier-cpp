@@ -39,9 +39,9 @@ protected:
 
 	virtual void NativePreConstruct() override;
 
-	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
-
 public:
+
+	void SetThickness(float InThickness);
 
 	void SetLength(float Length);
 
@@ -50,5 +50,9 @@ public:
 	void SetEndpoints(float Start, float End);
 
 	void SetColor(FLinearColor InColor);
+
+protected:
+
+	void UpdateArc() const;
 	
 };

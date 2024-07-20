@@ -13,46 +13,53 @@ void UArc::NativePreConstruct()
 		ArcImage->SetBrushFromMaterial(MaterialInstance);
 	}
 
-	if(MaterialInstance != nullptr)
-	{
-		MaterialInstance->SetScalarParameterValue("Thickness", ArcThickness);
-		MaterialInstance->SetScalarParameterValue("Turn", ArcStart);
-		MaterialInstance->SetScalarParameterValue("Percent", ArcLength);
-		ArcImage->SetBrushTintColor(ArcColor);
-	}
+	UpdateArc();
 }
 
-void UArc::NativeTick(const FGeometry& MyGeometry, const float InDeltaTime)
+void UArc::SetThickness(float InThickness)
 {
-	Super::NativeTick(MyGeometry, InDeltaTime);
-
-	if(MaterialInstance != nullptr)
-	{
-		MaterialInstance->SetScalarParameterValue("Thickness", ArcThickness);
-		MaterialInstance->SetScalarParameterValue("Turn", ArcStart);
-		MaterialInstance->SetScalarParameterValue("Percent", ArcLength);
-		ArcImage->SetBrushTintColor(ArcColor);
-	}
+	ArcThickness = InThickness;
+	
+	UpdateArc();
 }
 
 void UArc::SetLength(const float Length)
 {
 	ArcLength = Length;
+
+	UpdateArc();
 }
 
 void UArc::SetStartAndLength(const float Start, const float Length)
 {
 	ArcStart = Start;
 	ArcLength = Length;
+
+	UpdateArc();
 }
 
 void UArc::SetEndpoints(const float Start, const float End)
 {
 	ArcStart = Start;
 	ArcLength = End - Start;
+
+	UpdateArc();
 }
 
 void UArc::SetColor(const FLinearColor InColor)
 {
 	ArcColor = InColor;
+
+	UpdateArc();
+}
+
+void UArc::UpdateArc() const
+{
+	if(MaterialInstance != nullptr)
+	{
+		MaterialInstance->SetScalarParameterValue("Thickness", ArcThickness);
+		MaterialInstance->SetScalarParameterValue("Turn", ArcStart);
+		MaterialInstance->SetScalarParameterValue("Percent", ArcLength);
+		ArcImage->SetBrushTintColor(ArcColor);
+	}
 }
