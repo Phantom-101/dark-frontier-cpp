@@ -14,7 +14,9 @@
 #include "Structures/StructureLayout.h"
 #include "Structures/StructurePart.h"
 #include "Structures/StructureSlot.h"
+#include "Structures/Indications/DistanceIndication.h"
 #include "Structures/Indications/HullIndication.h"
+#include "Structures/Indications/SpeedIndication.h"
 #include "Structures/Indications/StructureIndication.h"
 
 AStructure::AStructure()
@@ -59,7 +61,9 @@ void AStructure::BeginPlay()
 		(void)ApplyEffect(PassiveEffectClass);
 	}
 
-	AddIndication(HullIndicationClass);
+	AddIndication(HullIndicationClass.Get());
+	AddIndication(DistanceIndicationClass.Get());
+	AddIndication(SpeedIndicationClass.Get());
 }
 
 void AStructure::Tick(float DeltaTime)
