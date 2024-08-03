@@ -9,6 +9,8 @@
 #include "Structures/Structure.h"
 #include "UI/Screens/StructureDetails/StructureDetails.h"
 #include "UI/Screens/UIBase.h"
+#include "UI/Screens/GameUI/GameUI.h"
+#include "UI/Screens/InventoryUI/InventoryUI.h"
 
 AStructureController::AStructureController()
 {
@@ -20,7 +22,7 @@ void AStructureController::BeginPlay()
 
 	UIBaseWidget = CreateWidget<UUIBase>(GetGameInstance(), UIBaseClass);
 	UIBaseWidget->AddToViewport();
-	(void)UIBaseWidget->PushGame(GameUIClass);
+	(void)UIBaseWidget->PushGame(GameUIClass.Get());
 }
 
 void AStructureController::SetupInputComponent()
@@ -39,6 +41,7 @@ void AStructureController::SetupInputComponent()
 	Input->BindAction(ZoomAction, ETriggerEvent::Triggered, this, &AStructureController::Zoom);
 	Input->BindAction(ZoomAction, ETriggerEvent::Completed, this, &AStructureController::Zoom);
 	Input->BindAction(ToggleUnlockAction, ETriggerEvent::Completed, this, &AStructureController::ToggleUnlock);
+	Input->BindAction(InventoryAction, ETriggerEvent::Completed, this, &AStructureController::OpenInventory);
 	Input->BindAction(EditStructureAction, ETriggerEvent::Completed, this, &AStructureController::EditStructure);
 }
 
@@ -181,6 +184,14 @@ void AStructureController::ToggleUnlock(const FInputActionInstance& Instance)
 			}
 		}
 	}
+}
+
+void AStructureController::OpenInventory(const FInputActionInstance& Instance)
+{
+	if(!IsValid(StructurePawn)) return;
+
+	const UInventoryUI* Inventory = UIBaseWidget->PushGame<UInventoryUI>(InventoryUIClass);
+	Inventory->SetInventory(StructurePawn->GetInventory());
 }
 
 void AStructureController::EditStructure(const FInputActionInstance& Instance)

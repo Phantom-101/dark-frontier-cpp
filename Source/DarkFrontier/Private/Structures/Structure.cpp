@@ -190,6 +190,31 @@ void AStructure::UnregisterPart(AStructurePart* InPart, const bool SuppressEvent
 	}
 }
 
+FText AStructure::ValidateLayout()
+{
+	// Check for upkeep
+	if(GetUpkeep() > Attributes->GetMaxUpkeep())
+	{
+		return FText::FromString("Structure uses more upkeep than it can support");
+	}
+
+	// TODO Check for inventory
+	
+	// Check self intersection
+	for(int i = 0; i < Parts.Num(); i++)
+	{
+		for(int j = i + 1; j < Parts.Num(); j++)
+		{
+			if(Parts[i]->IsOverlappingActor(Parts[j]))
+			{
+				return FText::FromString("Structure has intersecting parts");
+			}
+		}
+	}
+
+	return FText::GetEmpty();
+}
+
 bool AStructure::IsLayoutValid()
 {
 	return !IsLayoutSelfIntersecting() && !IsLayoutUpkeepOverloaded();

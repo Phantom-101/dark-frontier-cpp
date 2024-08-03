@@ -21,8 +21,6 @@ void UStructureDetails::NativeConstruct()
 
 	BackgroundButton->OnClicked().Clear();
 	BackgroundButton->OnClicked().AddUObject<UStructureDetails>(this, &UStructureDetails::OnBackgroundClicked);
-	ApplyButton->OnClicked().Clear();
-	ApplyButton->OnClicked().AddUObject<UStructureDetails>(this, &UStructureDetails::OnApplyButtonClicked);
 	ExitButton->OnClicked().Clear();
 	ExitButton->OnClicked().AddUObject<UStructureDetails>(this, &UStructureDetails::OnExitButtonClicked);
 
@@ -39,15 +37,6 @@ void UStructureDetails::NativeConstruct()
 void UStructureDetails::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 {
 	Super::NativeTick(MyGeometry, InDeltaTime);
-
-	if(IsValid(TargetStructure))
-	{
-		ApplyButton->SetIsEnabled(TargetStructure->IsLayoutValid());
-	}
-	else
-	{
-		ApplyButton->SetIsEnabled(false);
-	}
 }
 
 TOptional<FUIInputConfig> UStructureDetails::GetDesiredInputConfig() const
@@ -122,6 +111,13 @@ void UStructureDetails::AttachWithSlotName(const FText& InName)
 {
 	AStructurePart* Section = Cast<AStructurePart>(GetWorld()->SpawnActor(PartType));
 	Section->GetSlot(InName)->TryAttach(BaseSlot);
+
+	const FText Result = TargetStructure->ValidateLayout();
+	if(!Result.EqualTo(FText::GetEmpty()))
+	{
+		UE_LOG(LogDarkFrontier, Log, TEXT("%s"), *Result.ToString())
+		Section->DetachSlots();
+	}
 	
 	BaseSlot = nullptr;
 	PartType = nullptr;
@@ -145,15 +141,11 @@ void UStructureDetails::OnLayoutChanged()
 	}
 }
 
-void UStructureDetails::OnApplyButtonClicked()
-{
-	if(!TargetStructure->IsLayoutValid()) return;
-
-	DeactivateWidget();
-}
-
 void UStructureDetails::OnExitButtonClicked()
 {
+	DeactivateWidget();
+
+	/*
 	if(StructureClass == nullptr)
 	{
 		UE_LOG(LogDarkFrontier, Error, TEXT("Structure class is null"));
@@ -181,5 +173,5 @@ void UStructureDetails::OnExitButtonClicked()
 	
 	TargetStructure->TryDestroy();
 	
-	DeactivateWidget();
+	 */
 }

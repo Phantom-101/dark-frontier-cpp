@@ -115,23 +115,19 @@ bool UInventory::AddItems(UItem* Item, const int Quantity, const float Value)
 		{
 			Stack.Quantity += Quantity;
 			Stack.Value += Value;
+			OnItemChanged.Broadcast(Item, Stack.Quantity);
 			return true;
 		}
 	}
 
 	ItemStacks.Add(FItemStack(Item, Quantity, Value));
-	
+	OnItemAdded.Broadcast(Item, Quantity);
 	return true;
-}
-
-bool UInventory::AddStack(const FItemStack& InStack)
-{
-	return AddItems(InStack.Item, InStack.Quantity, InStack.Value);
 }
 
 bool UInventory::RemoveItems(UItem* Item, int Quantity, float& Value)
 {
-	const FItemStack* ToRemove = nullptr;
+	const FItemStack* Found = nullptr;
 	for(FItemStack& Stack : ItemStacks)
 	{
 		if(Stack.Item == Item)
@@ -148,27 +144,28 @@ bool UInventory::RemoveItems(UItem* Item, int Quantity, float& Value)
 			Stack.Value -= RemovedValue;
 			Value += RemovedValue;
 
-			if(Stack.Quantity == 0)
-			{
-				// Mark stack for removal
-				ToRemove = &Stack;
-			}
+			Found = &Stack;
 			
 			break;
 		}
 	}
 
-	if(ToRemove == nullptr)
+	if(Found == nullptr)
 	{
 		// Item does not exist
 		return false;
 	}
 
-	ItemStacks.RemoveSingle(*ToRemove);
+	// Remove stack if depleted
+	if(Found->Quantity == 0)
+	{
+		ItemStacks.RemoveSingle(*Found);
+		OnItemRemoved.Broadcast(Item);
+	}
+	else
+	{
+		OnItemChanged.Broadcast(Item, Found->Quantity);
+	}
+	
 	return true;
-}
-
-bool UInventory::RemoveStack(const FItemStack& InStack)
-{
-	return ItemStacks.RemoveSingle(InStack) == 1;
 }

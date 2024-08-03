@@ -23,7 +23,12 @@ void UInfoField::SetContentFromString(const FString& InContent) const
 	ContentText->SetText(FText::FromString(InContent));
 }
 
+void UInfoField::SetContentFromInt(const int InContent) const
+{
+	ContentText->SetText(FText::FromString(FString::Printf(TEXT("%d"), InContent)));
+}
+
 void UInfoField::SetContentFromFloat(const float InContent) const
 {
-	ContentText->SetText(FText::FromString(FString::FromInt(FMath::RoundToInt(InContent))));
+	ContentText->SetText(FText::FromString(FString::Printf(TEXT("%g"), InContent)));
 }

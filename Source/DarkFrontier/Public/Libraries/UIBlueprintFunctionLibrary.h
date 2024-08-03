@@ -3,6 +3,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Log.h"
+#include "Blueprint/WidgetTree.h"
 #include "Components/PanelWidget.h"
 #include "Components/Widget.h"
 #include "Kismet/BlueprintFunctionLibrary.h"
@@ -21,22 +23,32 @@ public:
 	template<class T>
 	static T* GetParentWidgetOfClass(const UWidget* InWidget)
 	{
-		if(const UObject* Top = InWidget->GetParent())
+		const UWidget* Current = InWidget;
+		while(Current != nullptr)
 		{
-			while(true)
+			UWidget* Parent = Current->GetParent();
+			if(Parent == nullptr)
 			{
-				UObject* CurrentOuter = Top->GetOuter();
-				if(CurrentOuter->IsA(T::StaticClass()))
-				{
-					return Cast<T>(CurrentOuter);
-				}
-				if(!CurrentOuter)
-				{
-					return nullptr;
-				}
-				Top = CurrentOuter;
+				// Parent is null when currently on the top-most widget in a user widget tree
+				// Call get outer twice to get tree then wrapping user widget
+				const UWidgetTree* Tree = Cast<UWidgetTree>(Current->GetOuter());
+				Parent = Cast<UWidget>(Tree->GetOuter());
 			}
+
+			if(Parent != nullptr && Parent->IsA(T::StaticClass()))
+			{
+				return Cast<T>(Parent);
+			}
+				
+			if(Current == Parent)
+			{
+				UE_LOG(LogDarkFrontier, Warning, TEXT("Reference cycle detected when finding parent widget of type"))
+				return nullptr;
+			}
+
+			Current = Parent;
 		}
+		
 		return nullptr;
 	}
 

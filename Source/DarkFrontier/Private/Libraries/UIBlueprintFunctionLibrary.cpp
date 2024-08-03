@@ -4,21 +4,31 @@
 
 UWidget* UUIBlueprintFunctionLibrary::GetParentWidgetOfClass(const TSubclassOf<UWidget> InClass, const UWidget* InWidget)
 {
-	if(const UObject* Top = InWidget->GetParent())
+	const UWidget* Current = InWidget;
+	while(Current != nullptr)
 	{
-		while(true)
+		UWidget* Parent = Current->GetParent();
+		if(Parent == nullptr)
 		{
-			UObject* CurrentOuter = Top->GetOuter();
-			if(CurrentOuter->IsA(InClass))
-			{
-				return Cast<UWidget>(CurrentOuter);
-			}
-			if(!CurrentOuter)
-			{
-				return nullptr;
-			}
-			Top = CurrentOuter;
+			// Parent is null when currently on the top-most widget in a user widget tree
+			// Call get outer twice to get tree then wrapping user widget
+			const UWidgetTree* Tree = Cast<UWidgetTree>(Current->GetOuter());
+			Parent = Cast<UWidget>(Tree->GetOuter());
 		}
+
+		if(Parent != nullptr && Parent->IsA(InClass))
+		{
+			return Parent;
+		}
+				
+		if(Current == Parent)
+		{
+			UE_LOG(LogDarkFrontier, Warning, TEXT("Reference cycle detected when finding parent widget of type"))
+			return nullptr;
+		}
+
+		Current = Parent;
 	}
+		
 	return nullptr;
 }
