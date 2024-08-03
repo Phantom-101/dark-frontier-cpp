@@ -60,30 +60,11 @@ void UStructureInfo::SetTarget(AStructure* InTargetStructure)
 	TArray<FStringFormatArg> FormatArgs;
 	
 	HullField->SetContentFromFloat(MaxHull);
-	
-	FormatArgs.Add(FStringFormatArg(ToString(MaxShield)));
-	FormatArgs.Add(FStringFormatArg(ToString(ShieldRegen)));
-	ShieldField->SetContentFromString(FString::Format(TEXT("{0}+{1}"), FormatArgs));
-	
-	FormatArgs.Empty();
-	FormatArgs.Add(FStringFormatArg(ToString(MaxEnergy)));
-	FormatArgs.Add(FStringFormatArg(ToString(EnergyRegen)));
-	EnergyField->SetContentFromString(FString::Format(TEXT("{0}+{1}"), FormatArgs));
-
-	FormatArgs.Empty();
-	FormatArgs.Add(FStringFormatArg(ToString(Upkeep)));
-	FormatArgs.Add(FStringFormatArg(ToString(MaxUpkeep)));
-	UpkeepField->SetContentFromString(FString::Format(TEXT("{0}/{1}"), FormatArgs));
-	
-	FormatArgs.Empty();
-	FormatArgs.Add(FStringFormatArg(ToString(LinearSpeed)));
-	FormatArgs.Add(FStringFormatArg(ToString(LinearAccel)));
-	LinearField->SetContentFromString(FString::Format(TEXT("{0}+{1}"), FormatArgs));
-	
-	FormatArgs.Empty();
-	FormatArgs.Add(FStringFormatArg(ToString(AngularSpeed)));
-	FormatArgs.Add(FStringFormatArg(ToString(AngularAccel)));
-	AngularField->SetContentFromString(FString::Format(TEXT("{0}+{1}"), FormatArgs));
+	ShieldField->SetContentFromString(FString::Printf(TEXT("%g+%g"), MaxShield, ShieldRegen));
+	EnergyField->SetContentFromString(FString::Printf(TEXT("%g+%g"), MaxEnergy, EnergyRegen));
+	UpkeepField->SetContentFromString(FString::Printf(TEXT("%g/%g"), Upkeep, MaxUpkeep));
+	LinearField->SetContentFromString(FString::Printf(TEXT("%g+%g"), LinearSpeed, LinearAccel));
+	AngularField->SetContentFromString(FString::Printf(TEXT("%g+%g"), AngularSpeed, AngularAccel));
 
 	OnTypeModeSelected();
 	RebuildTypeMode();

@@ -42,6 +42,8 @@ public:
 
 	void SetContentFromString(const FString& InContent) const;
 
+	void SetContentFromInt(int InContent) const;
+
 	void SetContentFromFloat(float InContent) const;
 	
 };

@@ -41,16 +41,22 @@ protected:
 	TObjectPtr<UInputAction> ToggleUnlockAction;
 
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category="Input")
+	TObjectPtr<UInputAction> InventoryAction;
+
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category="Input")
 	TObjectPtr<UInputAction> EditStructureAction;
 
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category="UI")
 	TSubclassOf<class UUIBase> UIBaseClass;
 	
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category="UI")
-	TSubclassOf<class UCommonActivatableWidget> GameUIClass;
+	TSubclassOf<class UGameUI> GameUIClass;
 
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category="UI")
-	TSubclassOf<UCommonActivatableWidget> StructureDetailsUIClass;
+	TSubclassOf<class UInventoryUI> InventoryUIClass;
+
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category="UI")
+	TSubclassOf<class UStructureDetails> StructureDetailsUIClass;
 
 	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly, Category="Controller")
 	TObjectPtr<class AStructure> StructurePawn;
@@ -143,6 +149,9 @@ protected:
 
 	UFUNCTION()
 	void ToggleUnlock(const FInputActionInstance& Instance);
+
+	UFUNCTION()
+	void OpenInventory(const FInputActionInstance& Instance);
 
 	UFUNCTION()
 	void EditStructure(const FInputActionInstance& Instance);

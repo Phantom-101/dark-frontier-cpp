@@ -43,10 +43,7 @@ protected:
 
 	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
 	TObjectPtr<class UStructureSlotInfo> SlotInfo;
-
-	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
-	TObjectPtr<UCommonButtonBase> ApplyButton;
-
+	
 	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
 	TObjectPtr<UCommonButtonBase> ExitButton;
 	
@@ -101,9 +98,7 @@ protected:
 	void OnBackgroundClicked() const;
 
 	void OnLayoutChanged();
-
-	void OnApplyButtonClicked();
-
+	
 	void OnExitButtonClicked();
 	
 };

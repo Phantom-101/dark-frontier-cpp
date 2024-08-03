@@ -8,6 +8,10 @@
 class UItem;
 struct FItemStack;
 
+DECLARE_MULTICAST_DELEGATE_TwoParams(FInventoryItemAdded, UItem*, int)
+DECLARE_MULTICAST_DELEGATE_OneParam(FInventoryItemRemoved, UItem*)
+DECLARE_MULTICAST_DELEGATE_TwoParams(FInventoryItemChanged, UItem*, int)
+
 /**
  * 
  */
@@ -28,6 +32,12 @@ protected:
 	TArray<FItemStack> ItemStacks;
 
 public:
+
+	FInventoryItemAdded OnItemAdded;
+
+	FInventoryItemRemoved OnItemRemoved;
+	
+	FInventoryItemChanged OnItemChanged;
 
 	UFUNCTION(BlueprintCallable)
 	TArray<FItemStack> GetStacks();
@@ -63,12 +73,6 @@ public:
 	bool AddItems(UItem* Item, int Quantity, float Value);
 
 	UFUNCTION(BlueprintCallable)
-	bool AddStack(const FItemStack& InStack);
-
-	UFUNCTION(BlueprintCallable)
 	bool RemoveItems(UItem* Item, int Quantity, float& Value);
-
-	UFUNCTION(BlueprintCallable)
-	bool RemoveStack(const FItemStack& InStack);
 	
 };

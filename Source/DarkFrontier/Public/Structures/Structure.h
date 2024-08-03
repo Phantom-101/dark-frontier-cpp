@@ -152,6 +152,9 @@ public:
 	void UnregisterPart(AStructurePart* InPart, bool SuppressEvent = false);
 
 	UFUNCTION(BlueprintCallable, Category="Layout")
+	FText ValidateLayout();
+
+	UFUNCTION(BlueprintCallable, Category="Layout")
 	bool IsLayoutValid();
 
 	UFUNCTION(BlueprintCallable, Category="Layout")
