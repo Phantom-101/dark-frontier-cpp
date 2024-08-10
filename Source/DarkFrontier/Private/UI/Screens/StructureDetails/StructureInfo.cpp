@@ -11,9 +11,8 @@
 #include "Structures/StructureAttributeSet.h"
 #include "Structures/StructureController.h"
 #include "Structures/StructurePart.h"
-#include "Structures/StructureSlot.h"
-#include "Structures/StructureSlotType.h"
-#include "UI/Screens/StructureDetails/StructureSlotCardList.h"
+#include "Structures/StructurePartGroup.h"
+#include "UI/Screens/StructureDetails/StructurePartCardList.h"
 #include "UI/Widgets/InfoField.h"
 
 void UStructureInfo::NativeConstruct()
@@ -75,41 +74,39 @@ void UStructureInfo::RebuildTypeMode()
 {
 	if(!IsValid(TargetStructure)) return;
 	
-	// Collate slots
-	TMap<UStructureSlotType*, TArray<UStructureSlot*>> TypeMap;
-	TArray<UStructureSlot*> MiscSlots;
-	for(AStructurePart* Part : TargetStructure->GetParts())
+	TArray<UStructurePartGroup*> PartTypes;
+	for(const AStructurePart* Part : TargetStructure->GetParts())
 	{
-		for(UStructureSlot* PartSlot : Part->GetSlots())
-		{
-			if(PartSlot->GetSlotType() == nullptr)
-			{
-				MiscSlots.Add(PartSlot);
-				continue;
-			}
-			
-			if(!TypeMap.Contains(PartSlot->GetSlotType()))
-			{
-				TypeMap.Add(PartSlot->GetSlotType(), TArray<UStructureSlot*>());
-			}
-			TypeMap[PartSlot->GetSlotType()].Add(PartSlot);
-		}
+		PartTypes.AddUnique(Part->GetPartType());
 	}
 
-	// Add to list
 	TypeList->ClearChildren();
-	for(const TPair<UStructureSlotType*, TArray<UStructureSlot*>> Pair : TypeMap)
+	for(const UStructurePartGroup* PartType : PartTypes)
 	{
-		UStructureSlotCardList* View = CreateWidget<UStructureSlotCardList>(this, CardListClass);
-		TypeList->AddChild(View);
-		View->Init(Pair.Value, Pair.Key->TypeName, Pair.Key->Color);
-	}
-	
-	if(MiscSlots.Num() > 0)
-	{
-		UStructureSlotCardList* View = CreateWidget<UStructureSlotCardList>(this, CardListClass);
-		TypeList->AddChild(View);
-		View->Init(MiscSlots, FText::FromString("Miscellaneous"), FLinearColor::White);
+		TArray<AStructurePart*> Parts;
+		for(AStructurePart* Part : TargetStructure->GetParts())
+		{
+			if(Part->GetPartType() == PartType)
+			{
+				Parts.Add(Part);
+			}
+		}
+		
+		UStructurePartCardList* CardList = CreateWidget<UStructurePartCardList>(this, CardListClass);
+		TypeList->AddChild(CardList);
+
+		if(PartType == nullptr)
+		{
+			CardList->SetHeader(FText::FromString("Miscellaneous"));
+			CardList->SetHeaderColor(FLinearColor::White);
+		}
+		else
+		{
+			CardList->SetHeader(PartType->TypeName);
+			CardList->SetHeaderColor(PartType->Color);
+		}
+
+		CardList->SetParts(Parts);
 	}
 }
 

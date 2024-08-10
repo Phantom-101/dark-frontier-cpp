@@ -5,11 +5,11 @@
 #include "Structures/StructurePart.h"
 #include "Structures/Structure.h"
 #include "Kismet/KismetMathLibrary.h"
-#include "Structures/StructureSlotFilter.h"
+#include "Structures/StructurePartFilter.h"
 
 UStructureSlot::UStructureSlot()
 {
-	Filter = CreateDefaultSubobject<UStructureSlotFilter>("Filter");
+	Filter = CreateDefaultSubobject<UStructurePartFilter>("Filter");
 }
 
 void UStructureSlot::BeginPlay()
@@ -24,11 +24,6 @@ FText UStructureSlot::GetSlotName() const
 	return SlotName;
 }
 
-UStructureSlotType* UStructureSlot::GetSlotType() const
-{
-	return SlotType;
-}
-
 AStructure* UStructureSlot::GetOwningStructure() const
 {
 	if(!IsValid(OwningPart)) return nullptr;
@@ -40,6 +35,16 @@ AStructurePart* UStructureSlot::GetOwningPart() const
 	return OwningPart;
 }
 
+const AStructurePart* UStructureSlot::GetOwningPart_Always() const
+{
+	if(IsValid(OwningPart))
+	{
+		return OwningPart;
+	}
+
+	return GetOwningPart_CDO(this);
+}
+
 UStructureSlot* UStructureSlot::GetAttachedSlot() const
 {
 	return AttachedSlot;
@@ -47,7 +52,7 @@ UStructureSlot* UStructureSlot::GetAttachedSlot() const
 
 bool UStructureSlot::CanAttach(const UStructureSlot* Other) const
 {
-	return Filter->IsCompatible(Other) && Other->Filter->IsCompatible(this);
+	return Filter->IsCompatible(Other->GetOwningPart_Always()) && Other->Filter->IsCompatible(GetOwningPart_Always());
 }
 
 /**
@@ -137,4 +142,12 @@ void UStructureSlot::MatchTransform(UStructureSlot* Other)
 	// Match current slot position with other slot position
 	const FVector Offset = GetComponentLocation() - OwningPart->GetActorLocation();
 	OwningPart->SetActorLocation(Other->GetComponentLocation() - Offset);
+}
+
+const AStructurePart* UStructureSlot::GetOwningPart_CDO(const UStructureSlot* Slot)
+{
+	const UBlueprintGeneratedClass* BPClass = Cast<UBlueprintGeneratedClass>(Slot->GetOuter());
+	if(BPClass == nullptr) return nullptr;
+
+	return BPClass->GetDefaultObject<AStructurePart>();
 }

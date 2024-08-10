@@ -37,6 +37,11 @@ FText AStructurePart::GetTypeName() const
 	return TypeName;
 }
 
+UStructurePartGroup* AStructurePart::GetPartType() const
+{
+	return PartType;
+}
+
 TSubclassOf<UGameplayEffect> AStructurePart::GetPassiveEffect() const
 {
 	return PassiveEffect;
@@ -202,7 +207,7 @@ UStructurePartControl* AStructurePart::CreateControl(UWidget* WidgetOwner)
 TArray<const UStructureSlot*> AStructurePart::GetSlots_CDO(TSubclassOf<AStructurePart> PartClass)
 {
 	const UBlueprintGeneratedClass* BPClass = Cast<UBlueprintGeneratedClass>(PartClass);
-	if(!BPClass) return TArray<const UStructureSlot*>();
+	if(BPClass == nullptr) return TArray<const UStructureSlot*>();
 
 	TArray<const UStructureSlot*> Slots;
 	TArray<USCS_Node*> Nodes = BPClass->SimpleConstructionScript->GetAllNodes();
