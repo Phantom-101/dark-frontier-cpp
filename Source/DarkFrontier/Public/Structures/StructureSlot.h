@@ -20,11 +20,8 @@ protected:
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category="Setup")
 	FText SlotName;
 
-	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category="Setup")
-	TObjectPtr<class UStructureSlotType> SlotType;
-
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Instanced, Category="Setup")
-	TObjectPtr<class UStructureSlotFilter> Filter;
+	TObjectPtr<class UStructurePartFilter> Filter;
 
 	UPROPERTY(BlueprintReadOnly)
 	TObjectPtr<class AStructurePart> OwningPart;
@@ -39,14 +36,14 @@ public:
 	UFUNCTION(BlueprintCallable, Category="Prototype")
 	FText GetSlotName() const;
 	
-	UFUNCTION(BlueprintCallable, Category="Prototype")
-	UStructureSlotType* GetSlotType() const;
-
 	UFUNCTION(BlueprintCallable, Category="Layout")
 	class AStructure* GetOwningStructure() const;
 
 	UFUNCTION(BlueprintCallable, Category="Layout")
 	AStructurePart* GetOwningPart() const;
+
+	UFUNCTION(BlueprintCallable, Category="Layout")
+	const AStructurePart* GetOwningPart_Always() const;
 
 	UFUNCTION(BlueprintCallable, Category="Layout")
 	UStructureSlot* GetAttachedSlot() const;
@@ -64,5 +61,9 @@ protected:
 
 	UFUNCTION(BlueprintCallable)
 	void MatchTransform(UStructureSlot* Other);
+
+public:
+
+	static const AStructurePart* GetOwningPart_CDO(const UStructureSlot* Slot);
 	
 };

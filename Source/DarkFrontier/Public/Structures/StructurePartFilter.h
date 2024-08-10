@@ -3,18 +3,20 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "StructureSlotFilter.generated.h"
+#include "StructurePartFilter.generated.h"
+
+class AStructurePart;
 
 /**
  * 
  */
 UCLASS(DefaultToInstanced, EditInlineNew)
-class DARKFRONTIER_API UStructureSlotFilter : public UObject
+class DARKFRONTIER_API UStructurePartFilter : public UObject
 {
 	GENERATED_BODY()
 
 public:
 
-	virtual bool IsCompatible(const class UStructureSlot* Other);
+	virtual bool IsCompatible(const AStructurePart* Other);
 	
 };

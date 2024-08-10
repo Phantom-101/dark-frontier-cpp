@@ -7,6 +7,7 @@
 #include "GameFramework/Actor.h"
 #include "StructurePart.generated.h"
 
+class UStructurePartGroup;
 class UStructureSlot;
 class UStructureDock;
 class UStructureFacility;
@@ -26,6 +27,9 @@ protected:
 
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category="Setup")
 	FText TypeName;
+
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category="Setup")
+	TObjectPtr<UStructurePartGroup> PartType;
 
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category="Setup")
 	TSubclassOf<class UGameplayEffect> PassiveEffect;
@@ -59,6 +63,9 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category="Prototype")
 	FText GetTypeName() const;
+
+	UFUNCTION(BlueprintCallable, Category="Prototype")
+	UStructurePartGroup* GetPartType() const;
 
 	UFUNCTION(BlueprintCallable, Category="Prototype")
 	TSubclassOf<UGameplayEffect> GetPassiveEffect() const;
