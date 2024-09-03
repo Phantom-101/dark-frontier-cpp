@@ -9,7 +9,6 @@
 
 class UStructurePartGroup;
 class UStructureSlot;
-class UStructureDock;
 class UStructureFacility;
 class AFaction;
 class UWidget;
@@ -47,9 +46,6 @@ protected:
 	int32 RootDistance = -1;
 
 	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly, Category="Docking")
-	TArray<TObjectPtr<UStructureDock>> Docks;
-
-	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly, Category="Inventory")
 	TArray<TObjectPtr<UStructureFacility>> Facilities;
 
 	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly, Category="Gameplay")

@@ -9,6 +9,7 @@
 #include "Structures/StructureLayout.h"
 #include "Structures/StructurePart.h"
 #include "Structures/StructureSlot.h"
+#include "Structures/StructureValidationResult.h"
 #include "UI/Screens/StructureDetails/StructureInfo.h"
 #include "UI/Screens/StructureDetails/StructurePartInfo.h"
 #include "UI/Screens/StructureDetails/StructurePartSelector.h"
@@ -112,10 +113,10 @@ void UStructureDetails::AttachWithSlotName(const FText& InName)
 	AStructurePart* Section = Cast<AStructurePart>(GetWorld()->SpawnActor(PartType));
 	Section->GetSlot(InName)->TryAttach(BaseSlot);
 
-	const FText Result = TargetStructure->ValidateLayout();
-	if(!Result.EqualTo(FText::GetEmpty()))
+	const EStructureValidationResult Result = TargetStructure->ValidateLayout();
+	if(Result != EStructureValidationResult::Valid)
 	{
-		UE_LOG(LogDarkFrontier, Log, TEXT("%s"), *Result.ToString())
+		UE_LOG(LogDarkFrontier, Log, TEXT("Layout validation error"))
 		Section->DetachSlots();
 	}
 	
