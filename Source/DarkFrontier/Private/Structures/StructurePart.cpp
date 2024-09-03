@@ -7,8 +7,7 @@
 #include "Structures/Structure.h"
 #include "Structures/StructureAttributeSet.h"
 #include "Structures/StructureDamage.h"
-#include "Structures/StructureDock.h"
-#include "Structures/StructureFacility.h"
+#include "Structures/StructureProduction.h"
 #include "Structures/StructureSlot.h"
 
 AStructurePart::AStructurePart()
@@ -21,7 +20,6 @@ void AStructurePart::BeginPlay()
 	Super::BeginPlay();
 
 	GetComponents<UStructureSlot>(Slots);
-	GetComponents<UStructureDock>(Docks);
 	GetComponents<UStructureFacility>(Facilities);
 }
 

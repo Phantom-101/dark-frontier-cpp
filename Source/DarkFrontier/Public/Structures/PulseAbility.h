@@ -34,9 +34,6 @@ protected:
 	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly)
 	TObjectPtr<UTurretPayload> CurrentPayload;
 
-	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly)
-	TObjectPtr<UHitscanTask> CurrentTask;
-
 	virtual void OnActivate(UTurretPayload* Payload) override;
 
 private:

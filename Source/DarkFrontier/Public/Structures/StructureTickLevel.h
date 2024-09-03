@@ -9,8 +9,7 @@
 UENUM(BlueprintType)
 enum class EStructureTickLevel : uint8
 {
-    Invalid,
-    Full,
+    Omitted,
     Limited,
-    None
+    Full
 };

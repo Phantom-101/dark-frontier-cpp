@@ -14,6 +14,7 @@
 #include "Structures/StructureLayout.h"
 #include "Structures/StructurePart.h"
 #include "Structures/StructureSlot.h"
+#include "Structures/StructureValidationResult.h"
 #include "Structures/Indications/DistanceIndication.h"
 #include "Structures/Indications/HullIndication.h"
 #include "Structures/Indications/SpeedIndication.h"
@@ -190,60 +191,25 @@ void AStructure::UnregisterPart(AStructurePart* InPart, const bool SuppressEvent
 	}
 }
 
-FText AStructure::ValidateLayout()
+EStructureValidationResult AStructure::ValidateLayout()
 {
-	// Check for upkeep
+	for(int i = 0; i < Parts.Num(); i++)
+	{
+		for(int j = i + 1; j < Parts.Num(); j++)
+		{
+			if(Parts[i]->IsOverlappingActor(Parts[j]))
+			{
+				return EStructureValidationResult::SelfIntersecting;
+			}
+		}
+	}
+	
 	if(GetUpkeep() > Attributes->GetMaxUpkeep())
 	{
-		return FText::FromString("Structure uses more upkeep than it can support");
+		return EStructureValidationResult::UpkeepExceeded;
 	}
 
-	// TODO Check for inventory
-	
-	// Check self intersection
-	for(int i = 0; i < Parts.Num(); i++)
-	{
-		for(int j = i + 1; j < Parts.Num(); j++)
-		{
-			if(Parts[i]->IsOverlappingActor(Parts[j]))
-			{
-				return FText::FromString("Structure has intersecting parts");
-			}
-		}
-	}
-
-	return FText::GetEmpty();
-}
-
-bool AStructure::IsLayoutValid()
-{
-	return !IsLayoutSelfIntersecting() && !IsLayoutUpkeepOverloaded();
-}
-
-bool AStructure::IsLayoutSelfIntersecting()
-{
-	for(int i = 0; i < Parts.Num(); i++)
-	{
-		for(int j = i + 1; j < Parts.Num(); j++)
-		{
-			if(Parts[i]->IsOverlappingActor(Parts[j]))
-			{
-				UE_LOG(LogDarkFrontier, Warning, TEXT("Self intersecting layout"))
-				return true;
-			}
-		}
-	}
-	return false;
-}
-
-bool AStructure::IsLayoutUpkeepOverloaded() const
-{
-	const bool IsOverloaded = GetUpkeep() > Attributes->GetMaxUpkeep();
-	if(IsOverloaded)
-	{
-		UE_LOG(LogDarkFrontier, Warning, TEXT("Upkeep overloaded"))
-	}
-	return IsOverloaded;
+	return EStructureValidationResult::Valid;
 }
 
 bool AStructure::LoadLayout(FStructureLayout InLayout)
@@ -397,21 +363,31 @@ void AStructure::UpdateLayoutInformation()
 
 UStructureDock* AStructure::GetDock()
 {
-	return Dock;
+	return CurrentDock;
 }
 
-void AStructure::DockAt(UStructureDock* InDock)
+bool AStructure::TryDock(UStructureDock* InDock)
 {
-	Dock = InDock;
+	if(InDock->ConfirmDock(this))
+	{
+		CurrentDock = InDock;
+		AttachToActor(CurrentDock->GetOwner(), FAttachmentTransformRules(EAttachmentRule::KeepWorld, true));
+		return true;
+	}
 
-	AttachToActor(Dock->GetOwner(), FAttachmentTransformRules(EAttachmentRule::KeepWorld, true));
+	return false;
 }
 
-void AStructure::UnDock()
+bool AStructure::TryUnDock()
 {
-	DetachFromActor(FDetachmentTransformRules(EDetachmentRule::KeepWorld, false));
-	
-	Dock = nullptr;
+	if(CurrentDock->ConfirmUnDock(this))
+	{
+		CurrentDock = nullptr;
+		DetachFromActor(FDetachmentTransformRules(EDetachmentRule::KeepWorld, false));
+		return true;
+	}
+
+	return false;
 }
 
 EStructureTickLevel AStructure::GetTickLevel()
@@ -456,7 +432,7 @@ void AStructure::UpdateTickLevel()
 	}
 	else
 	{
-		SetTickLevel(EStructureTickLevel::None);
+		SetTickLevel(EStructureTickLevel::Omitted);
 	}
 }
 

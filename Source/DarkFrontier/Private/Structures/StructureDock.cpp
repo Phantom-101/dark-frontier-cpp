@@ -2,41 +2,45 @@
 
 #include "Structures/StructureDock.h"
 #include "Structures/Structure.h"
-#include "Structures/StructurePart.h"
 
-void UStructureDock::BeginPlay()
+bool UStructureDock::ConfirmDock(AStructure* Structure)
 {
-	Super::BeginPlay();
+	if(!IsValid(Structure))
+	{
+		return false;
+	}
 
-	OwningPart = Cast<AStructurePart>(GetOwner());
-}
+	if(Docker != nullptr)
+	{
+		return false;
+	}
 
-AStructure* UStructureDock::GetOwningStructure() const
-{
-	return OwningPart->GetOwningStructure();
-}
-
-AStructurePart* UStructureDock::GetOwningPart() const
-{
-	return OwningPart;
-}
-
-bool UStructureDock::TryDock(AStructure* Structure)
-{
-	if(IsValid(Docker) || !IsValid(Structure) || IsValid(Structure->GetDock())) return false;
-
-	Docker = Structure;
-	Docker->DockAt(this);
+	if(Structure->GetDock() != nullptr)
+	{
+		return false;
+	}
 	
+	Docker = Structure;
 	return true;
 }
 
-bool UStructureDock::TryUnDock()
+bool UStructureDock::ConfirmUnDock(AStructure* Structure)
 {
-	if(!IsValid(Docker)) return false;
+	if(!IsValid(Structure))
+	{
+		return false;
+	}
 
-	Docker->UnDock();
+	if(Docker != Structure)
+	{
+		return false;
+	}
+
+	if(Structure->GetDock() != this)
+	{
+		return false;
+	}
+
 	Docker = nullptr;
-
 	return true;
 }

@@ -15,30 +15,15 @@ void UPulseAbility::OnActivate(UTurretPayload* Payload)
 {
 	Super::OnActivate(Payload);
 
-	TArray<AActor*> IgnoredActors;
-	IgnoredActors.Add(Payload->Instigator);
-	for(AStructurePart* Part : Payload->Instigator->GetParts())
-	{
-		IgnoredActors.Add(Part);
-	}
-	
-	UHitscanTask* HitscanTask = UHitscanTask::New(this, Payload->Source->GetComponentLocation(), Payload->Target->GetActorLocation(), TraceChannel, IgnoredActors);
-	HitscanTask->Activate();
-
-	if(!IsValid(HitscanTask->HitPart))
-	{
-		CancelAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true);
-		return;
-	}
+	CurrentPayload = Payload;
 
 	if(CommitAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo))
 	{
+		// Setup attack indication
 		UTimerIndication* Indication = Cast<UTimerIndication>(Payload->Instigator->AddIndication(IndicationClass));
 		Indication->Init(Delay);
 
-		CurrentPayload = Payload;
-		CurrentTask = HitscanTask;
-		
+		// Wait to perform raycast and apply damage
 		UAbilityTask_WaitDelay* DelayTask = UAbilityTask_WaitDelay::WaitDelay(this, Delay);
 		DelayTask->OnFinish.AddDynamic(this, &UPulseAbility::OnDelayFinish);
 		DelayTask->Activate();
@@ -51,18 +36,33 @@ void UPulseAbility::OnActivate(UTurretPayload* Payload)
 
 void UPulseAbility::OnDelayFinish()
 {
-	UHitscanResult* Result = NewObject<UHitscanResult>();
-	Result->Payload = CurrentPayload;
-	Result->HitPart = CurrentTask->HitPart;
-	Result->HitResult = CurrentTask->HitResult;
-
-	UStructureAbilitySystemComponent* Comp = Cast<UStructureAbilitySystemComponent>(Result->Payload->Instigator->GetAbilitySystemComponent());
-	if(Comp)
+	if(!IsValid(CurrentPayload->Instigator) || !IsValid(CurrentPayload->Target))
 	{
-		FGameplayCueParameters Parameters;
-		Parameters.Instigator = Result->Payload->Instigator;
-		Parameters.SourceObject = Result;
-		Parameters.EffectContext.AddHitResult(Result->HitResult);
-		Comp->ExecuteGameplayCueLocal(CueTag, Parameters);
+		return;
+	}
+	
+	TArray<AActor*> IgnoredActors;
+	IgnoredActors.Add(CurrentPayload->Instigator);
+	IgnoredActors.Append(CurrentPayload->Instigator->GetParts());
+	
+	UHitscanTask* HitscanTask = UHitscanTask::New(this, CurrentPayload->Source->GetComponentLocation(), CurrentPayload->Target->GetActorLocation(), TraceChannel, IgnoredActors);
+	HitscanTask->Activate();
+
+	if(IsValid(HitscanTask->HitPart))
+	{
+		UHitscanResult* Result = NewObject<UHitscanResult>();
+		Result->Payload = CurrentPayload;
+		Result->HitPart = HitscanTask->HitPart;
+		Result->HitResult = HitscanTask->HitResult;
+
+		UStructureAbilitySystemComponent* Comp = Cast<UStructureAbilitySystemComponent>(Result->Payload->Instigator->GetAbilitySystemComponent());
+		if(Comp)
+		{
+			FGameplayCueParameters Parameters;
+			Parameters.Instigator = Result->Payload->Instigator;
+			Parameters.SourceObject = Result;
+			Parameters.EffectContext.AddHitResult(Result->HitResult);
+			Comp->ExecuteGameplayCueLocal(CueTag, Parameters);
+		}
 	}
 }

@@ -20,7 +20,7 @@ class DARKFRONTIER_API UUIBlueprintFunctionLibrary : public UBlueprintFunctionLi
 
 public:
 
-	template<class T>
+	template <class T>
 	static T* GetParentWidgetOfClass(const UWidget* InWidget)
 	{
 		const UWidget* Current = InWidget;

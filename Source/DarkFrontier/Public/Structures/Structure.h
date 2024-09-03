@@ -9,6 +9,7 @@
 #include "GameFramework/Pawn.h"
 #include "Structure.generated.h"
 
+enum class EStructureValidationResult : uint8;
 class UInventory;
 class UStructureAbilitySystemComponent;
 class UStructureAttributeSet;
@@ -63,10 +64,10 @@ protected:
 	TArray<TObjectPtr<AStructurePart>> Parts;
 
 	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly, Category="Docking")
-	TObjectPtr<UStructureDock> Dock;
+	TObjectPtr<UStructureDock> CurrentDock;
 
 	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly, Category="Sector")
-	EStructureTickLevel TickLevel = EStructureTickLevel::Invalid;
+	EStructureTickLevel TickLevel = EStructureTickLevel::Omitted;
 
 	UPROPERTY(BlueprintReadOnly, EditInstanceOnly, Category="Sector")
 	TObjectPtr<ASector> CurrentSector;
@@ -152,16 +153,7 @@ public:
 	void UnregisterPart(AStructurePart* InPart, bool SuppressEvent = false);
 
 	UFUNCTION(BlueprintCallable, Category="Layout")
-	FText ValidateLayout();
-
-	UFUNCTION(BlueprintCallable, Category="Layout")
-	bool IsLayoutValid();
-
-	UFUNCTION(BlueprintCallable, Category="Layout")
-	bool IsLayoutSelfIntersecting();
-
-	UFUNCTION(BlueprintCallable, Category="Layout")
-	bool IsLayoutUpkeepOverloaded() const;
+	EStructureValidationResult ValidateLayout();
 
 	UFUNCTION(BlueprintCallable, Category="Layout")
 	bool LoadLayout(struct FStructureLayout InLayout);
@@ -173,10 +165,10 @@ public:
 	UStructureDock* GetDock();
 
 	UFUNCTION(BlueprintCallable, Category="Docking")
-	void DockAt(UStructureDock* InDock);
+	bool TryDock(UStructureDock* InDock);
 
 	UFUNCTION(BlueprintCallable, Category="Docking")
-	void UnDock();
+	bool TryUnDock();
 	
 	UFUNCTION(BlueprintCallable, Category="Sector")
 	EStructureTickLevel GetTickLevel();

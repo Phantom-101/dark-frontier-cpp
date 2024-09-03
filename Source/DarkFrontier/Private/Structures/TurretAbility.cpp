@@ -3,7 +3,6 @@
 #include "Structures/TurretAbility.h"
 #include "Abilities/Async/AbilityAsync_WaitGameplayEvent.h"
 #include "Abilities/Tasks/AbilityTask_WaitGameplayEvent.h"
-#include "Structures/StructureAbilitySystemComponent.h"
 #include "Structures/TurretPayload.h"
 
 void UTurretAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
