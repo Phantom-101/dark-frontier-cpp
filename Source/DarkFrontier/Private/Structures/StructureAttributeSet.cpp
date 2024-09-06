@@ -32,17 +32,17 @@ void UStructureAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty
 
 	DOREPLIFETIME_CONDITION_NOTIFY(UStructureAttributeSet, MaxHull, COND_None, REPNOTIFY_OnChanged);
 	DOREPLIFETIME_CONDITION_NOTIFY(UStructureAttributeSet, Hull, COND_None, REPNOTIFY_Always);
-	DOREPLIFETIME_CONDITION_NOTIFY(UStructureAttributeSet, HullKineticDamageReduction, COND_None, REPNOTIFY_OnChanged);
-	DOREPLIFETIME_CONDITION_NOTIFY(UStructureAttributeSet, HullExplosiveDamageReduction, COND_None, REPNOTIFY_OnChanged);
-	DOREPLIFETIME_CONDITION_NOTIFY(UStructureAttributeSet, HullBeamDamageReduction, COND_None, REPNOTIFY_OnChanged);
-	DOREPLIFETIME_CONDITION_NOTIFY(UStructureAttributeSet, HullFieldDamageReduction, COND_None, REPNOTIFY_OnChanged);
+	DOREPLIFETIME_CONDITION_NOTIFY(UStructureAttributeSet, HullKineticResistance, COND_None, REPNOTIFY_OnChanged);
+	DOREPLIFETIME_CONDITION_NOTIFY(UStructureAttributeSet, HullExplosiveResistance, COND_None, REPNOTIFY_OnChanged);
+	DOREPLIFETIME_CONDITION_NOTIFY(UStructureAttributeSet, HullThermalResistance, COND_None, REPNOTIFY_OnChanged);
+	DOREPLIFETIME_CONDITION_NOTIFY(UStructureAttributeSet, HullElectromagneticResistance, COND_None, REPNOTIFY_OnChanged);
 	DOREPLIFETIME_CONDITION_NOTIFY(UStructureAttributeSet, MaxShield, COND_None, REPNOTIFY_OnChanged);
 	DOREPLIFETIME_CONDITION_NOTIFY(UStructureAttributeSet, Shield, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UStructureAttributeSet, ShieldRegen, COND_None, REPNOTIFY_OnChanged);
-	DOREPLIFETIME_CONDITION_NOTIFY(UStructureAttributeSet, ShieldKineticDamageReduction, COND_None, REPNOTIFY_OnChanged);
-	DOREPLIFETIME_CONDITION_NOTIFY(UStructureAttributeSet, ShieldExplosiveDamageReduction, COND_None, REPNOTIFY_OnChanged);
-	DOREPLIFETIME_CONDITION_NOTIFY(UStructureAttributeSet, ShieldBeamDamageReduction, COND_None, REPNOTIFY_OnChanged);
-	DOREPLIFETIME_CONDITION_NOTIFY(UStructureAttributeSet, ShieldFieldDamageReduction, COND_None, REPNOTIFY_OnChanged);
+	DOREPLIFETIME_CONDITION_NOTIFY(UStructureAttributeSet, ShieldKineticResistance, COND_None, REPNOTIFY_OnChanged);
+	DOREPLIFETIME_CONDITION_NOTIFY(UStructureAttributeSet, ShieldExplosiveResistance, COND_None, REPNOTIFY_OnChanged);
+	DOREPLIFETIME_CONDITION_NOTIFY(UStructureAttributeSet, ShieldThermalResistance, COND_None, REPNOTIFY_OnChanged);
+	DOREPLIFETIME_CONDITION_NOTIFY(UStructureAttributeSet, ShieldElectromagneticResistance, COND_None, REPNOTIFY_OnChanged);
 	DOREPLIFETIME_CONDITION_NOTIFY(UStructureAttributeSet, MaxEnergy, COND_None, REPNOTIFY_OnChanged);
 	DOREPLIFETIME_CONDITION_NOTIFY(UStructureAttributeSet, Energy, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UStructureAttributeSet, EnergyRegen, COND_None, REPNOTIFY_OnChanged);
@@ -67,24 +67,24 @@ void UStructureAttributeSet::OnRep_Hull(const FGameplayAttributeData& OldHull)
 	GAMEPLAYATTRIBUTE_REPNOTIFY(UStructureAttributeSet, Hull, OldHull);
 }
 
-void UStructureAttributeSet::OnRep_HullKineticDamageReduction(const FGameplayAttributeData& OldHullKineticDamageReduction)
+void UStructureAttributeSet::OnRep_HullKineticResistance(const FGameplayAttributeData& OldHullKineticResistance)
 {
-	GAMEPLAYATTRIBUTE_REPNOTIFY(UStructureAttributeSet, HullKineticDamageReduction, OldHullKineticDamageReduction);
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UStructureAttributeSet, HullKineticResistance, OldHullKineticResistance);
 }
 
-void UStructureAttributeSet::OnRep_HullExplosiveDamageReduction(const FGameplayAttributeData& OldHullExplosiveDamageReduction)
+void UStructureAttributeSet::OnRep_HullExplosiveResistance(const FGameplayAttributeData& OldHullExplosiveResistance)
 {
-	GAMEPLAYATTRIBUTE_REPNOTIFY(UStructureAttributeSet, HullExplosiveDamageReduction, OldHullExplosiveDamageReduction);
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UStructureAttributeSet, HullExplosiveResistance, OldHullExplosiveResistance);
 }
 
-void UStructureAttributeSet::OnRep_HullBeamDamageReduction(const FGameplayAttributeData& OldHullBeamDamageReduction)
+void UStructureAttributeSet::OnRep_HullThermalResistance(const FGameplayAttributeData& OldHullThermalResistance)
 {
-	GAMEPLAYATTRIBUTE_REPNOTIFY(UStructureAttributeSet, HullBeamDamageReduction, OldHullBeamDamageReduction);
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UStructureAttributeSet, HullThermalResistance, OldHullThermalResistance);
 }
 
-void UStructureAttributeSet::OnRep_HullFieldDamageReduction(const FGameplayAttributeData& OldHullFieldDamageReduction)
+void UStructureAttributeSet::OnRep_HullElectromagneticResistance(const FGameplayAttributeData& OldHullElectromagneticResistance)
 {
-	GAMEPLAYATTRIBUTE_REPNOTIFY(UStructureAttributeSet, HullFieldDamageReduction, OldHullFieldDamageReduction);
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UStructureAttributeSet, HullElectromagneticResistance, OldHullElectromagneticResistance);
 }
 
 void UStructureAttributeSet::OnRep_MaxShield(const FGameplayAttributeData& OldMaxShield)
@@ -102,24 +102,24 @@ void UStructureAttributeSet::OnRep_ShieldRegen(const FGameplayAttributeData& Old
 	GAMEPLAYATTRIBUTE_REPNOTIFY(UStructureAttributeSet, ShieldRegen, OldShieldRegen);
 }
 
-void UStructureAttributeSet::OnRep_ShieldKineticDamageReduction(const FGameplayAttributeData& OldShieldKineticDamageReduction)
+void UStructureAttributeSet::OnRep_ShieldKineticResistance(const FGameplayAttributeData& OldShieldKineticResistance)
 {
-	GAMEPLAYATTRIBUTE_REPNOTIFY(UStructureAttributeSet, ShieldKineticDamageReduction, OldShieldKineticDamageReduction);
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UStructureAttributeSet, ShieldKineticResistance, OldShieldKineticResistance);
 }
 
-void UStructureAttributeSet::OnRep_ShieldExplosiveDamageReduction(const FGameplayAttributeData& OldShieldExplosiveDamageReduction)
+void UStructureAttributeSet::OnRep_ShieldExplosiveResistance(const FGameplayAttributeData& OldShieldExplosiveResistance)
 {
-	GAMEPLAYATTRIBUTE_REPNOTIFY(UStructureAttributeSet, ShieldExplosiveDamageReduction, OldShieldExplosiveDamageReduction);
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UStructureAttributeSet, ShieldExplosiveResistance, OldShieldExplosiveResistance);
 }
 
-void UStructureAttributeSet::OnRep_ShieldBeamDamageReduction(const FGameplayAttributeData& OldShieldBeamDamageReduction)
+void UStructureAttributeSet::OnRep_ShieldThermalResistance(const FGameplayAttributeData& OldShieldThermalResistance)
 {
-	GAMEPLAYATTRIBUTE_REPNOTIFY(UStructureAttributeSet, ShieldBeamDamageReduction, OldShieldBeamDamageReduction);
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UStructureAttributeSet, ShieldThermalResistance, OldShieldThermalResistance);
 }
 
-void UStructureAttributeSet::OnRep_ShieldFieldDamageReduction(const FGameplayAttributeData& OldShieldFieldDamageReduction)
+void UStructureAttributeSet::OnRep_ShieldElectromagneticResistance(const FGameplayAttributeData& OldShieldElectromagneticResistance)
 {
-	GAMEPLAYATTRIBUTE_REPNOTIFY(UStructureAttributeSet, ShieldFieldDamageReduction, OldShieldFieldDamageReduction);
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UStructureAttributeSet, ShieldElectromagneticResistance, OldShieldElectromagneticResistance);
 }
 
 void UStructureAttributeSet::OnRep_MaxEnergy(const FGameplayAttributeData& OldMaxEnergy)

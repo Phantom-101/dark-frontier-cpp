@@ -15,6 +15,7 @@
 #include "Structures/StructurePart.h"
 #include "Structures/StructureSlot.h"
 #include "Structures/StructureValidationResult.h"
+#include "Structures/Damage/StructureDamageType.h"
 #include "Structures/Indications/DistanceIndication.h"
 #include "Structures/Indications/HullIndication.h"
 #include "Structures/Indications/SpeedIndication.h"
@@ -545,57 +546,30 @@ bool AStructure::IsDetecting(AStructure* Other) const
 
 void AStructure::ApplyDamage(FStructureDamage Damage, AStructurePart* HitPart, FVector HitLocation)
 {
-	Damage = ProcessDamage(Damage);
-	
-	if(Damage.Sum() > 0 && GetShield() > 0)
+	if(Damage.IsValid() && GetShield() > 0)
 	{
-		const FStructureDamage ShieldPostMitigation = GetShieldPostMitigationDamage(Damage);
-		const float ShieldAbsorbedPercent = FMath::Min(GetShield() / ShieldPostMitigation.Sum(), 1);
-		const float ShieldDamage = ShieldPostMitigation.Sum() * ShieldAbsorbedPercent;
-		SetShield(GetShield() - ShieldDamage);
-		Damage = Damage.Scale(1 - ShieldAbsorbedPercent);
+		const float PostMitigation = Damage.Amount * Damage.DamageType.GetDefaultObject()->GetShieldMultiplier(AbilitySystemComponent);
+		const float AbsorbedPercent = FMath::Min(GetShield() / PostMitigation, 1);
+		const float Applied = PostMitigation * AbsorbedPercent;
+		SetShield(GetShield() - Applied);
+		Damage = FStructureDamage(Damage.DamageType, Damage.Amount * (1 - AbsorbedPercent));
 
 		FGameplayCueParameters Parameters;
 		Parameters.Location = HitLocation;
-		Parameters.RawMagnitude = ShieldDamage;
+		Parameters.RawMagnitude = Applied;
 		AbilitySystemComponent->ExecuteGameplayCueLocal(ShieldDamageCueTag, Parameters);
 	}
 
-	if(Damage.Sum() > 0 && GetHull() > 0)
+	if(Damage.IsValid() && GetHull() > 0)
 	{
-		const FStructureDamage HullPostMitigation = GetHullPostMitigationDamage(Damage);
-		SetHull(GetHull() - HullPostMitigation.Sum());
+		const float PostMitigation = Damage.Amount * Damage.DamageType.GetDefaultObject()->GetHullMultiplier(AbilitySystemComponent);
+		SetHull(GetHull() - PostMitigation);
 
 		FGameplayCueParameters Parameters;
 		Parameters.Location = HitLocation;
-		Parameters.RawMagnitude = HullPostMitigation.Sum();
+		Parameters.RawMagnitude = PostMitigation;
 		AbilitySystemComponent->ExecuteGameplayCueLocal(HullDamageCueTag, Parameters);
 	}
-}
-
-FStructureDamage AStructure::ProcessDamage(FStructureDamage Damage)
-{
-	return Damage;
-}
-
-FStructureDamage AStructure::GetHullPostMitigationDamage(const FStructureDamage& PreMitigationDamage) const
-{
-	return FStructureDamage(
-		PreMitigationDamage.Kinetic / (1 + Attributes->GetHullKineticDamageReduction()),
-		PreMitigationDamage.Explosive / (1 + Attributes->GetHullExplosiveDamageReduction()),
-		PreMitigationDamage.Beam / (1 + Attributes->GetHullBeamDamageReduction()),
-		PreMitigationDamage.Field / (1 + Attributes->GetHullFieldDamageReduction())
-	);
-}
-
-FStructureDamage AStructure::GetShieldPostMitigationDamage(const FStructureDamage& PreMitigationDamage) const
-{
-	return FStructureDamage(
-		PreMitigationDamage.Kinetic / (1 + Attributes->GetShieldKineticDamageReduction()),
-		PreMitigationDamage.Explosive / (1 + Attributes->GetShieldExplosiveDamageReduction()),
-		PreMitigationDamage.Beam / (1 + Attributes->GetShieldBeamDamageReduction()),
-		PreMitigationDamage.Field / (1 + Attributes->GetShieldFieldDamageReduction())
-	);
 }
 
 FActiveGameplayEffectHandle AStructure::ApplyEffect(const TSubclassOf<UGameplayEffect> EffectClass) const

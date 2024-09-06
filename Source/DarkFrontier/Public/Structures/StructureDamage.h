@@ -5,6 +5,8 @@
 #include "CoreMinimal.h"
 #include "StructureDamage.generated.h"
 
+class UStructureDamageType;
+
 /**
  * 
  */
@@ -13,26 +15,16 @@ struct DARKFRONTIER_API FStructureDamage
 {
 	GENERATED_BODY()
 
-	UPROPERTY(BlueprintReadWrite, EditAnywhere)	
-	float Kinetic = 0;
+	UPROPERTY(BlueprintReadOnly, EditAnywhere)	
+	TSubclassOf<UStructureDamageType> DamageType;
 
-	UPROPERTY(BlueprintReadWrite, EditAnywhere)	
-	float Explosive = 0;
-
-	UPROPERTY(BlueprintReadWrite, EditAnywhere)	
-	float Beam = 0;
-	
-	UPROPERTY(BlueprintReadWrite, EditAnywhere)	
-	float Field = 0;
+	UPROPERTY(BlueprintReadOnly, EditAnywhere)
+	float Amount;
 
 	FStructureDamage();
 
-	FStructureDamage(float InKinetic, float InExplosive, float InBeam, float InField);
+	FStructureDamage(TSubclassOf<UStructureDamageType> InDamageType, float InAmount);
 
-	float Sum() const;
+	bool IsValid() const;
 
-	FStructureDamage Scale(float InFactor) const;
-
-	void SetMagnitudes(TSubclassOf<class UStructureDamageTags> Tags, const struct FGameplayEffectSpecHandle& SpecHandle) const;
-	
 };

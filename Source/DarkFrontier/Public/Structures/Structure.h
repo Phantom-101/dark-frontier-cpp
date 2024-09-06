@@ -240,15 +240,6 @@ public:
 	void ApplyDamage(FStructureDamage Damage, AStructurePart* HitPart, FVector HitLocation);
 
 	UFUNCTION(BlueprintCallable, Category="Gameplay")
-	FStructureDamage ProcessDamage(FStructureDamage Damage);
-
-	UFUNCTION(BlueprintCallable, Category="Gameplay")
-	FStructureDamage GetHullPostMitigationDamage(const FStructureDamage& PreMitigationDamage) const;
-
-	UFUNCTION(BlueprintCallable, Category="Gameplay")
-	FStructureDamage GetShieldPostMitigationDamage(const FStructureDamage& PreMitigationDamage) const;
-	
-	UFUNCTION(BlueprintCallable, Category="Gameplay")
 	FActiveGameplayEffectHandle ApplyEffect(TSubclassOf<class UGameplayEffect> EffectClass) const;
 
 	UFUNCTION(BlueprintCallable, Category="Gameplay")
