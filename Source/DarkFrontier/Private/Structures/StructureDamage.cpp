@@ -1,30 +1,21 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "Structures/StructureDamage.h"
+#include "Structures/Damage/StructureDamageType.h"
 
 FStructureDamage::FStructureDamage()
 {
+	DamageType = nullptr;
+	Amount = 0;
 }
 
-FStructureDamage::FStructureDamage(const float InKinetic, const float InExplosive, const float InBeam, const float InField)
+FStructureDamage::FStructureDamage(const TSubclassOf<UStructureDamageType> InDamageType, const float InAmount)
 {
-	Kinetic = abs(InKinetic);
-	Explosive = abs(InExplosive);
-	Beam = abs(InBeam);
-	Field = abs(InField);
+	DamageType = InDamageType;
+	Amount = InAmount;
 }
 
-float FStructureDamage::Sum() const
+bool FStructureDamage::IsValid() const
 {
-	return Kinetic + Explosive + Beam + Field;
-}
-
-FStructureDamage FStructureDamage::Scale(const float InFactor) const
-{
-	return FStructureDamage(
-		Kinetic * abs(InFactor),
-		Explosive * abs(InFactor),
-		Beam * abs(InFactor),
-		Field * abs(InFactor)
-	);
+	return DamageType != nullptr && Amount > 0;
 }

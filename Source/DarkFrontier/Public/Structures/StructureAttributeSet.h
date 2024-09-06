@@ -29,17 +29,17 @@ public:
 	UPROPERTY(BlueprintReadOnly, Category="Attributes", ReplicatedUsing=OnRep_Hull)
 	FGameplayAttributeData Hull;
 	
-	UPROPERTY(BlueprintReadOnly, Category="Attributes", ReplicatedUsing=OnRep_HullKineticDamageReduction)
-	FGameplayAttributeData HullKineticDamageReduction;
+	UPROPERTY(BlueprintReadOnly, Category="Attributes", ReplicatedUsing=OnRep_HullKineticResistance)
+	FGameplayAttributeData HullKineticResistance;
 	
-	UPROPERTY(BlueprintReadOnly, Category="Attributes", ReplicatedUsing=OnRep_HullExplosiveDamageReduction)
-	FGameplayAttributeData HullExplosiveDamageReduction;
-	
-	UPROPERTY(BlueprintReadOnly, Category="Attributes", ReplicatedUsing=OnRep_HullBeamDamageReduction)
-	FGameplayAttributeData HullBeamDamageReduction;
-	
-	UPROPERTY(BlueprintReadOnly, Category="Attributes", ReplicatedUsing=OnRep_HullFieldDamageReduction)
-	FGameplayAttributeData HullFieldDamageReduction;
+	UPROPERTY(BlueprintReadOnly, Category="Attributes", ReplicatedUsing=OnRep_HullExplosiveResistance)
+	FGameplayAttributeData HullExplosiveResistance;
+
+	UPROPERTY(BlueprintReadOnly, Category="Attributes", ReplicatedUsing=OnRep_HullThermalResistance)
+	FGameplayAttributeData HullThermalResistance;
+
+	UPROPERTY(BlueprintReadOnly, Category="Attributes", ReplicatedUsing=OnRep_HullElectromagneticResistance)
+	FGameplayAttributeData HullElectromagneticResistance;
 	
 	UPROPERTY(BlueprintReadOnly, Category="Attributes", ReplicatedUsing=OnRep_MaxShield)
 	FGameplayAttributeData MaxShield;
@@ -50,18 +50,18 @@ public:
 	UPROPERTY(BlueprintReadOnly, Category="Attributes", ReplicatedUsing=OnRep_ShieldRegen)
 	FGameplayAttributeData ShieldRegen;
 	
-	UPROPERTY(BlueprintReadOnly, Category="Attributes", ReplicatedUsing=OnRep_ShieldKineticDamageReduction)
-	FGameplayAttributeData ShieldKineticDamageReduction;
-	
-	UPROPERTY(BlueprintReadOnly, Category="Attributes", ReplicatedUsing=OnRep_ShieldExplosiveDamageReduction)
-	FGameplayAttributeData ShieldExplosiveDamageReduction;
-	
-	UPROPERTY(BlueprintReadOnly, Category="Attributes", ReplicatedUsing=OnRep_ShieldBeamDamageReduction)
-	FGameplayAttributeData ShieldBeamDamageReduction;
-	
-	UPROPERTY(BlueprintReadOnly, Category="Attributes", ReplicatedUsing=OnRep_ShieldFieldDamageReduction)
-	FGameplayAttributeData ShieldFieldDamageReduction;
+	UPROPERTY(BlueprintReadOnly, Category="Attributes", ReplicatedUsing=OnRep_ShieldKineticResistance)
+	FGameplayAttributeData ShieldKineticResistance;
 
+	UPROPERTY(BlueprintReadOnly, Category="Attributes", ReplicatedUsing=OnRep_ShieldExplosiveResistance)
+	FGameplayAttributeData ShieldExplosiveResistance;
+	
+	UPROPERTY(BlueprintReadOnly, Category="Attributes", ReplicatedUsing=OnRep_ShieldThermalResistance)
+	FGameplayAttributeData ShieldThermalResistance;
+
+	UPROPERTY(BlueprintReadOnly, Category="Attributes", ReplicatedUsing=OnRep_ShieldElectromagneticResistance)
+	FGameplayAttributeData ShieldElectromagneticResistance;
+	
 	UPROPERTY(BlueprintReadOnly, Category="Attributes", ReplicatedUsing=OnRep_MaxEnergy)
 	FGameplayAttributeData MaxEnergy;
 
@@ -102,17 +102,17 @@ public:
 
 	ATTRIBUTE_ACCESSORS(UStructureAttributeSet, MaxHull);
 	ATTRIBUTE_ACCESSORS(UStructureAttributeSet, Hull);
-	ATTRIBUTE_ACCESSORS(UStructureAttributeSet, HullKineticDamageReduction);
-	ATTRIBUTE_ACCESSORS(UStructureAttributeSet, HullExplosiveDamageReduction);
-	ATTRIBUTE_ACCESSORS(UStructureAttributeSet, HullBeamDamageReduction);
-	ATTRIBUTE_ACCESSORS(UStructureAttributeSet, HullFieldDamageReduction);
+	ATTRIBUTE_ACCESSORS(UStructureAttributeSet, HullKineticResistance);
+	ATTRIBUTE_ACCESSORS(UStructureAttributeSet, HullExplosiveResistance);
+	ATTRIBUTE_ACCESSORS(UStructureAttributeSet, HullThermalResistance);
+	ATTRIBUTE_ACCESSORS(UStructureAttributeSet, HullElectromagneticResistance);
 	ATTRIBUTE_ACCESSORS(UStructureAttributeSet, MaxShield);
 	ATTRIBUTE_ACCESSORS(UStructureAttributeSet, Shield);
 	ATTRIBUTE_ACCESSORS(UStructureAttributeSet, ShieldRegen);
-	ATTRIBUTE_ACCESSORS(UStructureAttributeSet, ShieldKineticDamageReduction);
-	ATTRIBUTE_ACCESSORS(UStructureAttributeSet, ShieldExplosiveDamageReduction);
-	ATTRIBUTE_ACCESSORS(UStructureAttributeSet, ShieldBeamDamageReduction);
-	ATTRIBUTE_ACCESSORS(UStructureAttributeSet, ShieldFieldDamageReduction);
+	ATTRIBUTE_ACCESSORS(UStructureAttributeSet, ShieldKineticResistance);
+	ATTRIBUTE_ACCESSORS(UStructureAttributeSet, ShieldExplosiveResistance);
+	ATTRIBUTE_ACCESSORS(UStructureAttributeSet, ShieldThermalResistance);
+	ATTRIBUTE_ACCESSORS(UStructureAttributeSet, ShieldElectromagneticResistance);
 	ATTRIBUTE_ACCESSORS(UStructureAttributeSet, MaxEnergy);
 	ATTRIBUTE_ACCESSORS(UStructureAttributeSet, Energy);
 	ATTRIBUTE_ACCESSORS(UStructureAttributeSet, EnergyRegen);
@@ -137,16 +137,16 @@ public:
 	virtual void OnRep_Hull(const FGameplayAttributeData& OldHull);
 
 	UFUNCTION()
-	virtual void OnRep_HullKineticDamageReduction(const FGameplayAttributeData& OldHullKineticDamageReduction);
+	virtual void OnRep_HullKineticResistance(const FGameplayAttributeData& OldHullKineticResistance);
 
 	UFUNCTION()
-	virtual void OnRep_HullExplosiveDamageReduction(const FGameplayAttributeData& OldHullExplosiveDamageReduction);
+	virtual void OnRep_HullExplosiveResistance(const FGameplayAttributeData& OldHullExplosiveResistance);
 
 	UFUNCTION()
-	virtual void OnRep_HullBeamDamageReduction(const FGameplayAttributeData& OldHullBeamDamageReduction);
+	virtual void OnRep_HullThermalResistance(const FGameplayAttributeData& OldHullThermalResistance);
 
 	UFUNCTION()
-	virtual void OnRep_HullFieldDamageReduction(const FGameplayAttributeData& OldHullFieldDamageReduction);
+	virtual void OnRep_HullElectromagneticResistance(const FGameplayAttributeData& OldHullElectromagneticResistance);
 
 	UFUNCTION()
 	virtual void OnRep_MaxShield(const FGameplayAttributeData& OldMaxShield);
@@ -158,16 +158,16 @@ public:
 	virtual void OnRep_ShieldRegen(const FGameplayAttributeData& OldShieldRegen);
 
 	UFUNCTION()
-	virtual void OnRep_ShieldKineticDamageReduction(const FGameplayAttributeData& OldShieldKineticDamageReduction);
+	virtual void OnRep_ShieldKineticResistance(const FGameplayAttributeData& OldShieldKineticResistance);
 
 	UFUNCTION()
-	virtual void OnRep_ShieldExplosiveDamageReduction(const FGameplayAttributeData& OldShieldExplosiveDamageReduction);
-	
+	virtual void OnRep_ShieldExplosiveResistance(const FGameplayAttributeData& OldShieldExplosiveResistance);
+
 	UFUNCTION()
-	virtual void OnRep_ShieldBeamDamageReduction(const FGameplayAttributeData& OldShieldBeamDamageReduction);
-	
+	virtual void OnRep_ShieldThermalResistance(const FGameplayAttributeData& OldShieldThermalResistance);
+
 	UFUNCTION()
-	virtual void OnRep_ShieldFieldDamageReduction(const FGameplayAttributeData& OldShieldFieldDamageReduction);
+	virtual void OnRep_ShieldElectromagneticResistance(const FGameplayAttributeData& OldShieldElectromagneticResistance);
 	
 	UFUNCTION()
 	virtual void OnRep_MaxEnergy(const FGameplayAttributeData& OldMaxEnergy);
