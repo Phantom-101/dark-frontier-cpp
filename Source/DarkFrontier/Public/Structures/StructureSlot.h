@@ -20,7 +20,7 @@ protected:
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category="Setup")
 	FText SlotName;
 
-	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Instanced, Category="Setup")
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category="Setup")
 	TObjectPtr<class UStructurePartFilter> Filter;
 
 	UPROPERTY(BlueprintReadOnly)

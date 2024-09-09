@@ -9,6 +9,8 @@
 #include "GameFramework/Pawn.h"
 #include "Structure.generated.h"
 
+class UStructureIndices;
+class UStructureGameplay;
 enum class EStructureValidationResult : uint8;
 class UInventory;
 class UStructureAbilitySystemComponent;
@@ -51,17 +53,8 @@ protected:
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category="Components")
 	TObjectPtr<UCameraComponent> Camera;
 
-	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category="Setup")
-	TSubclassOf<UGameplayEffect> DefaultAttributes;
-
-	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category="Setup")
-	TArray<TSubclassOf<UGameplayEffect>> PassiveEffectClasses;
-
-	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly, Category="Layout")
-	TObjectPtr<AStructurePart> RootPart;
-
-	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly, Category="Layout")
-	TArray<TObjectPtr<AStructurePart>> Parts;
+	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly)
+	TObjectPtr<UStructureIndices> Indices;
 
 	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly, Category="Docking")
 	TObjectPtr<UStructureDock> CurrentDock;
@@ -81,12 +74,9 @@ protected:
 	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly, Category="Combat")
 	TObjectPtr<AStructure> Target;
 
-	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category="Gameplay")
-	TObjectPtr<UStructureAbilitySystemComponent> AbilitySystemComponent;
+	UPROPERTY(BlueprintReadOnly, VisibleAnywhere)
+	TObjectPtr<UStructureGameplay> Gameplay;
 	
-	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category="Gameplay")
-	TObjectPtr<UStructureAttributeSet> Attributes;
-
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category="Gameplay")
 	FGameplayTag HullDamageCueTag;
 	
@@ -132,25 +122,10 @@ public:
 	virtual void PossessedBy(AController* NewController) override;
 
 	UFUNCTION(BlueprintCallable, Category="Lifetime")
-	bool TryInit(AStructurePart* NewRoot, bool RegisterOnly = false);
-
-	UFUNCTION(BlueprintCallable, Category="Lifetime")
 	bool TryDestroy();
 
-	UFUNCTION(BlueprintCallable, Category="Layout")
-	AStructurePart* GetRootPart() const;
-
-	UFUNCTION(BlueprintCallable, Category="Layout")
-	TArray<AStructurePart*> GetParts();
-
-	UFUNCTION(BlueprintCallable, Category="Layout")
-	AStructurePart* GetPart(FString InId);
-
-	UFUNCTION(BlueprintCallable, Category="Layout")
-	void RegisterPart(AStructurePart* InPart, bool SuppressEvent = false, bool KeepId = false);
-
-	UFUNCTION(BlueprintCallable, Category="Layout")
-	void UnregisterPart(AStructurePart* InPart, bool SuppressEvent = false);
+	UFUNCTION(BlueprintCallable)
+	UStructureIndices* GetIndices() const;
 
 	UFUNCTION(BlueprintCallable, Category="Layout")
 	EStructureValidationResult ValidateLayout();
@@ -162,7 +137,7 @@ public:
 	void UpdateLayoutInformation();
 
 	UFUNCTION(BlueprintCallable, Category="Docking")
-	UStructureDock* GetDock();
+	UStructureDock* GetDock() const;
 
 	UFUNCTION(BlueprintCallable, Category="Docking")
 	bool TryDock(UStructureDock* InDock);
@@ -197,59 +172,13 @@ public:
 	UFUNCTION(BlueprintCallable, Category="Combat")
 	void SetTarget(AStructure* InTarget);
 
-	UFUNCTION(BlueprintCallable, Category="Gameplay")
-	void InitGameplay();
-	
-	UFUNCTION(BlueprintCallable, Category="Gameplay")
-	float GetMaxHull() const;
+	UFUNCTION(BlueprintCallable)
+	UStructureGameplay* GetGameplay() const;
 
-	UFUNCTION(BlueprintCallable, Category="Gameplay")
-	float GetHull() const;
-
-	UFUNCTION(BlueprintCallable, Category="Gameplay")
-	void SetHull(float InHull) const;
-
-	UFUNCTION(BlueprintCallable, Category="Gameplay")
-	float GetMaxShield() const;
-
-	UFUNCTION(BlueprintCallable, Category="Gameplay")
-	float GetShield() const;
-
-	UFUNCTION(BlueprintCallable, Category="Gameplay")
-	void SetShield(float InShield) const;
-
-	UFUNCTION(BlueprintCallable, Category="Gameplay")
-	float GetMaxEnergy() const;
-	
-	UFUNCTION(BlueprintCallable, Category="Gameplay")
-	float GetEnergy() const;
-	
-	UFUNCTION(BlueprintCallable, Category="Gameplay")
-	float GetUpkeep() const;
-
-	UFUNCTION(BlueprintCallable, Category="Gameplay")
-	float GetLinearMaxSpeed() const;
-	
-	UFUNCTION(BlueprintCallable, Category="Gameplay")
-	float GetLinearSpeed() const;
-	
-	UFUNCTION(BlueprintCallable, Category="Gameplay")
-	bool IsDetecting(AStructure* Other) const;
+	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 
 	UFUNCTION(BlueprintCallable, Category="Gameplay")
 	void ApplyDamage(FStructureDamage Damage, AStructurePart* HitPart, FVector HitLocation);
-
-	UFUNCTION(BlueprintCallable, Category="Gameplay")
-	FActiveGameplayEffectHandle ApplyEffect(TSubclassOf<class UGameplayEffect> EffectClass) const;
-
-	UFUNCTION(BlueprintCallable, Category="Gameplay")
-	FGameplayAbilitySpecHandle GiveAbility(TSubclassOf<class UStructureAbility> AbilityClass) const;
-
-	UFUNCTION(BlueprintCallable, Category="Gameplay")
-	void ClearAbility(FGameplayAbilitySpecHandle AbilityHandle) const;
-
-	UFUNCTION(BlueprintCallable, Category="Gameplay")
-	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 
 	UFUNCTION(BlueprintCallable, Category="Gameplay")
 	TArray<UStructureIndication*> GetIndications();

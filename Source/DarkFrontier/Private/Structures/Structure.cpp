@@ -10,7 +10,10 @@
 #include "Structures/StructureAttributeSet.h"
 #include "Structures/StructureDamage.h"
 #include "Structures/StructureAbility.h"
+#include "Structures/StructureAuthoring.h"
 #include "Structures/StructureDock.h"
+#include "Structures/StructureGameplay.h"
+#include "Structures/StructureIndices.h"
 #include "Structures/StructureLayout.h"
 #include "Structures/StructurePart.h"
 #include "Structures/StructureSlot.h"
@@ -34,18 +37,16 @@ AStructure::AStructure()
 	Camera = CreateDefaultSubobject<UCameraComponent>("Camera");
 	Camera->SetupAttachment(SpringArm);
 
+	Indices = UStructureIndices::CreateIndices(this);
+
 	Inventory = CreateDefaultSubobject<UInventory>("Inventory");
 
-	AbilitySystemComponent = CreateDefaultSubobject<UStructureAbilitySystemComponent>("AbilitySystemComp");
-	AbilitySystemComponent->SetIsReplicated(true);
-	AbilitySystemComponent->SetReplicationMode(EGameplayEffectReplicationMode::Minimal);
-
-	Attributes = CreateDefaultSubobject<UStructureAttributeSet>("Attributes");
+	Gameplay = UStructureGameplay::CreateGameplay(this);
 }
 
 void AStructure::PostInitializeComponents()
 {
-	InitGameplay();
+	Gameplay->Initialize();
 	
 	Super::PostInitializeComponents();
 }
@@ -54,44 +55,48 @@ void AStructure::BeginPlay()
 {
 	Super::BeginPlay();
 
-	InitGameplay();
+	Gameplay->Initialize();
+	Gameplay->ApplyStartingEffects();
 
-	(void)ApplyEffect(DefaultAttributes);
-		
-	for(const TSubclassOf<UGameplayEffect> PassiveEffectClass : PassiveEffectClasses)
-	{
-		(void)ApplyEffect(PassiveEffectClass);
-	}
+	TryEnterSector(CurrentSector);
 
 	AddIndication(HullIndicationClass.Get());
 	AddIndication(DistanceIndicationClass.Get());
 	AddIndication(SpeedIndicationClass.Get());
+
+	UStructureAuthoring* Authoring = GetComponentByClass<UStructureAuthoring>();
+	if(Authoring != nullptr)
+	{
+		LoadLayout(Authoring->GetLayout());
+	}
 }
 
 void AStructure::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	if(!IsValid(RootPart)) return;
+	if(!IsValid(Indices->GetRootPart())) return;
 
 	UpdateTickLevel();
 
+	const UStructureAttributeSet* AttributeSet = Gameplay->GetAttributeSet();
+
 	if(TickLevel == EStructureTickLevel::Full)
 	{
-		const float LinearMaxSpeed = Attributes->GetLinearMaxSpeed();
-		const float LinearAccel = Attributes->GetLinearAcceleration();
+		const float LinearMaxSpeed = AttributeSet->GetLinearMaxSpeed();
+		const float LinearAccel = AttributeSet->GetLinearAcceleration();
 		StaticMesh->AddImpulse(CalculateImpulse(StaticMesh->GetPhysicsLinearVelocity(), MoveInput, LinearMaxSpeed, LinearAccel, DeltaTime), NAME_None, true);
 
-		const float AngularMaxSpeed = Attributes->GetAngularMaxSpeed();
-		const float AngularAccel = Attributes->GetAngularAcceleration();
+		const float AngularMaxSpeed = AttributeSet->GetAngularMaxSpeed();
+		const float AngularAccel = AttributeSet->GetAngularAcceleration();
 		StaticMesh->AddAngularImpulseInDegrees(CalculateImpulse(StaticMesh->GetPhysicsAngularVelocityInDegrees(), RotateInput, AngularMaxSpeed, AngularAccel, DeltaTime), NAME_None, true);
 	}
 	else if(TickLevel == EStructureTickLevel::Limited)
 	{
-		const FVector ScaledMoveInput = MoveInput * Attributes->GetLinearMaxSpeed();
+		const FVector ScaledMoveInput = MoveInput * AttributeSet->GetLinearMaxSpeed();
 		SetActorLocation(GetActorLocation() + ScaledMoveInput);
 
-		const FVector ScaledRotateInput = RotateInput * Attributes->GetAngularMaxSpeed();
+		const FVector ScaledRotateInput = RotateInput * AttributeSet->GetAngularMaxSpeed();
 		const FRotator Rotation = FRotator(ScaledRotateInput.X, ScaledRotateInput.Z, ScaledRotateInput.Y);
 		SetActorRotation(GetActorRotation() + Rotation);
 	}
@@ -101,99 +106,38 @@ void AStructure::PossessedBy(AController* NewController)
 {
 	Super::PossessedBy(NewController);
 
-	AbilitySystemComponent->InitAbilityActorInfo(this, this);
+	Gameplay->Initialize();
+	
 	SetOwner(NewController); // For ASC mixed replication mode
-}
-
-bool AStructure::TryInit(AStructurePart* NewRoot, const bool RegisterOnly)
-{
-	if(RootPart) return false;
-	if(NewRoot->GetOwningStructure()) return false;
-
-	// Ensure ability system component is initialized as part will apply passive effects once registered
-	InitGameplay();
-
-	if(NewRoot->TryInit(this, RegisterOnly))
-	{
-		RootPart = NewRoot;
-		RootPart->SetActorRelativeLocation(FVector::ZeroVector);
-		RootPart->SetActorRelativeRotation(FRotator::ZeroRotator);
-
-		TryEnterSector(CurrentSector);
-		
-		return true;
-	}
-	return false;
 }
 
 bool AStructure::TryDestroy()
 {
-	if(!IsValid(RootPart)) return false;
+	if(!IsValid(Indices->GetRootPart())) return false;
 	
-	RootPart->DetachSlots();
+	Indices->GetRootPart()->DetachSlots();
 	UpdateLayoutInformation();
 
-	RootPart->Destroy();
+	Indices->GetRootPart()->Destroy();
+
+	if(IsValid(CurrentSector))
+	{
+		CurrentSector->UnregisterStructure(this);
+	}
 
 	Destroy();
 
 	return true;
 }
 
-AStructurePart* AStructure::GetRootPart() const
+UStructureIndices* AStructure::GetIndices() const
 {
-	return RootPart;
-}
-
-TArray<AStructurePart*> AStructure::GetParts()
-{
-	return Parts;
-}
-
-AStructurePart* AStructure::GetPart(const FString InId)
-{
-	for(AStructurePart* Part : Parts)
-	{
-		if(Part->GetPartId().Equals(InId))
-		{
-			return Part;
-		}
-	}
-	return nullptr;
-}
-
-void AStructure::RegisterPart(AStructurePart* InPart, const bool SuppressEvent, const bool KeepId)
-{
-	// Keep default id, such as when loading from layout
-	// Part id may be set to desired value after registration is complete
-	// Initializing id now will block that later step
-	if(!KeepId)
-	{
-		InPart->TryInitPartId(FGuid::NewGuid().ToString());
-	}
-	
-	Parts.Add(InPart);
-	InPart->OnRegistered();
-	
-	if(!SuppressEvent)
-	{
-		OnLayoutChanged.Broadcast();
-	}
-}
-
-void AStructure::UnregisterPart(AStructurePart* InPart, const bool SuppressEvent)
-{
-	Parts.Remove(InPart);
-	InPart->OnUnRegistered();
-
-	if(!SuppressEvent)
-	{
-		OnLayoutChanged.Broadcast();
-	}
+	return Indices;
 }
 
 EStructureValidationResult AStructure::ValidateLayout()
 {
+	TArray<AStructurePart*> Parts = Indices->GetParts();
 	for(int i = 0; i < Parts.Num(); i++)
 	{
 		for(int j = i + 1; j < Parts.Num(); j++)
@@ -205,7 +149,7 @@ EStructureValidationResult AStructure::ValidateLayout()
 		}
 	}
 	
-	if(GetUpkeep() > Attributes->GetMaxUpkeep())
+	if(Gameplay->GetUpkeep() > Gameplay->GetAttributeSet()->GetMaxUpkeep())
 	{
 		return EStructureValidationResult::UpkeepExceeded;
 	}
@@ -215,7 +159,7 @@ EStructureValidationResult AStructure::ValidateLayout()
 
 bool AStructure::LoadLayout(FStructureLayout InLayout)
 {
-	if(RootPart) return false;
+	if(Indices->GetRootPart()) return false;
 
 	// If any layout part has an empty id, set it to a random guid
 	for(int i = 0; i < InLayout.Parts.Num(); i++)
@@ -232,25 +176,15 @@ bool AStructure::LoadLayout(FStructureLayout InLayout)
 		if(PartData.IsValid())
 		{
 			AStructurePart* Part = GetWorld()->SpawnActor<AStructurePart>(PartData.PartType);
-			
-			if(RootPart)
-			{
-				if(!Part->TryInit(this, true))
-				{
-					UE_LOG(LogDarkFrontier, Warning, TEXT("Failed to create layout part on %s with id %s"), *GetName(), *PartData.PartId);
-				}
-			}
-			else
-			{
-				if(!TryInit(Part, true))
-				{
-					UE_LOG(LogDarkFrontier, Warning, TEXT("Failed to create layout part as root on %s with id %s"), *GetName(), *PartData.PartId);
-				}
-			}
-			
+
 			if(!Part->TryInitPartId(PartData.PartId))
 			{
 				UE_LOG(LogDarkFrontier, Warning, TEXT("Failed to set layout part on %s to target id %s"), *GetName(), *PartData.PartId);
+			}
+			
+			if(!Indices->AddPart(Part))
+			{
+				UE_LOG(LogDarkFrontier, Warning, TEXT("Failed to create layout part on %s with id %s"), *GetName(), *PartData.PartId);
 			}
 		}
 		else
@@ -260,14 +194,14 @@ bool AStructure::LoadLayout(FStructureLayout InLayout)
 		}
 	}
 
-	if(!RootPart) return false;
+	if(!Indices->GetRootPart()) return false;
 
 	for(FStructureLayoutConnection ConnectionData : InLayout.Connections)
 	{
 		if(ConnectionData.IsValid())
 		{
-			AStructurePart* PartA = GetPart(ConnectionData.PartAId);
-			AStructurePart* PartB = GetPart(ConnectionData.PartBId);
+			AStructurePart* PartA = Indices->GetPart(ConnectionData.PartAId);
+			AStructurePart* PartB = Indices->GetPart(ConnectionData.PartBId);
 
 			if(IsValid(PartA) && IsValid(PartB))
 			{
@@ -308,7 +242,7 @@ void AStructure::UpdateLayoutInformation()
 {
 	// Collect reachable parts
 	TArray<AStructurePart*> NewParts;
-	NewParts.Add(RootPart);
+	NewParts.Add(Indices->GetRootPart());
 
 	int CurrentIndex = 0;
 	while(CurrentIndex < NewParts.Num())
@@ -326,19 +260,20 @@ void AStructure::UpdateLayoutInformation()
 	// Call register and unregister events as needed
 	for(AStructurePart* Part : NewParts)
 	{
-		if(!Parts.Contains(Part))
+		if(!Indices->GetParts().Contains(Part))
 		{
-			RegisterPart(Part, true);
+			Indices->AddPart(Part);
 		}
 	}
 
 	CurrentIndex = 0;
+	TArray<AStructurePart*> Parts = Indices->GetParts();
 	while(CurrentIndex < Parts.Num())
 	{
 		if(!NewParts.Contains(Parts[CurrentIndex]))
 		{
 			Parts[CurrentIndex]->Destroy();
-			UnregisterPart(Parts[CurrentIndex], true);
+			Indices->RemovePart(Parts[CurrentIndex]);
 		}
 		else
 		{
@@ -352,17 +287,10 @@ void AStructure::UpdateLayoutInformation()
 		Part->AttachSlots();
 	}
 	
-	// Update root distances
-	for(AStructurePart* Part : Parts)
-	{
-		Part->ResetRootDistance();
-	}
-	RootPart->UpdateRootDistance(0);
-
 	OnLayoutChanged.Broadcast();
 }
 
-UStructureDock* AStructure::GetDock()
+UStructureDock* AStructure::GetDock() const
 {
 	return CurrentDock;
 }
@@ -479,79 +407,26 @@ void AStructure::SetTarget(AStructure* InTarget)
 	Target = InTarget;
 }
 
-void AStructure::InitGameplay()
+UStructureGameplay* AStructure::GetGameplay() const
 {
-	AbilitySystemComponent->InitAbilityActorInfo(this, this);
+	return Gameplay;
 }
 
-float AStructure::GetMaxHull() const
+UAbilitySystemComponent* AStructure::GetAbilitySystemComponent() const
 {
-	return Attributes->GetMaxHull() == 0 ? 1 : Attributes->GetMaxHull();
-}
-
-float AStructure::GetHull() const
-{
-	return Attributes->GetHull();
-}
-
-void AStructure::SetHull(const float InHull) const
-{
-	Attributes->SetHull(FMath::Clamp(InHull, 0, Attributes->GetMaxHull()));
-}
-
-float AStructure::GetMaxShield() const
-{
-	return Attributes->GetMaxShield() == 0 ? 1 : Attributes->GetMaxShield();
-}
-
-float AStructure::GetShield() const
-{
-	return Attributes->GetShield();
-}
-
-void AStructure::SetShield(const float InShield) const
-{
-	Attributes->SetShield(FMath::Clamp(InShield, 0, Attributes->GetMaxShield()));
-}
-
-float AStructure::GetMaxEnergy() const
-{
-	return Attributes->GetMaxEnergy() == 0 ? 1 : Attributes->GetMaxEnergy();
-}
-
-float AStructure::GetEnergy() const
-{
-	return Attributes->GetEnergy();
-}
-
-float AStructure::GetUpkeep() const
-{
-	return Attributes->GetUpkeep() / (Attributes->GetUpkeepReduction() + 1);
-}
-
-float AStructure::GetLinearMaxSpeed() const
-{
-	return Attributes->GetLinearMaxSpeed() == 0 ? 1 : Attributes->GetLinearMaxSpeed();
-}
-
-float AStructure::GetLinearSpeed() const
-{
-	return StaticMesh->GetPhysicsLinearVelocity().Length();
-}
-
-bool AStructure::IsDetecting(AStructure* Other) const
-{
-	return (GetActorLocation() - Other->GetActorLocation()).SquaredLength() <= Attributes->GetSensorStrength() * Other->Attributes->GetSignatureVisibility();
+	return Gameplay->GetAbilitySystemComponent();
 }
 
 void AStructure::ApplyDamage(FStructureDamage Damage, AStructurePart* HitPart, FVector HitLocation)
 {
-	if(Damage.IsValid() && GetShield() > 0)
+	const UStructureAbilitySystemComponent* AbilitySystemComponent = Gameplay->GetAbilitySystemComponent();
+	
+	if(Damage.IsValid() && Gameplay->GetShield() > 0)
 	{
 		const float PostMitigation = Damage.Amount * Damage.DamageType.GetDefaultObject()->GetShieldMultiplier(AbilitySystemComponent);
-		const float AbsorbedPercent = FMath::Min(GetShield() / PostMitigation, 1);
+		const float AbsorbedPercent = FMath::Min(Gameplay->GetShield() / PostMitigation, 1);
 		const float Applied = PostMitigation * AbsorbedPercent;
-		SetShield(GetShield() - Applied);
+		Gameplay->SetShield(Gameplay->GetShield() - Applied);
 		Damage = FStructureDamage(Damage.DamageType, Damage.Amount * (1 - AbsorbedPercent));
 
 		FGameplayCueParameters Parameters;
@@ -560,59 +435,16 @@ void AStructure::ApplyDamage(FStructureDamage Damage, AStructurePart* HitPart, F
 		AbilitySystemComponent->ExecuteGameplayCueLocal(ShieldDamageCueTag, Parameters);
 	}
 
-	if(Damage.IsValid() && GetHull() > 0)
+	if(Damage.IsValid() && Gameplay->GetHull() > 0)
 	{
 		const float PostMitigation = Damage.Amount * Damage.DamageType.GetDefaultObject()->GetHullMultiplier(AbilitySystemComponent);
-		SetHull(GetHull() - PostMitigation);
+		Gameplay->SetHull(Gameplay->GetHull() - PostMitigation);
 
 		FGameplayCueParameters Parameters;
 		Parameters.Location = HitLocation;
 		Parameters.RawMagnitude = PostMitigation;
 		AbilitySystemComponent->ExecuteGameplayCueLocal(HullDamageCueTag, Parameters);
 	}
-}
-
-FActiveGameplayEffectHandle AStructure::ApplyEffect(const TSubclassOf<UGameplayEffect> EffectClass) const
-{
-	if(AbilitySystemComponent && EffectClass)
-	{
-		FGameplayEffectContextHandle EffectContext = AbilitySystemComponent->MakeEffectContext();
-		EffectContext.AddSourceObject(this);
-
-		const FGameplayEffectSpecHandle SpecHandle = AbilitySystemComponent->MakeOutgoingSpec(EffectClass, 1, EffectContext);
-
-		if(SpecHandle.IsValid())
-		{
-			const FActiveGameplayEffectHandle EffectHandle = AbilitySystemComponent->ApplyGameplayEffectSpecToSelf(*SpecHandle.Data.Get());
-			UE_LOG(LogDarkFrontier, Log, TEXT("Applied effect %s"), *EffectClass->GetName());
-			return EffectHandle;
-		}
-	}
-
-	return FActiveGameplayEffectHandle();
-}
-
-FGameplayAbilitySpecHandle AStructure::GiveAbility(const TSubclassOf<UStructureAbility> AbilityClass) const
-{
-	if(HasAuthority() && AbilitySystemComponent && AbilityClass)
-	{
-		return AbilitySystemComponent->GiveAbility(FGameplayAbilitySpec(AbilityClass, 1, INDEX_NONE, AbilitySystemComponent));
-	}
-
-	return FGameplayAbilitySpecHandle();
-}
-
-void AStructure::ClearAbility(const FGameplayAbilitySpecHandle AbilityHandle) const
-{
-	if(HasAuthority() && AbilitySystemComponent && AbilityHandle.IsValid())
-	{
-		AbilitySystemComponent->ClearAbility(AbilityHandle);
-	}
-}
-
-UAbilitySystemComponent* AStructure::GetAbilitySystemComponent() const
-{
-	return AbilitySystemComponent;
 }
 
 TArray<UStructureIndication*> AStructure::GetIndications()

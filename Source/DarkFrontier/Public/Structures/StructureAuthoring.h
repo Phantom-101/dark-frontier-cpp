@@ -17,6 +17,8 @@ protected:
 	UPROPERTY(BlueprintReadOnly, EditAnywhere)
 	FStructureLayout Layout;
 
-	virtual void BeginPlay() override;
+public:
+
+	FStructureLayout GetLayout();
 
 };

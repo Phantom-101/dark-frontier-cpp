@@ -42,10 +42,7 @@ protected:
 	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly, Category="Layout")
 	FString PartId;
 
-	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly, Category="Layout")
-	int32 RootDistance = -1;
-
-	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly, Category="Docking")
+	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly, Category="Facilities")
 	TArray<TObjectPtr<UStructureFacility>> Facilities;
 
 	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly, Category="Gameplay")
@@ -66,14 +63,11 @@ public:
 	UFUNCTION(BlueprintCallable, Category="Prototype")
 	TSubclassOf<UGameplayEffect> GetPassiveEffect() const;
 	
-	UFUNCTION(BlueprintCallable, Category="Lifetime")
-	bool TryInit(AStructure* NewOwner, bool RegisterOnly = false);
+	UFUNCTION(BlueprintCallable)
+	virtual void OnAdded(AStructure* Structure);
 
-	UFUNCTION(BlueprintCallable, Category="Lifetime")
-	virtual void OnRegistered();
-
-	UFUNCTION(BlueprintCallable, Category="Lifetime")
-	virtual void OnUnRegistered();
+	UFUNCTION(BlueprintCallable)
+	virtual void OnRemoved();
 
 	UFUNCTION(BlueprintCallable, Category="Layout")
 	AStructure* GetOwningStructure() const;
@@ -88,15 +82,6 @@ public:
 	bool TryInitPartId(FString InId);
 
 	UFUNCTION(BlueprintCallable, Category="Layout")
-	int GetRootDistance() const;
-
-	UFUNCTION(BlueprintCallable, Category="Layout")
-	void ResetRootDistance();
-
-	UFUNCTION(BlueprintCallable, Category="Layout")
-	void UpdateRootDistance(int32 Distance);
-	
-	UFUNCTION(BlueprintCallable, Category="Layout")
 	TArray<UStructureSlot*> GetSlots();
 
 	UFUNCTION(BlueprintCallable, Category="Layout")
@@ -110,6 +95,9 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category="Layout")
 	void DetachSlots();
+
+	UFUNCTION(BlueprintCallable, Category="Facilities")
+	TArray<UStructureFacility*> GetFacilities();
 
 	UFUNCTION(BlueprintCallable, Category="Gameplay")
 	void ApplyDamage(struct FStructureDamage Damage, FVector HitLocation);

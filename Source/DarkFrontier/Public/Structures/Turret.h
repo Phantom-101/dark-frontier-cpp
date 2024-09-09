@@ -34,9 +34,9 @@ protected:
 
 public:
 
-	virtual void OnRegistered() override;
+	virtual void OnAdded(AStructure* Structure) override;
 
-	virtual void OnUnRegistered() override;
+	virtual void OnRemoved() override;
 
 	UFUNCTION(BlueprintCallable, Category="Gameplay")
 	virtual TSubclassOf<UTurretAbility> GetAbilityClass();
