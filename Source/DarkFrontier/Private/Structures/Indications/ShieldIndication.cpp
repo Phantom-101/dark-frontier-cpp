@@ -2,8 +2,9 @@
 
 #include "Structures/Indications/ShieldIndication.h"
 #include "Structures/Structure.h"
+#include "Structures/StructureGameplay.h"
 
 float UShieldIndication::GetShieldPercent() const
 {
-	return Structure->GetShield() / Structure->GetMaxShield();
+	return Structure->GetGameplay()->GetShield() / Structure->GetGameplay()->GetMaxShield();
 }

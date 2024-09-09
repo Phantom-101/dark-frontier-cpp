@@ -12,6 +12,8 @@
 #include "Components/ScrollBox.h"
 #include "Structures/Structure.h"
 #include "Structures/StructureController.h"
+#include "Structures/StructureGameplay.h"
+#include "Structures/StructureIndices.h"
 #include "Structures/StructurePart.h"
 #include "UI/Widgets/CustomGameplayEffectUIData.h"
 #include "UI/Widgets/GameplayEffectIndicatorObject.h"
@@ -38,10 +40,12 @@ void UGameUI::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 	{
 		if(const AStructure* Structure = Cast<AStructure>(PlayerController->GetPawn()))
 		{
-			HullArc->SetLength(Structure->GetHull() / Structure->GetMaxHull() * 0.25);
-			ShieldArc->SetLength(Structure->GetShield() / Structure->GetMaxShield() * 0.2);
-			EnergyArc->SetLength(Structure->GetEnergy() / Structure->GetMaxEnergy() * 0.25);
-			SpeedArc->SetLength(Structure->GetLinearSpeed() / Structure->GetLinearMaxSpeed() * 0.2);
+			const UStructureGameplay* Gameplay = Structure->GetGameplay();
+			
+			HullArc->SetLength(Gameplay->GetHull() / Gameplay->GetMaxHull() * 0.25);
+			ShieldArc->SetLength(Gameplay->GetShield() / Gameplay->GetMaxShield() * 0.2);
+			EnergyArc->SetLength(Gameplay->GetEnergy() / Gameplay->GetMaxEnergy() * 0.25);
+			SpeedArc->SetLength(Gameplay->GetLinearSpeed() / Gameplay->GetLinearMaxSpeed() * 0.2);
 		}
 		
 		const FVector ScaledRotateInput = PlayerController->GetTurnIndicatorOffset() * 200;
@@ -107,7 +111,7 @@ void UGameUI::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 			}
 		}
 
-		for(AStructurePart* Part : PlayerStructure->GetParts())
+		for(AStructurePart* Part : PlayerStructure->GetIndices()->GetParts())
 		{
 			if(!Existing.Contains(Part))
 			{

@@ -10,6 +10,7 @@
 #include "Structures/Structure.h"
 #include "Structures/StructureAttributeSet.h"
 #include "Structures/StructureController.h"
+#include "Structures/StructureIndices.h"
 #include "Structures/StructurePart.h"
 #include "Structures/StructurePartGroup.h"
 #include "UI/Screens/StructureDetails/StructurePartCardList.h"
@@ -75,7 +76,7 @@ void UStructureInfo::RebuildTypeMode()
 	if(!IsValid(TargetStructure)) return;
 	
 	TArray<UStructurePartGroup*> PartTypes;
-	for(const AStructurePart* Part : TargetStructure->GetParts())
+	for(const AStructurePart* Part : TargetStructure->GetIndices()->GetParts())
 	{
 		PartTypes.AddUnique(Part->GetPartType());
 	}
@@ -84,7 +85,7 @@ void UStructureInfo::RebuildTypeMode()
 	for(const UStructurePartGroup* PartType : PartTypes)
 	{
 		TArray<AStructurePart*> Parts;
-		for(AStructurePart* Part : TargetStructure->GetParts())
+		for(AStructurePart* Part : TargetStructure->GetIndices()->GetParts())
 		{
 			if(Part->GetPartType() == PartType)
 			{
@@ -115,7 +116,7 @@ void UStructureInfo::RebuildListMode() const
 	if(!IsValid(TargetStructure)) return;
 	
 	PartCardList->ClearListItems();
-	for(AStructurePart* Part : TargetStructure->GetParts())
+	for(AStructurePart* Part : TargetStructure->GetIndices()->GetParts())
 	{
 		PartCardList->AddItem(Part);
 	}

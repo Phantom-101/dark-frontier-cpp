@@ -6,6 +6,7 @@
 #include "Structures/HitscanResult.h"
 #include "Structures/Structure.h"
 #include "Structures/StructureAbilitySystemComponent.h"
+#include "Structures/StructureIndices.h"
 #include "Structures/StructurePart.h"
 #include "Structures/TurretPayload.h"
 #include "Structures/TurretSource.h"
@@ -43,7 +44,7 @@ void UPulseAbility::OnDelayFinish()
 	
 	TArray<AActor*> IgnoredActors;
 	IgnoredActors.Add(CurrentPayload->Instigator);
-	IgnoredActors.Append(CurrentPayload->Instigator->GetParts());
+	IgnoredActors.Append(CurrentPayload->Instigator->GetIndices()->GetParts());
 	
 	UHitscanTask* HitscanTask = UHitscanTask::New(this, CurrentPayload->Source->GetComponentLocation(), CurrentPayload->Target->GetActorLocation(), TraceChannel, IgnoredActors);
 	HitscanTask->Activate();

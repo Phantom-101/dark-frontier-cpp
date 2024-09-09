@@ -3,6 +3,7 @@
 #include "Structures/StructureLayout.h"
 #include "Log.h"
 #include "Structures/Structure.h"
+#include "Structures/StructureIndices.h"
 #include "Structures/StructurePart.h"
 #include "Structures/StructureSlot.h"
 
@@ -12,7 +13,7 @@ FStructureLayout::FStructureLayout()
 
 FStructureLayout::FStructureLayout(const AStructure* InStructure)
 {
-	AStructurePart* Root = InStructure->GetRootPart();
+	AStructurePart* Root = InStructure->GetIndices()->GetRootPart();
 	if(!IsValid(Root))
 	{
 		UE_LOG(LogDarkFrontier, Error, TEXT("Attempted layout creation for structure with invalid root part"));

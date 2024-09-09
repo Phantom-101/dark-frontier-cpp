@@ -7,6 +7,8 @@
 #include "Structures/Structure.h"
 #include "Structures/StructureAttributeSet.h"
 #include "Structures/StructureDamage.h"
+#include "Structures/StructureGameplay.h"
+#include "Structures/StructureIndices.h"
 #include "Structures/StructureProduction.h"
 #include "Structures/StructureSlot.h"
 
@@ -45,25 +47,23 @@ TSubclassOf<UGameplayEffect> AStructurePart::GetPassiveEffect() const
 	return PassiveEffect;
 }
 
-bool AStructurePart::TryInit(AStructure* NewOwner, const bool RegisterOnly)
+void AStructurePart::OnAdded(AStructure* Structure)
 {
-	if(OwningStructure) return false;
-	
-	OwningStructure = NewOwner;
-	OwningStructure->RegisterPart(this, RegisterOnly, RegisterOnly);
-	AttachToActor(OwningStructure, FAttachmentTransformRules(EAttachmentRule::KeepWorld, true));
-	
-	return true;
-}
+	OwningStructure = Structure;
 
-void AStructurePart::OnRegistered()
-{
+	TryInitPartId(FGuid::NewGuid().ToString());
+	
+	AttachToActor(OwningStructure, FAttachmentTransformRules(EAttachmentRule::KeepWorld, true));
+	SetActorRelativeLocation(FVector::ZeroVector);
+	SetActorRelativeRotation(FRotator::ZeroRotator);
+
 	if(PassiveEffect)
 	{
-		PassiveEffectHandle = OwningStructure->ApplyEffect(PassiveEffect);
+		PassiveEffectHandle = OwningStructure->GetGameplay()->ApplyEffect(PassiveEffect);
 
+		// TODO wrap in a helper function
 		float Hull = 0;
-		
+
 		UGameplayEffect* Effect = PassiveEffect->GetDefaultObject<UGameplayEffect>();
 		for(FGameplayModifierInfo Modifier : Effect->Modifiers)
 		{
@@ -74,16 +74,22 @@ void AStructurePart::OnRegistered()
 			}
 		}
 
-		OwningStructure->SetHull(OwningStructure->GetHull() + Hull);
+		// Add the extra hull that this part provides
+		// TODO do the same with shield
+		OwningStructure->GetGameplay()->SetHull(OwningStructure->GetGameplay()->GetHull() + Hull);
 	}
 }
 
-void AStructurePart::OnUnRegistered()
+void AStructurePart::OnRemoved()
 {
 	if(PassiveEffectHandle.IsValid())
 	{
-		OwningStructure->GetAbilitySystemComponent()->RemoveActiveGameplayEffect(PassiveEffectHandle);
+		OwningStructure->GetGameplay()->RemoveEffect(PassiveEffectHandle);
 		PassiveEffectHandle = FActiveGameplayEffectHandle();
+
+		// Clamp hull to the now reduced max hull
+		// TODO do the same with shield
+		OwningStructure->GetGameplay()->SetHull(OwningStructure->GetGameplay()->GetHull());
 	}
 }
 
@@ -94,7 +100,7 @@ AStructure* AStructurePart::GetOwningStructure() const
 
 bool AStructurePart::IsRootPart() const
 {
-	return IsValid(OwningStructure) && OwningStructure->GetRootPart() == this;
+	return IsValid(OwningStructure) && OwningStructure->GetIndices()->GetRootPart() == this;
 }
 
 FString AStructurePart::GetPartId() const
@@ -107,28 +113,6 @@ bool AStructurePart::TryInitPartId(FString InId)
 	if(!PartId.IsEmpty()) return false;
 	PartId = InId;
 	return true;
-}
-
-int AStructurePart::GetRootDistance() const
-{
-	return RootDistance;
-}
-
-void AStructurePart::ResetRootDistance()
-{
-	RootDistance = -1;
-}
-
-void AStructurePart::UpdateRootDistance(const int32 Distance)
-{
-	RootDistance = Distance;
-	for(const UStructureSlot* Slot : Slots)
-	{
-		if(IsValid(Slot->GetAttachedSlot()) && Slot->GetAttachedSlot()->GetOwningPart()->RootDistance == -1)
-		{
-			Slot->GetAttachedSlot()->GetOwningPart()->UpdateRootDistance(Distance + 1);
-		}
-	}
 }
 
 TArray<UStructureSlot*> AStructurePart::GetSlots()
@@ -166,7 +150,7 @@ void AStructurePart::AttachSlots()
 	{
 		if(!Slot->GetAttachedSlot())
 		{
-			for(AStructurePart* Part : OwningStructure->GetParts())
+			for(AStructurePart* Part : OwningStructure->GetIndices()->GetParts())
 			{
 				if(Part != this)
 				{
@@ -190,6 +174,11 @@ void AStructurePart::DetachSlots()
 		Slot->TryDetach();
 	}
 	OwningStructure->UpdateLayoutInformation();
+}
+
+TArray<UStructureFacility*> AStructurePart::GetFacilities()
+{
+	return Facilities;
 }
 
 void AStructurePart::ApplyDamage(const FStructureDamage Damage, const FVector HitLocation)

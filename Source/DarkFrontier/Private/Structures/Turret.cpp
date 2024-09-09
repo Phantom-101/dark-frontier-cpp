@@ -5,6 +5,7 @@
 #include "AbilitySystemComponent.h"
 #include "Abilities/GameplayAbilityTypes.h"
 #include "Structures/Structure.h"
+#include "Structures/StructureGameplay.h"
 #include "Structures/TurretAbility.h"
 #include "Structures/TurretPayload.h"
 #include "Structures/TurretSource.h"
@@ -16,23 +17,23 @@ void ATurret::BeginPlay()
 	GetComponents<UTurretSource>(Sources);
 }
 
-void ATurret::OnRegistered()
+void ATurret::OnAdded(AStructure* Structure)
 {
-	Super::OnRegistered();
+	Super::OnAdded(Structure);
 
 	if(GetAbilityClass() != nullptr)
 	{
-		AbilityHandle = OwningStructure->GiveAbility(GetAbilityClass());
+		AbilityHandle = OwningStructure->GetGameplay()->GiveAbility(GetAbilityClass());
 	}
 }
 
-void ATurret::OnUnRegistered()
+void ATurret::OnRemoved()
 {
-	Super::OnUnRegistered();
+	Super::OnRemoved();
 
 	if(AbilityHandle.IsValid())
 	{
-		OwningStructure->ClearAbility(AbilityHandle);
+		OwningStructure->GetGameplay()->ClearAbility(AbilityHandle);
 		AbilityHandle = FGameplayAbilitySpecHandle();
 	}
 }
