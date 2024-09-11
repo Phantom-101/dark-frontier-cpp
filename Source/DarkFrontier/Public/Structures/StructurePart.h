@@ -99,9 +99,8 @@ public:
 	UFUNCTION(BlueprintCallable, Category="Facilities")
 	TArray<UStructureFacility*> GetFacilities();
 
-	UFUNCTION(BlueprintCallable, Category="Gameplay")
-	void ApplyDamage(struct FStructureDamage Damage, FVector HitLocation);
-
+	virtual float TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
+	
 	UFUNCTION(BlueprintCallable, Category="UI")
 	virtual class UStructurePartControl* CreateControl(UWidget* WidgetOwner);
 

@@ -3,12 +3,7 @@
 #include "Structures/Damage/SimpleDamageType.h"
 #include "Structures/StructureAbilitySystemComponent.h"
 
-float USimpleDamageType::GetHullMultiplier(const UStructureAbilitySystemComponent* Target) const
+float USimpleDamageType::GetMultiplier(const UStructureAbilitySystemComponent* Target) const
 {
-	return FMath::Exp(-Target->GetNumericAttribute(HullResistanceAttribute));
-}
-
-float USimpleDamageType::GetShieldMultiplier(const UStructureAbilitySystemComponent* Target) const
-{
-	return FMath::Exp(-Target->GetNumericAttribute(ShieldResistanceAttribute));
+	return FMath::Exp(-Target->GetNumericAttribute(ResistanceAttribute));
 }

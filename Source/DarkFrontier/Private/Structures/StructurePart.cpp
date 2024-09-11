@@ -4,9 +4,8 @@
 #include "GameplayEffect.h"
 #include "Engine/SCS_Node.h"
 #include "Engine/SimpleConstructionScript.h"
+#include "Gameplay/Attributes/IntegrityAttributeSet.h"
 #include "Structures/Structure.h"
-#include "Structures/StructureAttributeSet.h"
-#include "Structures/StructureDamage.h"
 #include "Structures/StructureGameplay.h"
 #include "Structures/StructureIndices.h"
 #include "Structures/StructureProduction.h"
@@ -70,13 +69,13 @@ void AStructurePart::OnAdded(AStructure* Structure)
 			float Magnitude;
 			if(Modifier.ModifierMagnitude.GetStaticMagnitudeIfPossible(1, Magnitude))
 			{
-				if(Modifier.Attribute == UStructureAttributeSet::GetMaxHullAttribute()) Hull += Magnitude;
+				if(Modifier.Attribute == UIntegrityAttributeSet::GetMaxIntegrityAttribute()) Hull += Magnitude;
 			}
 		}
 
 		// Add the extra hull that this part provides
-		// TODO do the same with shield
-		OwningStructure->GetGameplay()->SetHull(OwningStructure->GetGameplay()->GetHull() + Hull);
+		UIntegrityAttributeSet* IntegrityAttributes = OwningStructure->GetGameplay()->GetIntegrityAttributes();
+		IntegrityAttributes->SetIntegrity(IntegrityAttributes->GetIntegrity() + Hull);
 	}
 }
 
@@ -88,8 +87,8 @@ void AStructurePart::OnRemoved()
 		PassiveEffectHandle = FActiveGameplayEffectHandle();
 
 		// Clamp hull to the now reduced max hull
-		// TODO do the same with shield
-		OwningStructure->GetGameplay()->SetHull(OwningStructure->GetGameplay()->GetHull());
+		UIntegrityAttributeSet* IntegrityAttributes = OwningStructure->GetGameplay()->GetIntegrityAttributes();
+		IntegrityAttributes->SetIntegrity(IntegrityAttributes->GetIntegrity());
 	}
 }
 
@@ -181,9 +180,9 @@ TArray<UStructureFacility*> AStructurePart::GetFacilities()
 	return Facilities;
 }
 
-void AStructurePart::ApplyDamage(const FStructureDamage Damage, const FVector HitLocation)
+float AStructurePart::TakeDamage(const float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
 {
-	OwningStructure->ApplyDamage(Damage, this, HitLocation);
+	return OwningStructure->TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
 }
 
 UStructurePartControl* AStructurePart::CreateControl(UWidget* WidgetOwner)

@@ -8,6 +8,12 @@
 #include "UObject/Object.h"
 #include "StructureGameplay.generated.h"
 
+class UShieldAttributeSet;
+class USignatureAttributeSet;
+class ULayoutAttributeSet;
+class UEnergyAttributeSet;
+class UResistanceAttributeSet;
+class UIntegrityAttributeSet;
 class UStructureAbility;
 class UStructureAttributeSet;
 class UStructureAbilitySystemComponent;
@@ -30,6 +36,25 @@ protected:
 	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly)
 	TObjectPtr<UStructureAbilitySystemComponent> AbilitySystemComponent;
 
+	// TODO replace with wrapper classes
+	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly)
+	TObjectPtr<UIntegrityAttributeSet> IntegrityAttributes;
+
+	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly)
+	TObjectPtr<UResistanceAttributeSet> ResistanceAttributes;
+
+	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly)
+	TObjectPtr<UShieldAttributeSet> ShieldAttributes;
+
+	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly)
+	TObjectPtr<UEnergyAttributeSet> EnergyAttributes;
+
+	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly)
+	TObjectPtr<ULayoutAttributeSet> LayoutAttributes;
+
+	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly)
+	TObjectPtr<USignatureAttributeSet> SignatureAttributes;
+
 	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly)
 	TObjectPtr<UStructureAttributeSet> AttributeSet;
 
@@ -47,41 +72,28 @@ public:
 	UStructureAbilitySystemComponent* GetAbilitySystemComponent() const;
 
 	UFUNCTION(BlueprintCallable)
-	UStructureAttributeSet* GetAttributeSet() const;
+	UIntegrityAttributeSet* GetIntegrityAttributes() const;
 
 	UFUNCTION(BlueprintCallable)
-	float GetMaxHull() const;
+	UResistanceAttributeSet* GetResistanceAttributes() const;
 
 	UFUNCTION(BlueprintCallable)
-	float GetHull() const;
+	UShieldAttributeSet* GetShieldAttributes() const;
 
 	UFUNCTION(BlueprintCallable)
-	void SetHull(float InHull) const;
-
-	UFUNCTION(BlueprintCallable)
-	float GetMaxShield() const;
-
-	UFUNCTION(BlueprintCallable)
-	float GetShield() const;
-
-	UFUNCTION(BlueprintCallable)
-	void SetShield(float InShield) const;
-
-	UFUNCTION(BlueprintCallable)
-	float GetMaxEnergy() const;
+	UEnergyAttributeSet* GetEnergyAttributes() const;
 	
 	UFUNCTION(BlueprintCallable)
-	float GetEnergy() const;
-	
-	UFUNCTION(BlueprintCallable)
-	float GetUpkeep() const;
+	ULayoutAttributeSet* GetLayoutAttributes() const;
 
 	UFUNCTION(BlueprintCallable)
-	float GetLinearMaxSpeed() const;
-	
+	USignatureAttributeSet* GetSignatureAttributes() const;
+
+	// TODO replace with smaller attribute sets
 	UFUNCTION(BlueprintCallable)
-	float GetLinearSpeed() const;
-	
+	UStructureAttributeSet* GetStructureAttributes() const;
+
+	// TODO move out
 	UFUNCTION(BlueprintCallable)
 	bool IsDetecting(AStructure* Other) const;
 

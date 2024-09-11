@@ -40,8 +40,6 @@ protected:
 
 public:
 
-	virtual float GetHullMultiplier(const UStructureAbilitySystemComponent* Target) const override;
-
-	virtual float GetShieldMultiplier(const UStructureAbilitySystemComponent* Target) const override;
+	virtual float GetMultiplier(const UStructureAbilitySystemComponent* Target) const override;
 	
 };

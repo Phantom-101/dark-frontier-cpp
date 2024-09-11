@@ -2,12 +2,7 @@
 
 #include "Structures/Damage/StructureDamageType.h"
 
-float UStructureDamageType::GetHullMultiplier(const UStructureAbilitySystemComponent* Target) const
-{
-	return 1;
-}
-
-float UStructureDamageType::GetShieldMultiplier(const UStructureAbilitySystemComponent* Target) const
+float UStructureDamageType::GetMultiplier(const UStructureAbilitySystemComponent* Target) const
 {
 	return 1;
 }

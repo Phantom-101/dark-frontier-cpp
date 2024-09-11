@@ -4,7 +4,8 @@
 #include "CommonListView.h"
 #include "CommonTextBlock.h"
 #include "GameplayEffect.h"
-#include "Structures/StructureAttributeSet.h"
+#include "Gameplay/Attributes/IntegrityAttributeSet.h"
+#include "Gameplay/Attributes/LayoutAttributeSet.h"
 #include "Structures/StructureController.h"
 #include "Structures/StructurePart.h"
 #include "Structures/StructureSlot.h"
@@ -48,8 +49,8 @@ void UStructurePartInfo::SetTarget(AStructurePart* InTargetPart)
 			float Magnitude;
 			if(Modifier.ModifierMagnitude.GetStaticMagnitudeIfPossible(1, Magnitude))
 			{
-				if(Modifier.Attribute == UStructureAttributeSet::GetMaxHullAttribute()) Hull += Magnitude;
-				else if(Modifier.Attribute == UStructureAttributeSet::GetUpkeepAttribute()) Upkeep += Magnitude;
+				if(Modifier.Attribute == UIntegrityAttributeSet::GetMaxIntegrityAttribute()) Hull += Magnitude;
+				else if(Modifier.Attribute == ULayoutAttributeSet::GetUpkeepAttribute()) Upkeep += Magnitude;
 			}
 		}
 	}

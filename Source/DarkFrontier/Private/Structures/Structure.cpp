@@ -3,12 +3,14 @@
 #include "Structures/Structure.h"
 #include "Log.h"
 #include "Camera/CameraComponent.h"
+#include "Engine/DamageEvents.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "Gameplay/Attributes/IntegrityAttributeSet.h"
+#include "Gameplay/Attributes/LayoutAttributeSet.h"
 #include "Items/Inventory.h"
 #include "Sectors/Sector.h"
 #include "Structures/StructureAbilitySystemComponent.h"
 #include "Structures/StructureAttributeSet.h"
-#include "Structures/StructureDamage.h"
 #include "Structures/StructureAbility.h"
 #include "Structures/StructureAuthoring.h"
 #include "Structures/StructureDock.h"
@@ -58,6 +60,8 @@ void AStructure::BeginPlay()
 	Gameplay->Initialize();
 	Gameplay->ApplyStartingEffects();
 
+	OnTakePointDamage.AddDynamic(this, &AStructure::HandlePointDamage);
+
 	TryEnterSector(CurrentSector);
 
 	AddIndication(HullIndicationClass.Get());
@@ -79,7 +83,7 @@ void AStructure::Tick(float DeltaTime)
 
 	UpdateTickLevel();
 
-	const UStructureAttributeSet* AttributeSet = Gameplay->GetAttributeSet();
+	const UStructureAttributeSet* AttributeSet = Gameplay->GetStructureAttributes();
 
 	if(TickLevel == EStructureTickLevel::Full)
 	{
@@ -149,7 +153,7 @@ EStructureValidationResult AStructure::ValidateLayout()
 		}
 	}
 	
-	if(Gameplay->GetUpkeep() > Gameplay->GetAttributeSet()->GetMaxUpkeep())
+	if(Gameplay->GetLayoutAttributes()->GetUpkeep() > Gameplay->GetLayoutAttributes()->GetMaxUpkeep())
 	{
 		return EStructureValidationResult::UpkeepExceeded;
 	}
@@ -417,34 +421,32 @@ UAbilitySystemComponent* AStructure::GetAbilitySystemComponent() const
 	return Gameplay->GetAbilitySystemComponent();
 }
 
-void AStructure::ApplyDamage(FStructureDamage Damage, AStructurePart* HitPart, FVector HitLocation)
+float AStructure::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
 {
-	const UStructureAbilitySystemComponent* AbilitySystemComponent = Gameplay->GetAbilitySystemComponent();
+	// Calculate damage based on damage event type and fire event dispatchers
+	// The value provided to event listeners is the raw damage before resistances are applied
+	DamageAmount = Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
 	
-	if(Damage.IsValid() && Gameplay->GetShield() > 0)
-	{
-		const float PostMitigation = Damage.Amount * Damage.DamageType.GetDefaultObject()->GetShieldMultiplier(AbilitySystemComponent);
-		const float AbsorbedPercent = FMath::Min(Gameplay->GetShield() / PostMitigation, 1);
-		const float Applied = PostMitigation * AbsorbedPercent;
-		Gameplay->SetShield(Gameplay->GetShield() - Applied);
-		Damage = FStructureDamage(Damage.DamageType, Damage.Amount * (1 - AbsorbedPercent));
+	const UDamageType* DamageType = DamageEvent.DamageTypeClass ? DamageEvent.DamageTypeClass.GetDefaultObject() : GetDefault<UDamageType>();
+	const UStructureDamageType* StructureDamageType = Cast<UStructureDamageType>(DamageType);
 
-		FGameplayCueParameters Parameters;
-		Parameters.Location = HitLocation;
-		Parameters.RawMagnitude = Applied;
-		AbilitySystemComponent->ExecuteGameplayCueLocal(ShieldDamageCueTag, Parameters);
+	// Healing is not supported
+	if(DamageAmount > 0)
+	{
+		UIntegrityAttributeSet* IntegrityAttributes = Gameplay->GetIntegrityAttributes();
+		
+		const float Multiplier = StructureDamageType ? StructureDamageType->GetMultiplier(Gameplay->GetAbilitySystemComponent()) : 1;
+		const float Equivalent = IntegrityAttributes->GetIntegrity() / Multiplier;
+		const float Absorbed = FMath::Min(DamageAmount, Equivalent);
+		const float Damage = Absorbed * Multiplier;
+		
+		IntegrityAttributes->SetIntegrity(IntegrityAttributes->GetIntegrity() - Damage);
+		
+		// Return the actual amount absorbed
+		return Absorbed;
 	}
 
-	if(Damage.IsValid() && Gameplay->GetHull() > 0)
-	{
-		const float PostMitigation = Damage.Amount * Damage.DamageType.GetDefaultObject()->GetHullMultiplier(AbilitySystemComponent);
-		Gameplay->SetHull(Gameplay->GetHull() - PostMitigation);
-
-		FGameplayCueParameters Parameters;
-		Parameters.Location = HitLocation;
-		Parameters.RawMagnitude = PostMitigation;
-		AbilitySystemComponent->ExecuteGameplayCueLocal(HullDamageCueTag, Parameters);
-	}
+	return 0;
 }
 
 TArray<UStructureIndication*> AStructure::GetIndications()
@@ -495,4 +497,15 @@ FVector AStructure::CalculateImpulse(const FVector& RawVelocities, const FVector
 	const FVector Diff = Input * MaxSpeed - Velocities;
 	const FVector Applied = ClampVector(Diff, FVector(-Accel * DeltaTime), FVector(Accel * DeltaTime));
 	return GetTransform().TransformVector(Applied);
+}
+
+void AStructure::HandlePointDamage(AActor* DamagedActor, const float Damage, AController* InstigatedBy, const FVector HitLocation, UPrimitiveComponent* HitComponent, FName BoneName, FVector ShotFromDirection, const UDamageType* DamageType, AActor* DamageCauser)
+{
+	if(Damage > 0)
+	{
+		FGameplayCueParameters Parameters;
+		Parameters.Location = HitLocation;
+		Parameters.RawMagnitude = Damage;
+		Gameplay->GetAbilitySystemComponent()->ExecuteGameplayCueLocal(HullDamageCueTag, Parameters);
+	}
 }
