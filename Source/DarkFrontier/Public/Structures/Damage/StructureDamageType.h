@@ -18,8 +18,6 @@ class DARKFRONTIER_API UStructureDamageType : public UDamageType
 
 public:
 
-	virtual float GetHullMultiplier(const UStructureAbilitySystemComponent* Target) const;
-
-	virtual float GetShieldMultiplier(const UStructureAbilitySystemComponent* Target) const;
+	virtual float GetMultiplier(const UStructureAbilitySystemComponent* Target) const;
 	
 };

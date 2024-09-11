@@ -7,9 +7,13 @@
 #include "CommonTextBlock.h"
 #include "Components/ScrollBox.h"
 #include "Components/WidgetSwitcher.h"
+#include "Gameplay/Attributes/EnergyAttributeSet.h"
+#include "Gameplay/Attributes/IntegrityAttributeSet.h"
+#include "Gameplay/Attributes/LayoutAttributeSet.h"
 #include "Structures/Structure.h"
 #include "Structures/StructureAttributeSet.h"
 #include "Structures/StructureController.h"
+#include "Structures/StructureGameplay.h"
 #include "Structures/StructureIndices.h"
 #include "Structures/StructurePart.h"
 #include "Structures/StructurePartGroup.h"
@@ -45,13 +49,14 @@ void UStructureInfo::SetTarget(AStructure* InTargetStructure)
 	const UAbilitySystemComponent* AbilitySystemComp = TargetStructure->GetAbilitySystemComponent();
 	const UStructureAttributeSet* Attributes = Cast<UStructureAttributeSet>(AbilitySystemComp->GetAttributeSet(UStructureAttributeSet::StaticClass()));
 
-	const float MaxHull = Attributes->GetMaxHull();
-	const float MaxShield = Attributes->GetMaxShield();
-	const float ShieldRegen = Attributes->GetShieldRegen();
-	const float MaxEnergy = Attributes->GetMaxEnergy();
-	const float EnergyRegen = Attributes->GetEnergyRegen();
-	const float MaxUpkeep = Attributes->GetMaxUpkeep();
-	const float Upkeep = Attributes->GetUpkeep() / Attributes->GetUpkeepReduction();
+	const float MaxHull = TargetStructure->GetGameplay()->GetIntegrityAttributes()->GetMaxIntegrity();
+	// TODO replace with actual shield
+	const float MaxShield = TargetStructure->GetGameplay()->GetIntegrityAttributes()->GetMaxIntegrity();
+	const float ShieldRegen = 0;
+	const float MaxEnergy = TargetStructure->GetGameplay()->GetEnergyAttributes()->GetMaxEnergy();
+	const float EnergyRegen = TargetStructure->GetGameplay()->GetEnergyAttributes()->GetRegeneration();
+	const float MaxUpkeep = TargetStructure->GetGameplay()->GetLayoutAttributes()->GetMaxUpkeep();
+	const float Upkeep = TargetStructure->GetGameplay()->GetLayoutAttributes()->GetUpkeep();
 	const float LinearSpeed = Attributes->GetLinearMaxSpeed();
 	const float LinearAccel = Attributes->GetLinearAcceleration();
 	const float AngularSpeed = Attributes->GetAngularMaxSpeed();

@@ -177,8 +177,7 @@ public:
 
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 
-	UFUNCTION(BlueprintCallable, Category="Gameplay")
-	void ApplyDamage(FStructureDamage Damage, AStructurePart* HitPart, FVector HitLocation);
+	virtual float TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
 
 	UFUNCTION(BlueprintCallable, Category="Gameplay")
 	TArray<UStructureIndication*> GetIndications();
@@ -201,5 +200,8 @@ public:
 protected:
 	
 	FVector CalculateImpulse(const FVector& RawVelocities, const FVector& RawInput, float MaxSpeed, float Accel, float DeltaTime) const;
+
+	UFUNCTION()
+	void HandlePointDamage(AActor* DamagedActor, float Damage, AController* InstigatedBy, const FVector HitLocation, UPrimitiveComponent* HitComponent, FName BoneName, FVector ShotFromDirection, const UDamageType* DamageType, AActor* DamageCauser);
 	
 };

@@ -2,6 +2,12 @@
 
 #include "Structures/StructureGameplay.h"
 #include "Log.h"
+#include "Gameplay/Attributes/EnergyAttributeSet.h"
+#include "Gameplay/Attributes/IntegrityAttributeSet.h"
+#include "Gameplay/Attributes/LayoutAttributeSet.h"
+#include "Gameplay/Attributes/ResistanceAttributeSet.h"
+#include "Gameplay/Attributes/ShieldAttributeSet.h"
+#include "Gameplay/Attributes/SignatureAttributeSet.h"
 #include "Structures/Structure.h"
 #include "Structures/StructureAbility.h"
 #include "Structures/StructureAbilitySystemComponent.h"
@@ -15,6 +21,12 @@ UStructureGameplay* UStructureGameplay::CreateGameplay(AStructure* Structure)
 	Gameplay->AbilitySystemComponent->SetIsReplicated(true);
 	Gameplay->AbilitySystemComponent->SetReplicationMode(EGameplayEffectReplicationMode::Minimal);
 
+	Gameplay->IntegrityAttributes = Structure->CreateDefaultSubobject<UIntegrityAttributeSet>("IntegrityAttributes");
+	Gameplay->ResistanceAttributes = Structure->CreateDefaultSubobject<UResistanceAttributeSet>("ResistanceAttributes");
+	Gameplay->ShieldAttributes = Structure->CreateDefaultSubobject<UShieldAttributeSet>("ShieldAttributes");
+	Gameplay->EnergyAttributes = Structure->CreateDefaultSubobject<UEnergyAttributeSet>("EnergyAttributes");
+	Gameplay->LayoutAttributes = Structure->CreateDefaultSubobject<ULayoutAttributeSet>("LayoutAttributes");
+	Gameplay->SignatureAttributes = Structure->CreateDefaultSubobject<USignatureAttributeSet>("SignatureAttributes");
 	Gameplay->AttributeSet = Structure->CreateDefaultSubobject<UStructureAttributeSet>("AttributeSet");
 
 	return Gameplay;
@@ -35,70 +47,45 @@ UStructureAbilitySystemComponent* UStructureGameplay::GetAbilitySystemComponent(
 	return AbilitySystemComponent;
 }
 
-UStructureAttributeSet* UStructureGameplay::GetAttributeSet() const
+UIntegrityAttributeSet* UStructureGameplay::GetIntegrityAttributes() const
+{
+	return IntegrityAttributes;
+}
+
+UResistanceAttributeSet* UStructureGameplay::GetResistanceAttributes() const
+{
+	return ResistanceAttributes;
+}
+
+UShieldAttributeSet* UStructureGameplay::GetShieldAttributes() const
+{
+	return ShieldAttributes;
+}
+
+UEnergyAttributeSet* UStructureGameplay::GetEnergyAttributes() const
+{
+	return EnergyAttributes;
+}
+
+ULayoutAttributeSet* UStructureGameplay::GetLayoutAttributes() const
+{
+	return LayoutAttributes;
+}
+
+USignatureAttributeSet* UStructureGameplay::GetSignatureAttributes() const
+{
+	return SignatureAttributes;
+}
+
+UStructureAttributeSet* UStructureGameplay::GetStructureAttributes() const
 {
 	return AttributeSet;
-}
-
-float UStructureGameplay::GetMaxHull() const
-{
-	return AttributeSet->GetMaxHull() == 0 ? 1 : AttributeSet->GetMaxHull();
-}
-
-float UStructureGameplay::GetHull() const
-{
-	return AttributeSet->GetHull();
-}
-
-void UStructureGameplay::SetHull(const float InHull) const
-{
-	AttributeSet->SetHull(FMath::Clamp(InHull, 0, AttributeSet->GetMaxHull()));
-}
-
-float UStructureGameplay::GetMaxShield() const
-{
-	return AttributeSet->GetMaxShield() == 0 ? 1 : AttributeSet->GetMaxShield();
-}
-
-float UStructureGameplay::GetShield() const
-{
-	return AttributeSet->GetShield();
-}
-
-void UStructureGameplay::SetShield(const float InShield) const
-{
-	AttributeSet->SetShield(FMath::Clamp(InShield, 0, AttributeSet->GetMaxShield()));
-}
-
-float UStructureGameplay::GetMaxEnergy() const
-{
-	return AttributeSet->GetMaxEnergy() == 0 ? 1 : AttributeSet->GetMaxEnergy();
-}
-
-float UStructureGameplay::GetEnergy() const
-{
-	return AttributeSet->GetEnergy();
-}
-
-float UStructureGameplay::GetUpkeep() const
-{
-	return AttributeSet->GetUpkeep() / (AttributeSet->GetUpkeepReduction() + 1);
-}
-
-float UStructureGameplay::GetLinearMaxSpeed() const
-{
-	return AttributeSet->GetLinearMaxSpeed() == 0 ? 1 : AttributeSet->GetLinearMaxSpeed();
-}
-
-float UStructureGameplay::GetLinearSpeed() const
-{
-	return GetStructure()->GetComponentByClass<UStaticMeshComponent>()->GetPhysicsLinearVelocity().Length();
 }
 
 bool UStructureGameplay::IsDetecting(AStructure* Other) const
 {
 	const double SquareLength = (GetStructure()->GetActorLocation() - Other->GetActorLocation()).SquaredLength();
-	const float Detection = AttributeSet->GetSensorStrength() * Other->GetGameplay()->AttributeSet->GetSignatureVisibility();
+	const float Detection = AttributeSet->GetSensorStrength() * Other->GetGameplay()->GetSignatureAttributes()->GetRadarSignature();
 	return SquareLength <= Detection;
 }
 
