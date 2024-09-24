@@ -7,7 +7,7 @@ public class DarkFrontierTarget : TargetRules
 	public DarkFrontierTarget(TargetInfo Target) : base(Target)
 	{
 		Type = TargetType.Game;
-		DefaultBuildSettings = BuildSettingsVersion.V2;
+		DefaultBuildSettings = BuildSettingsVersion.Latest;
 
 		ExtraModuleNames.AddRange( new[] { "DarkFrontier" } );
 	}

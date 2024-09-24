@@ -12,13 +12,13 @@ void UTurretAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle, co
 	WaitEventTask->Activate();
 }
 
-void UTurretAbility::OnActivate(UTurretPayload* Payload)
+void UTurretAbility::OnActivate(const UTurretPayload* Payload)
 {
 }
 
 void UTurretAbility::HandlePayloadReceived(const FGameplayEventData Payload)
 {
-	UTurretPayload* Obj = Cast<UTurretPayload>(Payload.OptionalObject);
+	const UTurretPayload* Obj = Cast<UTurretPayload>(Payload.OptionalObject);
 	if(Obj != nullptr)
 	{
 		OnActivate(Obj);
