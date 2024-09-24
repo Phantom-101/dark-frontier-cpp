@@ -16,7 +16,7 @@ class DARKFRONTIER_API UHitscanResult : public UObject
 public:
 
 	UPROPERTY(BlueprintReadWrite)
-	TObjectPtr<class UTurretPayload> Payload;
+	TObjectPtr<const class UTurretPayload> Payload;
 
 	UPROPERTY(BlueprintReadWrite)
 	TObjectPtr<class AStructurePart> HitPart;

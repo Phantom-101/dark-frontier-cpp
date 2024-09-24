@@ -32,9 +32,9 @@ protected:
 	FGameplayTag CueTag;
 
 	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly)
-	TObjectPtr<UTurretPayload> CurrentPayload;
+	TObjectPtr<const UTurretPayload> CurrentPayload;
 
-	virtual void OnActivate(UTurretPayload* Payload) override;
+	virtual void OnActivate(const UTurretPayload* Payload) override;
 
 private:
 

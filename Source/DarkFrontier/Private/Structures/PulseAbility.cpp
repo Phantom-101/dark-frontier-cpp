@@ -12,7 +12,7 @@
 #include "Structures/TurretSource.h"
 #include "Structures/Indications/TimerIndication.h"
 
-void UPulseAbility::OnActivate(UTurretPayload* Payload)
+void UPulseAbility::OnActivate(const UTurretPayload* Payload)
 {
 	Super::OnActivate(Payload);
 

@@ -21,7 +21,7 @@ protected:
 
 	virtual void ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData) override;
 
-	virtual void OnActivate(class UTurretPayload* Payload);
+	virtual void OnActivate(const class UTurretPayload* Payload);
 	
 private:
 

@@ -109,7 +109,7 @@ void AStructureController::UpdateCamera()
 		CameraTargetComponent = nullptr;
 	}
 
-	const FBoxSphereBounds Bounds = UBoundsBlueprintFunctionLibrary::GetBounds(CameraTargetComponent ? CameraTargetComponent->GetOwner() : CameraTargetActor, true);
+	const FBoxSphereBounds Bounds = UBoundsBlueprintFunctionLibrary::GetBounds(CameraTargetComponent ? CameraTargetComponent->GetOwner() : CameraTargetActor.Get(), true);
 	const FVector Location = CameraTargetComponent ? CameraTargetComponent->GetComponentLocation() : CameraTargetActor->GetActorLocation();
 	const FRotator Rotation = CameraTargetComponent ? CameraTargetComponent->GetComponentRotation() : CameraTargetActor->GetActorRotation();
 
