@@ -7,7 +7,7 @@
 #include "Gameplay/Attributes/LayoutAttributeSet.h"
 #include "Gameplay/Attributes/ResistanceAttributeSet.h"
 #include "Gameplay/Attributes/ShieldAttributeSet.h"
-#include "Gameplay/Attributes/SignatureAttributeSet.h"
+#include "Gameplay/Attributes/DetectabilityAttributeSet.h"
 #include "Structures/Structure.h"
 #include "Structures/StructureAbility.h"
 #include "Structures/StructureAbilitySystemComponent.h"
@@ -26,7 +26,7 @@ UStructureGameplay* UStructureGameplay::CreateGameplay(AStructure* Structure)
 	Gameplay->ShieldAttributes = Structure->CreateDefaultSubobject<UShieldAttributeSet>("ShieldAttributes");
 	Gameplay->EnergyAttributes = Structure->CreateDefaultSubobject<UEnergyAttributeSet>("EnergyAttributes");
 	Gameplay->LayoutAttributes = Structure->CreateDefaultSubobject<ULayoutAttributeSet>("LayoutAttributes");
-	Gameplay->SignatureAttributes = Structure->CreateDefaultSubobject<USignatureAttributeSet>("SignatureAttributes");
+	Gameplay->DetectabilityAttributes = Structure->CreateDefaultSubobject<UDetectabilityAttributeSet>("SignatureAttributes");
 	Gameplay->AttributeSet = Structure->CreateDefaultSubobject<UStructureAttributeSet>("AttributeSet");
 
 	return Gameplay;
@@ -47,45 +47,10 @@ UStructureAbilitySystemComponent* UStructureGameplay::GetAbilitySystemComponent(
 	return AbilitySystemComponent;
 }
 
-UIntegrityAttributeSet* UStructureGameplay::GetIntegrityAttributes() const
-{
-	return IntegrityAttributes;
-}
-
-UResistanceAttributeSet* UStructureGameplay::GetResistanceAttributes() const
-{
-	return ResistanceAttributes;
-}
-
-UShieldAttributeSet* UStructureGameplay::GetShieldAttributes() const
-{
-	return ShieldAttributes;
-}
-
-UEnergyAttributeSet* UStructureGameplay::GetEnergyAttributes() const
-{
-	return EnergyAttributes;
-}
-
-ULayoutAttributeSet* UStructureGameplay::GetLayoutAttributes() const
-{
-	return LayoutAttributes;
-}
-
-USignatureAttributeSet* UStructureGameplay::GetSignatureAttributes() const
-{
-	return SignatureAttributes;
-}
-
-UStructureAttributeSet* UStructureGameplay::GetStructureAttributes() const
-{
-	return AttributeSet;
-}
-
 bool UStructureGameplay::IsDetecting(AStructure* Other) const
 {
 	const double SquareLength = (GetStructure()->GetActorLocation() - Other->GetActorLocation()).SquaredLength();
-	const float Detection = AttributeSet->GetSensorStrength() * Other->GetGameplay()->GetSignatureAttributes()->GetRadarSignature();
+	const float Detection = AttributeSet->GetSensorStrength() * Other->GetGameplay()->GetRadarCrossSection();
 	return SquareLength <= Detection;
 }
 

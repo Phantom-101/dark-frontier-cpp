@@ -49,14 +49,16 @@ void UStructureInfo::SetTarget(AStructure* InTargetStructure)
 	const UAbilitySystemComponent* AbilitySystemComp = TargetStructure->GetAbilitySystemComponent();
 	const UStructureAttributeSet* Attributes = Cast<UStructureAttributeSet>(AbilitySystemComp->GetAttributeSet(UStructureAttributeSet::StaticClass()));
 
-	const float MaxHull = TargetStructure->GetGameplay()->GetIntegrityAttributes()->GetMaxIntegrity();
+	UStructureGameplay* Gameplay = TargetStructure->GetGameplay();
+	
+	const float MaxHull = Gameplay->GetMaxIntegrity();
 	// TODO replace with actual shield
-	const float MaxShield = TargetStructure->GetGameplay()->GetIntegrityAttributes()->GetMaxIntegrity();
+	const float MaxShield = Gameplay->GetMaxIntegrity();
 	const float ShieldRegen = 0;
-	const float MaxEnergy = TargetStructure->GetGameplay()->GetEnergyAttributes()->GetMaxEnergy();
-	const float EnergyRegen = TargetStructure->GetGameplay()->GetEnergyAttributes()->GetRegeneration();
-	const float MaxUpkeep = TargetStructure->GetGameplay()->GetLayoutAttributes()->GetMaxUpkeep();
-	const float Upkeep = TargetStructure->GetGameplay()->GetLayoutAttributes()->GetUpkeep();
+	const float MaxEnergy = Gameplay->GetMaxEnergy();
+	const float EnergyRegen = Gameplay->GetEnergyRegeneration();
+	const float MaxUpkeep = Gameplay->GetMaxUpkeep();
+	const float Upkeep = Gameplay->GetUpkeep();
 	const float LinearSpeed = Attributes->GetLinearMaxSpeed();
 	const float LinearAccel = Attributes->GetLinearAcceleration();
 	const float AngularSpeed = Attributes->GetAngularMaxSpeed();

@@ -42,12 +42,12 @@ void UGameUI::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 	{
 		if(const AStructure* Structure = Cast<AStructure>(PlayerController->GetPawn()))
 		{
-			const UStructureGameplay* Gameplay = Structure->GetGameplay();
+			UStructureGameplay* Gameplay = Structure->GetGameplay();
 			
-			HullArc->SetLength(Gameplay->GetIntegrityAttributes()->GetIntegrity() / Gameplay->GetIntegrityAttributes()->GetMaxIntegrity() * 0.25);
+			HullArc->SetLength(Gameplay->GetIntegrity() / Gameplay->GetMaxIntegrity() * 0.25);
 			// TODO replace with actual shield
-			ShieldArc->SetLength(Gameplay->GetIntegrityAttributes()->GetIntegrity() / Gameplay->GetIntegrityAttributes()->GetMaxIntegrity() * 0.2);
-			EnergyArc->SetLength(Gameplay->GetEnergyAttributes()->GetEnergy() / Gameplay->GetEnergyAttributes()->GetMaxEnergy() * 0.25);
+			ShieldArc->SetLength(Gameplay->GetIntegrity() / Gameplay->GetMaxIntegrity() * 0.2);
+			EnergyArc->SetLength(Gameplay->GetEnergy() / Gameplay->GetMaxEnergy() * 0.25);
 			// TODO replace with actual speed
 			SpeedArc->SetLength(1 * 0.2);
 		}

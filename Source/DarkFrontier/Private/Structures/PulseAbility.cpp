@@ -2,14 +2,16 @@
 
 #include "Structures/PulseAbility.h"
 #include "Abilities/Tasks/AbilityTask_WaitDelay.h"
+#include "Engine/DamageEvents.h"
 #include "Gameplay/Tasks/HitscanTask.h"
 #include "Structures/HitscanResult.h"
 #include "Structures/Structure.h"
 #include "Structures/StructureAbilitySystemComponent.h"
 #include "Structures/StructureIndices.h"
-#include "Structures/StructurePart.h"
+#include "Structures/Turret.h"
 #include "Structures/TurretPayload.h"
 #include "Structures/TurretSource.h"
+#include "Structures/Damage/StructureDamageType.h"
 #include "Structures/Indications/TimerIndication.h"
 
 void UPulseAbility::OnActivate(const UTurretPayload* Payload)
@@ -45,17 +47,25 @@ void UPulseAbility::OnDelayFinish()
 	TArray<AActor*> IgnoredActors;
 	IgnoredActors.Add(CurrentPayload->Instigator);
 	IgnoredActors.Append(CurrentPayload->Instigator->GetIndices()->GetParts());
-	
-	UHitscanTask* HitscanTask = UHitscanTask::New(this, CurrentPayload->Source->GetComponentLocation(), CurrentPayload->Target->GetActorLocation(), TraceChannel, IgnoredActors);
+
+	const FVector Start = CurrentPayload->Source->GetComponentLocation();
+	const FVector End = CurrentPayload->Target->GetActorLocation();
+	UHitscanTask* HitscanTask = UHitscanTask::New(this, Start, End, TraceChannel, IgnoredActors);
 	HitscanTask->Activate();
 
-	if(IsValid(HitscanTask->HitPart))
+	float DamageRemaining = DamageAmount;
+	for(const FHitResult& HitResult : HitscanTask->HitResults)
 	{
-		UHitscanResult* Result = NewObject<UHitscanResult>();
-		Result->Payload = CurrentPayload;
-		Result->HitPart = HitscanTask->HitPart;
-		Result->HitResult = HitscanTask->HitResult;
+		FVector Direction = End - Start;
+		Direction.Normalize();
+		
+		const FPointDamageEvent Event = FPointDamageEvent(DamageRemaining, HitResult, Direction, DamageType);
+		AController* Instigator = CurrentPayload->Instigator->GetController();
+		AActor* Causer = CurrentPayload->Turret;
+		
+		DamageRemaining -= HitResult.GetActor()->TakeDamage(DamageRemaining, Event, Instigator, Causer);
 
+		/*
 		UStructureAbilitySystemComponent* Comp = Cast<UStructureAbilitySystemComponent>(Result->Payload->Instigator->GetAbilitySystemComponent());
 		if(Comp)
 		{
@@ -65,5 +75,6 @@ void UPulseAbility::OnDelayFinish()
 			Parameters.EffectContext.AddHitResult(Result->HitResult);
 			Comp->ExecuteGameplayCueLocal(CueTag, Parameters);
 		}
+		 */
 	}
 }

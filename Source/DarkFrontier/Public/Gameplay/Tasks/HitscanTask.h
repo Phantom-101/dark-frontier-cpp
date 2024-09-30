@@ -31,10 +31,7 @@ public:
 	TArray<TObjectPtr<AActor>> IgnoredActors;
 
 	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly)
-	FHitResult HitResult;
-
-	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly)
-	TObjectPtr<AStructurePart> HitPart;
+	TArray<FHitResult> HitResults;
 
 	static UHitscanTask* New(UGameplayAbility* OwningAbility, const FVector& InStart, const FVector& InEnd, ECollisionChannel InChannel, const TArray<AActor*>& InIgnored);
 

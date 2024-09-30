@@ -74,8 +74,8 @@ void AStructurePart::OnAdded(AStructure* Structure)
 		}
 
 		// Add the extra hull that this part provides
-		UIntegrityAttributeSet* IntegrityAttributes = OwningStructure->GetGameplay()->GetIntegrityAttributes();
-		IntegrityAttributes->SetIntegrity(IntegrityAttributes->GetIntegrity() + Hull);
+		UStructureGameplay* Gameplay = OwningStructure->GetGameplay();
+		Gameplay->SetIntegrity(Gameplay->GetIntegrity() + Hull);
 	}
 }
 
@@ -87,8 +87,8 @@ void AStructurePart::OnRemoved()
 		PassiveEffectHandle = FActiveGameplayEffectHandle();
 
 		// Clamp hull to the now reduced max hull
-		UIntegrityAttributeSet* IntegrityAttributes = OwningStructure->GetGameplay()->GetIntegrityAttributes();
-		IntegrityAttributes->SetIntegrity(IntegrityAttributes->GetIntegrity());
+		UStructureGameplay* Gameplay = OwningStructure->GetGameplay();
+		Gameplay->SetIntegrity(Gameplay->GetIntegrity());
 	}
 }
 
