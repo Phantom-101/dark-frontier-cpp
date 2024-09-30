@@ -5,17 +5,18 @@
 #include "CoreMinimal.h"
 #include "ActiveGameplayEffectHandle.h"
 #include "GameplayAbilitySpecHandle.h"
+#include "StructureAttributeSet.h"
+#include "Gameplay/Attributes/AttributeMacros.h"
+#include "Gameplay/Attributes/DetectabilityAttributeSet.h"
+#include "Gameplay/Attributes/EnergyAttributeSet.h"
+#include "Gameplay/Attributes/IntegrityAttributeSet.h"
+#include "Gameplay/Attributes/LayoutAttributeSet.h"
+#include "Gameplay/Attributes/ResistanceAttributeSet.h"
+#include "Gameplay/Attributes/ShieldAttributeSet.h"
 #include "UObject/Object.h"
 #include "StructureGameplay.generated.h"
 
-class UShieldAttributeSet;
-class USignatureAttributeSet;
-class ULayoutAttributeSet;
-class UEnergyAttributeSet;
-class UResistanceAttributeSet;
-class UIntegrityAttributeSet;
 class UStructureAbility;
-class UStructureAttributeSet;
 class UStructureAbilitySystemComponent;
 class UGameplayEffect;
 class AStructure;
@@ -53,7 +54,7 @@ protected:
 	TObjectPtr<ULayoutAttributeSet> LayoutAttributes;
 
 	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly)
-	TObjectPtr<USignatureAttributeSet> SignatureAttributes;
+	TObjectPtr<UDetectabilityAttributeSet> DetectabilityAttributes;
 
 	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly)
 	TObjectPtr<UStructureAttributeSet> AttributeSet;
@@ -71,27 +72,42 @@ public:
 	UFUNCTION(BlueprintCallable)
 	UStructureAbilitySystemComponent* GetAbilitySystemComponent() const;
 
-	UFUNCTION(BlueprintCallable)
-	UIntegrityAttributeSet* GetIntegrityAttributes() const;
+	ATTRIBUTE_PASSTHROUGH(IntegrityAttributes, MaxIntegrity);
+	ATTRIBUTE_PASSTHROUGH(IntegrityAttributes, Integrity);
+	ATTRIBUTE_PASSTHROUGH_WithPrefix(IntegrityAttributes, Regeneration, Integrity);
 
-	UFUNCTION(BlueprintCallable)
-	UResistanceAttributeSet* GetResistanceAttributes() const;
+	ATTRIBUTE_PASSTHROUGH(ResistanceAttributes, KineticResistance);
+	ATTRIBUTE_PASSTHROUGH(ResistanceAttributes, ExplosiveResistance);
+	ATTRIBUTE_PASSTHROUGH(ResistanceAttributes, ThermalResistance);
+	ATTRIBUTE_PASSTHROUGH(ResistanceAttributes, ElectromagneticResistance);
 
-	UFUNCTION(BlueprintCallable)
-	UShieldAttributeSet* GetShieldAttributes() const;
+	ATTRIBUTE_PASSTHROUGH(ShieldAttributes, MaxIntegrityBonus);
+	ATTRIBUTE_PASSTHROUGH(ShieldAttributes, MaxIntegrityMultiplier);
+	ATTRIBUTE_PASSTHROUGH(ShieldAttributes, RegenerationBonus);
+	ATTRIBUTE_PASSTHROUGH(ShieldAttributes, RegenerationMultiplier);
+	ATTRIBUTE_PASSTHROUGH(ShieldAttributes, KineticResistanceBonus);
+	ATTRIBUTE_PASSTHROUGH(ShieldAttributes, KineticResistanceMultiplier);
+	ATTRIBUTE_PASSTHROUGH(ShieldAttributes, ExplosiveResistanceBonus);
+	ATTRIBUTE_PASSTHROUGH(ShieldAttributes, ExplosiveResistanceMultiplier);
+	ATTRIBUTE_PASSTHROUGH(ShieldAttributes, ThermalResistanceBonus);
+	ATTRIBUTE_PASSTHROUGH(ShieldAttributes, ThermalResistanceMultiplier);
+	ATTRIBUTE_PASSTHROUGH(ShieldAttributes, ElectromagneticResistanceBonus);
+	ATTRIBUTE_PASSTHROUGH(ShieldAttributes, ElectromagneticResistanceMultiplier);
 
-	UFUNCTION(BlueprintCallable)
-	UEnergyAttributeSet* GetEnergyAttributes() const;
-	
-	UFUNCTION(BlueprintCallable)
-	ULayoutAttributeSet* GetLayoutAttributes() const;
+	ATTRIBUTE_PASSTHROUGH(EnergyAttributes, MaxEnergy);
+	ATTRIBUTE_PASSTHROUGH(EnergyAttributes, Energy);
+	ATTRIBUTE_PASSTHROUGH_WithPrefix(EnergyAttributes, Regeneration, Energy);
 
-	UFUNCTION(BlueprintCallable)
-	USignatureAttributeSet* GetSignatureAttributes() const;
+	ATTRIBUTE_PASSTHROUGH(LayoutAttributes, MaxUpkeep);
+	ATTRIBUTE_PASSTHROUGH(LayoutAttributes, Upkeep);
 
-	// TODO replace with smaller attribute sets
-	UFUNCTION(BlueprintCallable)
-	UStructureAttributeSet* GetStructureAttributes() const;
+	ATTRIBUTE_PASSTHROUGH(DetectabilityAttributes, RadarCrossSection);
+
+	ATTRIBUTE_PASSTHROUGH(AttributeSet, LinearAcceleration);
+	ATTRIBUTE_PASSTHROUGH(AttributeSet, LinearMaxSpeed);
+	ATTRIBUTE_PASSTHROUGH(AttributeSet, AngularAcceleration);
+	ATTRIBUTE_PASSTHROUGH(AttributeSet, AngularMaxSpeed);
+	ATTRIBUTE_PASSTHROUGH(AttributeSet, SensorStrength);
 
 	// TODO move out
 	UFUNCTION(BlueprintCallable)

@@ -6,6 +6,7 @@
 #include "TurretAbility.h"
 #include "PulseAbility.generated.h"
 
+class UStructureDamageType;
 class UTimerIndication;
 class UHitscanTask;
 
@@ -30,6 +31,12 @@ protected:
 
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category="Gameplay")
 	FGameplayTag CueTag;
+
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly)
+	float DamageAmount = 0;
+
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly)
+	TSubclassOf<UStructureDamageType> DamageType;
 
 	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly)
 	TObjectPtr<const UTurretPayload> CurrentPayload;

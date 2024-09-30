@@ -5,12 +5,9 @@
 #include "Camera/CameraComponent.h"
 #include "Engine/DamageEvents.h"
 #include "GameFramework/SpringArmComponent.h"
-#include "Gameplay/Attributes/IntegrityAttributeSet.h"
-#include "Gameplay/Attributes/LayoutAttributeSet.h"
 #include "Items/Inventory.h"
 #include "Sectors/Sector.h"
 #include "Structures/StructureAbilitySystemComponent.h"
-#include "Structures/StructureAttributeSet.h"
 #include "Structures/StructureAbility.h"
 #include "Structures/StructureAuthoring.h"
 #include "Structures/StructureDock.h"
@@ -83,24 +80,22 @@ void AStructure::Tick(float DeltaTime)
 
 	UpdateTickLevel();
 
-	const UStructureAttributeSet* AttributeSet = Gameplay->GetStructureAttributes();
-
 	if(TickLevel == EStructureTickLevel::Full)
 	{
-		const float LinearMaxSpeed = AttributeSet->GetLinearMaxSpeed();
-		const float LinearAccel = AttributeSet->GetLinearAcceleration();
+		const float LinearMaxSpeed = Gameplay->GetLinearMaxSpeed();
+		const float LinearAccel = Gameplay->GetLinearAcceleration();
 		StaticMesh->AddImpulse(CalculateImpulse(StaticMesh->GetPhysicsLinearVelocity(), MoveInput, LinearMaxSpeed, LinearAccel, DeltaTime), NAME_None, true);
 
-		const float AngularMaxSpeed = AttributeSet->GetAngularMaxSpeed();
-		const float AngularAccel = AttributeSet->GetAngularAcceleration();
+		const float AngularMaxSpeed = Gameplay->GetAngularMaxSpeed();
+		const float AngularAccel = Gameplay->GetAngularAcceleration();
 		StaticMesh->AddAngularImpulseInDegrees(CalculateImpulse(StaticMesh->GetPhysicsAngularVelocityInDegrees(), RotateInput, AngularMaxSpeed, AngularAccel, DeltaTime), NAME_None, true);
 	}
 	else if(TickLevel == EStructureTickLevel::Limited)
 	{
-		const FVector ScaledMoveInput = MoveInput * AttributeSet->GetLinearMaxSpeed();
+		const FVector ScaledMoveInput = MoveInput * Gameplay->GetLinearMaxSpeed();
 		SetActorLocation(GetActorLocation() + ScaledMoveInput);
 
-		const FVector ScaledRotateInput = RotateInput * AttributeSet->GetAngularMaxSpeed();
+		const FVector ScaledRotateInput = RotateInput * Gameplay->GetAngularMaxSpeed();
 		const FRotator Rotation = FRotator(ScaledRotateInput.X, ScaledRotateInput.Z, ScaledRotateInput.Y);
 		SetActorRotation(GetActorRotation() + Rotation);
 	}
@@ -153,7 +148,7 @@ EStructureValidationResult AStructure::ValidateLayout()
 		}
 	}
 	
-	if(Gameplay->GetLayoutAttributes()->GetUpkeep() > Gameplay->GetLayoutAttributes()->GetMaxUpkeep())
+	if(Gameplay->GetUpkeep() > Gameplay->GetMaxUpkeep())
 	{
 		return EStructureValidationResult::UpkeepExceeded;
 	}
@@ -433,14 +428,12 @@ float AStructure::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent
 	// Healing is not supported
 	if(DamageAmount > 0)
 	{
-		UIntegrityAttributeSet* IntegrityAttributes = Gameplay->GetIntegrityAttributes();
-		
 		const float Multiplier = StructureDamageType ? StructureDamageType->GetMultiplier(Gameplay->GetAbilitySystemComponent()) : 1;
-		const float Equivalent = IntegrityAttributes->GetIntegrity() / Multiplier;
+		const float Equivalent = Gameplay->GetIntegrity() / Multiplier;
 		const float Absorbed = FMath::Min(DamageAmount, Equivalent);
 		const float Damage = Absorbed * Multiplier;
 		
-		IntegrityAttributes->SetIntegrity(IntegrityAttributes->GetIntegrity() - Damage);
+		Gameplay->SetIntegrity(Gameplay->GetIntegrity() - Damage);
 		
 		// Return the actual amount absorbed
 		return Absorbed;
