@@ -19,13 +19,13 @@ UStructureIndicator* UStructureIndicatorGroup::GetIndicator(UStructureIndication
 	return nullptr;
 }
 
-void UStructureIndicatorGroup::AddIndicator(UStructureIndication* Indication)
+void UStructureIndicatorGroup::AddIndicator(UStructureIndication* Indication, const TSubclassOf<UStructureIndicator>& IndicatorClass)
 {
-	if(GetClass() == Indication->IndicatorGroupClass && GetIndicator(Indication) == nullptr)
+	if(IndicatorClass != nullptr && GetIndicator(Indication) == nullptr)
 	{
-		UStructureIndicator* Indicator = CreateWidget<UStructureIndicator>(this, Indication->IndicatorClass);
-		Indicator->TryInit(Indication);
+		UStructureIndicator* Indicator = CreateWidget<UStructureIndicator>(this, IndicatorClass);
 		PanelWidget->AddChild(Indicator);
+		Indicator->TryInit(Indication);
 	}
 }
 

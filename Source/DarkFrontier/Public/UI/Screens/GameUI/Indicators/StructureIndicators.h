@@ -6,6 +6,7 @@
 #include "CommonUserWidget.h"
 #include "StructureIndicators.generated.h"
 
+class UStructureIndicatorMapping;
 class UStructureIndication;
 class UStructureIndicatorGroup;
 
@@ -22,6 +23,9 @@ protected:
 	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
 	TObjectPtr<class UCanvasPanel> IndicatorCanvas;
 
+	UPROPERTY(BlueprintReadOnly, EditAnywhere)
+	TSubclassOf<UStructureIndicatorMapping> Mapping;
+
 public:
 
 	UFUNCTION(BlueprintCallable)
@@ -33,6 +37,6 @@ public:
 protected:
 	
 	UFUNCTION(BlueprintCallable)
-	UStructureIndicatorGroup* GetIndicatorGroup(UStructureIndication* Indication);
+	UStructureIndicatorGroup* GetGroup(TSubclassOf<UStructureIndicatorGroup> GroupClass);
 
 };

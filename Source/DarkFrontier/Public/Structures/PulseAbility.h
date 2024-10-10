@@ -7,7 +7,6 @@
 #include "PulseAbility.generated.h"
 
 class UStructureDamageType;
-class UTimerIndication;
 class UHitscanTask;
 
 /**
@@ -25,9 +24,6 @@ protected:
 
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category="Gameplay")
 	float Delay = 3;
-
-	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category="Gameplay")
-	TSubclassOf<UTimerIndication> IndicationClass;
 
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category="Gameplay")
 	FGameplayTag CueTag;

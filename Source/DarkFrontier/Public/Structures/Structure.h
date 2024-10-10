@@ -23,9 +23,6 @@ class AFaction;
 class UStructureIndication;
 class ASector;
 class UStructureDock;
-class UHullIndication;
-class UDistanceIndication;
-class USpeedIndication;
 struct FStructureDamage;
 struct FActiveGameplayEffectHandle;
 struct FGameplayAbilitySpecHandle;
@@ -85,15 +82,6 @@ protected:
 
 	UPROPERTY(BlueprintReadOnly, EditInstanceOnly, Category="Gameplay")
 	TArray<TObjectPtr<UStructureIndication>> Indications;
-
-	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category="Gameplay")
-	TSubclassOf<UHullIndication> HullIndicationClass;
-
-	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category="Gameplay")
-	TSubclassOf<UDistanceIndication> DistanceIndicationClass;
-
-	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category="Gameplay")
-	TSubclassOf<USpeedIndication> SpeedIndicationClass;
 
 	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly, Category="Input")
 	FVector MoveInput = FVector::ZeroVector;

@@ -9,7 +9,7 @@
 /**
  * 
  */
-UCLASS()
+UCLASS(Abstract)
 class DARKFRONTIER_API USpeedIndicator : public UStructureIndicator
 {
 	GENERATED_BODY()

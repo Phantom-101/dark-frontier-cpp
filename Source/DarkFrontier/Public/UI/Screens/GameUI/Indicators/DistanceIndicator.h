@@ -9,7 +9,7 @@
 /**
  * 
  */
-UCLASS()
+UCLASS(Abstract)
 class DARKFRONTIER_API UDistanceIndicator : public UStructureIndicator
 {
 	GENERATED_BODY()

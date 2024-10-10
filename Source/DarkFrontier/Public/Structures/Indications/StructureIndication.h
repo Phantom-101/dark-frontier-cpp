@@ -17,14 +17,6 @@ class DARKFRONTIER_API UStructureIndication : public UObject
 {
 	GENERATED_BODY()
 
-public:
-
-	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly)
-	TSubclassOf<UStructureIndicatorGroup> IndicatorGroupClass;
-
-	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly)
-	TSubclassOf<UStructureIndicator> IndicatorClass;
-
 protected:
 
 	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly)

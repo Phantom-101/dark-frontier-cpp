@@ -4,9 +4,7 @@
 #include "Abilities/Tasks/AbilityTask_WaitDelay.h"
 #include "Engine/DamageEvents.h"
 #include "Gameplay/Tasks/HitscanTask.h"
-#include "Structures/HitscanResult.h"
 #include "Structures/Structure.h"
-#include "Structures/StructureAbilitySystemComponent.h"
 #include "Structures/StructureIndices.h"
 #include "Structures/Turret.h"
 #include "Structures/TurretPayload.h"
@@ -23,7 +21,7 @@ void UPulseAbility::OnActivate(const UTurretPayload* Payload)
 	if(CommitAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo))
 	{
 		// Setup attack indication
-		UTimerIndication* Indication = Cast<UTimerIndication>(Payload->Instigator->AddIndication(IndicationClass));
+		UTimerIndication* Indication = Cast<UTimerIndication>(Payload->Instigator->AddIndication(UTimerIndication::StaticClass()));
 		Indication->Init(Delay);
 
 		// Wait to perform raycast and apply damage
@@ -59,7 +57,7 @@ void UPulseAbility::OnDelayFinish()
 		FVector Direction = End - Start;
 		Direction.Normalize();
 		
-		const FPointDamageEvent Event = FPointDamageEvent(DamageRemaining, HitResult, Direction, DamageType);
+		const FPointDamageEvent Event = FPointDamageEvent(DamageRemaining, HitResult, Direction, DamageType.Get());
 		AController* Instigator = CurrentPayload->Instigator->GetController();
 		AActor* Causer = CurrentPayload->Turret;
 		

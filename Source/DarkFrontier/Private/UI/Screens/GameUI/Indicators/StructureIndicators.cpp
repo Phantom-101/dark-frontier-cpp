@@ -4,32 +4,40 @@
 #include "Components/CanvasPanel.h"
 #include "Structures/Indications/StructureIndication.h"
 #include "UI/Screens/GameUI/Indicators/StructureIndicatorGroup.h"
+#include "UI/Screens/GameUI/Indicators/StructureIndicatorMapping.h"
+#include "UI/Screens/GameUI/Indicators/StructureIndicatorMappingEntry.h"
 
 void UStructureIndicators::AddIndicator(UStructureIndication* Indication)
 {
-	UStructureIndicatorGroup* Group = GetIndicatorGroup(Indication);
-
-	if(Group != nullptr)
+	const FStructureIndicatorMappingEntry Entry = Mapping.GetDefaultObject()->Find(Indication);
+	if(Entry.IsValid())
 	{
-		Group->AddIndicator(Indication);
+		UStructureIndicatorGroup* Group = GetGroup(Entry.GroupClass);
+		if(Group != nullptr)
+		{
+			Group->AddIndicator(Indication, Entry.IndicatorClass);
+		}
 	}
 }
 
 void UStructureIndicators::RemoveIndicator(UStructureIndication* Indication)
 {
-	UStructureIndicatorGroup* Group = GetIndicatorGroup(Indication);
-
-	if(Group != nullptr)
+	const FStructureIndicatorMappingEntry Entry = Mapping.GetDefaultObject()->Find(Indication);
+	if(Entry.IsValid())
 	{
-		Group->RemoveIndicator(Indication);
+		UStructureIndicatorGroup* Group = GetGroup(Entry.GroupClass);
+		if(Group != nullptr)
+		{
+			Group->RemoveIndicator(Indication);
+		}
 	}
 }
 
-UStructureIndicatorGroup* UStructureIndicators::GetIndicatorGroup(UStructureIndication* Indication)
+UStructureIndicatorGroup* UStructureIndicators::GetGroup(TSubclassOf<UStructureIndicatorGroup> GroupClass)
 {
 	for(UWidget* Widget : IndicatorCanvas->GetAllChildren())
 	{
-		if(Widget->GetClass() == Indication->IndicatorGroupClass)
+		if(Widget->GetClass() == GroupClass)
 		{
 			return Cast<UStructureIndicatorGroup>(Widget);
 		}
