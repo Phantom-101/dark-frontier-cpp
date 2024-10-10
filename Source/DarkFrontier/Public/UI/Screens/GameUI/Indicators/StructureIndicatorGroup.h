@@ -28,7 +28,7 @@ public:
 	UStructureIndicator* GetIndicator(UStructureIndication* Indication);
 
 	UFUNCTION(BlueprintCallable)
-	void AddIndicator(UStructureIndication* Indication);
+	void AddIndicator(UStructureIndication* Indication, const TSubclassOf<UStructureIndicator>& IndicatorClass);
 
 	UFUNCTION(BlueprintCallable)
 	void RemoveIndicator(UStructureIndication* Indication);

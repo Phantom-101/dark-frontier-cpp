@@ -61,9 +61,9 @@ void AStructure::BeginPlay()
 
 	TryEnterSector(CurrentSector);
 
-	AddIndication(HullIndicationClass.Get());
-	AddIndication(DistanceIndicationClass.Get());
-	AddIndication(SpeedIndicationClass.Get());
+	AddIndication(UHullIndication::StaticClass());
+	AddIndication(UDistanceIndication::StaticClass());
+	AddIndication(USpeedIndication::StaticClass());
 
 	UStructureAuthoring* Authoring = GetComponentByClass<UStructureAuthoring>();
 	if(Authoring != nullptr)
