@@ -3,9 +3,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "StructureFacility.h"
 #include "UObject/Object.h"
 #include "StructureIndices.generated.h"
 
+class AStructureSubactor;
 class UStructureSlot;
 class UStructureFacility;
 class AStructurePart;
@@ -54,17 +56,37 @@ public:
 	AStructurePart* GetPart(FString Id);
 
 	UFUNCTION(BlueprintCallable)
-	TArray<UStructureSlot*> GetSlots();
-
-	UFUNCTION(BlueprintCallable)
-	TArray<UStructureFacility*> GetFacilities();
-
-	UFUNCTION(BlueprintCallable)
 	bool AddPart(AStructurePart* Part);
 
 	UFUNCTION(BlueprintCallable)
 	bool RemovePart(AStructurePart* Part);
 
+	UFUNCTION(BlueprintCallable)
+	void ReconnectParts();
+	
+	UFUNCTION(BlueprintCallable)
+	void CullParts();
+
+	UFUNCTION(BlueprintCallable)
+	TArray<UStructureSlot*> GetSlots();
+
+	UFUNCTION(BlueprintCallable)
+	TArray<UStructureFacility*> GetFacilities();
+
+	template<typename T>
+	TArray<T*> GetFacilities()
+	{
+		TArray<T*> Ret;
+		for(UStructureFacility* Facility : Facilities)
+		{
+			if(Facility->IsA<T>())
+			{
+				Ret.Add(Cast<T>(Facility));
+			}
+		}
+		return Ret;
+	}
+	
 private:
 
 	void UpdateIndices();

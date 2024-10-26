@@ -147,20 +147,21 @@ void AStructurePart::AttachSlots()
 {
 	for(UStructureSlot* Slot : Slots)
 	{
-		if(!Slot->GetAttachedSlot())
+		if(Slot->GetAttachedSlot() != nullptr)
 		{
-			for(AStructurePart* Part : OwningStructure->GetIndices()->GetParts())
+			continue;
+		}
+		
+		for(UStructureSlot* Other : OwningStructure->GetIndices()->GetSlots())
+		{
+			if(Other->GetOwningPart() == this)
 			{
-				if(Part != this)
-				{
-					for(UStructureSlot* Other : Part->Slots)
-					{
-						if((Other->GetComponentLocation() - Slot->GetComponentLocation()).IsNearlyZero(1))
-						{
-							Slot->TryAttach(Other);
-						}
-					}
-				}
+				continue;
+			}
+			
+			if((Other->GetComponentLocation() - Slot->GetComponentLocation()).IsNearlyZero(1))
+			{
+				Slot->TryAttach(Other);
 			}
 		}
 	}
@@ -172,7 +173,7 @@ void AStructurePart::DetachSlots()
 	{
 		Slot->TryDetach();
 	}
-	OwningStructure->UpdateLayoutInformation();
+	OwningStructure->GetIndices()->CullParts();
 }
 
 TArray<UStructureFacility*> AStructurePart::GetFacilities()

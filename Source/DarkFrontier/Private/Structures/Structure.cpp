@@ -6,14 +6,13 @@
 #include "Engine/DamageEvents.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Items/Inventory.h"
-#include "Sectors/Sector.h"
 #include "Structures/StructureAbilitySystemComponent.h"
 #include "Structures/StructureAbility.h"
 #include "Structures/StructureAuthoring.h"
-#include "Structures/StructureDock.h"
 #include "Structures/StructureGameplay.h"
 #include "Structures/StructureIndices.h"
 #include "Structures/StructureLayout.h"
+#include "Structures/StructureLocation.h"
 #include "Structures/StructurePart.h"
 #include "Structures/StructureSlot.h"
 #include "Structures/StructureValidationResult.h"
@@ -59,7 +58,7 @@ void AStructure::BeginPlay()
 
 	OnTakePointDamage.AddDynamic(this, &AStructure::HandlePointDamage);
 
-	TryEnterSector(CurrentSector);
+	Location->EnterSector(InitialSector);
 
 	AddIndication(UHullIndication::StaticClass());
 	AddIndication(UDistanceIndication::StaticClass());
@@ -115,14 +114,11 @@ bool AStructure::TryDestroy()
 	if(!IsValid(Indices->GetRootPart())) return false;
 	
 	Indices->GetRootPart()->DetachSlots();
-	UpdateLayoutInformation();
+	Indices->CullParts();
 
 	Indices->GetRootPart()->Destroy();
 
-	if(IsValid(CurrentSector))
-	{
-		CurrentSector->UnregisterStructure(this);
-	}
+	Location->ExitSector();
 
 	Destroy();
 
@@ -132,6 +128,11 @@ bool AStructure::TryDestroy()
 UStructureIndices* AStructure::GetIndices() const
 {
 	return Indices;
+}
+
+UStructureLocation* AStructure::GetLocation() const
+{
+	return Location;
 }
 
 EStructureValidationResult AStructure::ValidateLayout()
@@ -232,90 +233,9 @@ bool AStructure::LoadLayout(FStructureLayout InLayout)
 	}
 
 	// All parts should be connected at this point
-	UpdateLayoutInformation();
+	Indices->ReconnectParts();
 
 	return true;
-}
-
-void AStructure::UpdateLayoutInformation()
-{
-	// Collect reachable parts
-	TArray<AStructurePart*> NewParts;
-	NewParts.Add(Indices->GetRootPart());
-
-	int CurrentIndex = 0;
-	while(CurrentIndex < NewParts.Num())
-	{
-		for(const UStructureSlot* Slot : NewParts[CurrentIndex]->GetSlots())
-		{
-			if(IsValid(Slot->GetAttachedSlot()) && !NewParts.Contains(Slot->GetAttachedSlot()->GetOwningPart()))
-			{
-				NewParts.Add(Slot->GetAttachedSlot()->GetOwningPart());
-			}
-		}
-		CurrentIndex++;
-	}
-
-	// Call register and unregister events as needed
-	for(AStructurePart* Part : NewParts)
-	{
-		if(!Indices->GetParts().Contains(Part))
-		{
-			Indices->AddPart(Part);
-		}
-	}
-
-	CurrentIndex = 0;
-	TArray<AStructurePart*> Parts = Indices->GetParts();
-	while(CurrentIndex < Parts.Num())
-	{
-		if(!NewParts.Contains(Parts[CurrentIndex]))
-		{
-			Parts[CurrentIndex]->Destroy();
-			Indices->RemovePart(Parts[CurrentIndex]);
-		}
-		else
-		{
-			CurrentIndex++;
-		}
-	}
-	
-	// Reconnect all valid connections
-	for(AStructurePart* Part : Parts)
-	{
-		Part->AttachSlots();
-	}
-	
-	OnLayoutChanged.Broadcast();
-}
-
-UStructureDock* AStructure::GetDock() const
-{
-	return CurrentDock;
-}
-
-bool AStructure::TryDock(UStructureDock* InDock)
-{
-	if(InDock->ConfirmDock(this))
-	{
-		CurrentDock = InDock;
-		AttachToActor(CurrentDock->GetOwner(), FAttachmentTransformRules(EAttachmentRule::KeepWorld, true));
-		return true;
-	}
-
-	return false;
-}
-
-bool AStructure::TryUnDock()
-{
-	if(CurrentDock->ConfirmUnDock(this))
-	{
-		CurrentDock = nullptr;
-		DetachFromActor(FDetachmentTransformRules(EDetachmentRule::KeepWorld, false));
-		return true;
-	}
-
-	return false;
 }
 
 EStructureTickLevel AStructure::GetTickLevel()
@@ -349,7 +269,7 @@ void AStructure::UpdateTickLevel()
 	const AStructure* Player = Cast<AStructure>(GetWorld()->GetFirstPlayerController()->GetPawn());
 	if(IsValid(Player))
 	{
-		if(CurrentSector == Player->CurrentSector)
+		if(Location->GetSector() == Player->GetLocation()->GetSector())
 		{
 			SetTickLevel(EStructureTickLevel::Full);
 		}
@@ -362,23 +282,6 @@ void AStructure::UpdateTickLevel()
 	{
 		SetTickLevel(EStructureTickLevel::Omitted);
 	}
-}
-
-bool AStructure::TryEnterSector(ASector* InSector)
-{
-	if(!IsValid(InSector) || CurrentSector == InSector) return false;
-
-	if(IsValid(CurrentSector))
-	{
-		CurrentSector->UnregisterStructure(this);
-	}
-
-	CurrentSector = InSector;
-	CurrentSector->RegisterStructure(this);
-
-	UpdateTickLevel();
-	
-	return true;
 }
 
 UInventory* AStructure::GetInventory() const

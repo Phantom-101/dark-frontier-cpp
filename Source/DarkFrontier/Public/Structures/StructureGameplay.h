@@ -6,6 +6,7 @@
 #include "ActiveGameplayEffectHandle.h"
 #include "GameplayAbilitySpecHandle.h"
 #include "StructureAttributeSet.h"
+#include "Gameplay/GameplaySubobject.h"
 #include "Gameplay/Attributes/AttributeMacros.h"
 #include "Gameplay/Attributes/DetectabilityAttributeSet.h"
 #include "Gameplay/Attributes/EnergyAttributeSet.h"
@@ -25,7 +26,7 @@ class AStructure;
  * 
  */
 UCLASS(DefaultToInstanced)
-class DARKFRONTIER_API UStructureGameplay : public UObject
+class DARKFRONTIER_API UStructureGameplay : public UGameplaySubobject
 {
 	GENERATED_BODY()
 
@@ -37,7 +38,6 @@ protected:
 	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly)
 	TObjectPtr<UStructureAbilitySystemComponent> AbilitySystemComponent;
 
-	// TODO replace with wrapper classes
 	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly)
 	TObjectPtr<UIntegrityAttributeSet> IntegrityAttributes;
 
@@ -64,13 +64,10 @@ public:
 	static UStructureGameplay* CreateGameplay(AStructure* Structure);
 
 	UFUNCTION(BlueprintCallable)
-	void Initialize() const;
-
-	UFUNCTION(BlueprintCallable)
 	AStructure* GetStructure() const;
 	
 	UFUNCTION(BlueprintCallable)
-	UStructureAbilitySystemComponent* GetAbilitySystemComponent() const;
+	virtual UStructureAbilitySystemComponent* GetAbilitySystemComponent() const override;
 
 	ATTRIBUTE_PASSTHROUGH(IntegrityAttributes, MaxIntegrity);
 	ATTRIBUTE_PASSTHROUGH(IntegrityAttributes, Integrity);
@@ -116,16 +113,4 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void ApplyStartingEffects();
 
-	UFUNCTION(BlueprintCallable)
-	FActiveGameplayEffectHandle ApplyEffect(TSubclassOf<UGameplayEffect> Effect) const;
-
-	UFUNCTION(BlueprintCallable)
-	void RemoveEffect(FActiveGameplayEffectHandle Handle) const;
-
-	UFUNCTION(BlueprintCallable)
-	FGameplayAbilitySpecHandle GiveAbility(TSubclassOf<UStructureAbility> Ability) const;
-
-	UFUNCTION(BlueprintCallable)
-	void ClearAbility(FGameplayAbilitySpecHandle Handle) const;
-	
 };
