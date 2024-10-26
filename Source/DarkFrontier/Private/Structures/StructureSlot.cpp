@@ -59,7 +59,7 @@ bool UStructureSlot::CanAttach(const UStructureSlot* Other) const
 /**
  * @note If both slots are already part of layout, the new slot will be moved with reference to the callee slot. This is not necessary when attaching nearby slots but required when loading from a layout object as parts were created without any prior connections/physical adjustments.
  */
-bool UStructureSlot::TryAttach(UStructureSlot* NewSlot, bool SuppressUpdate)
+bool UStructureSlot::TryAttach(UStructureSlot* NewSlot)
 {
 	if(!IsValid(NewSlot))
 	{
@@ -67,25 +67,18 @@ bool UStructureSlot::TryAttach(UStructureSlot* NewSlot, bool SuppressUpdate)
 		return false;
 	}
 	
-	if(AttachedSlot || NewSlot->AttachedSlot)
+	if(AttachedSlot != nullptr || NewSlot->AttachedSlot != nullptr)
 	{
 		UE_LOG(LogDarkFrontier, Warning, TEXT("Both slots must be null for them to attach"));
 		return false;
 	}
 	
-	if(!IsValid(GetOwningStructure()) && !IsValid(NewSlot->GetOwningStructure()))
+	if(GetOwningStructure() == nullptr && NewSlot->GetOwningStructure() == nullptr)
 	{
 		UE_LOG(LogDarkFrontier, Warning, TEXT("Neither slot has valid owning structure"));
 		return false;
 	}
 
-	if((GetOwningStructure() && !IsValid(GetOwningStructure())) ||
-		(NewSlot->GetOwningStructure() && !IsValid(NewSlot->GetOwningStructure())))
-	{
-		UE_LOG(LogDarkFrontier, Warning, TEXT("Cannot attach slot with non-valid owning structure"));
-		return false;
-	}
-	
 	if(!CanAttach(NewSlot))
 	{
 		UE_LOG(LogDarkFrontier, Warning, TEXT("Slots are not compatible"));
@@ -116,11 +109,6 @@ bool UStructureSlot::TryAttach(UStructureSlot* NewSlot, bool SuppressUpdate)
 		AttachedSlot->OwningPart->AttachSlots();
 	}
 
-	if(!SuppressUpdate)
-	{
-		GetOwningStructure()->UpdateLayoutInformation();
-	}
-	
 	return true;
 }
 
@@ -130,7 +118,7 @@ bool UStructureSlot::TryDetach()
 	
 	AttachedSlot->AttachedSlot = nullptr;
 	AttachedSlot = nullptr;
-	GetOwningStructure()->UpdateLayoutInformation();
+	GetOwningStructure()->GetIndices()->CullParts();
 
 	return true;
 }

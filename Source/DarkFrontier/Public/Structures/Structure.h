@@ -9,6 +9,7 @@
 #include "GameFramework/Pawn.h"
 #include "Structure.generated.h"
 
+class UStructureLocation;
 class UStructureIndices;
 class UStructureGameplay;
 enum class EStructureValidationResult : uint8;
@@ -53,14 +54,14 @@ protected:
 	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly)
 	TObjectPtr<UStructureIndices> Indices;
 
-	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly, Category="Docking")
-	TObjectPtr<UStructureDock> CurrentDock;
+	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly)
+	TObjectPtr<UStructureLocation> Location;
+
+	UPROPERTY(BlueprintReadOnly, EditAnywhere)
+	TObjectPtr<ASector> InitialSector;
 
 	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly, Category="Sector")
 	EStructureTickLevel TickLevel = EStructureTickLevel::Omitted;
-
-	UPROPERTY(BlueprintReadOnly, EditInstanceOnly, Category="Sector")
-	TObjectPtr<ASector> CurrentSector;
 
 	UPROPERTY(BlueprintReadOnly, EditAnywhere, Instanced, Category="Inventory")
 	TObjectPtr<UInventory> Inventory;
@@ -115,24 +116,15 @@ public:
 	UFUNCTION(BlueprintCallable)
 	UStructureIndices* GetIndices() const;
 
+	UFUNCTION(BlueprintCallable)
+	UStructureLocation* GetLocation() const;
+
 	UFUNCTION(BlueprintCallable, Category="Layout")
 	EStructureValidationResult ValidateLayout();
 
 	UFUNCTION(BlueprintCallable, Category="Layout")
 	bool LoadLayout(struct FStructureLayout InLayout);
 
-	UFUNCTION(BlueprintCallable, Category="Layout")
-	void UpdateLayoutInformation();
-
-	UFUNCTION(BlueprintCallable, Category="Docking")
-	UStructureDock* GetDock() const;
-
-	UFUNCTION(BlueprintCallable, Category="Docking")
-	bool TryDock(UStructureDock* InDock);
-
-	UFUNCTION(BlueprintCallable, Category="Docking")
-	bool TryUnDock();
-	
 	UFUNCTION(BlueprintCallable, Category="Sector")
 	EStructureTickLevel GetTickLevel();
 
@@ -141,9 +133,6 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category="Sector")
 	void UpdateTickLevel();
-
-	UFUNCTION(BlueprintCallable, Category="Sector")
-	bool TryEnterSector(ASector* InSector);
 
 	UFUNCTION(BlueprintCallable, Category="Inventory")
 	UInventory* GetInventory() const;

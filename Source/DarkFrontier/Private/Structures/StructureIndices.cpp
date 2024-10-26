@@ -3,6 +3,7 @@
 #include "Structures/StructureIndices.h"
 #include "Structures/Structure.h"
 #include "Structures/StructurePart.h"
+#include "Structures/StructureSlot.h"
 
 UStructureIndices* UStructureIndices::CreateIndices(AStructure* Structure)
 {
@@ -38,16 +39,6 @@ AStructurePart* UStructureIndices::GetPart(const FString Id)
 	return nullptr;
 }
 
-TArray<UStructureSlot*> UStructureIndices::GetSlots()
-{
-	return Slots;
-}
-
-TArray<UStructureFacility*> UStructureIndices::GetFacilities()
-{
-	return Facilities;
-}
-
 bool UStructureIndices::AddPart(AStructurePart* Part)
 {
 	if(Part->GetOwningStructure() == nullptr)
@@ -81,6 +72,60 @@ bool UStructureIndices::RemovePart(AStructurePart* Part)
 	}
 
 	return false;
+}
+
+void UStructureIndices::ReconnectParts()
+{
+	for(AStructurePart* Part : Parts)
+	{
+		Part->AttachSlots();
+	}
+}
+
+void UStructureIndices::CullParts()
+{
+	TArray<AStructurePart*> ReachableParts;
+	ReachableParts.Add(RootPart);
+
+	int CurrentIndex = 0;
+	while(CurrentIndex < ReachableParts.Num())
+	{
+		for(const UStructureSlot* Slot : ReachableParts[CurrentIndex]->GetSlots())
+		{
+			const UStructureSlot* Attached = Slot->GetAttachedSlot();
+			if(Attached != nullptr && !ReachableParts.Contains(Attached->GetOwningPart()))
+			{
+				ReachableParts.Add(Attached->GetOwningPart());
+			}
+		}
+		CurrentIndex++;
+	}
+
+	CurrentIndex = 0;
+	while(CurrentIndex < Parts.Num())
+	{
+		if(!ReachableParts.Contains(Parts[CurrentIndex]))
+		{
+			RemovePart(Parts[CurrentIndex]);
+			Parts[CurrentIndex]->Destroy();
+		}
+		else
+		{
+			CurrentIndex++;
+		}
+	}
+
+	UpdateIndices();
+}
+
+TArray<UStructureSlot*> UStructureIndices::GetSlots()
+{
+	return Slots;
+}
+
+TArray<UStructureFacility*> UStructureIndices::GetFacilities()
+{
+	return Facilities;
 }
 
 void UStructureIndices::UpdateIndices()
