@@ -10,9 +10,8 @@
 #include "Gameplay/Attributes/AttributeMacros.h"
 #include "Gameplay/Attributes/DetectabilityAttributeSet.h"
 #include "Gameplay/Attributes/EnergyAttributeSet.h"
-#include "Gameplay/Attributes/IntegrityAttributeSet.h"
+#include "Gameplay/Attributes/HullAttributeSet.h"
 #include "Gameplay/Attributes/LayoutAttributeSet.h"
-#include "Gameplay/Attributes/ResistanceAttributeSet.h"
 #include "Gameplay/Attributes/ShieldAttributeSet.h"
 #include "UObject/Object.h"
 #include "StructureGameplay.generated.h"
@@ -39,10 +38,7 @@ protected:
 	TObjectPtr<UStructureAbilitySystemComponent> AbilitySystemComponent;
 
 	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly)
-	TObjectPtr<UIntegrityAttributeSet> IntegrityAttributes;
-
-	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly)
-	TObjectPtr<UResistanceAttributeSet> ResistanceAttributes;
+	TObjectPtr<UHullAttributeSet> HullAttributes;
 
 	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly)
 	TObjectPtr<UShieldAttributeSet> ShieldAttributes;
@@ -66,34 +62,27 @@ public:
 	UFUNCTION(BlueprintCallable)
 	AStructure* GetStructure() const;
 	
-	UFUNCTION(BlueprintCallable)
 	virtual UStructureAbilitySystemComponent* GetAbilitySystemComponent() const override;
 
-	ATTRIBUTE_PASSTHROUGH(IntegrityAttributes, MaxIntegrity);
-	ATTRIBUTE_PASSTHROUGH(IntegrityAttributes, Integrity);
-	ATTRIBUTE_PASSTHROUGH_WithPrefix(IntegrityAttributes, Regeneration, Integrity);
+	ATTRIBUTE_PASSTHROUGH_ALIAS(HullAttributes, MaxIntegrity, MaxHull);
+	ATTRIBUTE_PASSTHROUGH_ALIAS(HullAttributes, Integrity, Hull);
+	ATTRIBUTE_PASSTHROUGH_ALIAS(HullAttributes, Regeneration, HullRegeneration);
+	ATTRIBUTE_PASSTHROUGH_ALIAS(HullAttributes, KineticResistance, HullKineticResistance);
+	ATTRIBUTE_PASSTHROUGH_ALIAS(HullAttributes, ExplosiveResistance, HullExplosiveResistance);
+	ATTRIBUTE_PASSTHROUGH_ALIAS(HullAttributes, ThermalResistance, HullThermalResistance);
+	ATTRIBUTE_PASSTHROUGH_ALIAS(HullAttributes, ElectromagneticResistance, HullElectromagneticResistance);
 
-	ATTRIBUTE_PASSTHROUGH(ResistanceAttributes, KineticResistance);
-	ATTRIBUTE_PASSTHROUGH(ResistanceAttributes, ExplosiveResistance);
-	ATTRIBUTE_PASSTHROUGH(ResistanceAttributes, ThermalResistance);
-	ATTRIBUTE_PASSTHROUGH(ResistanceAttributes, ElectromagneticResistance);
-
-	ATTRIBUTE_PASSTHROUGH(ShieldAttributes, MaxIntegrityBonus);
-	ATTRIBUTE_PASSTHROUGH(ShieldAttributes, MaxIntegrityMultiplier);
-	ATTRIBUTE_PASSTHROUGH(ShieldAttributes, RegenerationBonus);
-	ATTRIBUTE_PASSTHROUGH(ShieldAttributes, RegenerationMultiplier);
-	ATTRIBUTE_PASSTHROUGH(ShieldAttributes, KineticResistanceBonus);
-	ATTRIBUTE_PASSTHROUGH(ShieldAttributes, KineticResistanceMultiplier);
-	ATTRIBUTE_PASSTHROUGH(ShieldAttributes, ExplosiveResistanceBonus);
-	ATTRIBUTE_PASSTHROUGH(ShieldAttributes, ExplosiveResistanceMultiplier);
-	ATTRIBUTE_PASSTHROUGH(ShieldAttributes, ThermalResistanceBonus);
-	ATTRIBUTE_PASSTHROUGH(ShieldAttributes, ThermalResistanceMultiplier);
-	ATTRIBUTE_PASSTHROUGH(ShieldAttributes, ElectromagneticResistanceBonus);
-	ATTRIBUTE_PASSTHROUGH(ShieldAttributes, ElectromagneticResistanceMultiplier);
+	ATTRIBUTE_PASSTHROUGH_ALIAS(ShieldAttributes, MaxIntegrity, MaxShield);
+	ATTRIBUTE_PASSTHROUGH_ALIAS(ShieldAttributes, Integrity, Shield);
+	ATTRIBUTE_PASSTHROUGH_ALIAS(ShieldAttributes, Regeneration, ShieldRegeneration);
+	ATTRIBUTE_PASSTHROUGH_ALIAS(ShieldAttributes, KineticResistance, ShieldKineticResistance);
+	ATTRIBUTE_PASSTHROUGH_ALIAS(ShieldAttributes, ExplosiveResistance, ShieldExplosiveResistance);
+	ATTRIBUTE_PASSTHROUGH_ALIAS(ShieldAttributes, ThermalResistance, ShieldThermalResistance);
+	ATTRIBUTE_PASSTHROUGH_ALIAS(ShieldAttributes, ElectromagneticResistance, ShieldElectromagneticResistance);
 
 	ATTRIBUTE_PASSTHROUGH(EnergyAttributes, MaxEnergy);
 	ATTRIBUTE_PASSTHROUGH(EnergyAttributes, Energy);
-	ATTRIBUTE_PASSTHROUGH_WithPrefix(EnergyAttributes, Regeneration, Energy);
+	ATTRIBUTE_PASSTHROUGH_ALIAS(EnergyAttributes, Regeneration, EnergyRegeneration);
 
 	ATTRIBUTE_PASSTHROUGH(LayoutAttributes, MaxUpkeep);
 	ATTRIBUTE_PASSTHROUGH(LayoutAttributes, Upkeep);

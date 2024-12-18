@@ -8,8 +8,6 @@
 #include "Components/ScrollBox.h"
 #include "Components/WidgetSwitcher.h"
 #include "Gameplay/Attributes/EnergyAttributeSet.h"
-#include "Gameplay/Attributes/IntegrityAttributeSet.h"
-#include "Gameplay/Attributes/LayoutAttributeSet.h"
 #include "Structures/Structure.h"
 #include "Structures/StructureAttributeSet.h"
 #include "Structures/StructureController.h"
@@ -51,10 +49,9 @@ void UStructureInfo::SetTarget(AStructure* InTargetStructure)
 
 	UStructureGameplay* Gameplay = TargetStructure->GetGameplay();
 	
-	const float MaxHull = Gameplay->GetMaxIntegrity();
-	// TODO replace with actual shield
-	const float MaxShield = Gameplay->GetMaxIntegrity();
-	const float ShieldRegen = 0;
+	const float MaxHull = Gameplay->GetMaxHull();
+	const float MaxShield = Gameplay->GetMaxShield();
+	const float ShieldRegen = Gameplay->GetShieldRegeneration();
 	const float MaxEnergy = Gameplay->GetMaxEnergy();
 	const float EnergyRegen = Gameplay->GetEnergyRegeneration();
 	const float MaxUpkeep = Gameplay->GetMaxUpkeep();

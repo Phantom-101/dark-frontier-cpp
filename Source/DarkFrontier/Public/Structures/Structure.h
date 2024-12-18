@@ -6,6 +6,7 @@
 #include "CoreMinimal.h"
 #include "GameplayTagContainer.h"
 #include "StructureTickLevel.h"
+#include "Damage/HasTargetGroup.h"
 #include "GameFramework/Pawn.h"
 #include "Structure.generated.h"
 
@@ -28,11 +29,10 @@ struct FStructureDamage;
 struct FActiveGameplayEffectHandle;
 struct FGameplayAbilitySpecHandle;
 
-DECLARE_MULTICAST_DELEGATE(FStructureStateChanged)
 DECLARE_MULTICAST_DELEGATE_OneParam(FStructureIndicationChanged, UStructureIndication*)
 
 UCLASS()
-class DARKFRONTIER_API AStructure : public APawn, public IAbilitySystemInterface
+class DARKFRONTIER_API AStructure : public APawn, public IHasTargetGroup, public IAbilitySystemInterface
 {
 	GENERATED_BODY()
 
@@ -50,6 +50,9 @@ protected:
 
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category="Components")
 	TObjectPtr<UCameraComponent> Camera;
+
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category="Gameplay")
+	TObjectPtr<UTargetGroup> HullTargetGroup;
 
 	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly)
 	TObjectPtr<UStructureIndices> Indices;
@@ -91,8 +94,6 @@ protected:
 	FVector RotateInput = FVector::ZeroVector;
 
 public:
-
-	FStructureStateChanged OnLayoutChanged;
 
 	FStructureIndicationChanged OnIndicationAdded;
 
@@ -153,6 +154,8 @@ public:
 	UStructureGameplay* GetGameplay() const;
 
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
+
+	virtual UTargetGroup* GetTargetGroup() const override;
 
 	virtual float TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
 

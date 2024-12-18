@@ -36,9 +36,8 @@ AStructure::AStructure()
 	Camera->SetupAttachment(SpringArm);
 
 	Indices = UStructureIndices::CreateIndices(this);
-
+	Location = UStructureLocation::CreateLocation(this);
 	Inventory = CreateDefaultSubobject<UInventory>("Inventory");
-
 	Gameplay = UStructureGameplay::CreateGameplay(this);
 }
 
@@ -210,8 +209,7 @@ bool AStructure::LoadLayout(FStructureLayout InLayout)
 
 				if(IsValid(SlotA) && IsValid(SlotB))
 				{
-					// Suppress layout update to prevent deletion of parts not yet connected via connections
-					if(!SlotA->TryAttach(SlotB, true))
+					if(!SlotA->TryAttach(SlotB))
 					{
 						UE_LOG(LogDarkFrontier, Warning, TEXT("Failed to create layout connection on %s between %s (%s), %s (%s)"), *GetName(), *ConnectionData.PartAId, *ConnectionData.PartASlot.ToString(), *ConnectionData.PartBId, *ConnectionData.PartBSlot.ToString());
 					}
@@ -319,6 +317,11 @@ UAbilitySystemComponent* AStructure::GetAbilitySystemComponent() const
 	return Gameplay->GetAbilitySystemComponent();
 }
 
+UTargetGroup* AStructure::GetTargetGroup() const
+{
+	return HullTargetGroup;
+}
+
 float AStructure::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
 {
 	// Calculate damage based on damage event type and fire event dispatchers
@@ -331,12 +334,12 @@ float AStructure::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent
 	// Healing is not supported
 	if(DamageAmount > 0)
 	{
-		const float Multiplier = StructureDamageType ? StructureDamageType->GetMultiplier(Gameplay->GetAbilitySystemComponent()) : 1;
-		const float Equivalent = Gameplay->GetIntegrity() / Multiplier;
+		const float Multiplier = StructureDamageType ? StructureDamageType->Evaluate(HullTargetGroup, GetAbilitySystemComponent()) : 1;
+		const float Equivalent = Gameplay->GetHull() / Multiplier;
 		const float Absorbed = FMath::Min(DamageAmount, Equivalent);
 		const float Damage = Absorbed * Multiplier;
 		
-		Gameplay->SetIntegrity(Gameplay->GetIntegrity() - Damage);
+		Gameplay->SetHull(Gameplay->GetHull() - Damage);
 		
 		// Return the actual amount absorbed
 		return Absorbed;

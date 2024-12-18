@@ -9,7 +9,7 @@ FStructureDamage::FStructureDamage()
 	Amount = 0;
 }
 
-FStructureDamage::FStructureDamage(const TSubclassOf<UStructureDamageType> InDamageType, const float InAmount)
+FStructureDamage::FStructureDamage(const TSubclassOf<UStructureDamageType>& InDamageType, const float InAmount)
 {
 	DamageType = InDamageType;
 	Amount = InAmount;
