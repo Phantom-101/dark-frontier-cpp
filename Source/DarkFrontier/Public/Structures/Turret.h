@@ -3,13 +3,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameplayAbilitySpecHandle.h"
-#include "GameplayTagContainer.h"
 #include "Structures/StructurePart.h"
 #include "Turret.generated.h"
-
-class UTurretSource;
-class UTurretAbility;
 
 /**
  * 
@@ -19,27 +14,7 @@ class DARKFRONTIER_API ATurret : public AStructurePart
 {
 	GENERATED_BODY()
 
-protected:
-
-	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly, Category="Turret")
-	TArray<TObjectPtr<UTurretSource>> Sources;
-	
-	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category="Gameplay")
-	FGameplayTag PayloadTag;
-
-	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly, Category="Gameplay")
-	FGameplayAbilitySpecHandle AbilityHandle;
-
-	virtual void BeginPlay() override;
-
 public:
-
-	virtual void OnAdded(AStructure* Structure) override;
-
-	virtual void OnRemoved() override;
-
-	UFUNCTION(BlueprintCallable, Category="Gameplay")
-	virtual TSubclassOf<UTurretAbility> GetAbilityClass();
 
 	UFUNCTION(BlueprintCallable, Category="Gameplay")
 	virtual bool CanActivate();
@@ -50,12 +25,6 @@ public:
 protected:
 
 	UFUNCTION(BlueprintCallable, Category="Gameplay")
-	virtual bool CanActivateSource(UTurretSource* Source);
+	virtual void OnActivate();
 
-	UFUNCTION(BlueprintCallable, Category="Gameplay")
-	virtual bool TryActivateSource(UTurretSource* Source);
-
-	UFUNCTION(BlueprintCallable, Category="Gameplay")
-	void SendPayload(FGameplayTag Tag, UObject* Obj) const;
-	
 };

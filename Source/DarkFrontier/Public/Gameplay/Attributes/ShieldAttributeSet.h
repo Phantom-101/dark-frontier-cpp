@@ -23,95 +23,62 @@ class DARKFRONTIER_API UShieldAttributeSet : public UAttributeSet
 
 protected:
 
-	UPROPERTY(BlueprintReadOnly, ReplicatedUsing=OnRep_MaxIntegrityBonus)
-	FGameplayAttributeData MaxIntegrityBonus;
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing=OnRep_MaxIntegrity)
+	FGameplayAttributeData MaxIntegrity;
 
-	UPROPERTY(BlueprintReadOnly, ReplicatedUsing=OnRep_MaxIntegrityMultiplier)
-	FGameplayAttributeData MaxIntegrityMultiplier;
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing=OnRep_Integrity)
+	FGameplayAttributeData Integrity;
 
-	UPROPERTY(BlueprintReadOnly, ReplicatedUsing=OnRep_RegenerationBonus)
-	FGameplayAttributeData RegenerationBonus;
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing=OnRep_Regeneration)
+	FGameplayAttributeData Regeneration;
 
-	UPROPERTY(BlueprintReadOnly, ReplicatedUsing=OnRep_RegenerationMultiplier)
-	FGameplayAttributeData RegenerationMultiplier;
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing=OnRep_KineticResistance)
+	FGameplayAttributeData KineticResistance;
+	
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing=OnRep_ExplosiveResistance)
+	FGameplayAttributeData ExplosiveResistance;
 
-	UPROPERTY(BlueprintReadOnly, ReplicatedUsing=OnRep_KineticResistanceBonus)
-	FGameplayAttributeData KineticResistanceBonus;
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing=OnRep_ThermalResistance)
+	FGameplayAttributeData ThermalResistance;
 
-	UPROPERTY(BlueprintReadOnly, ReplicatedUsing=OnRep_KineticResistanceMultiplier)
-	FGameplayAttributeData KineticResistanceMultiplier;
-
-	UPROPERTY(BlueprintReadOnly, ReplicatedUsing=OnRep_ExplosiveResistanceBonus)
-	FGameplayAttributeData ExplosiveResistanceBonus;
-
-	UPROPERTY(BlueprintReadOnly, ReplicatedUsing=OnRep_ExplosiveResistanceMultiplier)
-	FGameplayAttributeData ExplosiveResistanceMultiplier;
-
-	UPROPERTY(BlueprintReadOnly, ReplicatedUsing=OnRep_ThermalResistanceBonus)
-	FGameplayAttributeData ThermalResistanceBonus;
-
-	UPROPERTY(BlueprintReadOnly, ReplicatedUsing=OnRep_ThermalResistanceMultiplier)
-	FGameplayAttributeData ThermalResistanceMultiplier;
-
-	UPROPERTY(BlueprintReadOnly, ReplicatedUsing=OnRep_ElectromagneticResistanceBonus)
-	FGameplayAttributeData ElectromagneticResistanceBonus;
-
-	UPROPERTY(BlueprintReadOnly, ReplicatedUsing=OnRep_ElectromagneticResistanceMultiplier)
-	FGameplayAttributeData ElectromagneticResistanceMultiplier;
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing=OnRep_ElectromagneticResistance)
+	FGameplayAttributeData ElectromagneticResistance;
 
 public:
 
-	ATTRIBUTE_ACCESSORS(UShieldAttributeSet, MaxIntegrityBonus);
-	ATTRIBUTE_ACCESSORS(UShieldAttributeSet, MaxIntegrityMultiplier);
-	ATTRIBUTE_ACCESSORS(UShieldAttributeSet, RegenerationBonus);
-	ATTRIBUTE_ACCESSORS(UShieldAttributeSet, RegenerationMultiplier);
-	ATTRIBUTE_ACCESSORS(UShieldAttributeSet, KineticResistanceBonus);
-	ATTRIBUTE_ACCESSORS(UShieldAttributeSet, KineticResistanceMultiplier);
-	ATTRIBUTE_ACCESSORS(UShieldAttributeSet, ExplosiveResistanceBonus);
-	ATTRIBUTE_ACCESSORS(UShieldAttributeSet, ExplosiveResistanceMultiplier);
-	ATTRIBUTE_ACCESSORS(UShieldAttributeSet, ThermalResistanceBonus);
-	ATTRIBUTE_ACCESSORS(UShieldAttributeSet, ThermalResistanceMultiplier);
-	ATTRIBUTE_ACCESSORS(UShieldAttributeSet, ElectromagneticResistanceBonus);
-	ATTRIBUTE_ACCESSORS(UShieldAttributeSet, ElectromagneticResistanceMultiplier);
+	ATTRIBUTE_ACCESSORS(UShieldAttributeSet, MaxIntegrity);
+	ATTRIBUTE_ACCESSORS(UShieldAttributeSet, Integrity);
+	ATTRIBUTE_ACCESSORS(UShieldAttributeSet, Regeneration);
+	ATTRIBUTE_ACCESSORS(UShieldAttributeSet, KineticResistance);
+	ATTRIBUTE_ACCESSORS(UShieldAttributeSet, ExplosiveResistance);
+	ATTRIBUTE_ACCESSORS(UShieldAttributeSet, ThermalResistance);
+	ATTRIBUTE_ACCESSORS(UShieldAttributeSet, ElectromagneticResistance);
 
 protected:
+
+	virtual void PreAttributeBaseChange(const FGameplayAttribute& Attribute, float& NewValue) const override;
 
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
 	UFUNCTION()
-	virtual void OnRep_MaxIntegrityBonus(const FGameplayAttributeData& OldMaxIntegrityBonus);
+	virtual void OnRep_MaxIntegrity(const FGameplayAttributeData& OldMaxIntegrity);
 
 	UFUNCTION()
-	virtual void OnRep_MaxIntegrityMultiplier(const FGameplayAttributeData& OldMaxIntegrityMultiplier);
+	virtual void OnRep_Integrity(const FGameplayAttributeData& OldIntegrity);
 
 	UFUNCTION()
-	virtual void OnRep_RegenerationBonus(const FGameplayAttributeData& OldRegenerationBonus);
+	virtual void OnRep_Regeneration(const FGameplayAttributeData& OldRegeneration);
 
 	UFUNCTION()
-	virtual void OnRep_RegenerationMultiplier(const FGameplayAttributeData& OldRegenerationMultiplier);
-	
-	UFUNCTION()
-	virtual void OnRep_KineticResistanceBonus(const FGameplayAttributeData& OldKineticResistanceBonus);
-	
-	UFUNCTION()
-	virtual void OnRep_KineticResistanceMultiplier(const FGameplayAttributeData& OldKineticResistanceMultiplier);
+	virtual void OnRep_KineticResistance(const FGameplayAttributeData& OldKineticResistance);
 
 	UFUNCTION()
-	virtual void OnRep_ExplosiveResistanceBonus(const FGameplayAttributeData& OldExplosiveResistanceBonus);
-	
-	UFUNCTION()
-	virtual void OnRep_ExplosiveResistanceMultiplier(const FGameplayAttributeData& OldExplosiveResistanceMultiplier);
+	virtual void OnRep_ExplosiveResistance(const FGameplayAttributeData& OldExplosiveResistance);
 
 	UFUNCTION()
-	virtual void OnRep_ThermalResistanceBonus(const FGameplayAttributeData& OldThermalResistanceBonus);
-	
-	UFUNCTION()
-	virtual void OnRep_ThermalResistanceMultiplier(const FGameplayAttributeData& OldThermalResistanceMultiplier);
+	virtual void OnRep_ThermalResistance(const FGameplayAttributeData& OldThermalResistance);
 
 	UFUNCTION()
-	virtual void OnRep_ElectromagneticResistanceBonus(const FGameplayAttributeData& OldElectromagneticResistanceBonus);
-	
-	UFUNCTION()
-	virtual void OnRep_ElectromagneticResistanceMultiplier(const FGameplayAttributeData& OldElectromagneticResistanceMultiplier);
+	virtual void OnRep_ElectromagneticResistance(const FGameplayAttributeData& OldElectromagneticResistance);
 	
 };

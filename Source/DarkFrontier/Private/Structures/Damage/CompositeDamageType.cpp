@@ -19,7 +19,7 @@ bool FCompositeDamageEntry::IsValid() const
 	return DamageType != nullptr && Ratio > 0;
 }
 
-float UCompositeDamageType::GetMultiplier(const UStructureAbilitySystemComponent* Target) const
+float UCompositeDamageType::Evaluate(const UTargetGroup* TargetGroup, const UAbilitySystemComponent* Comp) const
 {
 	float TotalRatio = 0;
 	float Multiplier = 0;
@@ -29,9 +29,9 @@ float UCompositeDamageType::GetMultiplier(const UStructureAbilitySystemComponent
 		if(Entry.IsValid())
 		{
 			TotalRatio += Entry.Ratio;
-			Multiplier += Entry.Ratio * Entry.DamageType.GetDefaultObject()->GetMultiplier(Target);
+			Multiplier += Entry.Ratio * Entry.DamageType.GetDefaultObject()->Evaluate(TargetGroup, Comp);
 		}
 	}
 
-	return TotalRatio == 0 ? 0 : Multiplier / TotalRatio;
+	return TotalRatio == 0 ? 1 : Multiplier / TotalRatio;
 }

@@ -7,5 +7,5 @@
 float UHullIndication::GetHullPercent() const
 {
 	UStructureGameplay* Gameplay = Structure->GetGameplay();
-	return Gameplay->GetIntegrity() / Gameplay->GetMaxIntegrity();
+	return Gameplay->GetHull() / Gameplay->GetMaxHull();
 }

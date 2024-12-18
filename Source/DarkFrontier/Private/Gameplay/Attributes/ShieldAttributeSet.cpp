@@ -3,80 +3,60 @@
 #include "Gameplay/Attributes/ShieldAttributeSet.h"
 #include "Net/UnrealNetwork.h"
 
+void UShieldAttributeSet::PreAttributeBaseChange(const FGameplayAttribute& Attribute, float& NewValue) const
+{
+	Super::PreAttributeBaseChange(Attribute, NewValue);
+
+	if(Attribute == GetIntegrityAttribute())
+	{
+		NewValue = FMath::Clamp(NewValue, 0, GetMaxIntegrity());
+	}
+}
+
 void UShieldAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
-	DOREPLIFETIME_CONDITION_NOTIFY(UShieldAttributeSet, MaxIntegrityBonus, COND_None, REPNOTIFY_OnChanged);
-	DOREPLIFETIME_CONDITION_NOTIFY(UShieldAttributeSet, MaxIntegrityMultiplier, COND_None, REPNOTIFY_OnChanged);
-	DOREPLIFETIME_CONDITION_NOTIFY(UShieldAttributeSet, RegenerationBonus, COND_None, REPNOTIFY_OnChanged);
-	DOREPLIFETIME_CONDITION_NOTIFY(UShieldAttributeSet, RegenerationMultiplier, COND_None, REPNOTIFY_OnChanged);
-	DOREPLIFETIME_CONDITION_NOTIFY(UShieldAttributeSet, KineticResistanceBonus, COND_None, REPNOTIFY_OnChanged);
-	DOREPLIFETIME_CONDITION_NOTIFY(UShieldAttributeSet, KineticResistanceMultiplier, COND_None, REPNOTIFY_OnChanged);
-	DOREPLIFETIME_CONDITION_NOTIFY(UShieldAttributeSet, ExplosiveResistanceBonus, COND_None, REPNOTIFY_OnChanged);
-	DOREPLIFETIME_CONDITION_NOTIFY(UShieldAttributeSet, ExplosiveResistanceMultiplier, COND_None, REPNOTIFY_OnChanged);
-	DOREPLIFETIME_CONDITION_NOTIFY(UShieldAttributeSet, ThermalResistanceBonus, COND_None, REPNOTIFY_OnChanged);
-	DOREPLIFETIME_CONDITION_NOTIFY(UShieldAttributeSet, ThermalResistanceMultiplier, COND_None, REPNOTIFY_OnChanged);
-	DOREPLIFETIME_CONDITION_NOTIFY(UShieldAttributeSet, ElectromagneticResistanceBonus, COND_None, REPNOTIFY_OnChanged);
-	DOREPLIFETIME_CONDITION_NOTIFY(UShieldAttributeSet, ElectromagneticResistanceMultiplier, COND_None, REPNOTIFY_OnChanged);
+	DOREPLIFETIME_CONDITION_NOTIFY(UShieldAttributeSet, MaxIntegrity, COND_None, REPNOTIFY_OnChanged);
+	DOREPLIFETIME_CONDITION_NOTIFY(UShieldAttributeSet, Integrity, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UShieldAttributeSet, Regeneration, COND_None, REPNOTIFY_OnChanged);
+	DOREPLIFETIME_CONDITION_NOTIFY(UShieldAttributeSet, KineticResistance, COND_None, REPNOTIFY_OnChanged);
+	DOREPLIFETIME_CONDITION_NOTIFY(UShieldAttributeSet, ExplosiveResistance, COND_None, REPNOTIFY_OnChanged);
+	DOREPLIFETIME_CONDITION_NOTIFY(UShieldAttributeSet, ThermalResistance, COND_None, REPNOTIFY_OnChanged);
+	DOREPLIFETIME_CONDITION_NOTIFY(UShieldAttributeSet, ElectromagneticResistance, COND_None, REPNOTIFY_OnChanged);
 }
 
-void UShieldAttributeSet::OnRep_MaxIntegrityBonus(const FGameplayAttributeData& OldMaxIntegrityBonus)
+void UShieldAttributeSet::OnRep_MaxIntegrity(const FGameplayAttributeData& OldMaxIntegrity)
 {
-	GAMEPLAYATTRIBUTE_REPNOTIFY(UShieldAttributeSet, MaxIntegrityBonus, OldMaxIntegrityBonus);
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UShieldAttributeSet, MaxIntegrity, OldMaxIntegrity);
 }
 
-void UShieldAttributeSet::OnRep_MaxIntegrityMultiplier(const FGameplayAttributeData& OldMaxIntegrityMultiplier)
+void UShieldAttributeSet::OnRep_Integrity(const FGameplayAttributeData& OldIntegrity)
 {
-	GAMEPLAYATTRIBUTE_REPNOTIFY(UShieldAttributeSet, MaxIntegrityMultiplier, OldMaxIntegrityMultiplier);
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UShieldAttributeSet, Integrity, OldIntegrity);
 }
 
-void UShieldAttributeSet::OnRep_RegenerationBonus(const FGameplayAttributeData& OldRegenerationBonus)
+void UShieldAttributeSet::OnRep_Regeneration(const FGameplayAttributeData& OldRegeneration)
 {
-	GAMEPLAYATTRIBUTE_REPNOTIFY(UShieldAttributeSet, RegenerationBonus, OldRegenerationBonus);
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UShieldAttributeSet, Regeneration, OldRegeneration);
 }
 
-void UShieldAttributeSet::OnRep_RegenerationMultiplier(const FGameplayAttributeData& OldRegenerationMultiplier)
+void UShieldAttributeSet::OnRep_KineticResistance(const FGameplayAttributeData& OldKineticResistance)
 {
-	GAMEPLAYATTRIBUTE_REPNOTIFY(UShieldAttributeSet, RegenerationMultiplier, OldRegenerationMultiplier);
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UShieldAttributeSet, KineticResistance, OldKineticResistance);
 }
 
-void UShieldAttributeSet::OnRep_KineticResistanceBonus(const FGameplayAttributeData& OldKineticResistanceBonus)
+void UShieldAttributeSet::OnRep_ExplosiveResistance(const FGameplayAttributeData& OldExplosiveResistance)
 {
-	GAMEPLAYATTRIBUTE_REPNOTIFY(UShieldAttributeSet, KineticResistanceBonus, OldKineticResistanceBonus);
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UShieldAttributeSet, ExplosiveResistance, OldExplosiveResistance);
 }
 
-void UShieldAttributeSet::OnRep_KineticResistanceMultiplier(const FGameplayAttributeData& OldKineticResistanceMultiplier)
+void UShieldAttributeSet::OnRep_ThermalResistance(const FGameplayAttributeData& OldThermalResistance)
 {
-	GAMEPLAYATTRIBUTE_REPNOTIFY(UShieldAttributeSet, KineticResistanceMultiplier, OldKineticResistanceMultiplier);
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UShieldAttributeSet, ThermalResistance, OldThermalResistance);
 }
 
-void UShieldAttributeSet::OnRep_ExplosiveResistanceBonus(const FGameplayAttributeData& OldExplosiveResistanceBonus)
+void UShieldAttributeSet::OnRep_ElectromagneticResistance(const FGameplayAttributeData& OldElectromagneticResistance)
 {
-	GAMEPLAYATTRIBUTE_REPNOTIFY(UShieldAttributeSet, ExplosiveResistanceBonus, OldExplosiveResistanceBonus);
-}
-
-void UShieldAttributeSet::OnRep_ExplosiveResistanceMultiplier(const FGameplayAttributeData& OldExplosiveResistanceMultiplier)
-{
-	GAMEPLAYATTRIBUTE_REPNOTIFY(UShieldAttributeSet, ExplosiveResistanceMultiplier, OldExplosiveResistanceMultiplier);
-}
-
-void UShieldAttributeSet::OnRep_ThermalResistanceBonus(const FGameplayAttributeData& OldThermalResistanceBonus)
-{
-	GAMEPLAYATTRIBUTE_REPNOTIFY(UShieldAttributeSet, ThermalResistanceBonus, OldThermalResistanceBonus);
-}
-
-void UShieldAttributeSet::OnRep_ThermalResistanceMultiplier(const FGameplayAttributeData& OldThermalResistanceMultiplier)
-{
-	GAMEPLAYATTRIBUTE_REPNOTIFY(UShieldAttributeSet, ThermalResistanceMultiplier, OldThermalResistanceMultiplier);
-}
-
-void UShieldAttributeSet::OnRep_ElectromagneticResistanceBonus(const FGameplayAttributeData& OldElectromagneticResistanceBonus)
-{
-	GAMEPLAYATTRIBUTE_REPNOTIFY(UShieldAttributeSet, ElectromagneticResistanceBonus, OldElectromagneticResistanceBonus);
-}
-
-void UShieldAttributeSet::OnRep_ElectromagneticResistanceMultiplier(const FGameplayAttributeData& OldElectromagneticResistanceMultiplier)
-{
-	GAMEPLAYATTRIBUTE_REPNOTIFY(UShieldAttributeSet, ElectromagneticResistanceMultiplier, OldElectromagneticResistanceMultiplier);
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UShieldAttributeSet, ElectromagneticResistance, OldElectromagneticResistance);
 }

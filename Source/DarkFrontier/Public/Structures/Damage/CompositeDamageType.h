@@ -39,7 +39,7 @@ protected:
 	TArray<FCompositeDamageEntry> Entries;
 
 public:
-
-	virtual float GetMultiplier(const UStructureAbilitySystemComponent* Target) const override;
 	
+	virtual float Evaluate(const UTargetGroup* TargetGroup, const UAbilitySystemComponent* Comp) const override;
+
 };

@@ -6,7 +6,6 @@
 
 float UShieldIndication::GetShieldPercent() const
 {
-	// TODO replace with actual shield integrity, this shows hull rn just to get the compile working
 	UStructureGameplay* Gameplay = Structure->GetGameplay();
-	return Gameplay->GetIntegrity() / Gameplay->GetMaxIntegrity();
+	return Gameplay->GetShield() / Gameplay->GetMaxShield();
 }

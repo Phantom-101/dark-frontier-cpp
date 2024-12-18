@@ -11,7 +11,7 @@
 #include "Components/CanvasPanelSlot.h"
 #include "Components/ScrollBox.h"
 #include "Gameplay/Attributes/EnergyAttributeSet.h"
-#include "Gameplay/Attributes/IntegrityAttributeSet.h"
+#include "Gameplay/Attributes/HullAttributeSet.h"
 #include "Structures/Structure.h"
 #include "Structures/StructureController.h"
 #include "Structures/StructureGameplay.h"
@@ -44,9 +44,8 @@ void UGameUI::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 		{
 			UStructureGameplay* Gameplay = Structure->GetGameplay();
 			
-			HullArc->SetLength(Gameplay->GetIntegrity() / Gameplay->GetMaxIntegrity() * 0.25);
-			// TODO replace with actual shield
-			ShieldArc->SetLength(Gameplay->GetIntegrity() / Gameplay->GetMaxIntegrity() * 0.2);
+			HullArc->SetLength(Gameplay->GetHull() / Gameplay->GetMaxHull() * 0.25);
+			ShieldArc->SetLength(Gameplay->GetShield() / Gameplay->GetMaxShield() * 0.2);
 			EnergyArc->SetLength(Gameplay->GetEnergy() / Gameplay->GetMaxEnergy() * 0.25);
 			// TODO replace with actual speed
 			SpeedArc->SetLength(1 * 0.2);

@@ -24,7 +24,7 @@ protected:
 	TObjectPtr<ASector> Sector;
 	
 	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly)
-	TObjectPtr<AStructure> Dockee;
+	TObjectPtr<AStructure> DockStructure;
 
 	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly)
 	TObjectPtr<UStructureDock> Dock;
@@ -49,7 +49,7 @@ public:
 	bool ExitSector();
 
 	UFUNCTION(BlueprintCallable)
-	AStructure* GetDockee() const;
+	AStructure* GetDockStructure() const;
 	
 	UFUNCTION(BlueprintCallable)
 	UStructureDock* GetDock() const;

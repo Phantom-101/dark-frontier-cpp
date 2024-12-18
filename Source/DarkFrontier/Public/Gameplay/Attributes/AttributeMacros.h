@@ -9,9 +9,9 @@
 		return ObjectName->Get##AttributeName(); \
 	}
 
-#define ATTRIBUTE_GETTER_PASSTHROUGH_WithPrefix(ObjectName, AttributeName, Prefix) \
+#define ATTRIBUTE_GETTER_PASSTHROUGH_ALIAS(ObjectName, AttributeName, Alias) \
 	UFUNCTION(BlueprintCallable) \
-	FORCEINLINE float Get##Prefix##AttributeName() \
+	FORCEINLINE float Get##Alias() \
 	{ \
 		return ObjectName->Get##AttributeName(); \
 	}
@@ -23,9 +23,9 @@
 		return ObjectName->Set##AttributeName(NewVal); \
 	}
 
-#define ATTRIBUTE_SETTER_PASSTHROUGH_WithPrefix(ObjectName, AttributeName, Prefix) \
+#define ATTRIBUTE_SETTER_PASSTHROUGH_ALIAS(ObjectName, AttributeName, Alias) \
 	UFUNCTION(BlueprintCallable) \
-	FORCEINLINE void Set##Prefix##AttributeName(float NewVal) \
+	FORCEINLINE void Set##Alias(float NewVal) \
 	{ \
 		return ObjectName->Set##AttributeName(NewVal); \
 	}
@@ -37,9 +37,9 @@
 		return ObjectName->Init##AttributeName(NewVal); \
 	}
 
-#define ATTRIBUTE_INITTER_PASSTHROUGH_WithPrefix(ObjectName, AttributeName, Prefix) \
+#define ATTRIBUTE_INITTER_PASSTHROUGH_ALIAS(ObjectName, AttributeName, Alias) \
 	UFUNCTION(BlueprintCallable) \
-	FORCEINLINE void Init##Prefix##AttributeName(float NewVal) \
+	FORCEINLINE void Init##Alias(float NewVal) \
 	{ \
 		return ObjectName->Init##AttributeName(NewVal); \
 	}
@@ -49,7 +49,7 @@
 	ATTRIBUTE_SETTER_PASSTHROUGH(ObjectName, AttributeName) \
 	ATTRIBUTE_INITTER_PASSTHROUGH(ObjectName, AttributeName)
 
-#define ATTRIBUTE_PASSTHROUGH_WithPrefix(ObjectName, AttributeName, Prefix) \
-	ATTRIBUTE_GETTER_PASSTHROUGH_WithPrefix(ObjectName, AttributeName, Prefix) \
-	ATTRIBUTE_SETTER_PASSTHROUGH_WithPrefix(ObjectName, AttributeName, Prefix) \
-	ATTRIBUTE_INITTER_PASSTHROUGH_WithPrefix(ObjectName, AttributeName, Prefix)
+#define ATTRIBUTE_PASSTHROUGH_ALIAS(ObjectName, AttributeName, Alias) \
+	ATTRIBUTE_GETTER_PASSTHROUGH_ALIAS(ObjectName, AttributeName, Alias) \
+	ATTRIBUTE_SETTER_PASSTHROUGH_ALIAS(ObjectName, AttributeName, Alias) \
+	ATTRIBUTE_INITTER_PASSTHROUGH_ALIAS(ObjectName, AttributeName, Alias)

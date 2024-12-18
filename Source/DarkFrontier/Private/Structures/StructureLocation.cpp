@@ -51,9 +51,9 @@ bool UStructureLocation::ExitSector()
 	return true;
 }
 
-AStructure* UStructureLocation::GetDockee() const
+AStructure* UStructureLocation::GetDockStructure() const
 {
-	return Dockee;
+	return DockStructure;
 }
 
 UStructureDock* UStructureLocation::GetDock() const
@@ -69,10 +69,10 @@ bool UStructureLocation::EnterDock(UStructureDock* Target)
 	}
 
 	Dock = Target;
-	Dockee = Target->GetOwningStructure();
-	Dockee->GetLocation()->Dockers.Add(GetStructure());
+	DockStructure = Target->GetOwningStructure();
+	DockStructure->GetLocation()->Dockers.Add(GetStructure());
 	
-	GetStructure()->AttachToActor(Dockee, FAttachmentTransformRules(EAttachmentRule::KeepWorld, true));
+	GetStructure()->AttachToActor(DockStructure, FAttachmentTransformRules(EAttachmentRule::KeepWorld, true));
 	return true;
 }
 
@@ -83,8 +83,8 @@ bool UStructureLocation::ExitDock()
 		return false;
 	}
 
-	Dockee->GetLocation()->Dockers.Remove(GetStructure());
-	Dockee = nullptr;
+	DockStructure->GetLocation()->Dockers.Remove(GetStructure());
+	DockStructure = nullptr;
 	Dock = nullptr;
 
 	GetStructure()->DetachFromActor(FDetachmentTransformRules(EDetachmentRule::KeepWorld, false));

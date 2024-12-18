@@ -4,7 +4,7 @@
 #include "GameplayEffect.h"
 #include "Engine/SCS_Node.h"
 #include "Engine/SimpleConstructionScript.h"
-#include "Gameplay/Attributes/IntegrityAttributeSet.h"
+#include "Gameplay/Attributes/HullAttributeSet.h"
 #include "Structures/Structure.h"
 #include "Structures/StructureGameplay.h"
 #include "Structures/StructureIndices.h"
@@ -69,13 +69,13 @@ void AStructurePart::OnAdded(AStructure* Structure)
 			float Magnitude;
 			if(Modifier.ModifierMagnitude.GetStaticMagnitudeIfPossible(1, Magnitude))
 			{
-				if(Modifier.Attribute == UIntegrityAttributeSet::GetMaxIntegrityAttribute()) Hull += Magnitude;
+				if(Modifier.Attribute == UHullAttributeSet::GetMaxIntegrityAttribute()) Hull += Magnitude;
 			}
 		}
 
 		// Add the extra hull that this part provides
 		UStructureGameplay* Gameplay = OwningStructure->GetGameplay();
-		Gameplay->SetIntegrity(Gameplay->GetIntegrity() + Hull);
+		Gameplay->SetHull(Gameplay->GetHull() + Hull);
 	}
 }
 
@@ -88,7 +88,7 @@ void AStructurePart::OnRemoved()
 
 		// Clamp hull to the now reduced max hull
 		UStructureGameplay* Gameplay = OwningStructure->GetGameplay();
-		Gameplay->SetIntegrity(Gameplay->GetIntegrity());
+		Gameplay->SetHull(Gameplay->GetHull());
 	}
 }
 

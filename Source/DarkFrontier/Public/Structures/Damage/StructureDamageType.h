@@ -6,7 +6,8 @@
 #include "GameFramework/DamageType.h"
 #include "StructureDamageType.generated.h"
 
-class UStructureAbilitySystemComponent;
+class UAbilitySystemComponent;
+class UTargetGroup;
 
 /**
  * 
@@ -18,6 +19,7 @@ class DARKFRONTIER_API UStructureDamageType : public UDamageType
 
 public:
 
-	virtual float GetMultiplier(const UStructureAbilitySystemComponent* Target) const;
+	// TODO only return resistance value and let caller decide how to calculate damage
+	virtual float Evaluate(const UTargetGroup* TargetGroup, const UAbilitySystemComponent* Comp) const;
 	
 };

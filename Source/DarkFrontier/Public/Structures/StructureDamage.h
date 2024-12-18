@@ -23,7 +23,7 @@ struct DARKFRONTIER_API FStructureDamage
 
 	FStructureDamage();
 
-	FStructureDamage(TSubclassOf<UStructureDamageType> InDamageType, float InAmount);
+	FStructureDamage(const TSubclassOf<UStructureDamageType>& InDamageType, float InAmount);
 
 	bool IsValid() const;
 

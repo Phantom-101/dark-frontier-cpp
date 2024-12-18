@@ -7,6 +7,7 @@
 #include "Input/CommonUIActionRouterBase.h"
 #include "Libraries/BoundsBlueprintFunctionLibrary.h"
 #include "Structures/Structure.h"
+#include "Structures/StructureIndices.h"
 #include "UI/Screens/StructureDetails/StructureDetails.h"
 #include "UI/Screens/UIBase.h"
 #include "UI/Screens/GameUI/GameUI.h"
@@ -67,7 +68,7 @@ void AStructureController::OnPossess(APawn* InPawn)
 	{
 		StructurePawn->GetAbilitySystemComponent()->InitAbilityActorInfo(StructurePawn, StructurePawn);
 		
-		OnLayoutChangedHandle = StructurePawn->OnLayoutChanged.AddUObject<AStructureController>(this, &AStructureController::PropagateLayoutChange);
+		OnLayoutChangedHandle = StructurePawn->GetIndices()->OnUpdated.AddUObject<AStructureController>(this, &AStructureController::PropagateLayoutChange);
 	}
 }
 
@@ -77,7 +78,7 @@ void AStructureController::OnUnPossess()
 
 	if(StructurePawn)
 	{
-		StructurePawn->OnLayoutChanged.Remove(OnLayoutChangedHandle);
+		StructurePawn->GetIndices()->OnUpdated.Remove(OnLayoutChangedHandle);
 	}
 
 	StructurePawn = nullptr;

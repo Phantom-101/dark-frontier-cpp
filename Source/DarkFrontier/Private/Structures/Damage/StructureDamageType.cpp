@@ -2,7 +2,7 @@
 
 #include "Structures/Damage/StructureDamageType.h"
 
-float UStructureDamageType::GetMultiplier(const UStructureAbilitySystemComponent* Target) const
+float UStructureDamageType::Evaluate(const UTargetGroup* TargetGroup, const UAbilitySystemComponent* Comp) const
 {
 	return 1;
 }

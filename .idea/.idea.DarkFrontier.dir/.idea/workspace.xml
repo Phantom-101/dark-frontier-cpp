@@ -8,25 +8,98 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="cb7ccd89-2b5f-4c19-9f87-96459d2ed121" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/Source/DarkFrontier/Private/Gameplay/GameplaySubobject.cpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Source/DarkFrontier/Private/Structures/StructureLocation.cpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Source/DarkFrontier/Private/Structures/Subactors/StructureShield.cpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Source/DarkFrontier/Private/Structures/Subactors/StructureShieldGameplay.cpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Source/DarkFrontier/Public/Gameplay/GameplaySubobject.h" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Source/DarkFrontier/Public/Structures/StructureLocation.h" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Source/DarkFrontier/Public/Structures/Subactors/StructureShield.h" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Source/DarkFrontier/Public/Structures/Subactors/StructureShieldGameplay.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Source/DarkFrontier/Private/Gameplay/Attributes/HullAttributeSet.cpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Source/DarkFrontier/Private/Libraries/StructureBlueprintFunctionLibrary.cpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Source/DarkFrontier/Public/Libraries/StructureBlueprintFunctionLibrary.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Source/DarkFrontier/Public/Structures/Damage/HasTargetGroup.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Source/DarkFrontier/Public/Structures/Damage/TargetGroup.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.DarkFrontier.dir/.idea/.name" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.DarkFrontier.dir/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.DarkFrontier.dir/.idea/dataSources.local.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.DarkFrontier.dir/.idea/dataSources.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.DarkFrontier.dir/.idea/dataSources.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.DarkFrontier.dir/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.DarkFrontier.dir/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Gameplay/Abilities/GA_PulseLaser.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Gameplay/Cues/GC_PulseLaser.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Gameplay/Effects/GE_Cost.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Gameplay/Effects/GE_Cost.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Gameplay/Effects/GE_DefaultAttributes.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Gameplay/Effects/GE_DefaultAttributes.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Gameplay/Effects/GE_PassiveRegen.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Gameplay/Effects/GE_PassiveRegen.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Gameplay/Effects/GE_ReactorAttributes_Test.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Gameplay/Effects/GE_ReactorAttributes_Test.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Maps/Test.umap" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Maps/Test.umap" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Structures/Base/BP_Structure.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Structures/Base/BP_Structure.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Structures/DamageTypes/Composite/BP_SDT_AP.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Structures/DamageTypes/Composite/BP_SDT_HE.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Structures/DamageTypes/Composite/BP_SDT_ParticleBeam.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Structures/DamageTypes/Composite/BP_SDT_Warhead.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Structures/DamageTypes/Simple/BP_SDT_Electromagnetic.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Structures/DamageTypes/Simple/BP_SDT_Electromagnetic.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Structures/DamageTypes/Simple/BP_SDT_Explosive.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Structures/DamageTypes/Simple/BP_SDT_Explosive.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Structures/DamageTypes/Simple/BP_SDT_Kinetic.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Structures/DamageTypes/Simple/BP_SDT_Kinetic.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Structures/DamageTypes/Simple/BP_SDT_Thermal.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Structures/DamageTypes/Simple/BP_SDT_Thermal.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Structures/PartGroups/DA_SPG_M_Component.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Structures/PartGroups/DA_SPG_M_Facility.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Structures/PartGroups/DA_SPG_M_Structural.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Structures/PartGroups/DA_SPG_M_Turret.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Structures/Parts/StationSmall/BP_StationSmall_Extension1.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Structures/Parts/StationSmall/BP_StationSmall_Extension1.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Structures/Parts/StationSmall/BP_StationSmall_Extension2.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Structures/Parts/StationSmall/BP_StationSmall_Extension2.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Structures/Parts/StationSmall/BP_StationSmall_Extension3.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Structures/Parts/StationSmall/BP_StationSmall_Extension3.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Structures/Parts/StationSmall/BP_StationSmall_Extension3Paneled.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Structures/Parts/StationSmall/BP_StationSmall_Extension3Paneled.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Structures/Parts/StationSmall/BP_StationSmall_FarmMkI.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Structures/Parts/StationSmall/BP_StationSmall_FarmMkI.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Structures/Parts/StationSmall/BP_StationSmall_FarmMkII.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Structures/Parts/StationSmall/BP_StationSmall_FarmMkII.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Structures/Parts/StationSmall/BP_StationSmall_HabitationMkI.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Structures/Parts/StationSmall/BP_StationSmall_HabitationMkI.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Structures/Parts/StationSmall/BP_StationSmall_HabitationMkII.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Structures/Parts/StationSmall/BP_StationSmall_HabitationMkII.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Structures/Parts/StationSmall/BP_StationSmall_JunctionMkI.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Structures/Parts/StationSmall/BP_StationSmall_JunctionMkI.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Structures/Parts/StationSmall/BP_StationSmall_JunctionMkII.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Structures/Parts/StationSmall/BP_StationSmall_JunctionMkII.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Structures/Parts/StationSmall/BP_StationSmall_ReactorMkI.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Structures/Parts/StationSmall/BP_StationSmall_ReactorMkI.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Structures/Parts/StationSmall/BP_StationSmall_RefineryMkI.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Structures/Parts/StationSmall/BP_StationSmall_RefineryMkI.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Structures/Parts/StationSmall/BP_StationSmall_RefineryMkII.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Structures/Parts/StationSmall/BP_StationSmall_RefineryMkII.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Structures/Parts/Turrets/BP_PulseLaser.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Structures/Parts/Turrets/BP_PulseLaser.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/UI/Screens/InventoryUI/W_ItemEntry.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/UI/Screens/InventoryUI/W_ItemEntry.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Private/Gameplay/Attributes/IntegrityAttributeSet.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Private/Gameplay/Attributes/ResistanceAttributeSet.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Private/Gameplay/Attributes/ShieldAttributeSet.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Private/Gameplay/Attributes/ShieldAttributeSet.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Private/Gameplay/Cues/PulseCue.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Private/Gameplay/Tasks/HitscanTask.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Private/Structures/Damage/CompositeDamageType.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Private/Structures/Damage/CompositeDamageType.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Private/Structures/Damage/SimpleDamageType.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Private/Structures/Damage/SimpleDamageType.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Private/Structures/Damage/StructureDamageType.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Private/Structures/Damage/StructureDamageType.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Private/Structures/Indications/HullIndication.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Private/Structures/Indications/HullIndication.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Private/Structures/Indications/ShieldIndication.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Private/Structures/Indications/ShieldIndication.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Private/Structures/PulseAbility.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Private/Structures/PulseTurret.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Private/Structures/PulseTurret.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Private/Structures/Structure.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Private/Structures/Structure.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Private/Structures/StructureDock.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Private/Structures/StructureDock.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Private/Structures/StructureController.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Private/Structures/StructureController.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Private/Structures/StructureDamage.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Private/Structures/StructureDamage.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Private/Structures/StructureGameplay.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Private/Structures/StructureGameplay.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Private/Structures/StructureIndices.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Private/Structures/StructureIndices.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Private/Structures/StructureLocation.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Private/Structures/StructureLocation.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Private/Structures/StructurePart.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Private/Structures/StructurePart.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Private/Structures/StructureSlot.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Private/Structures/StructureSlot.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Private/Structures/Subactors/StructureShield.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Private/Structures/Subactors/StructureShieldGameplay.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Private/Structures/Turret.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Private/Structures/Turret.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Private/Structures/TurretAbility.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Private/UI/Screens/GameUI/GameUI.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Private/UI/Screens/GameUI/GameUI.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Private/UI/Screens/StructureDetails/StructureInfo.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Private/UI/Screens/StructureDetails/StructureInfo.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Private/UI/Screens/StructureDetails/StructurePartInfo.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Private/UI/Screens/StructureDetails/StructurePartInfo.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Public/Gameplay/Attributes/AttributeMacros.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Public/Gameplay/Attributes/AttributeMacros.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Public/Gameplay/Attributes/IntegrityAttributeSet.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Public/Gameplay/Attributes/HullAttributeSet.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Public/Gameplay/Attributes/ResistanceAttributeSet.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Public/Gameplay/Attributes/ShieldAttributeSet.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Public/Gameplay/Attributes/ShieldAttributeSet.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Public/Gameplay/Cues/PulseCue.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Public/Gameplay/Tasks/HitscanTask.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Public/Structures/Damage/CompositeDamageType.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Public/Structures/Damage/CompositeDamageType.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Public/Structures/Damage/SimpleDamageType.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Public/Structures/Damage/SimpleDamageType.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Public/Structures/Damage/StructureDamageType.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Public/Structures/Damage/StructureDamageType.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Public/Structures/HitscanResult.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Public/Structures/PulseAbility.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Public/Structures/PulseTurret.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Public/Structures/PulseTurret.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Public/Structures/Structure.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Public/Structures/Structure.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Public/Structures/StructureController.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Public/Structures/StructureController.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Public/Structures/StructureDamage.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Public/Structures/StructureDamage.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Public/Structures/StructureGameplay.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Public/Structures/StructureGameplay.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Public/Structures/StructureIndices.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Public/Structures/StructureIndices.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Public/Structures/StructureSlot.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Public/Structures/StructureSlot.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Public/Structures/StructureLocation.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Public/Structures/StructureLocation.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Public/Structures/Subactors/StructureShield.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Public/Structures/Subactors/StructureShieldGameplay.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Public/Structures/Turret.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Public/Structures/Turret.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Public/Structures/TurretAbility.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Public/Structures/TurretPayload.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Public/Structures/TurretSource.h" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -56,7 +129,6 @@
 }</component>
   <component name="ProjectId" id="2U0Q0Ryzu8E1TSmMywhb8crHYzS" />
   <component name="ProjectViewState">
-    <option name="autoscrollFromSource" value="true" />
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
@@ -78,8 +150,8 @@
   },
   &quot;keyToStringList&quot;: {
     &quot;rider.external.source.directories&quot;: [
-      &quot;C:\\Users\\woyu\\AppData\\Roaming\\JetBrains\\Rider2023.2\\resharper-host\\DecompilerCache&quot;,
-      &quot;C:\\Users\\woyu\\AppData\\Roaming\\JetBrains\\Rider2023.2\\resharper-host\\SourcesCache&quot;,
+      &quot;C:\\Users\\woyu\\AppData\\Roaming\\JetBrains\\Rider2023.3\\resharper-host\\DecompilerCache&quot;,
+      &quot;C:\\Users\\woyu\\AppData\\Roaming\\JetBrains\\Rider2023.3\\resharper-host\\SourcesCache&quot;,
       &quot;C:\\Users\\woyu\\AppData\\Local\\Symbols\\src&quot;
     ]
   }
@@ -90,9 +162,9 @@
       <configuration_2>
         <option name="CONFIGURATION" value="DebugGame Editor" />
         <option name="PLATFORM" value="Win64" />
-        <option name="EXECUTABLE_PATH" value="D:\unreal\editors\UE_5.4\Engine\Binaries\Win64\UnrealEditor-Win64-DebugGame.exe" />
-        <option name="WORKING_DIRECTORY" value="D:\unreal\editors\UE_5.4" />
-        <option name="MANDATORY_PROGRAM_PARAMETERS" value=" &quot;D:\unreal\projects\dark-frontier-cpp\DarkFrontier.uproject&quot;" />
+        <option name="EXECUTABLE_PATH" value="C:\Program Files\Epic Games\UE_5.4\Engine\Binaries\Win64\UnrealEditor-Win64-DebugGame.exe" />
+        <option name="WORKING_DIRECTORY" value="C:\Program Files\Epic Games\UE_5.4" />
+        <option name="MANDATORY_PROGRAM_PARAMETERS" value=" &quot;C:\Users\woyu\Documents\Unreal Projects\DarkFrontier\DarkFrontier.uproject&quot;" />
         <option name="CUSTOM_PROGRAM_PARAMETERS" value="" />
         <option name="PASS_PARENT_ENVS" value="1" />
         <option name="USE_EXTERNAL_CONSOLE" value="0" />
@@ -101,8 +173,8 @@
       <configuration_3>
         <option name="CONFIGURATION" value="DebugGame" />
         <option name="PLATFORM" value="Win64" />
-        <option name="EXECUTABLE_PATH" value="D:\unreal\projects\dark-frontier-cpp\Binaries\Win64\DarkFrontier-Win64-DebugGame.exe" />
-        <option name="WORKING_DIRECTORY" value="D:\unreal\editors\UE_5.4" />
+        <option name="EXECUTABLE_PATH" value="C:\Users\woyu\Documents\Unreal Projects\DarkFrontier\Binaries\Win64\DarkFrontier-Win64-DebugGame.exe" />
+        <option name="WORKING_DIRECTORY" value="C:\Program Files\Epic Games\UE_5.4" />
         <option name="MANDATORY_PROGRAM_PARAMETERS" value="" />
         <option name="CUSTOM_PROGRAM_PARAMETERS" value="" />
         <option name="PASS_PARENT_ENVS" value="1" />
@@ -112,9 +184,9 @@
       <configuration_4>
         <option name="CONFIGURATION" value="Development Editor" />
         <option name="PLATFORM" value="Win64" />
-        <option name="EXECUTABLE_PATH" value="D:\unreal\editors\UE_5.4\Engine\Binaries\Win64\UnrealEditor.exe" />
-        <option name="WORKING_DIRECTORY" value="D:\unreal\editors\UE_5.4" />
-        <option name="MANDATORY_PROGRAM_PARAMETERS" value=" &quot;D:\unreal\projects\dark-frontier-cpp\DarkFrontier.uproject&quot;" />
+        <option name="EXECUTABLE_PATH" value="C:\Program Files\Epic Games\UE_5.4\Engine\Binaries\Win64\UnrealEditor.exe" />
+        <option name="WORKING_DIRECTORY" value="C:\Program Files\Epic Games\UE_5.4" />
+        <option name="MANDATORY_PROGRAM_PARAMETERS" value=" &quot;C:\Users\woyu\Documents\Unreal Projects\DarkFrontier\DarkFrontier.uproject&quot;" />
         <option name="CUSTOM_PROGRAM_PARAMETERS" value="" />
         <option name="PASS_PARENT_ENVS" value="1" />
         <option name="USE_EXTERNAL_CONSOLE" value="0" />
@@ -123,8 +195,8 @@
       <configuration_5>
         <option name="CONFIGURATION" value="Development" />
         <option name="PLATFORM" value="Win64" />
-        <option name="EXECUTABLE_PATH" value="D:\unreal\projects\dark-frontier-cpp\Binaries\Win64\DarkFrontier.exe" />
-        <option name="WORKING_DIRECTORY" value="D:\unreal\editors\UE_5.4" />
+        <option name="EXECUTABLE_PATH" value="C:\Users\woyu\Documents\Unreal Projects\DarkFrontier\Binaries\Win64\DarkFrontier.exe" />
+        <option name="WORKING_DIRECTORY" value="C:\Program Files\Epic Games\UE_5.4" />
         <option name="MANDATORY_PROGRAM_PARAMETERS" value="" />
         <option name="CUSTOM_PROGRAM_PARAMETERS" value="" />
         <option name="PASS_PARENT_ENVS" value="1" />
@@ -134,8 +206,8 @@
       <configuration_6>
         <option name="CONFIGURATION" value="Shipping" />
         <option name="PLATFORM" value="Win64" />
-        <option name="EXECUTABLE_PATH" value="D:\unreal\projects\dark-frontier-cpp\Binaries\Win64\DarkFrontier-Win64-Shipping.exe" />
-        <option name="WORKING_DIRECTORY" value="D:\unreal\editors\UE_5.4" />
+        <option name="EXECUTABLE_PATH" value="C:\Users\woyu\Documents\Unreal Projects\DarkFrontier\Binaries\Win64\DarkFrontier-Win64-Shipping.exe" />
+        <option name="WORKING_DIRECTORY" value="C:\Program Files\Epic Games\UE_5.4" />
         <option name="MANDATORY_PROGRAM_PARAMETERS" value="" />
         <option name="CUSTOM_PROGRAM_PARAMETERS" value="" />
         <option name="PASS_PARENT_ENVS" value="1" />
@@ -326,6 +398,8 @@
       <workItem from="1729663208115" duration="3526000" />
       <workItem from="1729935503925" duration="939000" />
       <workItem from="1729936613511" duration="144000" />
+      <workItem from="1734403557273" duration="6240000" />
+      <workItem from="1734470166691" duration="11382000" />
     </task>
     <servers />
   </component>

@@ -1,9 +1,15 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "Structures/Damage/SimpleDamageType.h"
-#include "Structures/StructureAbilitySystemComponent.h"
+#include "AbilitySystemComponent.h"
 
-float USimpleDamageType::GetMultiplier(const UStructureAbilitySystemComponent* Target) const
+float USimpleDamageType::Evaluate(const UTargetGroup* TargetGroup, const UAbilitySystemComponent* Comp) const
 {
-	return FMath::Exp(-Target->GetNumericAttribute(ResistanceAttribute));
+	if(ResistanceAttributes.Contains(TargetGroup))
+	{
+		const FGameplayAttribute Attribute = ResistanceAttributes[TargetGroup];
+		return FMath::Exp(-Comp->GetNumericAttribute(Attribute));
+	}
+
+	return 1;
 }

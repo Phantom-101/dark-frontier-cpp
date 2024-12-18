@@ -2,9 +2,8 @@
 
 #include "Structures/StructureGameplay.h"
 #include "Gameplay/Attributes/EnergyAttributeSet.h"
-#include "Gameplay/Attributes/IntegrityAttributeSet.h"
+#include "Gameplay/Attributes/HullAttributeSet.h"
 #include "Gameplay/Attributes/LayoutAttributeSet.h"
-#include "Gameplay/Attributes/ResistanceAttributeSet.h"
 #include "Gameplay/Attributes/ShieldAttributeSet.h"
 #include "Gameplay/Attributes/DetectabilityAttributeSet.h"
 #include "Structures/Structure.h"
@@ -20,8 +19,7 @@ UStructureGameplay* UStructureGameplay::CreateGameplay(AStructure* Structure)
 	Gameplay->AbilitySystemComponent->SetIsReplicated(true);
 	Gameplay->AbilitySystemComponent->SetReplicationMode(EGameplayEffectReplicationMode::Minimal);
 
-	Gameplay->IntegrityAttributes = Structure->CreateDefaultSubobject<UIntegrityAttributeSet>("IntegrityAttributes");
-	Gameplay->ResistanceAttributes = Structure->CreateDefaultSubobject<UResistanceAttributeSet>("ResistanceAttributes");
+	Gameplay->HullAttributes = Structure->CreateDefaultSubobject<UHullAttributeSet>("HullAttributes");
 	Gameplay->ShieldAttributes = Structure->CreateDefaultSubobject<UShieldAttributeSet>("ShieldAttributes");
 	Gameplay->EnergyAttributes = Structure->CreateDefaultSubobject<UEnergyAttributeSet>("EnergyAttributes");
 	Gameplay->LayoutAttributes = Structure->CreateDefaultSubobject<ULayoutAttributeSet>("LayoutAttributes");
