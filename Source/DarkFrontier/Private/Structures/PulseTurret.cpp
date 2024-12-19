@@ -10,7 +10,7 @@
 #include "Structures/StructureIndices.h"
 #include "Structures/Damage/StructureDamageType.h"
 #include "Structures/Indications/TimerIndication.h"
-#include "UI/Screens/GameUI/PulseTurretControl.h"
+#include "UI/Screens/GameUI/PulseTurretControls.h"
 
 APulseTurret::APulseTurret()
 {
@@ -31,19 +31,12 @@ void APulseTurret::OnActivate()
 	// Save target
 	SavedTarget = OwningStructure->GetTarget();
 
-	// Setup attack indication
-	UTimerIndication* Indication = Cast<UTimerIndication>(OwningStructure->AddIndication(UTimerIndication::StaticClass()));
-	Indication->Init(Delay);
-
 	// Apply damage after delay is completed
 	GetWorldTimerManager().SetTimer(DelayHandle, this, &APulseTurret::OnDelayComplete, Delay);
-}
 
-UStructurePartControl* APulseTurret::CreateControl(UWidget* WidgetOwner)
-{
-	UPulseTurretControl* Control = CreateWidget<UPulseTurretControl>(WidgetOwner, ControlClass);
-	Control->Turret = this;
-	return Control;
+	// Setup attack indication
+	UTimerIndication* Indication = Cast<UTimerIndication>(OwningStructure->AddIndication(UTimerIndication::StaticClass()));
+	Indication->Init(DelayHandle);
 }
 
 void APulseTurret::OnDelayComplete()

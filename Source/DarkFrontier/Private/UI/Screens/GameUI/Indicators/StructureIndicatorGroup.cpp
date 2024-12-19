@@ -2,7 +2,6 @@
 
 #include "UI/Screens/GameUI/Indicators/StructureIndicatorGroup.h"
 #include "Components/PanelWidget.h"
-#include "Structures/Indications/StructureIndication.h"
 #include "UI/Screens/GameUI/Indicators/StructureIndicator.h"
 
 UStructureIndicator* UStructureIndicatorGroup::GetIndicator(UStructureIndication* Indication)

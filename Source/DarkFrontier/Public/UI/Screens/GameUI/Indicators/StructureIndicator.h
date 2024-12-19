@@ -6,6 +6,7 @@
 #include "CommonUserWidget.h"
 #include "StructureIndicator.generated.h"
 
+class UStructureIndicatorGroup;
 class UStructureIndication;
 
 /**
@@ -18,10 +19,15 @@ class DARKFRONTIER_API UStructureIndicator : public UCommonUserWidget
 
 protected:
 
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly)
+	TSubclassOf<UStructureIndicatorGroup> GroupClass;
+
 	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly)
 	TObjectPtr<UStructureIndication> Indication;
 
 public:
+
+	TSubclassOf<UStructureIndicatorGroup> GetGroupClass() const;
 
 	bool TryInit(UStructureIndication* InIndication);
 

@@ -24,19 +24,19 @@ protected:
 	TObjectPtr<class UCanvasPanel> IndicatorCanvas;
 
 	UPROPERTY(BlueprintReadOnly, EditAnywhere)
-	TSubclassOf<UStructureIndicatorMapping> Mapping;
+	TObjectPtr<UStructureIndicatorMapping> Mapping;
 
 public:
 
 	UFUNCTION(BlueprintCallable)
-	void AddIndicator(UStructureIndication* Indication);
+	void AddIndicator(UStructureIndication* Indication) const;
 
 	UFUNCTION(BlueprintCallable)
-	void RemoveIndicator(UStructureIndication* Indication);
+	void RemoveIndicator(UStructureIndication* Indication) const;
 
 protected:
 	
 	UFUNCTION(BlueprintCallable)
-	UStructureIndicatorGroup* GetGroup(TSubclassOf<UStructureIndicatorGroup> GroupClass);
+	UStructureIndicatorGroup* GetGroup(TSubclassOf<UStructureIndicatorGroup> GroupClass) const;
 
 };

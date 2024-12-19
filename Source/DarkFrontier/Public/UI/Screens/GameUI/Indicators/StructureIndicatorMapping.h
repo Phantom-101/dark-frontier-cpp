@@ -3,32 +3,27 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "StructureIndicatorMappingEntry.h"
 #include "UObject/Object.h"
 #include "StructureIndicatorMapping.generated.h"
 
+class UStructureIndicator;
 class UStructureIndication;
 
 /**
  * 
  */
-UCLASS(Abstract, BlueprintType, Blueprintable)
-class DARKFRONTIER_API UStructureIndicatorMapping : public UObject
+UCLASS()
+class DARKFRONTIER_API UStructureIndicatorMapping : public UDataAsset
 {
 	GENERATED_BODY()
 
 protected:
 
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly)
-	FStructureIndicatorMappingEntry DefaultEntry;
-
-	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly)
-	TMap<TSubclassOf<UStructureIndication>, FStructureIndicatorMappingEntry> Entries;
+	TMap<TSubclassOf<UStructureIndication>, TSubclassOf<UStructureIndicator>> Mapping;
 
 public:
 
-	FStructureIndicatorMappingEntry Find(const TSubclassOf<UStructureIndication>& IndicationClass);
+	TSubclassOf<UStructureIndicator> Map(const TSubclassOf<UStructureIndication>& IndicationClass) const;
 
-	FStructureIndicatorMappingEntry Find(const UStructureIndication* Indication);
-	
 };

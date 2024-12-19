@@ -2,6 +2,11 @@
 
 #include "UI/Screens/GameUI/Indicators/StructureIndicator.h"
 
+TSubclassOf<UStructureIndicatorGroup> UStructureIndicator::GetGroupClass() const
+{
+	return GroupClass;
+}
+
 bool UStructureIndicator::TryInit(UStructureIndication* InIndication)
 {
 	if(Indication != nullptr)

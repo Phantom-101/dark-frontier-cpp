@@ -54,10 +54,10 @@ protected:
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category="Gameplay")
 	TObjectPtr<UTargetGroup> HullTargetGroup;
 
-	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly)
+	UPROPERTY(BlueprintReadOnly, VisibleAnywhere)
 	TObjectPtr<UStructureIndices> Indices;
 
-	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly)
+	UPROPERTY(BlueprintReadOnly, VisibleAnywhere)
 	TObjectPtr<UStructureLocation> Location;
 
 	UPROPERTY(BlueprintReadOnly, EditAnywhere)

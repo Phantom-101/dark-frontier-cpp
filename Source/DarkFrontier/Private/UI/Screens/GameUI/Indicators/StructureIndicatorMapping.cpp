@@ -1,26 +1,18 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 #include "UI/Screens/GameUI/Indicators/StructureIndicatorMapping.h"
-#include "Log.h"
 #include "Structures/Indications/StructureIndication.h"
 
-FStructureIndicatorMappingEntry UStructureIndicatorMapping::Find(const TSubclassOf<UStructureIndication>& IndicationClass)
+TSubclassOf<UStructureIndicator> UStructureIndicatorMapping::Map(const TSubclassOf<UStructureIndication>& IndicationClass) const
 {
-	if(IndicationClass == nullptr)
+	for (UClass* Class = IndicationClass; Class->IsChildOf<UStructureIndication>(); Class = Class->GetSuperClass())
 	{
-		UE_LOG(LogDarkFrontier, Warning, TEXT("Attempted mapping of null indication class"))
-		return DefaultEntry;
-	}
-	
-	if(Entries.Contains(IndicationClass))
-	{
-		return Entries[IndicationClass];
+		TSubclassOf<UStructureIndication> Subclass = TSubclassOf<UStructureIndication>(Class);
+		if(Mapping.Contains(Subclass))
+		{
+			return Mapping.FindRef(Subclass);
+		}
 	}
 
-	return DefaultEntry;
-}
-
-FStructureIndicatorMappingEntry UStructureIndicatorMapping::Find(const UStructureIndication* Indication)
-{
-	return Find(Indication->GetClass());
+	return nullptr;
 }

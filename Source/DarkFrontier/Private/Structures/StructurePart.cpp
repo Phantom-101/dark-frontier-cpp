@@ -186,11 +186,6 @@ float AStructurePart::TakeDamage(const float DamageAmount, FDamageEvent const& D
 	return OwningStructure->TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
 }
 
-UStructurePartControl* AStructurePart::CreateControl(UWidget* WidgetOwner)
-{
-	return nullptr;
-}
-
 TArray<const UStructureSlot*> AStructurePart::GetSlots_CDO(TSubclassOf<AStructurePart> PartClass)
 {
 	const UBlueprintGeneratedClass* BPClass = Cast<UBlueprintGeneratedClass>(PartClass);
