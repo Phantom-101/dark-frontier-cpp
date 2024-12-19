@@ -1,16 +1,19 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "Structures/Indications/TimerIndication.h"
-#include "Kismet/GameplayStatics.h"
 
-void UTimerIndication::Init(float InDuration)
+void UTimerIndication::Init(const FTimerHandle InHandle)
 {
-	StartTime = UGameplayStatics::GetTimeSeconds(GetWorld());
-	Duration = InDuration;
+	TimerHandle = InHandle;
 }
 
 float UTimerIndication::GetElapsedPercent() const
 {
-	const float CurrentTime = UGameplayStatics::GetTimeSeconds(GetWorld());
-	return FMath::Clamp((CurrentTime - StartTime) / Duration, 0, 1);
+	if(TimerHandle.IsValid())
+	{
+		const FTimerManager& Manager = GetWorld()->GetTimerManager();
+		return Manager.GetTimerElapsed(TimerHandle) / Manager.GetTimerRate(TimerHandle);
+	}
+
+	return 0;
 }

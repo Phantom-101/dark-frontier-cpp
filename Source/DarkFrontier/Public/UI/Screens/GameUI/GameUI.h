@@ -6,6 +6,8 @@
 #include "CommonActivatableWidget.h"
 #include "GameUI.generated.h"
 
+class UStructurePartControlsMapping;
+
 /**
  * 
  */
@@ -45,6 +47,9 @@ protected:
 
 	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
 	TObjectPtr<class UScrollBox> PartControls;
+
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly)
+	TObjectPtr<UStructurePartControlsMapping> ControlsMapping;
 
 	virtual TOptional<FUIInputConfig> GetDesiredInputConfig() const override;
 	

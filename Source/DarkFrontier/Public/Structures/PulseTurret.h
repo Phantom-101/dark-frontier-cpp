@@ -9,7 +9,6 @@
 class UNiagaraSystem;
 class UStructureDamageType;
 class UPulseAbility;
-class UPulseTurretControl;
 
 UCLASS()
 class DARKFRONTIER_API APulseTurret : public ATurret
@@ -42,9 +41,6 @@ protected:
 	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly, Category="Gameplay")
 	FTimerHandle DelayHandle;
 
-	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly)
-	TSubclassOf<UPulseTurretControl> ControlClass;
-
 public:
 
 	APulseTurret();
@@ -52,8 +48,6 @@ public:
 	virtual bool CanActivate() override;
 
 	virtual void OnActivate() override;
-
-	virtual UStructurePartControl* CreateControl(UWidget* WidgetOwner) override;
 
 protected:
 

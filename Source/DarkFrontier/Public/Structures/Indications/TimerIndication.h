@@ -17,12 +17,9 @@ class DARKFRONTIER_API UTimerIndication : public UStructureIndication
 public:
 
 	UPROPERTY(BlueprintReadWrite, EditInstanceOnly)
-	float StartTime = 0;
+	FTimerHandle TimerHandle;
 
-	UPROPERTY(BlueprintReadWrite, EditInstanceOnly)
-	float Duration = 0;
-
-	void Init(float InDuration);
+	void Init(FTimerHandle InHandle);
 
 	float GetElapsedPercent() const;
 	

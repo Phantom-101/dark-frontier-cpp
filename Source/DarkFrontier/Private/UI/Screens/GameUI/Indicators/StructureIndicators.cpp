@@ -3,29 +3,29 @@
 #include "UI/Screens/GameUI/Indicators/StructureIndicators.h"
 #include "Components/CanvasPanel.h"
 #include "Structures/Indications/StructureIndication.h"
+#include "UI/Screens/GameUI/Indicators/StructureIndicator.h"
 #include "UI/Screens/GameUI/Indicators/StructureIndicatorGroup.h"
 #include "UI/Screens/GameUI/Indicators/StructureIndicatorMapping.h"
-#include "UI/Screens/GameUI/Indicators/StructureIndicatorMappingEntry.h"
 
-void UStructureIndicators::AddIndicator(UStructureIndication* Indication)
+void UStructureIndicators::AddIndicator(UStructureIndication* Indication) const
 {
-	const FStructureIndicatorMappingEntry Entry = Mapping.GetDefaultObject()->Find(Indication);
-	if(Entry.IsValid())
+	const TSubclassOf<UStructureIndicator> IndicatorClass = Mapping->Map(Indication->GetClass());
+	if(IndicatorClass != nullptr)
 	{
-		UStructureIndicatorGroup* Group = GetGroup(Entry.GroupClass);
+		UStructureIndicatorGroup* Group = GetGroup(IndicatorClass.GetDefaultObject()->GetGroupClass());
 		if(Group != nullptr)
 		{
-			Group->AddIndicator(Indication, Entry.IndicatorClass);
+			Group->AddIndicator(Indication, IndicatorClass);
 		}
 	}
 }
 
-void UStructureIndicators::RemoveIndicator(UStructureIndication* Indication)
+void UStructureIndicators::RemoveIndicator(UStructureIndication* Indication) const
 {
-	const FStructureIndicatorMappingEntry Entry = Mapping.GetDefaultObject()->Find(Indication);
-	if(Entry.IsValid())
+	const TSubclassOf<UStructureIndicator> IndicatorClass = Mapping->Map(Indication->GetClass());
+	if(IndicatorClass != nullptr)
 	{
-		UStructureIndicatorGroup* Group = GetGroup(Entry.GroupClass);
+		UStructureIndicatorGroup* Group = GetGroup(IndicatorClass.GetDefaultObject()->GetGroupClass());
 		if(Group != nullptr)
 		{
 			Group->RemoveIndicator(Indication);
@@ -33,7 +33,7 @@ void UStructureIndicators::RemoveIndicator(UStructureIndication* Indication)
 	}
 }
 
-UStructureIndicatorGroup* UStructureIndicators::GetGroup(TSubclassOf<UStructureIndicatorGroup> GroupClass)
+UStructureIndicatorGroup* UStructureIndicators::GetGroup(const TSubclassOf<UStructureIndicatorGroup> GroupClass) const
 {
 	for(UWidget* Widget : IndicatorCanvas->GetAllChildren())
 	{

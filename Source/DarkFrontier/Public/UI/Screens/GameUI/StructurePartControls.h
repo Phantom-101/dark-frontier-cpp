@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "CommonUserWidget.h"
-#include "StructurePartControl.generated.h"
+#include "StructurePartControls.generated.h"
 
 class AStructurePart;
 
@@ -12,11 +12,19 @@ class AStructurePart;
  * 
  */
 UCLASS(Abstract)
-class DARKFRONTIER_API UStructurePartControl : public UCommonUserWidget
+class DARKFRONTIER_API UStructurePartControls : public UCommonUserWidget
 {
 	GENERATED_BODY()
 
+protected:
+
+	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly)
+	TObjectPtr<AStructurePart> Part;
+
 public:
+
+	UFUNCTION(BlueprintCallable)
+	virtual bool TryInitialize(AStructurePart* InPart);
 
 	UFUNCTION(BlueprintCallable)
 	virtual AStructurePart* GetPart();

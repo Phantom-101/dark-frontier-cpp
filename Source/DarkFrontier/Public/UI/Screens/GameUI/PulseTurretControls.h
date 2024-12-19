@@ -3,16 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "StructurePartControl.h"
-#include "PulseTurretControl.generated.h"
-
-class APulseTurret;
+#include "StructurePartControls.h"
+#include "PulseTurretControls.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class DARKFRONTIER_API UPulseTurretControl : public UStructurePartControl
+class DARKFRONTIER_API UPulseTurretControls : public UStructurePartControls
 {
 	GENERATED_BODY()
 
@@ -21,19 +19,11 @@ protected:
 	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
 	TObjectPtr<class UCommonButtonBase> ActivateButton;
 
-public:
-
-	TObjectPtr<APulseTurret> Turret;
-
-protected:
-
 	virtual void NativeConstruct() override;
 
 	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
 
-public:
-
-	virtual AStructurePart* GetPart() override;
+	virtual bool TryInitialize(AStructurePart* InPart) override;
 
 private:
 

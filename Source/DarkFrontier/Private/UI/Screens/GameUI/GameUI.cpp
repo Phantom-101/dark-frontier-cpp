@@ -10,8 +10,6 @@
 #include "Components/Image.h"
 #include "Components/CanvasPanelSlot.h"
 #include "Components/ScrollBox.h"
-#include "Gameplay/Attributes/EnergyAttributeSet.h"
-#include "Gameplay/Attributes/HullAttributeSet.h"
 #include "Structures/Structure.h"
 #include "Structures/StructureController.h"
 #include "Structures/StructureGameplay.h"
@@ -19,8 +17,9 @@
 #include "Structures/StructurePart.h"
 #include "UI/Widgets/CustomGameplayEffectUIData.h"
 #include "UI/Widgets/GameplayEffectIndicatorObject.h"
-#include "UI/Screens/GameUI/StructurePartControl.h"
+#include "UI/Screens/GameUI/StructurePartControls.h"
 #include "UI/Screens/GameUI/StructureSelectors.h"
+#include "UI/Screens/GameUI/Controls/StructurePartControlsMapping.h"
 #include "UI/Widgets/Arc.h"
 
 TOptional<FUIInputConfig> UGameUI::GetDesiredInputConfig() const
@@ -95,7 +94,7 @@ void UGameUI::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 		TArray<AStructurePart*> Existing;
 		for(UWidget* Widget : PartControls->GetAllChildren())
 		{
-			UStructurePartControl* Control = Cast<UStructurePartControl>(Widget);
+			UStructurePartControls* Control = Cast<UStructurePartControls>(Widget);
 			if(IsValid(Control))
 			{
 				if(IsValid(Control->GetPart()))
@@ -118,10 +117,19 @@ void UGameUI::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 		{
 			if(!Existing.Contains(Part))
 			{
-				UStructurePartControl* Control = Part->CreateControl(PartControls);
-				if(Control != nullptr)
+				TSubclassOf<UStructurePartControls> ControlsClass = ControlsMapping->Map(Part->GetClass());
+				if(ControlsClass != nullptr)
 				{
-					PartControls->AddChild(Control);
+					UStructurePartControls* Controls = CreateWidget<UStructurePartControls>(this, ControlsClass);
+					Controls->TryInitialize(Part);
+					if(Controls->GetPart() == Part)
+					{
+						PartControls->AddChild(Controls);
+					}
+					else
+					{
+						Controls->BeginDestroy();
+					}
 				}
 			}
 		}
