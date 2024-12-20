@@ -9,9 +9,9 @@ void UConfirmationModal::NativeConstruct()
 	Super::NativeConstruct();
 
 	ConfirmButton->OnClicked().Clear();
-	ConfirmButton->OnClicked().AddUObject<UConfirmationModal>(this, &UConfirmationModal::OnConfirmButtonClicked);
+	ConfirmButton->OnClicked().AddUObject<UConfirmationModal>(this, &UConfirmationModal::HandleConfirm);
 	CancelButton->OnClicked().Clear();
-	CancelButton->OnClicked().AddUObject<UConfirmationModal>(this, &UConfirmationModal::OnCancelButtonClicked);
+	CancelButton->OnClicked().AddUObject<UConfirmationModal>(this, &UConfirmationModal::HandleCancel);
 }
 
 void UConfirmationModal::NativeOnActivated()
@@ -28,26 +28,24 @@ UWidget* UConfirmationModal::NativeGetDesiredFocusTarget() const
 
 bool UConfirmationModal::NativeOnHandleBackAction()
 {
-	OnCancelButtonClicked();
+	HandleCancel();
 	return true;
 }
 
-void UConfirmationModal::SetText(FText NewHeader, FText NewBody) const
+void UConfirmationModal::SetText(const FText NewHeader, const FText NewBody) const
 {
 	HeaderText->SetText(NewHeader);
 	BodyText->SetText(NewBody);
 }
 
-void UConfirmationModal::OnConfirmButtonClicked()
+void UConfirmationModal::HandleConfirm()
 {
 	DeactivateWidget();
 	OnConfirmed.Broadcast();
-	OnConfirmedDynamic.Broadcast();
 }
 
-void UConfirmationModal::OnCancelButtonClicked()
+void UConfirmationModal::HandleCancel()
 {
 	DeactivateWidget();
 	OnCanceled.Broadcast();
-	OnCanceledDynamic.Broadcast();
 }

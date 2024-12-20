@@ -5,11 +5,10 @@
 #include "Gameplay/Attributes/HullAttributeSet.h"
 #include "Gameplay/Attributes/LayoutAttributeSet.h"
 #include "Gameplay/Attributes/ShieldAttributeSet.h"
-#include "Gameplay/Attributes/DetectabilityAttributeSet.h"
+#include "Gameplay/Attributes/DetectionAttributeSet.h"
 #include "Structures/Structure.h"
 #include "Structures/StructureAbility.h"
 #include "Structures/StructureAbilitySystemComponent.h"
-#include "Structures/StructureAttributeSet.h"
 
 UStructureGameplay* UStructureGameplay::CreateGameplay(AStructure* Structure)
 {
@@ -23,8 +22,8 @@ UStructureGameplay* UStructureGameplay::CreateGameplay(AStructure* Structure)
 	Gameplay->ShieldAttributes = Structure->CreateDefaultSubobject<UShieldAttributeSet>("ShieldAttributes");
 	Gameplay->EnergyAttributes = Structure->CreateDefaultSubobject<UEnergyAttributeSet>("EnergyAttributes");
 	Gameplay->LayoutAttributes = Structure->CreateDefaultSubobject<ULayoutAttributeSet>("LayoutAttributes");
-	Gameplay->DetectabilityAttributes = Structure->CreateDefaultSubobject<UDetectabilityAttributeSet>("SignatureAttributes");
-	Gameplay->AttributeSet = Structure->CreateDefaultSubobject<UStructureAttributeSet>("AttributeSet");
+	Gameplay->DetectionAttributes = Structure->CreateDefaultSubobject<UDetectionAttributeSet>("DetectionAttributes");
+	Gameplay->MobilityAttributes = Structure->CreateDefaultSubobject<UMobilityAttributeSet>("MobilityAttributes");
 
 	return Gameplay;
 }
@@ -42,7 +41,7 @@ UStructureAbilitySystemComponent* UStructureGameplay::GetAbilitySystemComponent(
 bool UStructureGameplay::IsDetecting(AStructure* Other) const
 {
 	const double SquareLength = (GetStructure()->GetActorLocation() - Other->GetActorLocation()).SquaredLength();
-	const float Detection = AttributeSet->GetSensorStrength() * Other->GetGameplay()->GetRadarCrossSection();
+	const float Detection = DetectionAttributes->GetDetection() * Other->GetGameplay()->GetDetectability();
 	return SquareLength <= Detection;
 }
 
