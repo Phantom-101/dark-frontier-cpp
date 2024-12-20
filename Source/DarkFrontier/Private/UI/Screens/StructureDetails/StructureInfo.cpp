@@ -1,15 +1,12 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "UI/Screens/StructureDetails/StructureInfo.h"
-#include "AbilitySystemComponent.h"
 #include "CommonButtonBase.h"
 #include "CommonListView.h"
 #include "CommonTextBlock.h"
 #include "Components/ScrollBox.h"
 #include "Components/WidgetSwitcher.h"
-#include "Gameplay/Attributes/EnergyAttributeSet.h"
 #include "Structures/Structure.h"
-#include "Structures/StructureAttributeSet.h"
 #include "Structures/StructureController.h"
 #include "Structures/StructureGameplay.h"
 #include "Structures/StructureIndices.h"
@@ -44,9 +41,6 @@ void UStructureInfo::SetTarget(AStructure* InTargetStructure)
 
 	NameText->SetText(FText::FromString(TargetStructure->GetName()));
 	
-	const UAbilitySystemComponent* AbilitySystemComp = TargetStructure->GetAbilitySystemComponent();
-	const UStructureAttributeSet* Attributes = Cast<UStructureAttributeSet>(AbilitySystemComp->GetAttributeSet(UStructureAttributeSet::StaticClass()));
-
 	UStructureGameplay* Gameplay = TargetStructure->GetGameplay();
 	
 	const float MaxHull = Gameplay->GetMaxHull();
@@ -56,10 +50,10 @@ void UStructureInfo::SetTarget(AStructure* InTargetStructure)
 	const float EnergyRegen = Gameplay->GetEnergyRegeneration();
 	const float MaxUpkeep = Gameplay->GetMaxUpkeep();
 	const float Upkeep = Gameplay->GetUpkeep();
-	const float LinearSpeed = Attributes->GetLinearMaxSpeed();
-	const float LinearAccel = Attributes->GetLinearAcceleration();
-	const float AngularSpeed = Attributes->GetAngularMaxSpeed();
-	const float AngularAccel = Attributes->GetAngularAcceleration();
+	const float LinearSpeed = Gameplay->GetLinearMaxSpeed();
+	const float LinearAccel = Gameplay->GetLinearAcceleration();
+	const float AngularSpeed = Gameplay->GetAngularMaxSpeed();
+	const float AngularAccel = Gameplay->GetAngularAcceleration();
 	
 	TArray<FStringFormatArg> FormatArgs;
 	

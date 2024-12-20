@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "AbilitySystemComponent.h"
 #include "AttributeSet.h"
-#include "DetectabilityAttributeSet.generated.h"
+#include "DetectionAttributeSet.generated.h"
 
 #define ATTRIBUTE_ACCESSORS(ClassName, PropertyName) \
 	GAMEPLAYATTRIBUTE_PROPERTY_GETTER(ClassName, PropertyName) \
@@ -17,24 +17,31 @@
  * 
  */
 UCLASS()
-class DARKFRONTIER_API UDetectabilityAttributeSet : public UAttributeSet
+class DARKFRONTIER_API UDetectionAttributeSet : public UAttributeSet
 {
 	GENERATED_BODY()
 
 protected:
 
-	UPROPERTY(BlueprintReadOnly, ReplicatedUsing=OnRep_RadarCrossSection)
-	FGameplayAttributeData RadarCrossSection;
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing=OnRep_Detection)
+	FGameplayAttributeData Detection;
+
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing=OnRep_Detectability)
+	FGameplayAttributeData Detectability;
 
 public:
 
-	ATTRIBUTE_ACCESSORS(UDetectabilityAttributeSet, RadarCrossSection);
+	ATTRIBUTE_ACCESSORS(UDetectionAttributeSet, Detection);
+	ATTRIBUTE_ACCESSORS(UDetectionAttributeSet, Detectability);
 
 protected:
 
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
 	UFUNCTION()
-	virtual void OnRep_RadarCrossSection(const FGameplayAttributeData& OldRadarCrossSection);
+	virtual void OnRep_Detection(const FGameplayAttributeData& OldDetection);
+
+	UFUNCTION()
+	virtual void OnRep_Detectability(const FGameplayAttributeData& OldDetectability);
 	
 };

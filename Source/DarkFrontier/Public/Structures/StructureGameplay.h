@@ -3,15 +3,13 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "ActiveGameplayEffectHandle.h"
-#include "GameplayAbilitySpecHandle.h"
-#include "StructureAttributeSet.h"
 #include "Gameplay/GameplaySubobject.h"
 #include "Gameplay/Attributes/AttributeMacros.h"
-#include "Gameplay/Attributes/DetectabilityAttributeSet.h"
+#include "Gameplay/Attributes/DetectionAttributeSet.h"
 #include "Gameplay/Attributes/EnergyAttributeSet.h"
 #include "Gameplay/Attributes/HullAttributeSet.h"
 #include "Gameplay/Attributes/LayoutAttributeSet.h"
+#include "Gameplay/Attributes/MobilityAttributeSet.h"
 #include "Gameplay/Attributes/ShieldAttributeSet.h"
 #include "UObject/Object.h"
 #include "StructureGameplay.generated.h"
@@ -50,10 +48,10 @@ protected:
 	TObjectPtr<ULayoutAttributeSet> LayoutAttributes;
 
 	UPROPERTY(BlueprintReadOnly, VisibleDefaultsOnly)
-	TObjectPtr<UDetectabilityAttributeSet> DetectabilityAttributes;
+	TObjectPtr<UDetectionAttributeSet> DetectionAttributes;
 
 	UPROPERTY(BlueprintReadOnly, VisibleDefaultsOnly)
-	TObjectPtr<UStructureAttributeSet> AttributeSet;
+	TObjectPtr<UMobilityAttributeSet> MobilityAttributes;
 
 public:
 
@@ -87,13 +85,13 @@ public:
 	ATTRIBUTE_PASSTHROUGH(LayoutAttributes, MaxUpkeep);
 	ATTRIBUTE_PASSTHROUGH(LayoutAttributes, Upkeep);
 
-	ATTRIBUTE_PASSTHROUGH(DetectabilityAttributes, RadarCrossSection);
+	ATTRIBUTE_PASSTHROUGH(DetectionAttributes, Detection);
+	ATTRIBUTE_PASSTHROUGH(DetectionAttributes, Detectability);
 
-	ATTRIBUTE_PASSTHROUGH(AttributeSet, LinearAcceleration);
-	ATTRIBUTE_PASSTHROUGH(AttributeSet, LinearMaxSpeed);
-	ATTRIBUTE_PASSTHROUGH(AttributeSet, AngularAcceleration);
-	ATTRIBUTE_PASSTHROUGH(AttributeSet, AngularMaxSpeed);
-	ATTRIBUTE_PASSTHROUGH(AttributeSet, SensorStrength);
+	ATTRIBUTE_PASSTHROUGH(MobilityAttributes, LinearAcceleration);
+	ATTRIBUTE_PASSTHROUGH(MobilityAttributes, LinearMaxSpeed);
+	ATTRIBUTE_PASSTHROUGH(MobilityAttributes, AngularAcceleration);
+	ATTRIBUTE_PASSTHROUGH(MobilityAttributes, AngularMaxSpeed);
 
 	// TODO move out
 	UFUNCTION(BlueprintCallable)

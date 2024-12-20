@@ -6,9 +6,7 @@
 #include "CommonActivatableWidget.h"
 #include "ConfirmationModal.generated.h"
 
-DECLARE_MULTICAST_DELEGATE(FModalActionTaken)
-// Include an additional dynamic delegate to allow blueprint access
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FModalActionTakenDynamic);
+DECLARE_MULTICAST_DELEGATE(FActionTaken)
 
 /**
  * 
@@ -20,15 +18,9 @@ class DARKFRONTIER_API UConfirmationModal : public UCommonActivatableWidget
 
 public:
 
-	FModalActionTaken OnConfirmed;
-	
-	UPROPERTY(BlueprintAssignable)
-	FModalActionTakenDynamic OnConfirmedDynamic;
+	FActionTaken OnConfirmed;
 
-	FModalActionTaken OnCanceled;
-
-	UPROPERTY(BlueprintAssignable)
-	FModalActionTakenDynamic OnCanceledDynamic;
+	FActionTaken OnCanceled;
 
 protected:
 	
@@ -59,8 +51,8 @@ public:
 
 private:
 
-	void OnConfirmButtonClicked();
+	void HandleConfirm();
 
-	void OnCancelButtonClicked();
+	void HandleCancel();
 	
 };
