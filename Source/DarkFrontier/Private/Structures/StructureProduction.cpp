@@ -29,28 +29,9 @@ void UStructureProduction::TickComponent(float DeltaTime, ELevelTick TickType, F
 		const bool CanFit = Inventory->CanFit(Recipe->Outputs->GetVolume(), Recipe->Outputs->GetMass());
 		if(Progress == Recipe->Time && CanFit)
 		{
-			const float TotalWeight = Recipe->Outputs->GetValue();
-
-			if(TotalWeight == 0)
+			for(const FItemStack& Stack : Recipe->Outputs->GetStacks())
 			{
-				// Weights were not set, use quantities as weights
-				const int TotalQuantity = Recipe->Outputs->GetQuantity();
-					
-				for(const FItemStack& Stack : Recipe->Outputs->GetStacks())
-				{
-					const float DistributedValue = InputValue * Stack.Quantity / TotalQuantity;
-					Inventory->AddItems(Stack.Item, Stack.Quantity, DistributedValue);
-				}
-			}
-			else
-			{
-				// Weights were set, assign values normally
-				for(const FItemStack& Stack : Recipe->Outputs->GetStacks())
-				{
-					const float StackWeight = Stack.Value;
-					const float DistributedValue = InputValue * StackWeight / TotalWeight;
-					Inventory->AddItems(Stack.Item, Stack.Quantity, DistributedValue);
-				}
+				Inventory->AddItems(Stack.Item, Stack.Quantity);
 			}
 		}
 	}
@@ -71,10 +52,9 @@ void UStructureProduction::TickComponent(float DeltaTime, ELevelTick TickType, F
 
 		if(CanStartRecipe)
 		{
-			InputValue = 0;
 			for(const FItemStack& Stack : Recipe->Inputs->GetStacks())
 			{
-				Inventory->RemoveItems(Stack.Item, Stack.Quantity, InputValue);
+				Inventory->RemoveItems(Stack.Item, Stack.Quantity);
 			}
 			RequirementsMet = true;
 		}

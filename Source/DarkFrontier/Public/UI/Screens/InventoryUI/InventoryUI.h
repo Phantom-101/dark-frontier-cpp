@@ -6,6 +6,15 @@
 #include "CommonActivatableWidget.h"
 #include "InventoryUI.generated.h"
 
+class UInventoryOption;
+class AStructure;
+class UListSelectionModal;
+class UInfoField;
+class UCommonTextBlock;
+class UImage;
+class UWidgetSwitcher;
+class UItemList;
+class UCommonButtonBase;
 class UItem;
 class UInventory;
 
@@ -20,10 +29,13 @@ class DARKFRONTIER_API UInventoryUI : public UCommonActivatableWidget
 protected:
 
 	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
-	TObjectPtr<class UItemList> ItemList;
+	TObjectPtr<UCommonButtonBase> SwitchButton;
 
 	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
-	TObjectPtr<class UWidgetSwitcher> InfoSwitcher;
+	TObjectPtr<UItemList> ItemList;
+
+	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
+	TObjectPtr<UWidgetSwitcher> InfoSwitcher;
 
 	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
 	TObjectPtr<UWidget> NoItem;
@@ -32,34 +44,43 @@ protected:
 	TObjectPtr<UWidget> ItemInfo;
 
 	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
-	TObjectPtr<class UImage> IconImage;
+	TObjectPtr<UImage> IconImage;
 
 	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
-	TObjectPtr<class UCommonTextBlock> NameText;
+	TObjectPtr<UCommonTextBlock> NameText;
 
 	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
-	TObjectPtr<class UCommonTextBlock> DescriptionText;
+	TObjectPtr<UCommonTextBlock> DescriptionText;
 
 	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
-	TObjectPtr<class UInfoField> QuantityField;
+	TObjectPtr<UInfoField> QuantityField;
 	
 	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
-	TObjectPtr<class UInfoField> ValueField;
+	TObjectPtr<UInfoField> VolumeField;
 
 	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
-	TObjectPtr<class UInfoField> VolumeField;
+	TObjectPtr<UInfoField> MassField;
 
 	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
-	TObjectPtr<class UInfoField> MassField;
-
-	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
-	TObjectPtr<class UCommonButtonBase> TradeButton;
+	TObjectPtr<UCommonButtonBase> TradeButton;
 	
 	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
-	TObjectPtr<class UCommonButtonBase> TransferButton;
+	TObjectPtr<UCommonButtonBase> TransferButton;
 
 	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
-	TObjectPtr<class UCommonButtonBase> DisposeButton;
+	TObjectPtr<UCommonButtonBase> DisposeButton;
+
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly)
+	TSubclassOf<UListSelectionModal> SelectionModalClass;
+
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly)
+	TSubclassOf<UInventoryOption> SelectionOptionClass;
+
+	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly)
+	TObjectPtr<AStructure> CurrentStructure;
+
+	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly)
+	TObjectPtr<UListSelectionModal> CurrentModal;
 
 	virtual void NativeConstruct() override;
 
@@ -69,8 +90,20 @@ protected:
 
 public:
 
-	UInventory* GetInventory() const;
+	void SetCurrentStructure(AStructure* InStructure);
 
-	void SetInventory(UInventory* InInventory) const;
+	AStructure* GetCurrentStructure() const;
+
+	UInventory* GetCurrentInventory() const;
+
+private:
+
+	void HandleSwitch();
+
+	void HandleSwitchConfirmed(UObject* Selection);
+
+	void HandleSwitchCanceled();
+
+	void DisposeModal();
 	
 };
