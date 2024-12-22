@@ -31,9 +31,6 @@ protected:
 	UPROPERTY(BlueprintReadOnly, EditInstanceOnly)
 	float Progress = 0;
 
-	UPROPERTY(BlueprintReadOnly, EditInstanceOnly)
-	float InputValue = 0;
-
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 };

@@ -31,28 +31,6 @@ int UInventory::GetItemQuantity(UItem* Item)
 	return 0;
 }
 
-float UInventory::GetValue()
-{
-	float Value = 0;
-	for(const FItemStack& Stack : ItemStacks)
-	{
-		Value += Stack.Value;
-	}
-	return Value;
-}
-
-float UInventory::GetItemValue(UItem* Item)
-{
-	for(const FItemStack& Stack : ItemStacks)
-	{
-		if(Stack.Item == Item)
-		{
-			return Stack.Value;
-		}
-	}
-	return 0;
-}
-
 float UInventory::GetVolume()
 {
 	float Volume = 0;
@@ -102,7 +80,7 @@ bool UInventory::CanFit(const int ExtraVolume, const int ExtraMass)
 	return GetVolume() + ExtraVolume <= MaxVolume && GetMass() + ExtraMass <= MaxMass;
 }
 
-bool UInventory::AddItems(UItem* Item, const int Quantity, const float Value)
+bool UInventory::AddItems(UItem* Item, const int Quantity)
 {
 	const float ExtraVolume = Item->Volume * Quantity;
 	const float ExtraMass = Item->Mass * Quantity;
@@ -114,18 +92,17 @@ bool UInventory::AddItems(UItem* Item, const int Quantity, const float Value)
 		if(Stack.Item == Item)
 		{
 			Stack.Quantity += Quantity;
-			Stack.Value += Value;
 			OnItemChanged.Broadcast(Item, Stack.Quantity);
 			return true;
 		}
 	}
 
-	ItemStacks.Add(FItemStack(Item, Quantity, Value));
+	ItemStacks.Add(FItemStack(Item, Quantity));
 	OnItemAdded.Broadcast(Item, Quantity);
 	return true;
 }
 
-bool UInventory::RemoveItems(UItem* Item, int Quantity, float& Value)
+bool UInventory::RemoveItems(UItem* Item, int Quantity)
 {
 	const FItemStack* Found = nullptr;
 	for(FItemStack& Stack : ItemStacks)
@@ -137,13 +114,8 @@ bool UInventory::RemoveItems(UItem* Item, int Quantity, float& Value)
 				// Not enough
 				return false;
 			}
-
-			const float RemovedValue = Stack.Value * Quantity / Stack.Quantity;
 			
 			Stack.Quantity -= Quantity;
-			Stack.Value -= RemovedValue;
-			Value += RemovedValue;
-
 			Found = &Stack;
 			
 			break;

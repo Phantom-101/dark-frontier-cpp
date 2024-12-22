@@ -36,7 +36,7 @@ bool UListSelectionModal::NativeOnHandleBackAction()
 void UListSelectionModal::SetOptions(const TArray<UObject*>& InOptions)
 {
 	Options = InOptions;
-	CurrentOption = Options.IsEmpty() ? nullptr : Options[0];
+	SetCurrentOption(nullptr);
 }
 
 void UListSelectionModal::SetOptionsWithInitial(const TArray<UObject*>& InOptions, UObject* Initial)
@@ -47,10 +47,12 @@ void UListSelectionModal::SetOptionsWithInitial(const TArray<UObject*>& InOption
 
 void UListSelectionModal::SetCurrentOption(UObject* Option)
 {
-	if(Options.Contains(Option))
+	if(Option == nullptr || Options.Contains(Option))
 	{
 		CurrentOption = Option;
 	}
+
+	ConfirmButton->SetIsEnabled(Options.Contains(CurrentOption));
 }
 
 void UListSelectionModal::SetBuilder(const TFunction<UWidget*(UObject*)>& Builder)

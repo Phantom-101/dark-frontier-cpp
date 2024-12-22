@@ -10,6 +10,7 @@ void UListSelectionOption::NativeConstruct()
 {
 	Super::NativeConstruct();
 
+	SelectButton->SetIsSelectable(true);
 	SelectButton->OnClicked().Clear();
 	SelectButton->OnClicked().AddUObject<UListSelectionOption>(this, &UListSelectionOption::HandleSelect);
 }

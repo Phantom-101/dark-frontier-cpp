@@ -21,17 +21,9 @@ struct DARKFRONTIER_API FItemStack
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	int Quantity = 0;
 
-	/**
-	 * Interpreted as total values for game stacks and weights for recipe stacks
-	 */
-	UPROPERTY(BlueprintReadWrite, EditAnywhere)
-	float Value = 0;
-
 	FItemStack();
 	
-	FItemStack(UItem* InItem, int InQuantity, double InValue);
-
-	float GetValuePerItem() const;
+	FItemStack(UItem* InItem, int InQuantity);
 
 	float GetVolume() const;
 

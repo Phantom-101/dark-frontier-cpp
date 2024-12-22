@@ -191,8 +191,8 @@ void AStructureController::OpenInventory(const FInputActionInstance& Instance)
 {
 	if(!IsValid(StructurePawn)) return;
 
-	const UInventoryUI* Inventory = UIBaseWidget->PushGame<UInventoryUI>(InventoryUIClass);
-	Inventory->SetInventory(StructurePawn->GetInventory());
+	UInventoryUI* Inventory = UIBaseWidget->PushGame<UInventoryUI>(InventoryUIClass);
+	Inventory->SetCurrentStructure(StructurePawn);
 }
 
 void AStructureController::EditStructure(const FInputActionInstance& Instance)

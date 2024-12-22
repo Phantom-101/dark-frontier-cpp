@@ -7,16 +7,10 @@ FItemStack::FItemStack()
 {
 }
 
-FItemStack::FItemStack(UItem* InItem, int InQuantity, double InValue)
+FItemStack::FItemStack(UItem* InItem, const int InQuantity)
 {
 	Item = InItem;
 	Quantity = InQuantity;
-	Value = InValue;
-}
-
-float FItemStack::GetValuePerItem() const
-{
-	return Value / Quantity;
 }
 
 float FItemStack::GetVolume() const
@@ -31,10 +25,10 @@ float FItemStack::GetMass() const
 
 bool FItemStack::IsValid() const
 {
-	return Item != nullptr && Quantity > 0 && Value >= 0;
+	return Item != nullptr && Quantity > 0;
 }
 
 bool FItemStack::operator==(const FItemStack& Other) const
 {
-	return Item == Other.Item && Quantity == Other.Quantity && Value == Other.Value;
+	return Item == Other.Item && Quantity == Other.Quantity;
 }

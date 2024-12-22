@@ -49,12 +49,6 @@ public:
 	int GetItemQuantity(UItem* Item);
 
 	UFUNCTION(BlueprintCallable)
-	float GetValue();
-
-	UFUNCTION(BlueprintCallable)
-	float GetItemValue(UItem* Item);
-
-	UFUNCTION(BlueprintCallable)
 	float GetVolume();
 
 	UFUNCTION(BlueprintCallable)
@@ -70,9 +64,9 @@ public:
 	bool CanFit(int ExtraVolume, int ExtraMass);
 	
 	UFUNCTION(BlueprintCallable)
-	bool AddItems(UItem* Item, int Quantity, float Value);
+	bool AddItems(UItem* Item, int Quantity);
 
 	UFUNCTION(BlueprintCallable)
-	bool RemoveItems(UItem* Item, int Quantity, float& Value);
+	bool RemoveItems(UItem* Item, int Quantity);
 	
 };
