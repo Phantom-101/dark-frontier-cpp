@@ -15,12 +15,12 @@
 #include "Structures/StructureGameplay.h"
 #include "Structures/StructureIndices.h"
 #include "Structures/StructurePart.h"
-#include "UI/Widgets/CustomGameplayEffectUIData.h"
-#include "UI/Widgets/GameplayEffectIndicatorObject.h"
 #include "UI/Screens/GameUI/StructurePartControls.h"
 #include "UI/Screens/GameUI/StructureSelectors.h"
 #include "UI/Screens/GameUI/Controls/StructurePartControlsMapping.h"
-#include "UI/Widgets/Arc.h"
+#include "UI/Widgets/Visuals/Arc.h"
+#include "UI/Widgets/Visuals/CustomGameplayEffectUIData.h"
+#include "UI/Widgets/Visuals/GameplayEffectIndicatorObject.h"
 
 TOptional<FUIInputConfig> UGameUI::GetDesiredInputConfig() const
 {

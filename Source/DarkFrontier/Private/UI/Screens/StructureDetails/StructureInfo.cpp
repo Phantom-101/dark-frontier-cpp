@@ -13,7 +13,7 @@
 #include "Structures/StructurePart.h"
 #include "Structures/StructurePartGroup.h"
 #include "UI/Screens/StructureDetails/StructurePartCardList.h"
-#include "UI/Widgets/InfoField.h"
+#include "UI/Widgets/Visuals/InfoField.h"
 
 void UStructureInfo::NativeConstruct()
 {

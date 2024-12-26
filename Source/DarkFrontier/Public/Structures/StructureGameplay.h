@@ -3,7 +3,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Gameplay/GameplaySubobject.h"
 #include "Gameplay/Attributes/AttributeMacros.h"
 #include "Gameplay/Attributes/DetectionAttributeSet.h"
 #include "Gameplay/Attributes/EnergyAttributeSet.h"
@@ -23,7 +22,7 @@ class AStructure;
  * 
  */
 UCLASS(DefaultToInstanced)
-class DARKFRONTIER_API UStructureGameplay : public UGameplaySubobject
+class DARKFRONTIER_API UStructureGameplay : public UObject
 {
 	GENERATED_BODY()
 
@@ -58,9 +57,24 @@ public:
 	static UStructureGameplay* CreateGameplay(AStructure* Structure);
 
 	UFUNCTION(BlueprintCallable)
+	void Initialize() const;
+
+	UFUNCTION(BlueprintCallable)
 	AStructure* GetStructure() const;
-	
-	virtual UStructureAbilitySystemComponent* GetAbilitySystemComponent() const override;
+
+	UFUNCTION(BlueprintCallable)
+	FActiveGameplayEffectHandle ApplyEffect(TSubclassOf<UGameplayEffect> Effect) const;
+
+	UFUNCTION(BlueprintCallable)
+	void RemoveEffect(FActiveGameplayEffectHandle Handle) const;
+
+	UFUNCTION(BlueprintCallable)
+	FGameplayAbilitySpecHandle GiveAbility(TSubclassOf<UStructureAbility> Ability) const;
+
+	UFUNCTION(BlueprintCallable)
+	void ClearAbility(FGameplayAbilitySpecHandle Handle) const;
+
+	virtual UStructureAbilitySystemComponent* GetAbilitySystemComponent() const;
 
 	ATTRIBUTE_PASSTHROUGH_ALIAS(HullAttributes, MaxIntegrity, MaxHull);
 	ATTRIBUTE_PASSTHROUGH_ALIAS(HullAttributes, Integrity, Hull);

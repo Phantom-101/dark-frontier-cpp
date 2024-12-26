@@ -12,7 +12,7 @@ class AStructure;
 /**
  * 
  */
-UCLASS()
+UCLASS(Abstract)
 class DARKFRONTIER_API UInventoryOption : public UCommonUserWidget
 {
 	GENERATED_BODY()

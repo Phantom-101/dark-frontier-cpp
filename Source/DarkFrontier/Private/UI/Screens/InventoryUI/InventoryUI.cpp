@@ -13,8 +13,8 @@
 #include "UI/Screens/UIBase.h"
 #include "UI/Screens/InventoryUI/InventoryOption.h"
 #include "UI/Screens/InventoryUI/ItemList.h"
-#include "UI/Widgets/InfoField.h"
-#include "UI/Widgets/ListSelectionModal.h"
+#include "UI/Widgets/Modals/ListBoxModal.h"
+#include "UI/Widgets/Visuals/InfoField.h"
 
 void UInventoryUI::NativeConstruct()
 {
@@ -24,7 +24,7 @@ void UInventoryUI::NativeConstruct()
 	SwitchButton->OnClicked().AddUObject<UInventoryUI>(this, &UInventoryUI::HandleSwitch);
 }
 
-void UInventoryUI::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
+void UInventoryUI::NativeTick(const FGeometry& MyGeometry, const float InDeltaTime)
 {
 	Super::NativeTick(MyGeometry, InDeltaTime);
 
@@ -93,9 +93,9 @@ void UInventoryUI::HandleSwitch()
 		HandleSwitchCanceled();
 	}
 	
-	CurrentModal = Base->PushModal<UListSelectionModal>(SelectionModalClass);
+	CurrentModal = Base->PushModal<UListBoxModal>(ListBoxModalClass);
 	CurrentModal->SetOptionsWithInitial(Structures, CurrentStructure);
-	CurrentModal->SetBuilder([CurrentModal = this->CurrentModal, SelectionOptionClass = this->SelectionOptionClass](UObject* Structure)
+	CurrentModal->SetBuilder([CurrentModal = this->CurrentModal, SelectionOptionClass = this->InventoryOptionClass](UObject* Structure)
 	{
 		UInventoryOption* Option = CreateWidget<UInventoryOption>(CurrentModal, SelectionOptionClass);
 		Option->Init(Cast<AStructure>(Structure));
