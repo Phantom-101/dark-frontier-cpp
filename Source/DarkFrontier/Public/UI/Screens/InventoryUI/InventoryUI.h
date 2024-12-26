@@ -8,7 +8,7 @@
 
 class UInventoryOption;
 class AStructure;
-class UListSelectionModal;
+class UListBoxModal;
 class UInfoField;
 class UCommonTextBlock;
 class UImage;
@@ -71,16 +71,16 @@ protected:
 	TObjectPtr<UCommonButtonBase> DisposeButton;
 
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly)
-	TSubclassOf<UListSelectionModal> SelectionModalClass;
+	TSubclassOf<UListBoxModal> ListBoxModalClass;
 
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly)
-	TSubclassOf<UInventoryOption> SelectionOptionClass;
+	TSubclassOf<UInventoryOption> InventoryOptionClass;
 
 	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly)
 	TObjectPtr<AStructure> CurrentStructure;
 
 	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly)
-	TObjectPtr<UListSelectionModal> CurrentModal;
+	TObjectPtr<UListBoxModal> CurrentModal;
 
 	virtual void NativeConstruct() override;
 

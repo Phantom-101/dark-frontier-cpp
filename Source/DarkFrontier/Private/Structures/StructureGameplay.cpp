@@ -1,6 +1,7 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 #include "Structures/StructureGameplay.h"
+#include "Log.h"
 #include "Gameplay/Attributes/EnergyAttributeSet.h"
 #include "Gameplay/Attributes/HullAttributeSet.h"
 #include "Gameplay/Attributes/LayoutAttributeSet.h"
@@ -28,9 +29,66 @@ UStructureGameplay* UStructureGameplay::CreateGameplay(AStructure* Structure)
 	return Gameplay;
 }
 
+void UStructureGameplay::Initialize() const
+{
+	AActor* Actor = Cast<AActor>(GetOuter());
+	GetAbilitySystemComponent()->InitAbilityActorInfo(Actor, Actor);
+}
+
 AStructure* UStructureGameplay::GetStructure() const
 {
-	return Cast<AStructure>(GetActor());
+	return Cast<AStructure>(GetOuter());
+}
+
+FActiveGameplayEffectHandle UStructureGameplay::ApplyEffect(const TSubclassOf<UGameplayEffect> Effect) const
+{
+	Initialize();
+	if(IsValid(Effect))
+	{
+		UStructureAbilitySystemComponent* Comp = GetAbilitySystemComponent();
+		
+		FGameplayEffectContextHandle EffectContext = Comp->MakeEffectContext();
+		EffectContext.AddSourceObject(GetStructure());
+
+		const FGameplayEffectSpecHandle SpecHandle = Comp->MakeOutgoingSpec(Effect, 1, EffectContext);
+
+		if(SpecHandle.IsValid())
+		{
+			const FActiveGameplayEffectHandle EffectHandle = Comp->ApplyGameplayEffectSpecToSelf(*SpecHandle.Data.Get());
+			UE_LOG(LogDarkFrontier, Log, TEXT("Applied effect %s"), *Effect->GetName());
+			return EffectHandle;
+		}
+	}
+
+	return FActiveGameplayEffectHandle();
+}
+
+void UStructureGameplay::RemoveEffect(const FActiveGameplayEffectHandle Handle) const
+{
+	if(Handle.IsValid())
+	{
+		GetAbilitySystemComponent()->RemoveActiveGameplayEffect(Handle);
+	}
+}
+
+FGameplayAbilitySpecHandle UStructureGameplay::GiveAbility(const TSubclassOf<UStructureAbility> Ability) const
+{
+	if(GetStructure()->HasAuthority() && IsValid(Ability))
+	{
+		UStructureAbilitySystemComponent* Comp = GetAbilitySystemComponent();
+		
+		return Comp->GiveAbility(FGameplayAbilitySpec(Ability, 1, INDEX_NONE, Comp));
+	}
+
+	return FGameplayAbilitySpecHandle();
+}
+
+void UStructureGameplay::ClearAbility(const FGameplayAbilitySpecHandle Handle) const
+{
+	if(GetStructure()->HasAuthority() && Handle.IsValid())
+	{
+		GetAbilitySystemComponent()->ClearAbility(Handle);
+	}
 }
 
 UStructureAbilitySystemComponent* UStructureGameplay::GetAbilitySystemComponent() const
