@@ -11,8 +11,8 @@ class UCommonButtonBase;
 class UCommonListView;
 class UCommonTextBlock;
 
-DECLARE_MULTICAST_DELEGATE_OneParam(FConfirmed, UObject*)
-DECLARE_MULTICAST_DELEGATE(FCanceled)
+DECLARE_MULTICAST_DELEGATE_OneParam(FListBoxModalConfirmed, UObject*)
+DECLARE_MULTICAST_DELEGATE(FListBoxModalCanceled)
 
 /**
  * 
@@ -24,9 +24,9 @@ class DARKFRONTIER_API UListBoxModal : public UCommonActivatableWidget
 	
 public:
 
-	FConfirmed OnConfirmed;
+	FListBoxModalConfirmed OnConfirmed;
 
-	FCanceled OnCanceled;
+	FListBoxModalCanceled OnCanceled;
 
 protected:
 	
@@ -45,6 +45,8 @@ protected:
 	virtual void NativeConstruct() override;
 
 	virtual void NativeOnActivated() override;
+
+	virtual void NativeOnDeactivated() override;
 
 	virtual UWidget* NativeGetDesiredFocusTarget() const override;
 	
@@ -65,6 +67,8 @@ public:
 	UObject* GetCurrentOption() const;
 
 private:
+
+	void HandleChanged(UObject* Current) const;
 
 	void HandleConfirm();
 

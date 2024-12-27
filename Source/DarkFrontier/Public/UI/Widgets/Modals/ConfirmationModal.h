@@ -6,7 +6,7 @@
 #include "CommonActivatableWidget.h"
 #include "ConfirmationModal.generated.h"
 
-DECLARE_MULTICAST_DELEGATE(FActionTaken)
+DECLARE_MULTICAST_DELEGATE(FConfirmationModalResolved)
 
 /**
  * 
@@ -18,9 +18,9 @@ class DARKFRONTIER_API UConfirmationModal : public UCommonActivatableWidget
 
 public:
 
-	FActionTaken OnConfirmed;
+	FConfirmationModalResolved OnConfirmed;
 
-	FActionTaken OnCanceled;
+	FConfirmationModalResolved OnCanceled;
 
 protected:
 	
@@ -39,6 +39,8 @@ protected:
 	virtual void NativeConstruct() override;
 
 	virtual void NativeOnActivated() override;
+
+	virtual void NativeOnDeactivated() override;
 
 	virtual UWidget* NativeGetDesiredFocusTarget() const override;
 	

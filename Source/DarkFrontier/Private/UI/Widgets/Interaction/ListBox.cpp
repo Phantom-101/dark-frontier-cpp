@@ -21,6 +21,7 @@ void UListBox::SetCurrentOption(UObject* Option)
 	if(Option == nullptr || Options.Contains(Option))
 	{
 		CurrentOption = Option;
+		OnChanged.Broadcast(CurrentOption);
 	}
 }
 

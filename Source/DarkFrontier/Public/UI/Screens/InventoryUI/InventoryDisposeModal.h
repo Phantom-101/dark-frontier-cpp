@@ -1,0 +1,71 @@
+﻿// Fill out your copyright notice in the Description page of Project Settings.
+
+#pragma once
+
+#include "CoreMinimal.h"
+#include "CommonActivatableWidget.h"
+#include "InventoryDisposeModal.generated.h"
+
+class UItem;
+class UItemOption;
+class UInventory;
+struct FItemStack;
+class UCommonButtonBase;
+class UQuantityInput;
+class UListBox;
+
+DECLARE_MULTICAST_DELEGATE_OneParam(FInventoryDisposeModalConfirmed, FItemStack)
+DECLARE_MULTICAST_DELEGATE(FInventoryDisposeModalCanceled)
+
+/**
+ * 
+ */
+UCLASS(Abstract)
+class DARKFRONTIER_API UInventoryDisposeModal : public UCommonActivatableWidget
+{
+	GENERATED_BODY()
+
+public:
+
+	FInventoryDisposeModalConfirmed OnConfirmed;
+
+	FInventoryDisposeModalCanceled OnCanceled;
+
+protected:
+
+	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
+	TObjectPtr<UQuantityInput> QuantityInput;
+
+	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
+	TObjectPtr<UCommonButtonBase> ConfirmButton;
+
+	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
+	TObjectPtr<UCommonButtonBase> CancelButton;
+
+	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly)
+	TObjectPtr<UInventory> Inventory;
+
+	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly)
+	TObjectPtr<UItem> Item;
+
+	virtual void NativeConstruct() override;
+	
+	virtual void NativeOnActivated() override;
+
+	virtual void NativeOnDeactivated() override;
+
+	virtual UWidget* NativeGetDesiredFocusTarget() const override;
+	
+	virtual bool NativeOnHandleBackAction() override;
+
+public:
+
+	void Init(UInventory* InInventory, UItem* InItem);
+
+private:
+
+	void HandleConfirm();
+
+	void HandleCancel();
+	
+};

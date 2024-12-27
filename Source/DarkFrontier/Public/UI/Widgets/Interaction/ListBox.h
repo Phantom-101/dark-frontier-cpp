@@ -8,6 +8,8 @@
 
 class UCommonListView;
 
+DECLARE_MULTICAST_DELEGATE_OneParam(FChanged, UObject*)
+
 /**
  * 
  */
@@ -15,6 +17,10 @@ UCLASS(Abstract)
 class DARKFRONTIER_API UListBox : public UCommonUserWidget
 {
 	GENERATED_BODY()
+
+public:
+
+	FChanged OnChanged;
 
 protected:
 	

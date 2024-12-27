@@ -6,6 +6,8 @@
 #include "CommonActivatableWidget.h"
 #include "InventoryUI.generated.h"
 
+struct FItemStack;
+class UInventoryDisposeModal;
 class UInventoryOption;
 class AStructure;
 class UListBoxModal;
@@ -76,11 +78,17 @@ protected:
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly)
 	TSubclassOf<UInventoryOption> InventoryOptionClass;
 
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly)
+	TSubclassOf<UInventoryDisposeModal> DisposeModalClass;
+
 	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly)
 	TObjectPtr<AStructure> CurrentStructure;
 
 	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly)
-	TObjectPtr<UListBoxModal> CurrentModal;
+	TObjectPtr<UListBoxModal> SwitchModal;
+	
+	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly)
+	TObjectPtr<UInventoryDisposeModal> DisposeModal;
 
 	virtual void NativeConstruct() override;
 
@@ -104,6 +112,10 @@ private:
 
 	void HandleSwitchCanceled();
 
-	void DisposeModal();
+	void HandleDispose();
+
+	void HandleDisposeConfirmed(const FItemStack Dispose);
+
+	void HandleDisposeCanceled();
 	
 };

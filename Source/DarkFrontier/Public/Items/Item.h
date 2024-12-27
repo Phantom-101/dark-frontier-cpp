@@ -3,9 +3,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "ItemObject.h"
 #include "Engine/DataAsset.h"
 #include "Item.generated.h"
 
+class UItemObject;
 /**
  * 
  */
@@ -30,5 +32,14 @@ public:
 
 	UPROPERTY(BlueprintReadOnly, EditAnywhere)
 	float Mass = 0;
+
+	UItemObject* ToObject();
 	
 };
+
+inline UItemObject* UItem::ToObject()
+{
+	UItemObject* Obj = NewObject<UItemObject>();
+	Obj->Item = this;
+	return Obj;
+}
