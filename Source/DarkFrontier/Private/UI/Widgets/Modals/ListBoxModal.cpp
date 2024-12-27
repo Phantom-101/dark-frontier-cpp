@@ -9,6 +9,8 @@ void UListBoxModal::NativeConstruct()
 {
 	Super::NativeConstruct();
 
+	ListBox->OnChanged.Clear();
+	ListBox->OnChanged.AddUObject<UListBoxModal>(this, &UListBoxModal::HandleChanged);
 	ConfirmButton->OnClicked().Clear();
 	ConfirmButton->OnClicked().AddUObject<UListBoxModal>(this, &UListBoxModal::HandleConfirm);
 	CancelButton->OnClicked().Clear();
@@ -20,6 +22,14 @@ void UListBoxModal::NativeOnActivated()
 	Super::NativeOnActivated();
 
 	GetDesiredFocusTarget()->SetFocus();
+}
+
+void UListBoxModal::NativeOnDeactivated()
+{
+	Super::NativeOnDeactivated();
+
+	OnConfirmed.Clear();
+	OnCanceled.Clear();
 }
 
 UWidget* UListBoxModal::NativeGetDesiredFocusTarget() const
@@ -46,8 +56,6 @@ void UListBoxModal::SetOptionsWithInitial(const TArray<UObject*>& InOptions, UOb
 void UListBoxModal::SetCurrentOption(UObject* Option) const
 {
 	ListBox->SetCurrentOption(Option);
-
-	ConfirmButton->SetIsEnabled(ListBox->IsCurrentOptionValid()); // TODO listen to listbox current option change event
 }
 
 void UListBoxModal::SetBuilder(const TFunction<UWidget*(UObject*)>& Builder) const
@@ -65,17 +73,22 @@ UObject* UListBoxModal::GetCurrentOption() const
 	return ListBox->GetCurrentOption();
 }
 
+void UListBoxModal::HandleChanged(UObject* Current) const
+{
+	ConfirmButton->SetIsEnabled(ListBox->IsCurrentOptionValid());
+}
+
 void UListBoxModal::HandleConfirm()
 {
 	if(ListBox->IsCurrentOptionValid())
 	{
-		DeactivateWidget();
 		OnConfirmed.Broadcast(ListBox->GetCurrentOption());
+		DeactivateWidget();
 	}
 }
 
 void UListBoxModal::HandleCancel()
 {
-	DeactivateWidget();
 	OnCanceled.Broadcast();
+	DeactivateWidget();
 }

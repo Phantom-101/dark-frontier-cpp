@@ -9,6 +9,19 @@ TArray<FItemStack> UInventory::GetStacks()
 	return ItemStacks;
 }
 
+TArray<UItem*> UInventory::GetItems()
+{
+	TArray<UItem*> Items;
+	for(const FItemStack& Stack : ItemStacks)
+	{
+		if(!Items.Contains(Stack.Item))
+		{
+			Items.Add(Stack.Item);
+		}
+	}
+	return Items;
+}
+
 int UInventory::GetQuantity()
 {
 	int Quantity = 0;

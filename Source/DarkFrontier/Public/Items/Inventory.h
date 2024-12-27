@@ -43,6 +43,9 @@ public:
 	TArray<FItemStack> GetStacks();
 
 	UFUNCTION(BlueprintCallable)
+	TArray<UItem*> GetItems();
+
+	UFUNCTION(BlueprintCallable)
 	int GetQuantity();
 
 	UFUNCTION(BlueprintCallable)

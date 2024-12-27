@@ -21,6 +21,14 @@ void UConfirmationModal::NativeOnActivated()
 	GetDesiredFocusTarget()->SetFocus();
 }
 
+void UConfirmationModal::NativeOnDeactivated()
+{
+	Super::NativeOnDeactivated();
+	
+	OnConfirmed.Clear();
+	OnCanceled.Clear();
+}
+
 UWidget* UConfirmationModal::NativeGetDesiredFocusTarget() const
 {
 	return CancelButton;
@@ -40,12 +48,12 @@ void UConfirmationModal::SetText(const FText NewHeader, const FText NewBody) con
 
 void UConfirmationModal::HandleConfirm()
 {
-	DeactivateWidget();
 	OnConfirmed.Broadcast();
+	DeactivateWidget();
 }
 
 void UConfirmationModal::HandleCancel()
 {
-	DeactivateWidget();
 	OnCanceled.Broadcast();
+	DeactivateWidget();
 }
