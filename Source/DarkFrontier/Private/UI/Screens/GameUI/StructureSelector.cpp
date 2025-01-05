@@ -13,7 +13,8 @@ void UStructureSelector::NativeConstruct()
 	Super::NativeConstruct();
 
 	UCanvasPanelSlot* PanelSlot = UWidgetLayoutLibrary::SlotAsCanvasSlot(this);
-	PanelSlot->SetAlignment(FVector2D(0.5, 0.5));
+	PanelSlot->SetAlignment(FVector2D(0.5));
+	PanelSlot->SetSize(FVector2D(100));
 
 	SelectorButton->OnClicked().Clear();
 	SelectorButton->OnClicked().AddUObject<UStructureSelector>(this, &UStructureSelector::OnClicked);
@@ -26,27 +27,13 @@ void UStructureSelector::NativeTick(const FGeometry& MyGeometry, float InDeltaTi
 	UCanvasPanelSlot* PanelSlot = UWidgetLayoutLibrary::SlotAsCanvasSlot(this);
 	APlayerController* Controller = GetWorld()->GetFirstPlayerController();
 
-	// Set position
 	FVector2D ScreenPos;
 	UWidgetLayoutLibrary::ProjectWorldLocationToWidgetPosition(Controller, Target->GetActorLocation(), ScreenPos, false);
 	PanelSlot->SetPosition(ScreenPos);
-
-	// Set size
-	PanelSlot->SetSize(FVector2D(100, 100));
-
-	// Set visibility
-	AStructure* Player = Cast<AStructure>(Controller->GetPawn());
-	if(IsValid(Player))
-	{
-		if(Target == Player)
-		{
-			SetVisibility(ESlateVisibility::Collapsed);
-		}
-		else
-		{
-			SetVisibility(ESlateVisibility::SelfHitTestInvisible);
-		}
-	}
+	
+	SetRenderScale(Target->IsSelected() ? FVector2D(1.5) : FVector2D(1));
+	
+	SetVisibility(Target->IsPlayer() ? ESlateVisibility::Collapsed : ESlateVisibility::SelfHitTestInvisible);
 }
 
 bool UStructureSelector::TryInit(AStructure* InTarget)

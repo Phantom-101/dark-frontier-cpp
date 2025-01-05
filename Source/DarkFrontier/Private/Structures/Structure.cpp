@@ -307,6 +307,34 @@ void AStructure::SetTarget(AStructure* InTarget)
 	Target = InTarget;
 }
 
+bool AStructure::IsPlayer() const
+{
+	const APlayerController* PlayerController = GetWorld()->GetFirstPlayerController();
+	if(PlayerController == nullptr)
+	{
+		return false;
+	}
+
+	return PlayerController->GetPawn() == this;
+}
+
+bool AStructure::IsSelected() const
+{
+	const APlayerController* PlayerController = GetWorld()->GetFirstPlayerController();
+	if(PlayerController == nullptr)
+	{
+		return false;
+	}
+
+	const AStructure* Player = Cast<AStructure>(PlayerController->GetPawn());
+	if(Player == nullptr)
+	{
+		return false;
+	}
+
+	return Player->Target == this;
+}
+
 UStructureGameplay* AStructure::GetGameplay() const
 {
 	return Gameplay;
