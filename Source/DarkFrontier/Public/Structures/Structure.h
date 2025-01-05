@@ -150,6 +150,12 @@ public:
 	UFUNCTION(BlueprintCallable, Category="Combat")
 	void SetTarget(AStructure* InTarget);
 
+	UFUNCTION(BlueprintCallable, Category="Combat")
+	bool IsPlayer() const;
+
+	UFUNCTION(BlueprintCallable, Category="Combat")
+	bool IsSelected() const;
+
 	UFUNCTION(BlueprintCallable)
 	UStructureGameplay* GetGameplay() const;
 
