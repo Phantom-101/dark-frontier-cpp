@@ -14,6 +14,7 @@
 #include "UI/Screens/UIBase.h"
 #include "UI/Screens/InventoryUI/InventoryDisposeModal.h"
 #include "UI/Screens/InventoryUI/InventoryOption.h"
+#include "UI/Screens/InventoryUI/InventoryTransferModal.h"
 #include "UI/Screens/InventoryUI/ItemList.h"
 #include "UI/Widgets/Modals/ListBoxModal.h"
 #include "UI/Widgets/Visuals/InfoField.h"
@@ -24,6 +25,8 @@ void UInventoryUI::NativeConstruct()
 
 	SwitchButton->OnClicked().Clear();
 	SwitchButton->OnClicked().AddUObject<UInventoryUI>(this, &UInventoryUI::HandleSwitch);
+	TransferButton->OnClicked().Clear();
+	TransferButton->OnClicked().AddUObject<UInventoryUI>(this, &UInventoryUI::HandleTransfer);
 	DisposeButton->OnClicked().Clear();
 	DisposeButton->OnClicked().AddUObject<UInventoryUI>(this, &UInventoryUI::HandleDispose);
 }
@@ -74,31 +77,15 @@ UInventory* UInventoryUI::GetCurrentInventory() const
 
 void UInventoryUI::HandleSwitch()
 {
-	AStructure* Root = CurrentStructure;
-	while(Root->GetLocation()->GetDockStructure() != nullptr)
-	{
-		Root = Root->GetLocation()->GetDockStructure();
-	}
-	
-	TArray<UObject*> Structures;
-	Structures.Add(Root);
-
-	int Index = 0;
-	while(Index < Structures.Num())
-	{
-		Structures.Append(Cast<AStructure>(Structures[Index])->GetLocation()->GetDockers());
-		Index++;
-	}
-
 	const UUIBase* Base = UUIBlueprintFunctionLibrary::GetParentWidgetOfClass<UUIBase>(this);
 
 	if(SwitchModal != nullptr)
 	{
 		HandleSwitchCanceled();
 	}
-	
+
 	SwitchModal = Base->PushModal<UListBoxModal>(ListBoxModalClass);
-	SwitchModal->SetOptionsWithInitial(Structures, CurrentStructure);
+	SwitchModal->SetOptionsWithInitial(TArray<UObject*>(CurrentStructure->GetLocation()->GetInTree()), CurrentStructure);
 	SwitchModal->SetBuilder([Owner = SwitchModal, Class = InventoryOptionClass](UObject* Structure)
 	{
 		UInventoryOption* Option = CreateWidget<UInventoryOption>(Owner, Class);
@@ -123,6 +110,39 @@ void UInventoryUI::HandleSwitchCanceled()
 {
 	SwitchModal->DeactivateWidget();
 	SwitchModal = nullptr;
+}
+
+void UInventoryUI::HandleTransfer()
+{
+	const UUIBase* Base = UUIBlueprintFunctionLibrary::GetParentWidgetOfClass<UUIBase>(this);
+
+	if(TransferModal != nullptr)
+	{
+		HandleTransferCanceled();
+	}
+
+	TArray<AStructure*> Targets = CurrentStructure->GetLocation()->GetInTree();
+	Targets.Remove(CurrentStructure);
+	
+	TransferModal = Base->PushModal<UInventoryTransferModal>(TransferModalClass);
+	TransferModal->Init(ItemList->GetInventory(), ItemList->GetSelectedItem(), Targets);
+
+	TransferModal->OnConfirmed.Clear();
+	TransferModal->OnConfirmed.AddUObject<UInventoryUI>(this, &UInventoryUI::HandleTransferConfirmed);
+}
+
+void UInventoryUI::HandleTransferConfirmed(const FItemStack Transfer, AStructure* Target)
+{
+	ItemList->GetInventory()->RemoveItems(Transfer.Item, Transfer.Quantity);
+	Target->GetInventory()->AddItems(Transfer.Item, Transfer.Quantity);
+
+	HandleTransferCanceled();
+}
+
+void UInventoryUI::HandleTransferCanceled()
+{
+	TransferModal->DeactivateWidget();
+	TransferModal = nullptr;
 }
 
 void UInventoryUI::HandleDispose()

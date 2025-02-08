@@ -49,7 +49,7 @@ protected:
 	TObjectPtr<UItem> Item;
 
 	virtual void NativeConstruct() override;
-	
+
 	virtual void NativeOnActivated() override;
 
 	virtual void NativeOnDeactivated() override;

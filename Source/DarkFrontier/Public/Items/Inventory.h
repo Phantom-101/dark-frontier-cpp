@@ -58,10 +58,16 @@ public:
 	float GetItemVolume(UItem* Item);
 
 	UFUNCTION(BlueprintCallable)
+	float GetVolumeRemaining();
+
+	UFUNCTION(BlueprintCallable)
 	float GetMass();
 
 	UFUNCTION(BlueprintCallable)
 	float GetItemMass(UItem* Item);
+
+	UFUNCTION(BlueprintCallable)
+	float GetMassRemaining();
 
 	UFUNCTION(BlueprintCallable)
 	bool CanFit(int ExtraVolume, int ExtraMass);

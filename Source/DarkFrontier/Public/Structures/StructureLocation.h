@@ -62,5 +62,11 @@ public:
 	
 	UFUNCTION(BlueprintCallable)
 	TArray<AStructure*> GetDockers() const;
+
+	UFUNCTION(BlueprintCallable)
+	TArray<AStructure*> GetInSubTree() const;
+
+	UFUNCTION(BlueprintCallable)
+	TArray<AStructure*> GetInTree() const;
 	
 };
