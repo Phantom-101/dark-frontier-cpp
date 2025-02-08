@@ -66,6 +66,11 @@ float UInventory::GetItemVolume(UItem* Item)
 	return 0;
 }
 
+float UInventory::GetVolumeRemaining()
+{
+	return MaxVolume - GetVolume();
+}
+
 float UInventory::GetMass()
 {
 	float Mass = 0;
@@ -86,6 +91,11 @@ float UInventory::GetItemMass(UItem* Item)
 		}
 	}
 	return 0;
+}
+
+float UInventory::GetMassRemaining()
+{
+	return MaxMass - GetMass();
 }
 
 bool UInventory::CanFit(const int ExtraVolume, const int ExtraMass)

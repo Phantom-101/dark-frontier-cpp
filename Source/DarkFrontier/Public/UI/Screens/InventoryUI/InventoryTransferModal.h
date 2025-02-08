@@ -4,34 +4,38 @@
 
 #include "CoreMinimal.h"
 #include "CommonActivatableWidget.h"
-#include "InventoryDisposeModal.generated.h"
+#include "InventoryTransferModal.generated.h"
 
+class AStructure;
+class UInventoryOption;
+class UListBox;
 class UItem;
-class UItemOption;
 class UInventory;
-struct FItemStack;
 class UCommonButtonBase;
 class UQuantityInput;
-class UListBox;
+struct FItemStack;
 
-DECLARE_MULTICAST_DELEGATE_OneParam(FInventoryDisposeModalConfirmed, FItemStack)
-DECLARE_MULTICAST_DELEGATE(FInventoryDisposeModalCanceled)
+DECLARE_MULTICAST_DELEGATE_TwoParams(FInventoryTransferModalConfirmed, FItemStack, AStructure*)
+DECLARE_MULTICAST_DELEGATE(FInventoryTransferModalCanceled)
 
 /**
  * 
  */
 UCLASS(Abstract)
-class DARKFRONTIER_API UInventoryDisposeModal : public UCommonActivatableWidget
+class DARKFRONTIER_API UInventoryTransferModal : public UCommonActivatableWidget
 {
 	GENERATED_BODY()
 
 public:
 
-	FInventoryDisposeModalConfirmed OnConfirmed;
+	FInventoryTransferModalConfirmed OnConfirmed;
 
-	FInventoryDisposeModalCanceled OnCanceled;
+	FInventoryTransferModalCanceled OnCanceled;
 
 protected:
+
+	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
+	TObjectPtr<UListBox> TargetListBox;
 
 	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
 	TObjectPtr<UQuantityInput> QuantityInput;
@@ -41,6 +45,9 @@ protected:
 
 	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
 	TObjectPtr<UCommonButtonBase> CancelButton;
+
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly)
+	TSubclassOf<UInventoryOption> InventoryOptionClass;
 
 	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly)
 	TObjectPtr<UInventory> Inventory;
@@ -60,9 +67,11 @@ protected:
 
 public:
 
-	void Init(UInventory* InInventory, UItem* InItem);
+	void Init(UInventory* InInventory, UItem* InItem, const TArray<AStructure*>& InTargets);
 
 private:
+
+	void HandleTargetChange(UObject* Target) const;
 
 	void HandleConfirm();
 

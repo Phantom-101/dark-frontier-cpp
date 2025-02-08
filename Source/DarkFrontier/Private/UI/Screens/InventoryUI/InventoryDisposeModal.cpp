@@ -54,7 +54,6 @@ void UInventoryDisposeModal::HandleConfirm()
 {
 	OnConfirmed.Broadcast(FItemStack(Item, QuantityInput->GetQuantity()));
 	DeactivateWidget();
-	
 }
 
 void UInventoryDisposeModal::HandleCancel()

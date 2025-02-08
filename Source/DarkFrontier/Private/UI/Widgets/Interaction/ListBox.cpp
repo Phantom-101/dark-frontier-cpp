@@ -12,7 +12,7 @@ void UListBox::SetOptions(const TArray<UObject*>& InOptions)
 
 void UListBox::SetOptionsWithInitial(const TArray<UObject*>& InOptions, UObject* Initial)
 {
-	SetOptions(InOptions);
+	Options = InOptions;
 	SetCurrentOption(Initial);
 }
 

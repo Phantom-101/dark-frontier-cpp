@@ -95,3 +95,29 @@ TArray<AStructure*> UStructureLocation::GetDockers() const
 {
 	return Dockers;
 }
+
+TArray<AStructure*> UStructureLocation::GetInSubTree() const
+{
+	TArray<AStructure*> Structures;
+	Structures.Add(GetStructure());
+
+	int Index = 0;
+	while(Index < Structures.Num())
+	{
+		Structures.Append(Cast<AStructure>(Structures[Index])->GetLocation()->GetDockers());
+		Index++;
+	}
+
+	return Structures;
+}
+
+TArray<AStructure*> UStructureLocation::GetInTree() const
+{
+	const AStructure* Root = GetStructure();
+	while(Root->GetLocation()->GetDockStructure() != nullptr)
+	{
+		Root = Root->GetLocation()->GetDockStructure();
+	}
+	
+	return Root->GetLocation()->GetInSubTree();
+}
