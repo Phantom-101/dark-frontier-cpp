@@ -3,6 +3,12 @@
 #include "Items/Inventory.h"
 #include "Items/Item.h"
 #include "Items/ItemStack.h"
+#include "Structures/Structure.h"
+
+AStructure* UInventory::GetStructure() const
+{
+	return Cast<AStructure>(GetOuter());
+}
 
 TArray<FItemStack> UInventory::GetStacks()
 {

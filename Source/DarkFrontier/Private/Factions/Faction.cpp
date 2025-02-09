@@ -19,7 +19,23 @@ void AFaction::BeginPlay()
 	MilitaryExpansion = FMath::Clamp(MilitaryExpansion, -1, 1);
 }
 
-double AFaction::GetRelation(AFaction* Other)
+double AFaction::GetWealth() const
+{
+	return Wealth;
+}
+
+void AFaction::SetWealth(const double Target)
+{
+	Wealth = Target;
+}
+
+double AFaction::ChangeWealth(const double Delta)
+{
+	SetWealth(Wealth + Delta);
+	return Wealth;
+}
+
+double AFaction::GetRelation(AFaction* Other) const
 {
 	if(Other == this)
 	{

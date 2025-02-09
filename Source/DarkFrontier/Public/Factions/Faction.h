@@ -53,6 +53,9 @@ public:
 	double MilitaryExpansion;
 
 	UPROPERTY(EditAnywhere)
+	double Wealth = 0;
+
+	UPROPERTY(EditAnywhere)
 	TMap<TObjectPtr<AFaction>, double> Relations;
 
 protected:
@@ -61,7 +64,13 @@ protected:
 
 public:
 
-	double GetRelation(AFaction* Other);
+	double GetWealth() const;
+
+	void SetWealth(double Target);
+
+	double ChangeWealth(double Delta);
+
+	double GetRelation(AFaction* Other) const;
 
 	void SetRelation(AFaction* Other, double Target);
 

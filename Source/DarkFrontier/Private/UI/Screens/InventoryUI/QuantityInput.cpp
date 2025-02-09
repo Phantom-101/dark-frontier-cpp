@@ -3,13 +3,14 @@
 #include "UI/Screens/InventoryUI/QuantityInput.h"
 #include "CommonButtonBase.h"
 #include "CommonTextBlock.h"
+#include "Log.h"
 #include "Components/Slider.h"
 
 void UQuantityInput::NativePreConstruct()
 {
 	Super::NativePreConstruct();
 
-	QuantitySlider->SetMinValue(0);
+	QuantitySlider->SetMinValue(MinQuantity);
 	QuantitySlider->SetMaxValue(MaxQuantity);
 	QuantitySlider->SetValue(CurrentQuantity);
 }
@@ -34,6 +35,18 @@ void UQuantityInput::NativeConstruct()
 	RemoveAllButton->OnClicked().AddUObject<UQuantityInput>(this, &UQuantityInput::HandleRemoveAll);
 }
 
+int UQuantityInput::GetMinQuantity() const
+{
+	return MinQuantity;
+}
+
+void UQuantityInput::SetMinQuantity(const int InMin)
+{
+	MinQuantity = InMin;
+	QuantitySlider->SetMinValue(MinQuantity);
+	SetQuantity(CurrentQuantity);
+}
+
 int UQuantityInput::GetMaxQuantity() const
 {
 	return MaxQuantity;
@@ -46,6 +59,12 @@ void UQuantityInput::SetMaxQuantity(const int InMax)
 	SetQuantity(CurrentQuantity);
 }
 
+void UQuantityInput::SetBounds(const int InMin, const int InMax)
+{
+	SetMinQuantity(InMin);
+	SetMaxQuantity(InMax);
+}
+
 int UQuantityInput::GetQuantity() const
 {
 	return CurrentQuantity;
@@ -53,9 +72,9 @@ int UQuantityInput::GetQuantity() const
 
 void UQuantityInput::SetQuantity(const int Target)
 {
-	const int Clamped = FMath::Clamp(Target, 0, MaxQuantity);
+	const int Clamped = FMath::Clamp(Target, MinQuantity, MaxQuantity);
 	CurrentQuantity = Clamped;
-	QuantityText->SetText(FText::FromString(FString::Printf(TEXT("%d/%d"), CurrentQuantity, MaxQuantity)));
+	QuantityText->SetText(FText::FromString(FString::Printf(TEXT("%d/%d/%d"), MinQuantity, CurrentQuantity, MaxQuantity)));
 	QuantitySlider->SetValue(CurrentQuantity);
 }
 
@@ -91,5 +110,5 @@ void UQuantityInput::HandleRemoveTen()
 
 void UQuantityInput::HandleRemoveAll()
 {
-	SetQuantity(0);
+	SetQuantity(MinQuantity);
 }
