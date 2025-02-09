@@ -33,6 +33,9 @@ public:
 	UPROPERTY(BlueprintReadOnly, EditAnywhere)
 	float Mass = 0;
 
+	UPROPERTY(BlueprintReadOnly, EditAnywhere)
+	float Value = 0;
+
 	UItemObject* ToObject();
 	
 };

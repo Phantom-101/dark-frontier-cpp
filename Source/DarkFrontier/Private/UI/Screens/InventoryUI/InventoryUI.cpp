@@ -5,6 +5,7 @@
 #include "CommonTextBlock.h"
 #include "Components/Image.h"
 #include "Components/WidgetSwitcher.h"
+#include "Factions/Faction.h"
 #include "Items/Inventory.h"
 #include "Items/Item.h"
 #include "Items/ItemStack.h"
@@ -14,6 +15,7 @@
 #include "UI/Screens/UIBase.h"
 #include "UI/Screens/InventoryUI/InventoryDisposeModal.h"
 #include "UI/Screens/InventoryUI/InventoryOption.h"
+#include "UI/Screens/InventoryUI/InventoryTradeModal.h"
 #include "UI/Screens/InventoryUI/InventoryTransferModal.h"
 #include "UI/Screens/InventoryUI/ItemList.h"
 #include "UI/Widgets/Modals/ListBoxModal.h"
@@ -25,6 +27,8 @@ void UInventoryUI::NativeConstruct()
 
 	SwitchButton->OnClicked().Clear();
 	SwitchButton->OnClicked().AddUObject<UInventoryUI>(this, &UInventoryUI::HandleSwitch);
+	TradeButton->OnClicked().Clear();
+	TradeButton->OnClicked().AddUObject<UInventoryUI>(this, &UInventoryUI::HandleTrade);
 	TransferButton->OnClicked().Clear();
 	TransferButton->OnClicked().AddUObject<UInventoryUI>(this, &UInventoryUI::HandleTransfer);
 	DisposeButton->OnClicked().Clear();
@@ -79,12 +83,13 @@ void UInventoryUI::HandleSwitch()
 {
 	const UUIBase* Base = UUIBlueprintFunctionLibrary::GetParentWidgetOfClass<UUIBase>(this);
 
-	if(SwitchModal != nullptr)
+	if(IsValid(CurrentModal))
 	{
-		HandleSwitchCanceled();
+		CurrentModal->DeactivateWidget();
+		CurrentModal = nullptr;
 	}
 
-	SwitchModal = Base->PushModal<UListBoxModal>(ListBoxModalClass);
+	UListBoxModal* SwitchModal = Base->PushModal<UListBoxModal>(ListBoxModalClass);
 	SwitchModal->SetOptionsWithInitial(TArray<UObject*>(CurrentStructure->GetLocation()->GetInTree()), CurrentStructure);
 	SwitchModal->SetBuilder([Owner = SwitchModal, Class = InventoryOptionClass](UObject* Structure)
 	{
@@ -95,83 +100,112 @@ void UInventoryUI::HandleSwitch()
 
 	SwitchModal->OnConfirmed.Clear();
 	SwitchModal->OnConfirmed.AddUObject<UInventoryUI>(this, &UInventoryUI::HandleSwitchConfirmed);
-	SwitchModal->OnCanceled.Clear();
-	SwitchModal->OnCanceled.AddUObject<UInventoryUI>(this, &UInventoryUI::HandleSwitchCanceled);
+	CurrentModal = SwitchModal;
 }
 
 void UInventoryUI::HandleSwitchConfirmed(UObject* Selection)
 {
 	SetCurrentStructure(Cast<AStructure>(Selection));
-	
-	HandleSwitchCanceled();
 }
 
-void UInventoryUI::HandleSwitchCanceled()
+void UInventoryUI::HandleTrade()
 {
-	SwitchModal->DeactivateWidget();
-	SwitchModal = nullptr;
+	const UUIBase* Base = UUIBlueprintFunctionLibrary::GetParentWidgetOfClass<UUIBase>(this);
+
+	if(IsValid(CurrentModal))
+	{
+		CurrentModal->DeactivateWidget();
+		CurrentModal = nullptr;
+	}
+
+	TArray<AStructure*> Targets = CurrentStructure->GetLocation()->GetInTree();
+	const AFaction* CurrentFaction = CurrentStructure->GetOwningFaction();
+	int Index = 0;
+	while(Index < Targets.Num())
+	{
+		if(Targets[Index]->GetOwningFaction() == CurrentFaction)
+		{
+			Targets.RemoveAt(Index);
+		}
+		else
+		{
+			Index++;
+		}
+	}
+	
+	UInventoryTradeModal* TradeModal = Base->PushModal<UInventoryTradeModal>(TradeModalClass);
+	TradeModal->Init(ItemList->GetInventory(), ItemList->GetSelectedItem(), Targets);
+
+	TradeModal->OnConfirmed.Clear();
+	TradeModal->OnConfirmed.AddUObject<UInventoryUI>(this, &UInventoryUI::HandleTradeConfirmed);
+
+	CurrentModal = TradeModal;
+}
+
+void UInventoryUI::HandleTradeConfirmed(const FItemStack Trade, AStructure* Target)
+{
+	if(Trade.Quantity > 0)
+	{
+		ItemList->GetInventory()->AddItems(Trade.Item, Trade.Quantity);
+		Target->GetInventory()->RemoveItems(Trade.Item, Trade.Quantity);
+	}
+	else
+	{
+		ItemList->GetInventory()->RemoveItems(Trade.Item, Trade.Quantity);
+		Target->GetInventory()->AddItems(Trade.Item, Trade.Quantity);
+	}
+	ItemList->GetInventory()->GetStructure()->GetOwningFaction()->ChangeWealth(-Trade.Quantity * Trade.Item->Value);
+	Target->GetOwningFaction()->ChangeWealth(Trade.Quantity * Trade.Item->Value);
 }
 
 void UInventoryUI::HandleTransfer()
 {
 	const UUIBase* Base = UUIBlueprintFunctionLibrary::GetParentWidgetOfClass<UUIBase>(this);
 
-	if(TransferModal != nullptr)
+	if(IsValid(CurrentModal))
 	{
-		HandleTransferCanceled();
+		CurrentModal->DeactivateWidget();
+		CurrentModal = nullptr;
 	}
 
 	TArray<AStructure*> Targets = CurrentStructure->GetLocation()->GetInTree();
 	Targets.Remove(CurrentStructure);
 	
-	TransferModal = Base->PushModal<UInventoryTransferModal>(TransferModalClass);
+	UInventoryTransferModal* TransferModal = Base->PushModal<UInventoryTransferModal>(TransferModalClass);
 	TransferModal->Init(ItemList->GetInventory(), ItemList->GetSelectedItem(), Targets);
 
 	TransferModal->OnConfirmed.Clear();
 	TransferModal->OnConfirmed.AddUObject<UInventoryUI>(this, &UInventoryUI::HandleTransferConfirmed);
+
+	CurrentModal = TransferModal;
 }
 
 void UInventoryUI::HandleTransferConfirmed(const FItemStack Transfer, AStructure* Target)
 {
 	ItemList->GetInventory()->RemoveItems(Transfer.Item, Transfer.Quantity);
 	Target->GetInventory()->AddItems(Transfer.Item, Transfer.Quantity);
-
-	HandleTransferCanceled();
-}
-
-void UInventoryUI::HandleTransferCanceled()
-{
-	TransferModal->DeactivateWidget();
-	TransferModal = nullptr;
 }
 
 void UInventoryUI::HandleDispose()
 {
 	const UUIBase* Base = UUIBlueprintFunctionLibrary::GetParentWidgetOfClass<UUIBase>(this);
 
-	if(DisposeModal != nullptr)
+	if(IsValid(CurrentModal))
 	{
-		HandleDisposeCanceled();
+		CurrentModal->DeactivateWidget();
+		CurrentModal = nullptr;
 	}
 	
-	DisposeModal = Base->PushModal<UInventoryDisposeModal>(DisposeModalClass);
+	UInventoryDisposeModal* DisposeModal = Base->PushModal<UInventoryDisposeModal>(DisposeModalClass);
 	DisposeModal->Init(ItemList->GetInventory(), ItemList->GetSelectedItem());
 
 	DisposeModal->OnConfirmed.Clear();
 	DisposeModal->OnConfirmed.AddUObject<UInventoryUI>(this, &UInventoryUI::HandleDisposeConfirmed);
-	DisposeModal->OnCanceled.Clear();
-	DisposeModal->OnCanceled.AddUObject<UInventoryUI>(this, &UInventoryUI::HandleDisposeCanceled);
+
+	CurrentModal = DisposeModal;
 }
 
 void UInventoryUI::HandleDisposeConfirmed(const FItemStack Dispose)
 {
 	ItemList->GetInventory()->RemoveItems(Dispose.Item, Dispose.Quantity);
-	
-	HandleDisposeCanceled();
-}
-
-void UInventoryUI::HandleDisposeCanceled()
-{
-	DisposeModal->DeactivateWidget();
-	DisposeModal = nullptr;
 }

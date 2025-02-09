@@ -45,6 +45,9 @@ protected:
 	TObjectPtr<UCommonButtonBase> RemoveAllButton;
 
 	UPROPERTY(BlueprintReadOnly, EditAnywhere)
+	int MinQuantity = 0;
+
+	UPROPERTY(BlueprintReadOnly, EditAnywhere)
 	int MaxQuantity = 0;
 
 	UPROPERTY(BlueprintReadOnly, EditAnywhere)
@@ -56,9 +59,15 @@ protected:
 
 public:
 
+	int GetMinQuantity() const;
+
+	void SetMinQuantity(int InMin);
+
 	int GetMaxQuantity() const;
 
 	void SetMaxQuantity(int InMax);
+
+	void SetBounds(int InMin, int InMax);
 
 	int GetQuantity() const;
 

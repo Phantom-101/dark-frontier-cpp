@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Inventory.generated.h"
 
+class AStructure;
 class UItem;
 struct FItemStack;
 
@@ -38,6 +39,9 @@ public:
 	FInventoryItemRemoved OnItemRemoved;
 	
 	FInventoryItemChanged OnItemChanged;
+
+	UFUNCTION(BlueprintCallable)
+	AStructure* GetStructure() const;
 
 	UFUNCTION(BlueprintCallable)
 	TArray<FItemStack> GetStacks();

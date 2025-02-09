@@ -6,6 +6,7 @@
 #include "CommonActivatableWidget.h"
 #include "InventoryUI.generated.h"
 
+class UInventoryTradeModal;
 class UInventoryTransferModal;
 struct FItemStack;
 class UInventoryDisposeModal;
@@ -80,6 +81,9 @@ protected:
 	TSubclassOf<UInventoryOption> InventoryOptionClass;
 
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly)
+	TSubclassOf<UInventoryTradeModal> TradeModalClass;
+
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly)
 	TSubclassOf<UInventoryTransferModal> TransferModalClass;
 
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly)
@@ -89,13 +93,7 @@ protected:
 	TObjectPtr<AStructure> CurrentStructure;
 
 	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly)
-	TObjectPtr<UListBoxModal> SwitchModal;
-
-	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly)
-	TObjectPtr<UInventoryTransferModal> TransferModal;
-	
-	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly)
-	TObjectPtr<UInventoryDisposeModal> DisposeModal;
+	TObjectPtr<UCommonActivatableWidget> CurrentModal;
 
 	virtual void NativeConstruct() override;
 
@@ -117,18 +115,16 @@ private:
 
 	void HandleSwitchConfirmed(UObject* Selection);
 
-	void HandleSwitchCanceled();
+	void HandleTrade();
+
+	void HandleTradeConfirmed(const FItemStack Trade, AStructure* Target);
 
 	void HandleTransfer();
 
 	void HandleTransferConfirmed(const FItemStack Transfer, AStructure* Target);
 
-	void HandleTransferCanceled();
-
 	void HandleDispose();
 
 	void HandleDisposeConfirmed(const FItemStack Dispose);
-
-	void HandleDisposeCanceled();
 	
 };
