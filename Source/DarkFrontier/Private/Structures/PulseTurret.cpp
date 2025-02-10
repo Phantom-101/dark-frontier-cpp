@@ -3,14 +3,12 @@
 #include "Structures/PulseTurret.h"
 #include "NiagaraComponent.h"
 #include "NiagaraFunctionLibrary.h"
-#include "Blueprint/UserWidget.h"
 #include "Engine/DamageEvents.h"
 #include "Structures/Structure.h"
 #include "Structures/StructureGameplay.h"
 #include "Structures/StructureIndices.h"
 #include "Structures/Damage/StructureDamageType.h"
 #include "Structures/Indications/TimerIndication.h"
-#include "UI/Screens/GameUI/PulseTurretControls.h"
 
 APulseTurret::APulseTurret()
 {

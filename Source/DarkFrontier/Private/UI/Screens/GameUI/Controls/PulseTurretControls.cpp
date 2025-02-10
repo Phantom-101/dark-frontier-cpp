@@ -1,6 +1,6 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-#include "UI/Screens/GameUI/PulseTurretControls.h"
+#include "UI/Screens/GameUI/Controls/PulseTurretControls.h"
 #include "CommonButtonBase.h"
 #include "Structures/PulseTurret.h"
 

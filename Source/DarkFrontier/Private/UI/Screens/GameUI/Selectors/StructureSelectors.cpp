@@ -1,10 +1,10 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-#include "UI/Screens/GameUI/StructureSelectors.h"
+#include "UI/Screens/GameUI/Selectors/StructureSelectors.h"
 #include "Components/CanvasPanel.h"
 #include "Kismet/GameplayStatics.h"
 #include "Structures/Structure.h"
-#include "UI/Screens/GameUI/StructureSelector.h"
+#include "UI/Screens/GameUI/Selectors/StructureSelector.h"
 
 void UStructureSelectors::UpdateSelectors()
 {

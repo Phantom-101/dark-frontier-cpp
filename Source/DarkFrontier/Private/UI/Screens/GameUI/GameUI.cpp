@@ -12,11 +12,13 @@
 #include "Components/ScrollBox.h"
 #include "Structures/Structure.h"
 #include "Structures/StructureController.h"
+#include "Structures/StructureDock.h"
 #include "Structures/StructureGameplay.h"
 #include "Structures/StructureIndices.h"
+#include "Structures/StructureLocation.h"
 #include "Structures/StructurePart.h"
-#include "UI/Screens/GameUI/StructurePartControls.h"
-#include "UI/Screens/GameUI/StructureSelectors.h"
+#include "UI/Screens/GameUI/Controls/StructurePartControls.h"
+#include "UI/Screens/GameUI/Selectors/StructureSelectors.h"
 #include "UI/Screens/GameUI/Controls/StructurePartControlsMapping.h"
 #include "UI/Widgets/Visuals/Arc.h"
 #include "UI/Widgets/Visuals/CustomGameplayEffectUIData.h"
@@ -27,7 +29,14 @@ TOptional<FUIInputConfig> UGameUI::GetDesiredInputConfig() const
 	return FUIInputConfig(ECommonInputMode::Game, EMouseCaptureMode::CapturePermanently);
 }
 
-void UGameUI::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
+void UGameUI::NativeConstruct()
+{
+	Super::NativeConstruct();
+
+	DockButton->OnClicked().AddUObject<UGameUI>(this, &UGameUI::HandleDock);
+}
+
+void UGameUI::NativeTick(const FGeometry& MyGeometry, const float InDeltaTime)
 {  
 	Super::NativeTick(MyGeometry, InDeltaTime);
 
@@ -89,7 +98,8 @@ void UGameUI::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 
 	Selectors->UpdateSelectors();
 
-	if(AStructure* PlayerStructure = Cast<AStructure>(GetOwningPlayerPawn()))
+	const AStructure* PlayerStructure = Cast<AStructure>(GetOwningPlayerPawn());
+	if(IsValid(PlayerStructure))
 	{
 		TArray<AStructurePart*> Existing;
 		for(UWidget* Widget : PartControls->GetAllChildren())
@@ -131,6 +141,21 @@ void UGameUI::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 						Controls->BeginDestroy();
 					}
 				}
+			}
+		}
+	}
+}
+
+void UGameUI::HandleDock() const
+{
+	const AStructure* PlayerStructure = Cast<AStructure>(GetOwningPlayerPawn());
+	if(IsValid(PlayerStructure) && IsValid(PlayerStructure->GetTarget()))
+	{
+		for(UStructureDock* Dock : PlayerStructure->GetTarget()->GetIndices()->GetFacilities<UStructureDock>())
+		{
+			if(PlayerStructure->GetLocation()->EnterDock(Dock))
+			{
+				break;
 			}
 		}
 	}

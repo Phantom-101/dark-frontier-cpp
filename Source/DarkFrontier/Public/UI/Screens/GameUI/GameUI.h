@@ -47,12 +47,21 @@ protected:
 
 	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
 	TObjectPtr<class UScrollBox> PartControls;
+	
+	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
+	TObjectPtr<class UCommonButtonBase> DockButton;
 
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly)
 	TObjectPtr<UStructurePartControlsMapping> ControlsMapping;
 
 	virtual TOptional<FUIInputConfig> GetDesiredInputConfig() const override;
+
+	virtual void NativeConstruct() override;
 	
 	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
+
+private:
+
+	void HandleDock() const;
 	
 };

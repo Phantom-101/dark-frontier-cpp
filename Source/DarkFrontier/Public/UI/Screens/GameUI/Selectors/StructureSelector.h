@@ -6,6 +6,10 @@
 #include "CommonUserWidget.h"
 #include "StructureSelector.generated.h"
 
+class AStructure;
+class UStructureIndicators;
+class UCommonButtonBase;
+class UWidgetSwitcher;
 class UStructureIndication;
 
 /**
@@ -19,14 +23,14 @@ class DARKFRONTIER_API UStructureSelector : public UCommonUserWidget
 protected:
 
 	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
-	TObjectPtr<class UCommonButtonBase> SelectorButton;
+	TObjectPtr<UCommonButtonBase> SelectorButton;
 
 	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
-	TObjectPtr<class UStructureIndicators> Indicators;
+	TObjectPtr<UStructureIndicators> Indicators;
 
 	UPROPERTY(BlueprintReadWrite, EditInstanceOnly)
-	TObjectPtr<class AStructure> Target;
-	
+	TObjectPtr<AStructure> Target;
+
 	virtual void NativeConstruct() override;
 
 	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
@@ -39,7 +43,7 @@ public:
 
 private:
 
-	void OnClicked() const;
+	void HandleClick() const;
 
 	void OnIndicationAdded(UStructureIndication* Indication) const;
 

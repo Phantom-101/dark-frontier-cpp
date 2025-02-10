@@ -1,6 +1,6 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-#include "UI/Screens/GameUI/StructureSelector.h"
+#include "UI/Screens/GameUI/Selectors/StructureSelector.h"
 #include "CommonButtonBase.h"
 #include "Blueprint/WidgetLayoutLibrary.h"
 #include "Components/CanvasPanelSlot.h"
@@ -16,11 +16,10 @@ void UStructureSelector::NativeConstruct()
 	PanelSlot->SetAlignment(FVector2D(0.5));
 	PanelSlot->SetSize(FVector2D(100));
 
-	SelectorButton->OnClicked().Clear();
-	SelectorButton->OnClicked().AddUObject<UStructureSelector>(this, &UStructureSelector::OnClicked);
+	SelectorButton->OnClicked().AddUObject<UStructureSelector>(this, &UStructureSelector::HandleClick);
 }
 
-void UStructureSelector::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
+void UStructureSelector::NativeTick(const FGeometry& MyGeometry, const float InDeltaTime)
 {
 	Super::NativeTick(MyGeometry, InDeltaTime);
 
@@ -62,7 +61,7 @@ AStructure* UStructureSelector::GetTarget() const
 	return Target;
 }
 
-void UStructureSelector::OnClicked() const
+void UStructureSelector::HandleClick() const
 {
 	AStructure* Player = Cast<AStructure>(GetWorld()->GetFirstPlayerController()->GetPawn());
 	if(IsValid(Target) && IsValid(Player))
