@@ -63,7 +63,7 @@ UStructureDock* UStructureLocation::GetDock() const
 
 bool UStructureLocation::EnterDock(UStructureDock* Target)
 {
-	if(Target == nullptr || !Dock->ConfirmDock(GetStructure()))
+	if(Target == nullptr || !Target->ConfirmDock(GetStructure()))
 	{
 		return false;
 	}

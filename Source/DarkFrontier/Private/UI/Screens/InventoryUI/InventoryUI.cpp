@@ -142,7 +142,7 @@ void UInventoryUI::HandleTrade()
 	CurrentModal = TradeModal;
 }
 
-void UInventoryUI::HandleTradeConfirmed(const FItemStack Trade, AStructure* Target)
+void UInventoryUI::HandleTradeConfirmed(const FItemStack Trade, AStructure* Target) const
 {
 	if(Trade.Quantity > 0)
 	{
@@ -180,7 +180,7 @@ void UInventoryUI::HandleTransfer()
 	CurrentModal = TransferModal;
 }
 
-void UInventoryUI::HandleTransferConfirmed(const FItemStack Transfer, AStructure* Target)
+void UInventoryUI::HandleTransferConfirmed(const FItemStack Transfer, AStructure* Target) const
 {
 	ItemList->GetInventory()->RemoveItems(Transfer.Item, Transfer.Quantity);
 	Target->GetInventory()->AddItems(Transfer.Item, Transfer.Quantity);
@@ -205,7 +205,7 @@ void UInventoryUI::HandleDispose()
 	CurrentModal = DisposeModal;
 }
 
-void UInventoryUI::HandleDisposeConfirmed(const FItemStack Dispose)
+void UInventoryUI::HandleDisposeConfirmed(const FItemStack Dispose) const
 {
 	ItemList->GetInventory()->RemoveItems(Dispose.Item, Dispose.Quantity);
 }
