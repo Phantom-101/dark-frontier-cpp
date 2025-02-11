@@ -154,8 +154,8 @@ void UInventoryUI::HandleTradeConfirmed(const FItemStack Trade, AStructure* Targ
 		ItemList->GetInventory()->RemoveItems(Trade.Item, Trade.Quantity);
 		Target->GetInventory()->AddItems(Trade.Item, Trade.Quantity);
 	}
-	ItemList->GetInventory()->GetStructure()->GetOwningFaction()->ChangeWealth(-Trade.Quantity * Trade.Item->Value);
-	Target->GetOwningFaction()->ChangeWealth(Trade.Quantity * Trade.Item->Value);
+	ItemList->GetInventory()->GetStructure()->GetOwningFaction()->ChangeBalance(-Trade.Quantity * Trade.Item->Value);
+	Target->GetOwningFaction()->ChangeBalance(Trade.Quantity * Trade.Item->Value);
 }
 
 void UInventoryUI::HandleTransfer()

@@ -75,12 +75,12 @@ void UInventoryTradeModal::HandleTargetChange(UObject* Target) const
 		const int Available = Inventory->GetItemQuantity(Item);
 		const float VolumeFit = Inventory->GetVolumeRemaining() / Item->Volume;
 		const float MassFit = Inventory->GetMassRemaining() / Item->Mass;
-		const float Afford = Inventory->GetStructure()->GetOwningFaction()->GetWealth() / Item->Value;
+		const float Afford = Inventory->GetStructure()->GetOwningFaction()->GetBalance() / Item->Value;
 
 		const int OtherAvailable = TargetInventory->GetItemQuantity(Item);
 		const float OtherVolumeFit = TargetInventory->GetVolumeRemaining() / Item->Volume;
 		const float OtherMassFit = TargetInventory->GetMassRemaining() / Item->Mass;
-		const float OtherAfford = TargetInventory->GetStructure()->GetOwningFaction()->GetWealth() / Item->Value;
+		const float OtherAfford = TargetInventory->GetStructure()->GetOwningFaction()->GetBalance() / Item->Value;
 
 		const int CanBuy = FMath::Min(FMath::Min(OtherAvailable, FMath::FloorToInt(FMath::Min(VolumeFit, MassFit))), Afford);
 		const int CanSell = FMath::Min(FMath::Min(Available, FMath::FloorToInt(FMath::Min(OtherVolumeFit, OtherMassFit))), OtherAfford);
