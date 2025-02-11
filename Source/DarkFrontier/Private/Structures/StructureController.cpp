@@ -46,14 +46,15 @@ void AStructureController::SetupInputComponent()
 	Input->BindAction(EditStructureAction, ETriggerEvent::Completed, this, &AStructureController::EditStructure);
 }
 
-void AStructureController::Tick(float DeltaSeconds)
+void AStructureController::Tick(const float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
 
 	if(!IsValid(StructurePawn)) return;
 
-	StructurePawn->SetMoveInput(MoveInput);
-	StructurePawn->SetRotateInput(RotateAddInput + RotateOverrideInput);
+	StructurePawn->SetMoveInput(MoveInput.IsNearlyZero(0.05) ? FVector::ZeroVector : MoveInput);
+	const FVector RotateInput = RotateAddInput + RotateOverrideInput
+	StructurePawn->SetRotateInput(RotateInput.IsNearlyZero(0.05) ? FVector::ZeroVector : RotateInput);
 	
 	UpdateCamera();
 }

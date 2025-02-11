@@ -25,7 +25,7 @@ void UListBoxOption::NativeOnListItemObjectSet(UObject* ListItemObject)
 	ContentSlot->AddChild(Params->Builder(Params->Option));
 }
 
-void UListBoxOption::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
+void UListBoxOption::NativeTick(const FGeometry& MyGeometry, const float InDeltaTime)
 {
 	Super::NativeTick(MyGeometry, InDeltaTime);
 

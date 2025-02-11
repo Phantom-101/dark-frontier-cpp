@@ -419,8 +419,7 @@ USpringArmComponent* AStructure::GetCameraSpringArm() const
 FVector AStructure::CalculateImpulse(const FVector& RawVelocities, const FVector& RawInput, const float MaxSpeed, const float Accel, const float DeltaTime) const
 {
 	const FVector Velocities = GetTransform().InverseTransformVector(RawVelocities);
-	const FVector ClampedInput = RawInput.GetClampedToMaxSize(1);
-	const FVector Input = ClampedInput.IsNearlyZero(0.15) ? FVector::ZeroVector : ClampedInput;
+	const FVector Input = RawInput.GetClampedToMaxSize(1);
 	const FVector Diff = Input * MaxSpeed - Velocities;
 	const FVector Applied = ClampVector(Diff, FVector(-Accel * DeltaTime), FVector(Accel * DeltaTime));
 	return GetTransform().TransformVector(Applied);

@@ -53,7 +53,7 @@ public:
 	double MilitaryExpansion;
 
 	UPROPERTY(EditAnywhere)
-	double Wealth = 0;
+	double Balance = 0;
 
 	UPROPERTY(EditAnywhere)
 	TMap<TObjectPtr<AFaction>, double> Relations;
@@ -64,11 +64,11 @@ protected:
 
 public:
 
-	double GetWealth() const;
+	double GetBalance() const;
 
-	void SetWealth(double Target);
+	void SetBalance(double Target);
 
-	double ChangeWealth(double Delta);
+	double ChangeBalance(double Delta);
 
 	double GetRelation(AFaction* Other) const;
 
