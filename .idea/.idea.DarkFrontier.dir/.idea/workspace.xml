@@ -8,21 +8,17 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="cb7ccd89-2b5f-4c19-9f87-96459d2ed121" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/Source/DarkFrontier/Private/UI/Widgets/Interaction/Tab.cpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Source/DarkFrontier/Private/UI/Widgets/Interaction/TabOption.cpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Source/DarkFrontier/Private/UI/Widgets/Interaction/Tabs.cpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Source/DarkFrontier/Public/UI/Widgets/Interaction/Tab.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Source/DarkFrontier/Public/UI/Widgets/Interaction/TabOption.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Source/DarkFrontier/Public/UI/Widgets/Interaction/Tabs.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.DarkFrontier.dir/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.DarkFrontier.dir/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Input/IMC_Game.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Input/IMC_Game.uasset" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Content/Maps/Test.umap" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Maps/Test.umap" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Content/StarterContent/Architecture/Floor_400x400.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/StarterContent/Architecture/Floor_400x400.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/UI/Screens/GameUI/W_GameUI.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/UI/Screens/GameUI/W_GameUI.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/UI/Screens/InventoryUI/W_InventoryUI.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/UI/Screens/InventoryUI/W_InventoryUI.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/UI/Screens/InventoryUI/W_ItemOption.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/UI/Screens/InventoryUI/W_ItemOption.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/UI/Widgets/Interaction/W_ListBoxOption.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/UI/Widgets/Interaction/W_ListBoxOption.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Private/Factions/Faction.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Private/Factions/Faction.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Private/Structures/Structure.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Private/Structures/Structure.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/UI/Screens/LogUI/W_LogUI.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/UI/Screens/LogUI/W_LogUI.uasset" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Private/Structures/StructureController.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Private/Structures/StructureController.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Private/UI/Screens/InventoryUI/InventoryTradeModal.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Private/UI/Screens/InventoryUI/InventoryTradeModal.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Private/UI/Screens/InventoryUI/InventoryUI.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Private/UI/Screens/InventoryUI/InventoryUI.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Private/UI/Widgets/Interaction/ListBoxOption.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Private/UI/Widgets/Interaction/ListBoxOption.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Public/Factions/Faction.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Public/Factions/Faction.h" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -332,6 +328,7 @@
       <workItem from="1739086529257" duration="4213000" />
       <workItem from="1739167336048" duration="6279000" />
       <workItem from="1739255589273" duration="5021000" />
+      <workItem from="1739342650581" duration="2299000" />
     </task>
     <servers />
   </component>
