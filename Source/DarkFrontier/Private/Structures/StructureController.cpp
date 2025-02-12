@@ -53,7 +53,7 @@ void AStructureController::Tick(const float DeltaSeconds)
 	if(!IsValid(StructurePawn)) return;
 
 	StructurePawn->SetMoveInput(MoveInput.IsNearlyZero(0.05) ? FVector::ZeroVector : MoveInput);
-	const FVector RotateInput = RotateAddInput + RotateOverrideInput
+	const FVector RotateInput = RotateAddInput + RotateOverrideInput;
 	StructurePawn->SetRotateInput(RotateInput.IsNearlyZero(0.05) ? FVector::ZeroVector : RotateInput);
 	
 	UpdateCamera();
