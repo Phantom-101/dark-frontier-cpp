@@ -17,6 +17,8 @@ public:
 	
 	AFaction();
 
+protected:
+
 	UPROPERTY(EditAnywhere)
 	FText FactionName;
 
@@ -57,12 +59,12 @@ public:
 
 	UPROPERTY(EditAnywhere)
 	TMap<TObjectPtr<AFaction>, double> Relations;
-
-protected:
 	
 	virtual void BeginPlay() override;
 
 public:
+
+	FText GetFactionName() const;
 
 	double GetBalance() const;
 
