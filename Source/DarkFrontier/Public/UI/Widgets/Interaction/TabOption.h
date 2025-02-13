@@ -13,7 +13,7 @@ class UImage;
 /**
  * 
  */
-UCLASS()
+UCLASS(Abstract)
 class DARKFRONTIER_API UTabOption : public UCommonUserWidget
 {
 	GENERATED_BODY()

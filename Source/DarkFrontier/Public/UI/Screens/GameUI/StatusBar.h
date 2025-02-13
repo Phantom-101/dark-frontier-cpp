@@ -6,6 +6,7 @@
 #include "CommonUserWidget.h"
 #include "StatusBar.generated.h"
 
+class ULogUI;
 class UCommonButtonBase;
 class UWidgetSwitcher;
 class UCommonTextBlock;
@@ -40,6 +41,13 @@ protected:
 	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
 	TObjectPtr<UCommonButtonBase> PauseButton;
 
+	UPROPERTY(BlueprintReadOnly, EditAnywhere)
+	TSubclassOf<ULogUI> LogUIClass;
+
 	virtual void NativeConstruct() override;
+
+private:
+
+	void HandleLog() const;
 	
 };

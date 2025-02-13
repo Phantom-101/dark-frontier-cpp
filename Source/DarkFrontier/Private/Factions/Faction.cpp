@@ -19,6 +19,11 @@ void AFaction::BeginPlay()
 	MilitaryExpansion = FMath::Clamp(MilitaryExpansion, -1, 1);
 }
 
+FText AFaction::GetFactionName() const
+{
+	return FactionName;
+}
+
 double AFaction::GetBalance() const
 {
 	return Balance;
