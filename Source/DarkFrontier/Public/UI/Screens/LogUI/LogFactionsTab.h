@@ -6,6 +6,7 @@
 #include "UI/Widgets/Interaction/Tab.h"
 #include "LogFactionsTab.generated.h"
 
+class UFactionOption;
 class UCommonButtonBase;
 class UCommonTextBlock;
 class UListBox;
@@ -32,6 +33,9 @@ protected:
 
 	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
 	TObjectPtr<UCommonButtonBase> BackButton;
+
+	UPROPERTY(BlueprintReadOnly, EditAnywhere)
+	TSubclassOf<UFactionOption> OptionClass;
 
 	virtual void NativeConstruct() override;
 

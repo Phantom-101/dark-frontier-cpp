@@ -1,6 +1,8 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 #include "UI/Widgets/Interaction/Tabs.h"
+
+#include "Log.h"
 #include "Components/WidgetSwitcher.h"
 #include "UI/Widgets/Interaction/ListBox.h"
 #include "UI/Widgets/Interaction/Tab.h"
@@ -17,13 +19,14 @@ void UTabs::NativeConstruct()
 		Tabs.Add(Tab);
 	}
 
+	TabListBox->SetOptions(TArray<UObject*>(Tabs));
 	TabListBox->SetBuilder([Owner = this, Class = TabOptionClass](UObject* Tab)
 	{
 		UTabOption* Option = CreateWidget<UTabOption>(Owner, Class);
 		Option->Init(Cast<UTab>(Tab));
 		return Option;
 	});
-	TabListBox->SetOptions(TArray<UObject*>(Tabs));
+	
 	TabListBox->OnChanged.AddUObject<UTabs>(this, &UTabs::HandleTabSelected);
 }
 
@@ -31,14 +34,7 @@ void UTabs::HandleTabSelected(UObject* Tab) const
 {
 	if(TabListBox->IsCurrentOptionValid())
 	{
-		for(UWidget* Widget : TabSwitcher->GetAllChildren())
-		{
-			if(Widget == Tab)
-			{
-				TabSwitcher->SetActiveWidget(Widget);
-				return;
-			}
-		}
+		TabSwitcher->SetActiveWidget(Cast<UWidget>(Tab));
 	}
 	else
 	{
