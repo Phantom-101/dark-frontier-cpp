@@ -11,6 +11,8 @@ void UListBoxOption::NativeConstruct()
 	Super::NativeConstruct();
 
 	SelectButton->SetIsSelectable(true);
+	SelectButton->SetIsToggleable(true);
+	
 	SelectButton->OnClicked().Clear();
 	SelectButton->OnClicked().AddUObject<UListBoxOption>(this, &UListBoxOption::HandleSelect);
 }

@@ -8,28 +8,25 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="cb7ccd89-2b5f-4c19-9f87-96459d2ed121" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/Source/DarkFrontier/Private/UI/Screens/LogUI/LogFactionsTab.cpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Source/DarkFrontier/Private/UI/Screens/LogUI/LogUI.cpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Source/DarkFrontier/Public/UI/Screens/LogUI/LogFactionsTab.h" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Source/DarkFrontier/Public/UI/Screens/LogUI/LogUI.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Source/DarkFrontier/Private/UI/Screens/LogUI/FactionOption.cpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Source/DarkFrontier/Private/UI/Widgets/Visuals/FillBar.cpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Source/DarkFrontier/Public/UI/Screens/LogUI/FactionOption.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Source/DarkFrontier/Public/UI/Widgets/Visuals/FillBar.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.DarkFrontier.dir/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.DarkFrontier.dir/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Factions/BP_DefaultFaction.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Factions/BP_DefaultFaction.uasset" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Content/Maps/Test.umap" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Maps/Test.umap" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Content/StarterContent/Architecture/Floor_400x400.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/StarterContent/Architecture/Floor_400x400.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/UI/Screens/GameUI/W_GameUI.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/UI/Screens/GameUI/W_GameUI.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/UI/Screens/GameUI/W_StatusBar.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/UI/Screens/GameUI/W_StatusBar.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/UI/Screens/InventoryUI/W_InventoryOption.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/UI/Screens/InventoryUI/W_InventoryOption.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/UI/Screens/InventoryUI/W_InventoryUI.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/UI/Screens/InventoryUI/W_InventoryUI.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/UI/Screens/InventoryUI/W_ItemEntry.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/UI/Screens/InventoryUI/W_ItemEntry.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/UI/Screens/LogUI/W_FactionEntry.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/UI/Screens/LogUI/W_FactionEntry.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/UI/Screens/LogUI/W_FactionEntry.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/UI/Screens/LogUI/W_LogFactionsTab.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/UI/Screens/LogUI/W_LogFactionsTab.uasset" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Content/UI/Screens/LogUI/W_LogUI.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/UI/Screens/LogUI/W_LogUI.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/UI/Screens/LogUI/W_MailEntry.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/UI/Screens/LogUI/W_PropertyEntry.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/UI/Widgets/Interaction/W_ListBoxOption.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/UI/Widgets/Interaction/W_ListBoxOption.uasset" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Content/UI/Widgets/Interaction/W_TabOption.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/UI/Widgets/Interaction/W_TabOption.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/UI/Widgets/Interaction/W_Tabs.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/UI/Widgets/Interaction/W_Tabs.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Private/Factions/Faction.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Private/Factions/Faction.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Private/Structures/StructureController.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Private/Structures/StructureController.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Private/UI/Screens/GameUI/StatusBar.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Private/UI/Screens/GameUI/StatusBar.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Public/Factions/Faction.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Public/Factions/Faction.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Public/UI/Screens/GameUI/StatusBar.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Public/UI/Screens/GameUI/StatusBar.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Public/UI/Widgets/Interaction/TabOption.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Public/UI/Widgets/Interaction/TabOption.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Private/UI/Screens/LogUI/LogFactionsTab.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Private/UI/Screens/LogUI/LogFactionsTab.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Private/UI/Widgets/Interaction/ListBoxOption.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Private/UI/Widgets/Interaction/ListBoxOption.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Private/UI/Widgets/Interaction/Tabs.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Private/UI/Widgets/Interaction/Tabs.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Public/UI/Screens/LogUI/LogFactionsTab.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Public/UI/Screens/LogUI/LogFactionsTab.h" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -343,6 +340,7 @@
       <workItem from="1739342650581" duration="2299000" />
       <workItem from="1739432486889" duration="1732000" />
       <workItem from="1739434250339" duration="3902000" />
+      <workItem from="1739602325136" duration="7267000" />
     </task>
     <servers />
   </component>
