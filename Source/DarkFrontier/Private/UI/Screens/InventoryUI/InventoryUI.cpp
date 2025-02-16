@@ -14,7 +14,7 @@
 #include "Structures/StructureLocation.h"
 #include "UI/Screens/UIBase.h"
 #include "UI/Screens/InventoryUI/InventoryDisposeModal.h"
-#include "UI/Screens/InventoryUI/InventoryOption.h"
+#include "UI/Screens/InventoryUI/InventoryEntry.h"
 #include "UI/Screens/InventoryUI/InventoryTradeModal.h"
 #include "UI/Screens/InventoryUI/InventoryTransferModal.h"
 #include "UI/Screens/InventoryUI/ItemList.h"
@@ -91,9 +91,9 @@ void UInventoryUI::HandleSwitch()
 
 	UListBoxModal* SwitchModal = Base->PushModal<UListBoxModal>(ListBoxModalClass);
 	SwitchModal->SetOptionsWithInitial(TArray<UObject*>(CurrentStructure->GetLocation()->GetInTree()), CurrentStructure);
-	SwitchModal->SetBuilder([Owner = SwitchModal, Class = InventoryOptionClass](UObject* Structure)
+	SwitchModal->SetBuilder([Owner = SwitchModal, Class = InventoryEntryClass](UObject* Structure)
 	{
-		UInventoryOption* Option = CreateWidget<UInventoryOption>(Owner, Class);
+		UInventoryEntry* Option = CreateWidget<UInventoryEntry>(Owner, Class);
 		Option->Init(Cast<AStructure>(Structure));
 		return Option;
 	});

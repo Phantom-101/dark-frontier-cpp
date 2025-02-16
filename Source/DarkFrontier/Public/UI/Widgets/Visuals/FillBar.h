@@ -20,7 +20,13 @@ class DARKFRONTIER_API UFillBar : public UCommonUserWidget
 protected:
 
 	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
+	TObjectPtr<UCommonBorder> Background;
+
+	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
 	TObjectPtr<UCommonBorder> Foreground;
+
+	UPROPERTY(BlueprintReadOnly, EditAnywhere)
+	TSubclassOf<UCommonBorderStyle> BackgroundStyle;
 
 	UPROPERTY(BlueprintReadOnly, EditAnywhere)
 	TSubclassOf<UCommonBorderStyle> ForegroundStyle;
@@ -35,7 +41,9 @@ protected:
 
 public:
 
-	void SetStyle(const TSubclassOf<UCommonBorderStyle>& InStyle);
+	void SetBackgroundStyle(const TSubclassOf<UCommonBorderStyle>& InStyle);
+
+	void SetForegroundStyle(const TSubclassOf<UCommonBorderStyle>& InStyle);
 
 	void SetStart(FVector2D InStart);
 
@@ -43,8 +51,8 @@ public:
 
 private:
 
-	void UpdateStyle() const;
+	void UpdateStyling() const;
 
-	void UpdateRender() const;
+	void UpdateFill() const;
 	
 };

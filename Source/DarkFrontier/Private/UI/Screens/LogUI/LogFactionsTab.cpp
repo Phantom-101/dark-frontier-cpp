@@ -6,7 +6,7 @@
 #include "Components/WidgetSwitcher.h"
 #include "Factions/Faction.h"
 #include "Kismet/GameplayStatics.h"
-#include "UI/Screens/LogUI/FactionOption.h"
+#include "UI/Screens/LogUI/FactionEntry.h"
 #include "UI/Widgets/Interaction/ListBox.h"
 
 void ULogFactionsTab::NativeConstruct()
@@ -16,9 +16,9 @@ void ULogFactionsTab::NativeConstruct()
 	TArray<AActor*> Factions;
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AFaction::StaticClass(), Factions);
 	FactionListBox->SetOptions(TArray<UObject*>(Factions));
-	FactionListBox->SetBuilder([Owner = this, Class = OptionClass](UObject* Faction)
+	FactionListBox->SetBuilder([Owner = this, Class = EntryClass](UObject* Faction)
 	{
-		UFactionOption* Option = CreateWidget<UFactionOption>(Owner, Class);
+		UFactionEntry* Option = CreateWidget<UFactionEntry>(Owner, Class);
 		Option->Init(Cast<AFaction>(Faction));
 		return Option;
 	});

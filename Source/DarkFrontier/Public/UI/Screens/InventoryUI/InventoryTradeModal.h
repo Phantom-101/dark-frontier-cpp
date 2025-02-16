@@ -9,7 +9,7 @@
 class UCommonTextBlock;
 class UItem;
 class UInventory;
-class UInventoryOption;
+class UInventoryEntry;
 class UCommonButtonBase;
 class UQuantityInput;
 class UListBox;
@@ -51,7 +51,7 @@ protected:
 	TObjectPtr<UCommonButtonBase> CancelButton;
 
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly)
-	TSubclassOf<UInventoryOption> InventoryOptionClass;
+	TSubclassOf<UInventoryEntry> InventoryEntryClass;
 
 	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly)
 	TObjectPtr<UInventory> Inventory;

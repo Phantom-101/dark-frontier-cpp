@@ -7,34 +7,41 @@ void UFillBar::NativePreConstruct()
 {
 	Super::NativePreConstruct();
 
-	UpdateStyle();
-	UpdateRender();
+	UpdateStyling();
+	UpdateFill();
 }
 
-void UFillBar::SetStyle(const TSubclassOf<UCommonBorderStyle>& InStyle)
+void UFillBar::SetBackgroundStyle(const TSubclassOf<UCommonBorderStyle>& InStyle)
+{
+	BackgroundStyle = InStyle;
+	UpdateStyling();
+}
+
+void UFillBar::SetForegroundStyle(const TSubclassOf<UCommonBorderStyle>& InStyle)
 {
 	ForegroundStyle = InStyle;
-	UpdateStyle();
+	UpdateStyling();
 }
 
 void UFillBar::SetStart(const FVector2D InStart)
 {
 	Start = InStart;
-	UpdateRender();
+	UpdateFill();
 }
 
 void UFillBar::SetFill(const FVector2D InFill)
 {
 	Fill = InFill;
-	UpdateRender();
+	UpdateFill();
 }
 
-void UFillBar::UpdateStyle() const
+void UFillBar::UpdateStyling() const
 {
+	Background->SetStyle(BackgroundStyle);
 	Foreground->SetStyle(ForegroundStyle);
 }
 
-void UFillBar::UpdateRender() const
+void UFillBar::UpdateFill() const
 {
 	Foreground->SetRenderTransformPivot(Start);
 	Foreground->SetRenderScale(Fill);

@@ -4,9 +4,9 @@
 
 #include "CoreMinimal.h"
 #include "UI/Widgets/Interaction/Tab.h"
-#include "LogFactionsTab.generated.h"
+#include "LogPropertyTab.generated.h"
 
-class UFactionEntry;
+class UStructureEntry;
 class UCommonButtonBase;
 class UCommonTextBlock;
 class UListBox;
@@ -16,17 +16,17 @@ class UWidgetSwitcher;
  * 
  */
 UCLASS(Abstract)
-class DARKFRONTIER_API ULogFactionsTab : public UTab
+class DARKFRONTIER_API ULogPropertyTab : public UTab
 {
 	GENERATED_BODY()
-
+	
 protected:
 
 	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
 	TObjectPtr<UWidgetSwitcher> Switcher;
 
 	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
-	TObjectPtr<UListBox> FactionListBox;
+	TObjectPtr<UListBox> StructureListBox;
 
 	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
 	TObjectPtr<UCommonTextBlock> NameText;
@@ -35,8 +35,8 @@ protected:
 	TObjectPtr<UCommonButtonBase> BackButton;
 
 	UPROPERTY(BlueprintReadOnly, EditAnywhere)
-	TSubclassOf<UFactionEntry> EntryClass;
-
+	TSubclassOf<UStructureEntry> EntryClass;
+	
 	virtual void NativeConstruct() override;
 
 private:
