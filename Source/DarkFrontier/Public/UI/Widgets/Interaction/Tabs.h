@@ -6,7 +6,7 @@
 #include "CommonUserWidget.h"
 #include "Tabs.generated.h"
 
-class UTabOption;
+class UTabEntry;
 class UWidgetSwitcher;
 class UListBox;
 class UTab;
@@ -28,7 +28,7 @@ protected:
 	TObjectPtr<UWidgetSwitcher> TabSwitcher;
 
 	UPROPERTY(BlueprintReadOnly, EditAnywhere)
-	TSubclassOf<UTabOption> TabOptionClass;
+	TSubclassOf<UTabEntry> TabEntryClass;
 
 	UPROPERTY(BlueprintReadOnly, EditAnywhere)
 	TArray<TSubclassOf<UTab>> TabClasses;

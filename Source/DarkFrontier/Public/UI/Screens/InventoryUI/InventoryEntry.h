@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "CommonUserWidget.h"
-#include "InventoryOption.generated.h"
+#include "InventoryEntry.generated.h"
 
 class UCommonTextBlock;
 class AStructure;
@@ -13,7 +13,7 @@ class AStructure;
  * 
  */
 UCLASS(Abstract)
-class DARKFRONTIER_API UInventoryOption : public UCommonUserWidget
+class DARKFRONTIER_API UInventoryEntry : public UCommonUserWidget
 {
 	GENERATED_BODY()
 

@@ -4,26 +4,30 @@
 
 #include "CoreMinimal.h"
 #include "CommonUserWidget.h"
-#include "ItemOption.generated.h"
+#include "TabEntry.generated.h"
 
+class UTab;
 class UCommonTextBlock;
-class UItemObject;
+class UImage;
 
 /**
  * 
  */
 UCLASS(Abstract)
-class DARKFRONTIER_API UItemOption : public UCommonUserWidget
+class DARKFRONTIER_API UTabEntry : public UCommonUserWidget
 {
 	GENERATED_BODY()
 
 protected:
 
 	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
+	TObjectPtr<UImage> IconImage;
+	
+	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
 	TObjectPtr<UCommonTextBlock> NameText;
 
 public:
 
-	void Init(const UItemObject* ItemObject) const;
+	void Init(UTab* Tab) const;
 	
 };

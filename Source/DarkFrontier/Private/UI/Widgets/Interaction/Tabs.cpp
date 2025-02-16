@@ -1,12 +1,10 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 #include "UI/Widgets/Interaction/Tabs.h"
-
-#include "Log.h"
 #include "Components/WidgetSwitcher.h"
 #include "UI/Widgets/Interaction/ListBox.h"
 #include "UI/Widgets/Interaction/Tab.h"
-#include "UI/Widgets/Interaction/TabOption.h"
+#include "UI/Widgets/Interaction/TabEntry.h"
 
 void UTabs::NativeConstruct()
 {
@@ -20,9 +18,9 @@ void UTabs::NativeConstruct()
 	}
 
 	TabListBox->SetOptions(TArray<UObject*>(Tabs));
-	TabListBox->SetBuilder([Owner = this, Class = TabOptionClass](UObject* Tab)
+	TabListBox->SetBuilder([Owner = this, Class = TabEntryClass](UObject* Tab)
 	{
-		UTabOption* Option = CreateWidget<UTabOption>(Owner, Class);
+		UTabEntry* Option = CreateWidget<UTabEntry>(Owner, Class);
 		Option->Init(Cast<UTab>(Tab));
 		return Option;
 	});

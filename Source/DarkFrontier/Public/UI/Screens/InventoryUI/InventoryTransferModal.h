@@ -7,7 +7,7 @@
 #include "InventoryTransferModal.generated.h"
 
 class AStructure;
-class UInventoryOption;
+class UInventoryEntry;
 class UListBox;
 class UItem;
 class UInventory;
@@ -47,7 +47,7 @@ protected:
 	TObjectPtr<UCommonButtonBase> CancelButton;
 
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly)
-	TSubclassOf<UInventoryOption> InventoryOptionClass;
+	TSubclassOf<UInventoryEntry> InventoryEntryClass;
 
 	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly)
 	TObjectPtr<UInventory> Inventory;

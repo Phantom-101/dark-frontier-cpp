@@ -10,7 +10,7 @@ class UInventoryTradeModal;
 class UInventoryTransferModal;
 struct FItemStack;
 class UInventoryDisposeModal;
-class UInventoryOption;
+class UInventoryEntry;
 class AStructure;
 class UListBoxModal;
 class UInfoField;
@@ -78,7 +78,7 @@ protected:
 	TSubclassOf<UListBoxModal> ListBoxModalClass;
 
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly)
-	TSubclassOf<UInventoryOption> InventoryOptionClass;
+	TSubclassOf<UInventoryEntry> InventoryEntryClass;
 
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly)
 	TSubclassOf<UInventoryTradeModal> TradeModalClass;

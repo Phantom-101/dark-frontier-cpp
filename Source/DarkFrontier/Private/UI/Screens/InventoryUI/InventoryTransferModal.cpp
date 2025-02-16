@@ -6,7 +6,7 @@
 #include "Items/Item.h"
 #include "Items/ItemStack.h"
 #include "Structures/Structure.h"
-#include "UI/Screens/InventoryUI/InventoryOption.h"
+#include "UI/Screens/InventoryUI/InventoryEntry.h"
 #include "UI/Screens/InventoryUI/QuantityInput.h"
 #include "UI/Widgets/Interaction/ListBox.h"
 
@@ -54,9 +54,9 @@ void UInventoryTransferModal::Init(UInventory* InInventory, UItem* InItem, const
 	Item = InItem;
 
 	TargetListBox->SetOptions(TArray<UObject*>(InTargets));
-	TargetListBox->SetBuilder([Owner = this, Class = InventoryOptionClass](UObject* Target)
+	TargetListBox->SetBuilder([Owner = this, Class = InventoryEntryClass](UObject* Target)
 	{
-		UInventoryOption* Option = CreateWidget<UInventoryOption>(Owner, Class);
+		UInventoryEntry* Option = CreateWidget<UInventoryEntry>(Owner, Class);
 		Option->Init(Cast<AStructure>(Target));
 		return Option;
 	});

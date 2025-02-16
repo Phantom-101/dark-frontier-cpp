@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "CommonUserWidget.h"
-#include "FactionOption.generated.h"
+#include "FactionEntry.generated.h"
 
 class UCommonBorderStyle;
 class AFaction;
@@ -15,7 +15,7 @@ class UCommonTextBlock;
  * 
  */
 UCLASS(Abstract)
-class DARKFRONTIER_API UFactionOption : public UCommonUserWidget
+class DARKFRONTIER_API UFactionEntry : public UCommonUserWidget
 {
 	GENERATED_BODY()
 
@@ -44,6 +44,7 @@ public:
 	void Init(AFaction* InFaction);
 
 private:
+	
 	static FVector2D GetStart(float Relation);
 
 	static FVector2D GetFill(float Relation);
