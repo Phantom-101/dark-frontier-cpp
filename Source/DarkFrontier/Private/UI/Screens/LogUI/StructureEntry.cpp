@@ -2,8 +2,10 @@
 
 #include "UI/Screens/LogUI/StructureEntry.h"
 #include "CommonTextBlock.h"
+#include "Sectors/Sector.h"
 #include "Structures/Structure.h"
 #include "Structures/StructureGameplay.h"
+#include "Structures/StructureLocation.h"
 #include "UI/Widgets/Visuals/FillBar.h"
 
 void UStructureEntry::NativeTick(const FGeometry& MyGeometry, const float InDeltaTime)
@@ -19,5 +21,5 @@ void UStructureEntry::Init(AStructure* InStructure)
 {
 	Structure = InStructure;
 	
-	NameText->SetText(FText::FromString(Structure->GetName()));
+	NameText->SetText(FText::FromString(FString::Printf(TEXT("\"%s\" (%s)"), *Structure->GetActorNameOrLabel(), *Structure->GetLocation()->GetSector()->GetActorNameOrLabel())));
 }
