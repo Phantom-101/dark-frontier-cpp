@@ -8,58 +8,19 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="cb7ccd89-2b5f-4c19-9f87-96459d2ed121" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/Source/DarkFrontier/Private/UI/Screens/InventoryUI/ItemStackEntry.cpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Source/DarkFrontier/Private/UI/Screens/LogUI/LogPropertyTab.cpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Source/DarkFrontier/Private/UI/Screens/LogUI/StructureEntry.cpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Source/DarkFrontier/Public/UI/Screens/InventoryUI/ItemStackEntry.h" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Source/DarkFrontier/Public/UI/Screens/LogUI/LogPropertyTab.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Source/DarkFrontier/Private/UI/Screens/LogUI/LogMailTab.cpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Source/DarkFrontier/Private/UI/Screens/LogUI/Mail.cpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Source/DarkFrontier/Private/UI/Screens/LogUI/MailEntry.cpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Source/DarkFrontier/Public/UI/Screens/LogUI/LogMailTab.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Source/DarkFrontier/Public/UI/Screens/LogUI/Mail.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Source/DarkFrontier/Public/UI/Screens/LogUI/MailEntry.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.DarkFrontier.dir/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.DarkFrontier.dir/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Content/Maps/Test.umap" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Maps/Test.umap" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Content/StarterContent/Architecture/Floor_400x400.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/StarterContent/Architecture/Floor_400x400.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/UI/Screens/InventoryUI/W_InventoryOption.uasset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/UI/Screens/InventoryUI/W_InventoryTradeModal.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/UI/Screens/InventoryUI/W_InventoryTradeModal.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/UI/Screens/InventoryUI/W_InventoryTransferModal.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/UI/Screens/InventoryUI/W_InventoryTransferModal.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/UI/Screens/InventoryUI/W_InventoryUI.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/UI/Screens/InventoryUI/W_InventoryUI.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/UI/Screens/InventoryUI/W_ItemEntry.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/UI/Screens/InventoryUI/W_ItemEntry.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/UI/Screens/InventoryUI/W_ItemList.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/UI/Screens/InventoryUI/W_ItemList.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/UI/Screens/InventoryUI/W_ItemOption.uasset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/UI/Screens/LogUI/W_FactionOption.uasset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/UI/Screens/LogUI/W_LogFactionsTab.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/UI/Screens/LogUI/W_LogFactionsTab.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/UI/Screens/LogUI/W_LogInfoTab.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/UI/Screens/LogUI/W_LogInfoTab.uasset" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Content/UI/Screens/LogUI/W_LogUI.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/UI/Screens/LogUI/W_LogUI.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/UI/Screens/LogUI/W_MailOption.uasset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/UI/Screens/LogUI/W_PropertyOption.uasset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/UI/Widgets/Interaction/W_TabOption.uasset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/UI/Widgets/Interaction/W_Tabs.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/UI/Widgets/Interaction/W_Tabs.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/UI/Widgets/Visuals/W_AnnotatedArc.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/UI/Widgets/Visuals/W_AnnotatedArc.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/UI/Widgets/Visuals/W_Arc.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/UI/Widgets/Visuals/W_Arc.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/UI/Widgets/Visuals/W_FillBar.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/UI/Widgets/Visuals/W_FillBar.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/UI/Widgets/Visuals/W_GameplayEffectIndicator.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/UI/Widgets/Visuals/W_GameplayEffectIndicator.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/UI/Widgets/Visuals/W_InfoField.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/UI/Widgets/Visuals/W_InfoField.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/UI/Widgets/Visuals/W_MultiArc.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/UI/Widgets/Visuals/W_MultiArc.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/UI/Widgets/Visuals/W_StructureStatInfo.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/UI/Widgets/Visuals/W_StructureStatInfo.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Private/UI/Screens/InventoryUI/InventoryOption.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Private/UI/Screens/InventoryUI/InventoryEntry.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Private/UI/Screens/InventoryUI/InventoryTradeModal.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Private/UI/Screens/InventoryUI/InventoryTradeModal.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Private/UI/Screens/InventoryUI/InventoryTransferModal.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Private/UI/Screens/InventoryUI/InventoryTransferModal.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Private/UI/Screens/InventoryUI/InventoryUI.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Private/UI/Screens/InventoryUI/InventoryUI.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Private/UI/Screens/InventoryUI/ItemEntry.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Private/UI/Screens/InventoryUI/ItemEntry.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Private/UI/Screens/InventoryUI/ItemOption.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Private/UI/Screens/LogUI/FactionOption.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Private/UI/Screens/LogUI/FactionEntry.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Private/UI/Screens/LogUI/LogFactionsTab.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Private/UI/Screens/LogUI/LogFactionsTab.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Private/UI/Widgets/Interaction/TabOption.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Private/UI/Widgets/Interaction/TabEntry.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Private/UI/Widgets/Interaction/Tabs.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Private/UI/Widgets/Interaction/Tabs.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Private/UI/Widgets/Visuals/FillBar.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Private/UI/Widgets/Visuals/FillBar.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Public/UI/Screens/InventoryUI/InventoryDisposeModal.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Public/UI/Screens/InventoryUI/InventoryDisposeModal.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Public/UI/Screens/InventoryUI/InventoryOption.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Public/UI/Screens/InventoryUI/InventoryEntry.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Public/UI/Screens/InventoryUI/InventoryTradeModal.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Public/UI/Screens/InventoryUI/InventoryTradeModal.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Public/UI/Screens/InventoryUI/InventoryTransferModal.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Public/UI/Screens/InventoryUI/InventoryTransferModal.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Public/UI/Screens/InventoryUI/InventoryUI.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Public/UI/Screens/InventoryUI/InventoryUI.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Public/UI/Screens/InventoryUI/ItemEntry.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Public/UI/Screens/InventoryUI/ItemEntry.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Public/UI/Screens/InventoryUI/ItemOption.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Public/UI/Screens/LogUI/StructureEntry.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Public/UI/Screens/LogUI/FactionOption.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Public/UI/Screens/LogUI/FactionEntry.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Public/UI/Screens/LogUI/LogFactionsTab.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Public/UI/Screens/LogUI/LogFactionsTab.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Public/UI/Widgets/Interaction/TabOption.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Public/UI/Widgets/Interaction/TabEntry.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Public/UI/Widgets/Interaction/Tabs.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Public/UI/Widgets/Interaction/Tabs.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Public/UI/Widgets/Visuals/FillBar.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Public/UI/Widgets/Visuals/FillBar.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/UI/Screens/LogUI/W_MailEntry.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/UI/Screens/LogUI/W_MailEntry.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Private/UI/Screens/LogUI/StructureEntry.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Private/UI/Screens/LogUI/StructureEntry.cpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -376,6 +337,8 @@
       <workItem from="1739602325136" duration="7267000" />
       <workItem from="1739687417477" duration="1285000" />
       <workItem from="1739688759271" duration="2719000" />
+      <workItem from="1739774752271" duration="4142000" />
+      <workItem from="1739860130242" duration="1698000" />
     </task>
     <servers />
   </component>
