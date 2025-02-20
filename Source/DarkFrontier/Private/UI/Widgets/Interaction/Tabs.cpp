@@ -9,6 +9,9 @@
 void UTabs::NativeConstruct()
 {
 	Super::NativeConstruct();
+
+	TabSwitcher->ClearChildren();
+	Tabs.Empty();
 	
 	for(TSubclassOf<UTab> TabClass : TabClasses)
 	{

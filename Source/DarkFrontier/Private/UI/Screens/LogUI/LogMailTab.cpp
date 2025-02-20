@@ -4,6 +4,7 @@
 #include "CommonButtonBase.h"
 #include "CommonTextBlock.h"
 #include "Components/WidgetSwitcher.h"
+#include "Game/UniverseGameState.h"
 #include "UI/Screens/LogUI/Mail.h"
 #include "UI/Screens/LogUI/MailEntry.h"
 #include "UI/Widgets/Interaction/ListBox.h"
@@ -17,7 +18,7 @@ void ULogMailTab::NativeConstruct()
 	UMail* Temp = NewObject<UMail>();
 	Temp->Subject = FText::FromString("Test subject");
 	Temp->Body = FText::FromString("Test body");
-	Temp->Timestamp = 5;
+	Temp->Timestamp = GetWorld()->GetGameState<AUniverseGameState>()->GetGameTimestamp();
 	Temp->IsRead = false;
 	Mail.Add(Temp);
 	MailListBox->SetOptions(Mail);
