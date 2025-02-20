@@ -6,6 +6,8 @@
 #include "UObject/Object.h"
 #include "Mail.generated.h"
 
+class UGameTimestamp;
+
 /**
  * 
  */
@@ -23,7 +25,7 @@ public:
 	FText Body;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
-	int Timestamp = 0;
+	TObjectPtr<UGameTimestamp> Timestamp;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	bool IsRead = false;

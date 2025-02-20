@@ -2,6 +2,7 @@
 
 #include "UI/Screens/LogUI/MailEntry.h"
 #include "CommonTextBlock.h"
+#include "Game/GameTimestamp.h"
 #include "UI/Screens/LogUI/Mail.h"
 
 void UMailEntry::Init(UMail* InMail)
@@ -10,5 +11,5 @@ void UMailEntry::Init(UMail* InMail)
 
 	SubjectText->SetText(FText::FromString(FString::Printf(TEXT("\"%s\""), *Mail->Subject.ToString())));
 	// TODO change to time ago
-	TimeText->SetText(FText::FromString(FString::FromInt(Mail->Timestamp)));
+	TimeText->SetText(FText::FromString(FString::FromInt(Mail->Timestamp->Value)));
 }
