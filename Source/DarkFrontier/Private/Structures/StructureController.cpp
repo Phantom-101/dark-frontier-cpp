@@ -3,6 +3,7 @@
 #include "Structures/StructureController.h"
 #include "AbilitySystemComponent.h"
 #include "EnhancedInputComponent.h"
+#include "Game/UniverseGameState.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Input/CommonUIActionRouterBase.h"
 #include "Libraries/BoundsBlueprintFunctionLibrary.h"
@@ -70,6 +71,8 @@ void AStructureController::OnPossess(APawn* InPawn)
 		StructurePawn->GetAbilitySystemComponent()->InitAbilityActorInfo(StructurePawn, StructurePawn);
 		
 		OnLayoutChangedHandle = StructurePawn->GetIndices()->OnUpdated.AddUObject<AStructureController>(this, &AStructureController::PropagateLayoutChange);
+
+		GetWorld()->GetGameState<AUniverseGameState>()->SetPlayerFaction(StructurePawn->GetOwningFaction());
 	}
 }
 

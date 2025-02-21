@@ -13,15 +13,7 @@ void ULogMailTab::NativeConstruct()
 {
 	Super::NativeConstruct();
 
-	TArray<UObject*> Mail;
-	// TODO get mail from somewhere
-	UMail* Temp = NewObject<UMail>();
-	Temp->Subject = FText::FromString("Test subject");
-	Temp->Body = FText::FromString("Test body");
-	Temp->Timestamp = GetWorld()->GetGameState<AUniverseGameState>()->GetGameTimestamp();
-	Temp->IsRead = false;
-	Mail.Add(Temp);
-	MailListBox->SetOptions(Mail);
+	MailListBox->SetOptions(TArray<UObject*>(GetWorld()->GetGameState<AUniverseGameState>()->GetMail()));
 	MailListBox->SetBuilder([Owner = this, Class = EntryClass](UObject* Faction)
 	{
 		UMailEntry* Option = CreateWidget<UMailEntry>(Owner, Class);
