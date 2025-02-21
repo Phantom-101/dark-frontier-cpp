@@ -1,29 +1,50 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 #include "Game/UniverseGameState.h"
-#include "Game/GameTime.h"
-#include "Game/GameTimestamp.h"
+#include "Game/Time.h"
+#include "Game/Timestamp.h"
 
 AUniverseGameState::AUniverseGameState()
 {
 	PrimaryActorTick.bCanEverTick = true;
-
-	Timestamp = CreateDefaultSubobject<UGameTimestamp>("Timestamp");
 }
 
-UGameTimestamp* AUniverseGameState::GetGameTimestamp() const
+FTimestamp AUniverseGameState::GetTimestamp() const
 {
 	return Timestamp;
 }
 
-UGameTime* AUniverseGameState::GetGameTime() const
+FTime AUniverseGameState::GetTime() const
 {
-	return UGameTime::FromTimestamp(Timestamp);
+	return FTime(Timestamp);
+}
+
+AFaction* AUniverseGameState::GetPlayerFaction()
+{
+	return PlayerFaction;
+}
+
+void AUniverseGameState::SetPlayerFaction(AFaction* Faction)
+{
+	if(Faction != nullptr)
+	{
+		PlayerFaction = Faction;
+	}
+}
+
+TArray<UMail*> AUniverseGameState::GetMail()
+{
+	return Mail;
+}
+
+void AUniverseGameState::AddMail(UMail* InMail)
+{
+	Mail.Add(InMail);
 }
 
 void AUniverseGameState::Tick(const float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
 
-	Timestamp->Value += DeltaSeconds;
+	Timestamp.Value += DeltaSeconds;
 }

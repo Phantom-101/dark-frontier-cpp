@@ -3,11 +3,13 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Time.h"
+#include "Timestamp.h"
 #include "GameFramework/GameState.h"
 #include "UniverseGameState.generated.h"
 
-class UGameTime;
-class UGameTimestamp;
+class UMail;
+class AFaction;
 
 /**
  * 
@@ -20,17 +22,37 @@ class DARKFRONTIER_API AUniverseGameState : public AGameStateBase
 protected:
 
 	UPROPERTY(BlueprintReadOnly, EditAnywhere)
-	TObjectPtr<UGameTimestamp> Timestamp;
+	FTimestamp Timestamp;
+
+	UPROPERTY(BlueprintReadOnly, EditAnywhere)
+	TObjectPtr<AFaction> PlayerFaction;
+
+	UPROPERTY(BlueprintReadOnly, EditAnywhere)
+	TArray<TObjectPtr<UMail>> Mail;
 
 public:
 
 	AUniverseGameState();
 
 	UFUNCTION(BlueprintCallable)
-	UGameTimestamp* GetGameTimestamp() const;
+	FTimestamp GetTimestamp() const;
 
 	UFUNCTION(BlueprintCallable)
-	UGameTime* GetGameTime() const;
+	FTime GetTime() const;
+
+	UFUNCTION(BlueprintCallable)
+	AFaction* GetPlayerFaction();
+
+	UFUNCTION(BlueprintCallable)
+	void SetPlayerFaction(AFaction* Faction);
+
+	UFUNCTION(BlueprintCallable)
+	TArray<UMail*> GetMail();
+
+	UFUNCTION(BlueprintCallable)
+	void AddMail(UMail* InMail);
+
+protected:
 
 	virtual void Tick(float DeltaSeconds) override;
 

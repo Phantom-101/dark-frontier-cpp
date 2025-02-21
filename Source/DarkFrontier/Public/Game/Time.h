@@ -4,38 +4,42 @@
 
 #include "CoreMinimal.h"
 #include "UObject/Object.h"
-#include "GameTime.generated.h"
+#include "Time.generated.h"
 
-class UGameTimestamp;
+struct FTimestamp;
 
 /**
  * 
  */
-UCLASS(DefaultToInstanced, EditInlineNew)
-class DARKFRONTIER_API UGameTime : public UObject
+USTRUCT(BlueprintType)
+struct DARKFRONTIER_API FTime
 {
 	GENERATED_BODY()
 
-public:
-	
-	inline static float FractionalPerMinute = 1.0f;
+	inline static float TimePerMinute = 1.0f;
 	inline static float MinutesPerHour = 60.0f;
 	inline static float HoursPerDay = 24.0f;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
-	float Fractional = 0;
+	float Remainder;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
-	int Minutes = 0;
+	int Minutes;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
-	int Hours = 0;
+	int Hours;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
-	int Days = 0;
+	int Days;
 
-	static UGameTime* FromTimestamp(const UGameTimestamp* Timestamp);
+	FTime();
 
-	UGameTimestamp* ToTimestamp() const;
+	FTime(FTimestamp Timestamp);
+
+	FTime Difference(FTime Other) const;
+
+	FTimestamp ToTimestamp() const;
+
+	FString ToString() const;
 	
 };

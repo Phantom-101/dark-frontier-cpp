@@ -8,20 +8,19 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="cb7ccd89-2b5f-4c19-9f87-96459d2ed121" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/Source/DarkFrontier/Private/Game/GameTime.cpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Source/DarkFrontier/Private/Game/UniverseGameState.cpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Source/DarkFrontier/Public/Game/GameTime.h" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Source/DarkFrontier/Public/Game/GameTimestamp.h" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Source/DarkFrontier/Public/Game/UniverseGameState.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Source/DarkFrontier/Private/Game/Timestamp.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.DarkFrontier.dir/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.DarkFrontier.dir/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/BP_MainMenuGameMode.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/BP_MainMenuGameMode.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/GM_Game.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/GM_Game.uasset" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Content/Maps/Test.umap" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Maps/Test.umap" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Content/StarterContent/Architecture/Floor_400x400.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/StarterContent/Architecture/Floor_400x400.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/UI/Screens/GameUI/W_GameUI.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/UI/Screens/GameUI/W_GameUI.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Private/Game/GameTime.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Private/Game/Time.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Private/Game/UniverseGameState.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Private/Game/UniverseGameState.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Private/Structures/StructureController.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Private/Structures/StructureController.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Private/UI/Screens/LogUI/LogMailTab.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Private/UI/Screens/LogUI/LogMailTab.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Private/UI/Screens/LogUI/Mail.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Private/UI/Screens/LogUI/Mail.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Private/UI/Screens/LogUI/MailEntry.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Private/UI/Screens/LogUI/MailEntry.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Private/UI/Widgets/Interaction/Tabs.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Private/UI/Widgets/Interaction/Tabs.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Public/Game/GameTime.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Public/Game/Time.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Public/Game/GameTimestamp.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Public/Game/Timestamp.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Public/Game/UniverseGameState.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Public/Game/UniverseGameState.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Public/UI/Screens/LogUI/Mail.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Public/UI/Screens/LogUI/Mail.h" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -34,7 +33,7 @@
   </component>
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$PROJECT_DIR$/../../editors/UE_5.4/Engine/Plugins/Marketplace/Developer/RiderLink/Source/RD/thirdparty/ordered-map/include/tsl/ordered_map.h" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://D:/unreal/projects/dark-frontier-cpp/Source/DarkFrontier/Private/Factions/Faction.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/../../editors/UE_5.4/Engine/Source/Runtime/Engine/Private/World.cpp" root0="SKIP_HIGHLIGHTING" />
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
@@ -343,6 +342,8 @@
       <workItem from="1739860130242" duration="1698000" />
       <workItem from="1739948137679" duration="688000" />
       <workItem from="1740030596714" duration="7269000" />
+      <workItem from="1740120971384" duration="1360000" />
+      <workItem from="1740122361924" duration="2594000" />
     </task>
     <servers />
   </component>
