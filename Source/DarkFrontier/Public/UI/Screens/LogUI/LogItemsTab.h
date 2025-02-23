@@ -6,9 +6,9 @@
 #include "UI/Widgets/Interaction/Tab.h"
 #include "LogItemsTab.generated.h"
 
+class UItemInfo;
 class UItemEntry;
 class UCommonButtonBase;
-class UCommonTextBlock;
 class UListBox;
 class UWidgetSwitcher;
 
@@ -29,7 +29,7 @@ protected:
 	TObjectPtr<UListBox> ItemListBox;
 
 	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
-	TObjectPtr<UCommonTextBlock> NameText;
+	TObjectPtr<UItemInfo> ItemInfo;
 
 	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
 	TObjectPtr<UCommonButtonBase> BackButton;

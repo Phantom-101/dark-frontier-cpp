@@ -2,11 +2,11 @@
 
 #include "UI/Screens/LogUI/LogItemsTab.h"
 #include "CommonButtonBase.h"
-#include "CommonTextBlock.h"
 #include "Components/WidgetSwitcher.h"
 #include "Game/UniverseGameMode.h"
 #include "Items/Item.h"
 #include "UI/Screens/InventoryUI/ItemEntry.h"
+#include "UI/Screens/LogUI/ItemInfo.h"
 #include "UI/Widgets/Interaction/ListBox.h"
 
 void ULogItemsTab::NativeConstruct()
@@ -44,7 +44,7 @@ void ULogItemsTab::HandleSelect(UObject* Object) const
 	else
 	{
 		Switcher->SetActiveWidgetIndex(1);
-		NameText->SetText(Cast<UItemObject>(Object)->Item->Name);
+		ItemInfo->Init(Cast<UItemObject>(Object));
 	}
 }
 
