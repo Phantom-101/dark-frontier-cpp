@@ -5,6 +5,8 @@
 #include "CoreMinimal.h"
 #include "Faction.generated.h"
 
+class ASector;
+
 /**
  * 
  */
@@ -24,41 +26,44 @@ protected:
 
 	// From -1 to 1, where -1 is resource extraction and production, 0 is manufacturing, and 1 is service industry
 	UPROPERTY(EditAnywhere)
-	double EconomicFocus;
+	float EconomicFocus = 0;
 
 	// From -1 to 1, where -1 is horizontal integration, and 1 is vertical integration
 	UPROPERTY(EditAnywhere)
-	double EconomicIntegration;
+	float EconomicIntegration = 0;
 
 	// From -1 to 1, where -1 is unwilling to enter new markets, and 1 is willing to enter new markets
 	UPROPERTY(EditAnywhere)
-	double EconomicDiversity;
+	float EconomicDiversity = 0;
 
 	// From -1 to 1, where -1 is unwilling to expand to new locations, and 1 is willing to expand to new locations
 	UPROPERTY(EditAnywhere)
-	double EconomicExpansion;
+	float EconomicExpansion = 0;
 
 	// From -1 to 1, where -1 is piracy, 0 is peacekeeping, 1 is empire building
 	UPROPERTY(EditAnywhere)
-	double MilitaryFocus;
+	float MilitaryFocus = 0;
 
 	// From -1 to 1, where -1 is unwilling to build military logistics, and 1 is willing to build military logistics
 	UPROPERTY(EditAnywhere)
-	double MilitaryIntegration;
+	float MilitaryIntegration = 0;
 
 	// From -1 to 1, where -1 is unwilling to maintain a diverse composition, and 1 is willing to maintain a diverse composition
 	UPROPERTY(EditAnywhere)
-	double MilitaryDiversity;
+	float MilitaryDiversity = 0;
 	
 	// From -1 to 1, where -1 is unwilling to expand to new locations, and 1 is willing to expand to new locations
 	UPROPERTY(EditAnywhere)
-	double MilitaryExpansion;
+	float MilitaryExpansion = 0;
 
 	UPROPERTY(EditAnywhere)
-	double Balance = 0;
+	TObjectPtr<ASector> Home;
 
 	UPROPERTY(EditAnywhere)
-	TMap<TObjectPtr<AFaction>, double> Relations;
+	float Balance = 0;
+
+	UPROPERTY(EditAnywhere)
+	TMap<TObjectPtr<AFaction>, float> Relations;
 	
 	virtual void BeginPlay() override;
 
@@ -66,16 +71,22 @@ public:
 
 	FText GetFactionName() const;
 
-	double GetBalance() const;
+	ASector* GetHome() const;
 
-	void SetBalance(double Target);
+	float GetBalance() const;
 
-	double ChangeBalance(double Delta);
+	void SetBalance(float Target);
 
-	double GetRelation(AFaction* Other) const;
+	float ChangeBalance(float Delta);
 
-	void SetRelation(AFaction* Other, double Target);
+	float GetRelation(AFaction* Other) const;
 
-	double ChangeRelation(AFaction* Other, double Delta);
+	void SetRelation(AFaction* Other, float Target);
+
+	float ChangeRelation(AFaction* Other, float Delta);
+
+	float GetPower() const;
+
+	float GetReputation();
 	
 };
