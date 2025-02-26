@@ -1,6 +1,9 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "Factions/Faction.h"
+#include "EngineUtils.h"
+#include "Structures/Structure.h"
+#include "Structures/StructureIndices.h"
 
 AFaction::AFaction()
 {
@@ -24,23 +27,28 @@ FText AFaction::GetFactionName() const
 	return FactionName;
 }
 
-double AFaction::GetBalance() const
+ASector* AFaction::GetHome() const
+{
+	return Home;
+}
+
+float AFaction::GetBalance() const
 {
 	return Balance;
 }
 
-void AFaction::SetBalance(const double Target)
+void AFaction::SetBalance(const float Target)
 {
 	Balance = Target;
 }
 
-double AFaction::ChangeBalance(const double Delta)
+float AFaction::ChangeBalance(const float Delta)
 {
 	SetBalance(Balance + Delta);
 	return Balance;
 }
 
-double AFaction::GetRelation(AFaction* Other) const
+float AFaction::GetRelation(AFaction* Other) const
 {
 	if(Other == this)
 	{
@@ -55,16 +63,41 @@ double AFaction::GetRelation(AFaction* Other) const
 	return 0;
 }
 
-void AFaction::SetRelation(AFaction* Other, double Target)
+void AFaction::SetRelation(AFaction* Other, float Target)
 {
 	Target = FMath::Clamp(Target, -1, 1);
 	Relations[Other] = Target;
 	Other->Relations[this] = Target;
 }
 
-double AFaction::ChangeRelation(AFaction* Other, const double Delta)
+float AFaction::ChangeRelation(AFaction* Other, const float Delta)
 {
-	const double Target = GetRelation(Other) + Delta;
+	const float Target = GetRelation(Other) + Delta;
 	SetRelation(Other, Target);
 	return Target;
+}
+
+float AFaction::GetPower() const
+{
+	float Power = 0;
+	for(TActorIterator<AStructure> Itr(GetWorld()); Itr; ++Itr)
+	{
+		if(Itr->GetOwningFaction() == this)
+		{
+			Power += Itr->GetIndices()->GetParts().Num();
+		}
+	}
+	return Power;
+}
+
+float AFaction::GetReputation()
+{
+	float Total = 0;
+	int Count = 0;
+	for(TActorIterator<AFaction> Itr(GetWorld()); Itr; ++Itr)
+	{
+		Total += Itr->GetRelation(this);
+		Count++;
+	}
+	return Total / Count;
 }

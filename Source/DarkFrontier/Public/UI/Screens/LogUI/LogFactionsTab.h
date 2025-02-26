@@ -6,6 +6,7 @@
 #include "UI/Widgets/Interaction/Tab.h"
 #include "LogFactionsTab.generated.h"
 
+class UFactionInfo;
 class UFactionEntry;
 class UCommonButtonBase;
 class UCommonTextBlock;
@@ -29,7 +30,7 @@ protected:
 	TObjectPtr<UListBox> FactionListBox;
 
 	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
-	TObjectPtr<UCommonTextBlock> NameText;
+	TObjectPtr<UFactionInfo> FactionInfo;
 
 	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
 	TObjectPtr<UCommonButtonBase> BackButton;

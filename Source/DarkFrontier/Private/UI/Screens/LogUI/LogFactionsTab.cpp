@@ -2,11 +2,11 @@
 
 #include "UI/Screens/LogUI/LogFactionsTab.h"
 #include "CommonButtonBase.h"
-#include "CommonTextBlock.h"
 #include "Components/WidgetSwitcher.h"
 #include "Factions/Faction.h"
 #include "Kismet/GameplayStatics.h"
 #include "UI/Screens/LogUI/FactionEntry.h"
+#include "UI/Screens/LogUI/FactionInfo.h"
 #include "UI/Widgets/Interaction/ListBox.h"
 
 void ULogFactionsTab::NativeConstruct()
@@ -36,7 +36,7 @@ void ULogFactionsTab::HandleSelect(UObject* Object) const
 	else
 	{
 		Switcher->SetActiveWidgetIndex(1);
-		NameText->SetText(Cast<AFaction>(Object)->GetFactionName());
+		FactionInfo->Init(Cast<AFaction>(Object));
 	}
 }
 
