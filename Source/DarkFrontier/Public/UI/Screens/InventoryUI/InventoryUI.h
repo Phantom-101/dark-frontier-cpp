@@ -6,6 +6,8 @@
 #include "CommonActivatableWidget.h"
 #include "InventoryUI.generated.h"
 
+class UItemStackEntry;
+class UListBox;
 class UInventoryTradeModal;
 class UInventoryTransferModal;
 struct FItemStack;
@@ -17,7 +19,6 @@ class UInfoField;
 class UCommonTextBlock;
 class UImage;
 class UWidgetSwitcher;
-class UItemList;
 class UCommonButtonBase;
 class UItem;
 class UInventory;
@@ -36,7 +37,7 @@ protected:
 	TObjectPtr<UCommonButtonBase> SwitchButton;
 
 	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
-	TObjectPtr<UItemList> ItemList;
+	TObjectPtr<UListBox> ItemListBox;
 
 	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
 	TObjectPtr<UWidgetSwitcher> InfoSwitcher;
@@ -75,6 +76,9 @@ protected:
 	TObjectPtr<UCommonButtonBase> DisposeButton;
 
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly)
+	TSubclassOf<UItemStackEntry> ItemStackEntryClass;
+
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly)
 	TSubclassOf<UListBoxModal> ListBoxModalClass;
 
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly)
@@ -90,7 +94,7 @@ protected:
 	TSubclassOf<UInventoryDisposeModal> DisposeModalClass;
 
 	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly)
-	TObjectPtr<AStructure> CurrentStructure;
+	TObjectPtr<AStructure> Structure;
 
 	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly)
 	TObjectPtr<UCommonActivatableWidget> CurrentModal;
@@ -103,14 +107,20 @@ protected:
 
 public:
 
-	void SetCurrentStructure(AStructure* InStructure);
+	void SetStructure(AStructure* InStructure);
 
-	AStructure* GetCurrentStructure() const;
+	AStructure* GetStructure() const;
 
-	UInventory* GetCurrentInventory() const;
+	UInventory* GetInventory() const;
 
 private:
 
+	void Rebuild();
+
+	void HandleItemAdded(UItem* Item, int Quantity);
+
+	void HandleItemRemoved(UItem* Item);
+	
 	void HandleSwitch();
 
 	void HandleSwitchConfirmed(UObject* Selection);

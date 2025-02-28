@@ -4,21 +4,20 @@
 
 #include "CoreMinimal.h"
 #include "CommonUserWidget.h"
-#include "Blueprint/IUserObjectListEntry.h"
 #include "ItemStackEntry.generated.h"
+
+class UItem;
+class UItemStackObject;
 
 /**
  * 
  */
-UCLASS()
-class DARKFRONTIER_API UItemStackEntry : public UCommonUserWidget, public IUserObjectListEntry
+UCLASS(Abstract)
+class DARKFRONTIER_API UItemStackEntry : public UCommonUserWidget
 {
 	GENERATED_BODY()
 
 protected:
-
-	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
-	TObjectPtr<class UCommonButtonBase> SelectButton;
 
 	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
 	TObjectPtr<class UImage> IconImage;
@@ -28,23 +27,16 @@ protected:
 
 	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
 	TObjectPtr<UCommonTextBlock> QuantityText;
-	
-	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly)
-	TObjectPtr<class UInventory> Inventory;
 
 	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly)
-	TObjectPtr<class UItem> Item;
+	TObjectPtr<UItemStackObject> ItemStack;
 
-	virtual void NativeConstruct() override;
+public:
 
-	virtual void NativeOnListItemObjectSet(UObject* ListItemObject) override;
-
-	virtual void NativeOnEntryReleased() override;
+	void Init(UItemStackObject* InItemStack);
 
 private:
 	
-	void OnSelected() const;
-
 	void UpdateQuantity(UItem* InItem, int InQuantity) const;
 	
 };
