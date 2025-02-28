@@ -47,7 +47,7 @@ void ULogPropertyTab::HandleSelect(UObject* Object) const
 	else
 	{
 		Switcher->SetActiveWidgetIndex(1);
-		NameText->SetText(FText::FromString(Cast<AStructure>(Object)->GetName()));
+		//NameText->SetText(FText::FromString(Cast<AStructure>(Object)->GetName()));
 	}
 }
 

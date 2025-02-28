@@ -50,6 +50,11 @@ int UInventory::GetItemQuantity(UItem* Item)
 	return 0;
 }
 
+float UInventory::GetMaxVolume() const
+{
+	return MaxVolume;
+}
+
 float UInventory::GetVolume()
 {
 	float Volume = 0;
@@ -75,6 +80,11 @@ float UInventory::GetItemVolume(UItem* Item)
 float UInventory::GetVolumeRemaining()
 {
 	return MaxVolume - GetVolume();
+}
+
+float UInventory::GetMaxMass() const
+{
+	return MaxMass;
 }
 
 float UInventory::GetMass()

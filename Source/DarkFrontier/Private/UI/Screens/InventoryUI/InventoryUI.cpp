@@ -9,6 +9,7 @@
 #include "Items/Inventory.h"
 #include "Items/Item.h"
 #include "Items/ItemStack.h"
+#include "Items/ItemStackObject.h"
 #include "Libraries/UIBlueprintFunctionLibrary.h"
 #include "Structures/Structure.h"
 #include "Structures/StructureLocation.h"
@@ -17,7 +18,8 @@
 #include "UI/Screens/InventoryUI/InventoryEntry.h"
 #include "UI/Screens/InventoryUI/InventoryTradeModal.h"
 #include "UI/Screens/InventoryUI/InventoryTransferModal.h"
-#include "UI/Screens/InventoryUI/ItemList.h"
+#include "UI/Screens/InventoryUI/ItemStackEntry.h"
+#include "UI/Widgets/Interaction/ListBox.h"
 #include "UI/Widgets/Modals/ListBoxModal.h"
 #include "UI/Widgets/Visuals/InfoField.h"
 
@@ -39,8 +41,8 @@ void UInventoryUI::NativeTick(const FGeometry& MyGeometry, const float InDeltaTi
 {
 	Super::NativeTick(MyGeometry, InDeltaTime);
 
-	UInventory* Inventory = GetCurrentInventory();
-	UItem* Selected = ItemList->GetSelectedItem();
+	UInventory* Inventory = GetInventory();
+	const UItemStackObject* Selected = Cast<UItemStackObject>(ItemListBox->GetCurrentOption());
 	if(Selected == nullptr)
 	{
 		InfoSwitcher->SetActiveWidget(NoItem);
@@ -49,12 +51,12 @@ void UInventoryUI::NativeTick(const FGeometry& MyGeometry, const float InDeltaTi
 	{
 		InfoSwitcher->SetActiveWidget(ItemInfo);
 
-		IconImage->SetBrushFromTexture(Selected->Icon);
-		NameText->SetText(Selected->Name);
-		DescriptionText->SetText(Selected->Description);
-		QuantityField->SetContentFromInt(Inventory->GetItemQuantity(Selected));
-		VolumeField->SetContentFromFloat(Inventory->GetItemVolume(Selected));
-		MassField->SetContentFromFloat(Inventory->GetItemMass(Selected));
+		IconImage->SetBrushFromTexture(Selected->Item->Icon);
+		NameText->SetText(Selected->Item->Name);
+		DescriptionText->SetText(Selected->Item->Description);
+		QuantityField->SetContentFromInt(Inventory->GetItemQuantity(Selected->Item));
+		VolumeField->SetContentFromFloat(Inventory->GetItemVolume(Selected->Item));
+		MassField->SetContentFromFloat(Inventory->GetItemMass(Selected->Item));
 	}
 }
 
@@ -63,20 +65,62 @@ TOptional<FUIInputConfig> UInventoryUI::GetDesiredInputConfig() const
 	return FUIInputConfig(ECommonInputMode::All, EMouseCaptureMode::NoCapture);
 }
 
-void UInventoryUI::SetCurrentStructure(AStructure* InStructure)
+void UInventoryUI::SetStructure(AStructure* InStructure)
 {
-	CurrentStructure = InStructure;
-	ItemList->SetInventory(CurrentStructure->GetInventory());
+	if(IsValid(Structure))
+	{
+		GetInventory()->OnItemAdded.RemoveAll(this);
+		GetInventory()->OnItemRemoved.RemoveAll(this);
+	}
+	
+	Structure = InStructure;
+
+	if(IsValid(Structure))
+	{
+		GetInventory()->OnItemAdded.AddUObject<UInventoryUI>(this, &UInventoryUI::HandleItemAdded);
+		GetInventory()->OnItemRemoved.AddUObject<UInventoryUI>(this, &UInventoryUI::HandleItemRemoved);
+	}
+	
+	Rebuild();
 }
 
-AStructure* UInventoryUI::GetCurrentStructure() const
+AStructure* UInventoryUI::GetStructure() const
 {
-	return CurrentStructure;
+	return Structure;
 }
 
-UInventory* UInventoryUI::GetCurrentInventory() const
+UInventory* UInventoryUI::GetInventory() const
 {
-	return ItemList->GetInventory();
+	return Structure->GetInventory();
+}
+
+void UInventoryUI::Rebuild()
+{
+	TArray<UObject*> Options;
+	for(UItem* Item : GetInventory()->GetItems())
+	{
+		UItemStackObject* Obj = NewObject<UItemStackObject>();
+		Obj->Inventory = GetInventory();
+		Obj->Item = Item;
+		Options.Add(Obj);
+	}
+	ItemListBox->SetOptions(Options);
+	ItemListBox->SetBuilder([Owner = this, Class = ItemStackEntryClass](UObject* ItemStack)
+	{
+		UItemStackEntry* Option = CreateWidget<UItemStackEntry>(Owner, Class);
+		Option->Init(Cast<UItemStackObject>(ItemStack));
+		return Option;
+	});
+}
+
+void UInventoryUI::HandleItemAdded(UItem* Item, int Quantity)
+{
+	Rebuild();
+}
+
+void UInventoryUI::HandleItemRemoved(UItem* Item)
+{
+	Rebuild();
 }
 
 void UInventoryUI::HandleSwitch()
@@ -90,7 +134,7 @@ void UInventoryUI::HandleSwitch()
 	}
 
 	UListBoxModal* SwitchModal = Base->PushModal<UListBoxModal>(ListBoxModalClass);
-	SwitchModal->SetOptionsWithInitial(TArray<UObject*>(CurrentStructure->GetLocation()->GetInTree()), CurrentStructure);
+	SwitchModal->SetOptionsWithInitial(TArray<UObject*>(Structure->GetLocation()->GetInTree()), Structure);
 	SwitchModal->SetBuilder([Owner = SwitchModal, Class = InventoryEntryClass](UObject* Structure)
 	{
 		UInventoryEntry* Option = CreateWidget<UInventoryEntry>(Owner, Class);
@@ -105,7 +149,7 @@ void UInventoryUI::HandleSwitch()
 
 void UInventoryUI::HandleSwitchConfirmed(UObject* Selection)
 {
-	SetCurrentStructure(Cast<AStructure>(Selection));
+	SetStructure(Cast<AStructure>(Selection));
 }
 
 void UInventoryUI::HandleTrade()
@@ -118,8 +162,8 @@ void UInventoryUI::HandleTrade()
 		CurrentModal = nullptr;
 	}
 
-	TArray<AStructure*> Targets = CurrentStructure->GetLocation()->GetInTree();
-	const AFaction* CurrentFaction = CurrentStructure->GetOwningFaction();
+	TArray<AStructure*> Targets = Structure->GetLocation()->GetInTree();
+	const AFaction* CurrentFaction = Structure->GetOwningFaction();
 	int Index = 0;
 	while(Index < Targets.Num())
 	{
@@ -134,7 +178,7 @@ void UInventoryUI::HandleTrade()
 	}
 	
 	UInventoryTradeModal* TradeModal = Base->PushModal<UInventoryTradeModal>(TradeModalClass);
-	TradeModal->Init(ItemList->GetInventory(), ItemList->GetSelectedItem(), Targets);
+	TradeModal->Init(GetInventory(), Cast<UItemStackObject>(ItemListBox->GetCurrentOption())->Item, Targets);
 
 	TradeModal->OnConfirmed.Clear();
 	TradeModal->OnConfirmed.AddUObject<UInventoryUI>(this, &UInventoryUI::HandleTradeConfirmed);
@@ -146,15 +190,15 @@ void UInventoryUI::HandleTradeConfirmed(const FItemStack Trade, AStructure* Targ
 {
 	if(Trade.Quantity > 0)
 	{
-		ItemList->GetInventory()->AddItems(Trade.Item, Trade.Quantity);
+		GetInventory()->AddItems(Trade.Item, Trade.Quantity);
 		Target->GetInventory()->RemoveItems(Trade.Item, Trade.Quantity);
 	}
 	else
 	{
-		ItemList->GetInventory()->RemoveItems(Trade.Item, Trade.Quantity);
+		GetInventory()->RemoveItems(Trade.Item, Trade.Quantity);
 		Target->GetInventory()->AddItems(Trade.Item, Trade.Quantity);
 	}
-	ItemList->GetInventory()->GetStructure()->GetOwningFaction()->ChangeBalance(-Trade.Quantity * Trade.Item->Value);
+	GetInventory()->GetStructure()->GetOwningFaction()->ChangeBalance(-Trade.Quantity * Trade.Item->Value);
 	Target->GetOwningFaction()->ChangeBalance(Trade.Quantity * Trade.Item->Value);
 }
 
@@ -168,11 +212,11 @@ void UInventoryUI::HandleTransfer()
 		CurrentModal = nullptr;
 	}
 
-	TArray<AStructure*> Targets = CurrentStructure->GetLocation()->GetInTree();
-	Targets.Remove(CurrentStructure);
+	TArray<AStructure*> Targets = Structure->GetLocation()->GetInTree();
+	Targets.Remove(Structure);
 	
 	UInventoryTransferModal* TransferModal = Base->PushModal<UInventoryTransferModal>(TransferModalClass);
-	TransferModal->Init(ItemList->GetInventory(), ItemList->GetSelectedItem(), Targets);
+	TransferModal->Init(GetInventory(), Cast<UItemStackObject>(ItemListBox->GetCurrentOption())->Item, Targets);
 
 	TransferModal->OnConfirmed.Clear();
 	TransferModal->OnConfirmed.AddUObject<UInventoryUI>(this, &UInventoryUI::HandleTransferConfirmed);
@@ -182,7 +226,7 @@ void UInventoryUI::HandleTransfer()
 
 void UInventoryUI::HandleTransferConfirmed(const FItemStack Transfer, AStructure* Target) const
 {
-	ItemList->GetInventory()->RemoveItems(Transfer.Item, Transfer.Quantity);
+	GetInventory()->RemoveItems(Transfer.Item, Transfer.Quantity);
 	Target->GetInventory()->AddItems(Transfer.Item, Transfer.Quantity);
 }
 
@@ -197,7 +241,7 @@ void UInventoryUI::HandleDispose()
 	}
 	
 	UInventoryDisposeModal* DisposeModal = Base->PushModal<UInventoryDisposeModal>(DisposeModalClass);
-	DisposeModal->Init(ItemList->GetInventory(), ItemList->GetSelectedItem());
+	DisposeModal->Init(GetInventory(), Cast<UItemStackObject>(ItemListBox->GetCurrentOption())->Item);
 
 	DisposeModal->OnConfirmed.Clear();
 	DisposeModal->OnConfirmed.AddUObject<UInventoryUI>(this, &UInventoryUI::HandleDisposeConfirmed);
@@ -207,5 +251,5 @@ void UInventoryUI::HandleDispose()
 
 void UInventoryUI::HandleDisposeConfirmed(const FItemStack Dispose) const
 {
-	ItemList->GetInventory()->RemoveItems(Dispose.Item, Dispose.Quantity);
+	GetInventory()->RemoveItems(Dispose.Item, Dispose.Quantity);
 }

@@ -29,9 +29,6 @@ protected:
 	TObjectPtr<UListBox> StructureListBox;
 
 	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
-	TObjectPtr<UCommonTextBlock> NameText;
-
-	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
 	TObjectPtr<UCommonButtonBase> BackButton;
 
 	UPROPERTY(BlueprintReadOnly, EditAnywhere)

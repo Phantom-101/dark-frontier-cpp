@@ -56,6 +56,9 @@ public:
 	int GetItemQuantity(UItem* Item);
 
 	UFUNCTION(BlueprintCallable)
+	float GetMaxVolume() const;
+
+	UFUNCTION(BlueprintCallable)
 	float GetVolume();
 
 	UFUNCTION(BlueprintCallable)
@@ -63,6 +66,9 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	float GetVolumeRemaining();
+
+	UFUNCTION(BlueprintCallable)
+	float GetMaxMass() const;
 
 	UFUNCTION(BlueprintCallable)
 	float GetMass();
