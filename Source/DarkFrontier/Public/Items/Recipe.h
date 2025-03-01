@@ -6,7 +6,7 @@
 #include "Engine/DataAsset.h"
 #include "Recipe.generated.h"
 
-class UInventory;
+class UItemList;
 
 /**
  * 
@@ -33,12 +33,12 @@ public:
 	float Cost = 0;
 	
 	UPROPERTY(BlueprintReadOnly, EditAnywhere, Instanced)
-	TObjectPtr<UInventory> Inputs;
+	TObjectPtr<UItemList> Inputs;
 
 	UPROPERTY(BlueprintReadOnly, EditAnywhere)
 	float Revenue = 0;
 
 	UPROPERTY(BlueprintReadOnly, EditAnywhere, Instanced)
-	TObjectPtr<UInventory> Outputs;
+	TObjectPtr<UItemList> Outputs;
 	
 };

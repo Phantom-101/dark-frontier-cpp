@@ -67,9 +67,9 @@ void UInventoryTransferModal::HandleTargetChange(UObject* Target) const
 	if(IsValid(Target))
 	{
 		UInventory* TargetInventory = Cast<AStructure>(Target)->GetInventory();
-		const int Available = Inventory->GetItemQuantity(Item);
-		const float VolumeFit = TargetInventory->GetVolumeRemaining() / Item->Volume;
-		const float MassFit = TargetInventory->GetMassRemaining() / Item->Mass;
+		const int Available = Inventory->GetQuantity(Item);
+		const float VolumeFit = TargetInventory->GetFreeVolume() / Item->Volume;
+		const float MassFit = TargetInventory->GetFreeMass() / Item->Mass;
 		QuantityInput->SetMaxQuantity(FMath::Min(Available, FMath::FloorToInt(FMath::Min(VolumeFit, MassFit))));
 	}
 	else

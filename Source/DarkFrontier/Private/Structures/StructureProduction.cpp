@@ -2,7 +2,6 @@
 
 #include "Structures/StructureProduction.h"
 #include "Items/Inventory.h"
-#include "Items/ItemStack.h"
 #include "Items/Recipe.h"
 #include "Structures/Structure.h"
 #include "Structures/StructurePart.h"
@@ -18,7 +17,7 @@ void UStructureProduction::TickComponent(float DeltaTime, ELevelTick TickType, F
 
 	if(!IsValid(OwningPart) || !IsValid(Recipe)) return;
 
-	UInventory* Inventory = OwningPart->GetOwningStructure()->GetInventory();
+	const UInventory* Inventory = OwningPart->GetOwningStructure()->GetInventory();
 
 	if(RequirementsMet)
 	{
@@ -26,37 +25,24 @@ void UStructureProduction::TickComponent(float DeltaTime, ELevelTick TickType, F
 		
 		Progress = FMath::Clamp(Progress + DeltaTime, 0, Recipe->Time);
 
-		const bool CanFit = Inventory->CanFit(Recipe->Outputs->GetVolume(), Recipe->Outputs->GetMass());
-		if(Progress == Recipe->Time && CanFit)
+		if(Progress == Recipe->Time && Inventory->FitsList(Recipe->Outputs))
 		{
-			for(const FItemStack& Stack : Recipe->Outputs->GetStacks())
-			{
-				Inventory->AddItems(Stack.Item, Stack.Quantity);
-			}
+			Inventory->AddList(Recipe->Outputs);
+			RequirementsMet = false;
+			Progress = 0;
 		}
 	}
 	else
 	{
 		// Recipe not in progress, try to start
 		
-		bool CanStartRecipe = true;
 		// todo check faction wealth
-		for(const FItemStack& Stack : Recipe->Inputs->GetStacks())
-		{
-			if(Inventory->GetItemQuantity(Stack.Item) < Stack.Quantity)
-			{
-				CanStartRecipe = false;
-				break;
-			}
-		}
 
-		if(CanStartRecipe)
+		if(Inventory->HasList(Recipe->Inputs))
 		{
-			for(const FItemStack& Stack : Recipe->Inputs->GetStacks())
-			{
-				Inventory->RemoveItems(Stack.Item, Stack.Quantity);
-			}
+			Inventory->RemoveList(Recipe->Inputs);
 			RequirementsMet = true;
+			Progress = 0;
 		}
 	}
 }

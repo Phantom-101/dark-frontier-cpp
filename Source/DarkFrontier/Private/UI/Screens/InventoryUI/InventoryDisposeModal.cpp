@@ -47,7 +47,7 @@ void UInventoryDisposeModal::Init(UInventory* InInventory, UItem* InItem)
 	Inventory = InInventory;
 	Item = InItem;
 	
-	QuantityInput->SetMaxQuantity(Inventory->GetItemQuantity(Item));
+	QuantityInput->SetMaxQuantity(Inventory->GetQuantity(Item));
 }
 
 void UInventoryDisposeModal::HandleConfirm()

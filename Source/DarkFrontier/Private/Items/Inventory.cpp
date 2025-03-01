@@ -2,52 +2,80 @@
 
 #include "Items/Inventory.h"
 #include "Items/Item.h"
+#include "Items/ItemList.h"
 #include "Items/ItemStack.h"
 #include "Structures/Structure.h"
+
+UInventory::UInventory()
+{
+	Items = CreateDefaultSubobject<UItemList>("Items");
+}
 
 AStructure* UInventory::GetStructure() const
 {
 	return Cast<AStructure>(GetOuter());
 }
 
-TArray<FItemStack> UInventory::GetStacks()
+TArray<FItemStack> UInventory::GetStacks() const
 {
-	return ItemStacks;
+	return Items->GetStacks();
 }
 
-TArray<UItem*> UInventory::GetItems()
+bool UInventory::GetStack(UItem* Item, FItemStack& OutStack) const
 {
-	TArray<UItem*> Items;
-	for(const FItemStack& Stack : ItemStacks)
-	{
-		if(!Items.Contains(Stack.Item))
-		{
-			Items.Add(Stack.Item);
-		}
-	}
-	return Items;
+	return Items->GetStack(Item, OutStack);
 }
 
-int UInventory::GetQuantity()
+TArray<UItem*> UInventory::GetItems() const
 {
-	int Quantity = 0;
-	for(const FItemStack& Stack : ItemStacks)
-	{
-		Quantity += Stack.Quantity;
-	}
-	return Quantity;
+	return Items->GetItems();
 }
 
-int UInventory::GetItemQuantity(UItem* Item)
+int UInventory::GetQuantity(UItem* Item) const
 {
-	for(const FItemStack& Stack : ItemStacks)
-	{
-		if(Stack.Item == Item)
-		{
-			return Stack.Quantity;
-		}
-	}
-	return 0;
+	return Items->GetQuantity(Item);
+}
+
+int UInventory::HasQuantity(UItem* Item, const int Quantity) const
+{
+	return Items->HasQuantity(Item, Quantity);
+}
+
+int UInventory::FitsQuantity(const UItem* Item, const int Quantity) const
+{
+	check(Item != nullptr)
+	
+	return GetTotalVolume() + Item->Volume * Quantity <= MaxVolume && GetTotalMass() + Item->Mass * Quantity <= MaxMass;
+}
+
+void UInventory::SetQuantity(UItem* Item, const int Quantity) const
+{
+	check(Item != nullptr)
+	check(Quantity >= 0)
+	check(FitsQuantity(Item, Quantity - GetQuantity(Item)))
+	
+	Items->SetQuantity(Item, Quantity);
+	OnItemsChanged.Broadcast();
+}
+
+void UInventory::AddQuantity(UItem* Item, const int Quantity) const
+{
+	check(Item != nullptr)
+	check(Quantity >= 0)
+	check(FitsQuantity(Item, Quantity))
+	
+	Items->AddQuantity(Item, Quantity);
+	OnItemsChanged.Broadcast();
+}
+
+void UInventory::RemoveQuantity(UItem* Item, const int Quantity) const
+{
+	check(Item != nullptr)
+	check(Quantity >= 0)
+	check(HasQuantity(Item, Quantity))
+	
+	Items->RemoveQuantity(Item, Quantity);
+	OnItemsChanged.Broadcast();
 }
 
 float UInventory::GetMaxVolume() const
@@ -55,31 +83,19 @@ float UInventory::GetMaxVolume() const
 	return MaxVolume;
 }
 
-float UInventory::GetVolume()
+float UInventory::GetTotalVolume() const
 {
-	float Volume = 0;
-	for(const FItemStack& Stack : ItemStacks)
-	{
-		Volume += Stack.GetVolume();
-	}
-	return Volume;
+	return Items->GetTotalVolume();
 }
 
-float UInventory::GetItemVolume(UItem* Item)
+float UInventory::GetFreeVolume() const
 {
-	for(const FItemStack& Stack : ItemStacks)
-	{
-		if(Stack.Item == Item)
-		{
-			return Stack.GetVolume();
-		}
-	}
-	return 0;
+	return MaxVolume - GetTotalVolume();
 }
 
-float UInventory::GetVolumeRemaining()
+float UInventory::GetVolume(UItem* Item) const
 {
-	return MaxVolume - GetVolume();
+	return Items->GetVolume(Item);
 }
 
 float UInventory::GetMaxMass() const
@@ -87,96 +103,65 @@ float UInventory::GetMaxMass() const
 	return MaxMass;
 }
 
-float UInventory::GetMass()
+float UInventory::GetTotalMass() const
 {
-	float Mass = 0;
-	for(const FItemStack& Stack : ItemStacks)
-	{
-		Mass += Stack.GetMass();
-	}
-	return Mass;
+	return Items->GetTotalMass();
 }
 
-float UInventory::GetItemMass(UItem* Item)
+float UInventory::GetFreeMass() const
 {
-	for(const FItemStack& Stack : ItemStacks)
-	{
-		if(Stack.Item == Item)
-		{
-			return Stack.GetMass();
-		}
-	}
-	return 0;
+	return MaxMass - GetTotalMass();
 }
 
-float UInventory::GetMassRemaining()
+float UInventory::GetMass(UItem* Item) const
 {
-	return MaxMass - GetMass();
+	return Items->GetMass(Item);
 }
 
-bool UInventory::CanFit(const int ExtraVolume, const int ExtraMass)
+UItemList* UInventory::GetList() const
 {
-	return GetVolume() + ExtraVolume <= MaxVolume && GetMass() + ExtraMass <= MaxMass;
+	UItemList* List = NewObject<UItemList>();
+	List->SetList(Items);
+	return List;
 }
 
-bool UInventory::AddItems(UItem* Item, const int Quantity)
+bool UInventory::HasList(UItemList* Other) const
 {
-	const float ExtraVolume = Item->Volume * Quantity;
-	const float ExtraMass = Item->Mass * Quantity;
-
-	if(!CanFit(ExtraVolume, ExtraMass)) return false;
-
-	for(FItemStack& Stack : ItemStacks)
-	{
-		if(Stack.Item == Item)
-		{
-			Stack.Quantity += Quantity;
-			OnItemChanged.Broadcast(Item, Stack.Quantity);
-			return true;
-		}
-	}
-
-	ItemStacks.Add(FItemStack(Item, Quantity));
-	OnItemAdded.Broadcast(Item, Quantity);
-	return true;
-}
-
-bool UInventory::RemoveItems(UItem* Item, int Quantity)
-{
-	const FItemStack* Found = nullptr;
-	for(FItemStack& Stack : ItemStacks)
-	{
-		if(Stack.Item == Item)
-		{
-			if(Stack.Quantity < Quantity)
-			{
-				// Not enough
-				return false;
-			}
-			
-			Stack.Quantity -= Quantity;
-			Found = &Stack;
-			
-			break;
-		}
-	}
-
-	if(Found == nullptr)
-	{
-		// Item does not exist
-		return false;
-	}
-
-	// Remove stack if depleted
-	if(Found->Quantity == 0)
-	{
-		ItemStacks.RemoveSingle(*Found);
-		OnItemRemoved.Broadcast(Item);
-	}
-	else
-	{
-		OnItemChanged.Broadcast(Item, Found->Quantity);
-	}
+	check(Other != nullptr)
 	
-	return true;
+	return Items->HasList(Other);
+}
+
+bool UInventory::FitsList(const UItemList* Other) const
+{
+	check(Other != nullptr)
+	
+	return GetTotalVolume() + Other->GetTotalVolume() <= MaxVolume && GetTotalMass() + Other->GetTotalMass() <= MaxMass;
+}
+
+void UInventory::SetList(UItemList* Other) const
+{
+	check(Other != nullptr)
+	check(Other->GetTotalVolume() <= MaxVolume && Other->GetTotalMass() <= MaxMass)
+
+	Items->SetList(Other);
+	OnItemsChanged.Broadcast();
+}
+
+void UInventory::AddList(UItemList* Other) const
+{
+	check(Other != nullptr)
+	check(FitsList(Other))
+
+	Items->AddList(Other);
+	OnItemsChanged.Broadcast();
+}
+
+void UInventory::RemoveList(UItemList* Other) const
+{
+	check(Other != nullptr)
+	check(HasList(Other))
+
+	Items->RemoveList(Other);
+	OnItemsChanged.Broadcast();
 }

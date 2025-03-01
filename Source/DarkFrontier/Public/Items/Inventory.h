@@ -5,13 +5,12 @@
 #include "CoreMinimal.h"
 #include "Inventory.generated.h"
 
+class UItemList;
 class AStructure;
 class UItem;
 struct FItemStack;
 
-DECLARE_MULTICAST_DELEGATE_TwoParams(FInventoryItemAdded, UItem*, int)
-DECLARE_MULTICAST_DELEGATE_OneParam(FInventoryItemRemoved, UItem*)
-DECLARE_MULTICAST_DELEGATE_TwoParams(FInventoryItemChanged, UItem*, int)
+DECLARE_MULTICAST_DELEGATE(FInventoryItemsChanged)
 
 /**
  * 
@@ -30,62 +29,84 @@ protected:
 	float MaxMass = 0;
 	
 	UPROPERTY(BlueprintReadOnly, EditAnywhere)
-	TArray<FItemStack> ItemStacks;
+	TObjectPtr<UItemList> Items;
 
 public:
-
-	FInventoryItemAdded OnItemAdded;
-
-	FInventoryItemRemoved OnItemRemoved;
 	
-	FInventoryItemChanged OnItemChanged;
+	FInventoryItemsChanged OnItemsChanged;
+
+	UInventory();
 
 	UFUNCTION(BlueprintCallable)
 	AStructure* GetStructure() const;
 
 	UFUNCTION(BlueprintCallable)
-	TArray<FItemStack> GetStacks();
+	TArray<FItemStack> GetStacks() const;
 
 	UFUNCTION(BlueprintCallable)
-	TArray<UItem*> GetItems();
+	bool GetStack(UItem* Item, FItemStack& OutStack) const;
 
 	UFUNCTION(BlueprintCallable)
-	int GetQuantity();
+	TArray<UItem*> GetItems() const;
 
 	UFUNCTION(BlueprintCallable)
-	int GetItemQuantity(UItem* Item);
+	int GetQuantity(UItem* Item) const;
+
+	UFUNCTION(BlueprintCallable)
+	int HasQuantity(UItem* Item, int Quantity) const;
+
+	UFUNCTION(BlueprintCallable)
+	int FitsQuantity(const UItem* Item, int Quantity) const;
+
+	UFUNCTION(BlueprintCallable)
+	void SetQuantity(UItem* Item, int Quantity) const;
+	
+	UFUNCTION(BlueprintCallable)
+	void AddQuantity(UItem* Item, int Quantity) const;
+
+	UFUNCTION(BlueprintCallable)
+	void RemoveQuantity(UItem* Item, int Quantity) const;
 
 	UFUNCTION(BlueprintCallable)
 	float GetMaxVolume() const;
 
 	UFUNCTION(BlueprintCallable)
-	float GetVolume();
+	float GetTotalVolume() const;
 
 	UFUNCTION(BlueprintCallable)
-	float GetItemVolume(UItem* Item);
-
+	float GetFreeVolume() const;
+	
 	UFUNCTION(BlueprintCallable)
-	float GetVolumeRemaining();
+	float GetVolume(UItem* Item) const;
 
 	UFUNCTION(BlueprintCallable)
 	float GetMaxMass() const;
 
 	UFUNCTION(BlueprintCallable)
-	float GetMass();
+	float GetTotalMass() const;
 
 	UFUNCTION(BlueprintCallable)
-	float GetItemMass(UItem* Item);
-
-	UFUNCTION(BlueprintCallable)
-	float GetMassRemaining();
-
-	UFUNCTION(BlueprintCallable)
-	bool CanFit(int ExtraVolume, int ExtraMass);
+	float GetFreeMass() const;
 	
 	UFUNCTION(BlueprintCallable)
-	bool AddItems(UItem* Item, int Quantity);
+	float GetMass(UItem* Item) const;
 
 	UFUNCTION(BlueprintCallable)
-	bool RemoveItems(UItem* Item, int Quantity);
+	UItemList* GetList() const;
+
+	UFUNCTION(BlueprintCallable)
+	bool HasList(UItemList* Other) const;
+
+	UFUNCTION(BlueprintCallable)
+	bool FitsList(const UItemList* Other) const;
+
+	UFUNCTION(BlueprintCallable)
+	void SetList(UItemList* Other) const;
+
+	UFUNCTION(BlueprintCallable)
+	void AddList(UItemList* Other) const;
+
+	UFUNCTION(BlueprintCallable)
+	void RemoveList(UItemList* Other) const;
 	
 };
