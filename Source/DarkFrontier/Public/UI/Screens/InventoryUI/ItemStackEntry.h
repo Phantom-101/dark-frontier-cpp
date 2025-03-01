@@ -37,6 +37,6 @@ public:
 
 private:
 	
-	void UpdateQuantity(UItem* InItem, int InQuantity) const;
+	void Update() const;
 	
 };

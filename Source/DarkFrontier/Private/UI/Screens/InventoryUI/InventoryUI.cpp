@@ -54,9 +54,9 @@ void UInventoryUI::NativeTick(const FGeometry& MyGeometry, const float InDeltaTi
 		IconImage->SetBrushFromTexture(Selected->Item->Icon);
 		NameText->SetText(Selected->Item->Name);
 		DescriptionText->SetText(Selected->Item->Description);
-		QuantityField->SetContentFromInt(Inventory->GetItemQuantity(Selected->Item));
-		VolumeField->SetContentFromFloat(Inventory->GetItemVolume(Selected->Item));
-		MassField->SetContentFromFloat(Inventory->GetItemMass(Selected->Item));
+		QuantityField->SetContentFromInt(Inventory->GetQuantity(Selected->Item));
+		VolumeField->SetContentFromFloat(Inventory->GetVolume(Selected->Item));
+		MassField->SetContentFromFloat(Inventory->GetMass(Selected->Item));
 	}
 }
 
@@ -69,16 +69,14 @@ void UInventoryUI::SetStructure(AStructure* InStructure)
 {
 	if(IsValid(Structure))
 	{
-		GetInventory()->OnItemAdded.RemoveAll(this);
-		GetInventory()->OnItemRemoved.RemoveAll(this);
+		GetInventory()->OnItemsChanged.RemoveAll(this);
 	}
 	
 	Structure = InStructure;
 
 	if(IsValid(Structure))
 	{
-		GetInventory()->OnItemAdded.AddUObject<UInventoryUI>(this, &UInventoryUI::HandleItemAdded);
-		GetInventory()->OnItemRemoved.AddUObject<UInventoryUI>(this, &UInventoryUI::HandleItemRemoved);
+		GetInventory()->OnItemsChanged.AddUObject<UInventoryUI>(this, &UInventoryUI::Rebuild);
 	}
 	
 	Rebuild();
@@ -111,16 +109,7 @@ void UInventoryUI::Rebuild()
 		Option->Init(Cast<UItemStackObject>(ItemStack));
 		return Option;
 	});
-}
-
-void UInventoryUI::HandleItemAdded(UItem* Item, int Quantity)
-{
-	Rebuild();
-}
-
-void UInventoryUI::HandleItemRemoved(UItem* Item)
-{
-	Rebuild();
+	// TODO remember prior item selection to reselect after rebuilding
 }
 
 void UInventoryUI::HandleSwitch()
@@ -190,13 +179,13 @@ void UInventoryUI::HandleTradeConfirmed(const FItemStack Trade, AStructure* Targ
 {
 	if(Trade.Quantity > 0)
 	{
-		GetInventory()->AddItems(Trade.Item, Trade.Quantity);
-		Target->GetInventory()->RemoveItems(Trade.Item, Trade.Quantity);
+		GetInventory()->AddQuantity(Trade.Item, Trade.Quantity);
+		Target->GetInventory()->RemoveQuantity(Trade.Item, Trade.Quantity);
 	}
 	else
 	{
-		GetInventory()->RemoveItems(Trade.Item, Trade.Quantity);
-		Target->GetInventory()->AddItems(Trade.Item, Trade.Quantity);
+		GetInventory()->RemoveQuantity(Trade.Item, Trade.Quantity);
+		Target->GetInventory()->AddQuantity(Trade.Item, Trade.Quantity);
 	}
 	GetInventory()->GetStructure()->GetOwningFaction()->ChangeBalance(-Trade.Quantity * Trade.Item->Value);
 	Target->GetOwningFaction()->ChangeBalance(Trade.Quantity * Trade.Item->Value);
@@ -226,8 +215,8 @@ void UInventoryUI::HandleTransfer()
 
 void UInventoryUI::HandleTransferConfirmed(const FItemStack Transfer, AStructure* Target) const
 {
-	GetInventory()->RemoveItems(Transfer.Item, Transfer.Quantity);
-	Target->GetInventory()->AddItems(Transfer.Item, Transfer.Quantity);
+	GetInventory()->RemoveQuantity(Transfer.Item, Transfer.Quantity);
+	Target->GetInventory()->AddQuantity(Transfer.Item, Transfer.Quantity);
 }
 
 void UInventoryUI::HandleDispose()
@@ -251,5 +240,5 @@ void UInventoryUI::HandleDispose()
 
 void UInventoryUI::HandleDisposeConfirmed(const FItemStack Dispose) const
 {
-	GetInventory()->RemoveItems(Dispose.Item, Dispose.Quantity);
+	GetInventory()->RemoveQuantity(Dispose.Item, Dispose.Quantity);
 }

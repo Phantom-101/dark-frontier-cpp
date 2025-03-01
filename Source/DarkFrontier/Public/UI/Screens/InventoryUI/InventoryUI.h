@@ -117,10 +117,6 @@ private:
 
 	void Rebuild();
 
-	void HandleItemAdded(UItem* Item, int Quantity);
-
-	void HandleItemRemoved(UItem* Item);
-	
 	void HandleSwitch();
 
 	void HandleSwitchConfirmed(UObject* Selection);

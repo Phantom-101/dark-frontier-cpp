@@ -11,20 +11,17 @@ void UItemStackEntry::Init(UItemStackObject* InItemStack)
 {
 	if(!ensureMsgf(ItemStack == nullptr, TEXT("Init called on ItemStackEntry with non-null item stack")))
 	{
-		ItemStack->Inventory->OnItemChanged.RemoveAll(this);
+		ItemStack->Inventory->OnItemsChanged.RemoveAll(this);
 	}
 	
 	ItemStack = InItemStack;
 	IconImage->SetBrushFromTexture(ItemStack->Item->Icon);
 	NameText->SetText(ItemStack->Item->Name);
-	UpdateQuantity(ItemStack->Item, ItemStack->Inventory->GetItemQuantity(ItemStack->Item));
-	ItemStack->Inventory->OnItemChanged.AddUObject<UItemStackEntry>(this, &UItemStackEntry::UpdateQuantity);
+	Update();
+	ItemStack->Inventory->OnItemsChanged.AddUObject<UItemStackEntry>(this, &UItemStackEntry::Update);
 }
 
-void UItemStackEntry::UpdateQuantity(UItem* InItem, const int InQuantity) const
+void UItemStackEntry::Update() const
 {
-	if(ItemStack->Item == InItem)
-	{
-		QuantityText->SetText(FText::FromString(FString::Printf(TEXT("%d"), InQuantity)));
-	}
+	QuantityText->SetText(FText::FromString(FString::Printf(TEXT("%d"), ItemStack->Inventory->GetQuantity(ItemStack->Item))));
 }
