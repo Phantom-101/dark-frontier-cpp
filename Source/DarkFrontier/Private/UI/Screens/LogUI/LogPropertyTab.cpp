@@ -1,13 +1,12 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 #include "UI/Screens/LogUI/LogPropertyTab.h"
-
 #include "CommonButtonBase.h"
-#include "CommonTextBlock.h"
 #include "EngineUtils.h"
 #include "Components/WidgetSwitcher.h"
 #include "Factions/Faction.h"
 #include "Structures/Structure.h"
+#include "UI/Screens/LogUI/PropertyInfo.h"
 #include "UI/Screens/LogUI/StructureEntry.h"
 #include "UI/Widgets/Interaction/ListBox.h"
 
@@ -15,7 +14,7 @@ void ULogPropertyTab::NativeConstruct()
 {
 	Super::NativeConstruct();
 
-	AFaction* PlayerFaction = Cast<AStructure>(GetWorld()->GetFirstPlayerController()->GetPawn())->GetOwningFaction();
+	const AFaction* PlayerFaction = Cast<AStructure>(GetWorld()->GetFirstPlayerController()->GetPawn())->GetOwningFaction();
 	
 	TArray<UObject*> Structures;
 	for(TActorIterator<AStructure> Itr(GetWorld()); Itr; ++Itr)
@@ -47,7 +46,7 @@ void ULogPropertyTab::HandleSelect(UObject* Object) const
 	else
 	{
 		Switcher->SetActiveWidgetIndex(1);
-		//NameText->SetText(FText::FromString(Cast<AStructure>(Object)->GetName()));
+		PropertyInfo->Init(Cast<AStructure>(Object));
 	}
 }
 

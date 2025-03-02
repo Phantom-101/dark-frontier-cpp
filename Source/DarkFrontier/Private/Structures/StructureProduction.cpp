@@ -1,6 +1,8 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "Structures/StructureProduction.h"
+
+#include "Factions/Faction.h"
 #include "Items/Inventory.h"
 #include "Items/Recipe.h"
 #include "Structures/Structure.h"
@@ -22,12 +24,12 @@ void UStructureProduction::TickComponent(float DeltaTime, ELevelTick TickType, F
 	if(RequirementsMet)
 	{
 		// Recipe in progress
-		
 		Progress = FMath::Clamp(Progress + DeltaTime, 0, Recipe->Time);
 
 		if(Progress == Recipe->Time && Inventory->FitsList(Recipe->Outputs))
 		{
 			Inventory->AddList(Recipe->Outputs);
+			GetOwningStructure()->GetOwningFaction()->ChangeBalance(Recipe->Revenue);
 			RequirementsMet = false;
 			Progress = 0;
 		}
@@ -35,12 +37,10 @@ void UStructureProduction::TickComponent(float DeltaTime, ELevelTick TickType, F
 	else
 	{
 		// Recipe not in progress, try to start
-		
-		// todo check faction wealth
-
-		if(Inventory->HasList(Recipe->Inputs))
+		if(Inventory->HasList(Recipe->Inputs) && GetOwningStructure()->GetOwningFaction()->GetBalance() >= Recipe->Cost)
 		{
 			Inventory->RemoveList(Recipe->Inputs);
+			GetOwningStructure()->GetOwningFaction()->ChangeBalance(-Recipe->Cost);
 			RequirementsMet = true;
 			Progress = 0;
 		}

@@ -30,5 +30,5 @@ void UInfoField::SetContentFromInt(const int InContent) const
 
 void UInfoField::SetContentFromFloat(const float InContent) const
 {
-	ContentText->SetText(FText::FromString(FString::Printf(TEXT("%g"), InContent)));
+	ContentText->SetText(FText::FromString(FString::Printf(TEXT("%.1f"), InContent)));
 }
