@@ -6,6 +6,7 @@
 #include "UI/Widgets/Interaction/Tab.h"
 #include "LogPropertyTab.generated.h"
 
+class UPropertyInfo;
 class UStructureEntry;
 class UCommonButtonBase;
 class UCommonTextBlock;
@@ -27,6 +28,9 @@ protected:
 
 	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
 	TObjectPtr<UListBox> StructureListBox;
+
+	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
+	TObjectPtr<UPropertyInfo> PropertyInfo;
 
 	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
 	TObjectPtr<UCommonButtonBase> BackButton;

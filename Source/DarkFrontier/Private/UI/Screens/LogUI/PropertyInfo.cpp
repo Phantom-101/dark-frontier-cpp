@@ -9,8 +9,8 @@
 void UPropertyInfo::Init(AStructure* Structure) const
 {
 	Header->Init(Structure);
-	PositionField->SetContentFromString(FString::Printf(TEXT("X: %f, Y: %f"), Structure->GetActorLocation().X, Structure->GetActorLocation().Y));
+	PositionField->SetContentFromString(FString::Printf(TEXT("X: %.1f, Y: %.1f"), Structure->GetActorLocation().X, Structure->GetActorLocation().Y));
 	OrderField->SetContentFromString("None");
-	VolumeField->SetContentFromString(FString::Printf(TEXT("%f/%f"), Structure->GetInventory()->GetTotalVolume(), Structure->GetInventory()->GetMaxVolume()));
-	MassField->SetContentFromString(FString::Printf(TEXT("%f/%f"), Structure->GetInventory()->GetTotalMass(), Structure->GetInventory()->GetMaxMass()));
+	VolumeField->SetContentFromString(FString::Printf(TEXT("%.1f/%.1f"), Structure->GetInventory()->GetTotalVolume(), Structure->GetInventory()->GetMaxVolume()));
+	MassField->SetContentFromString(FString::Printf(TEXT("%.1f/%.1f"), Structure->GetInventory()->GetTotalMass(), Structure->GetInventory()->GetMaxMass()));
 }

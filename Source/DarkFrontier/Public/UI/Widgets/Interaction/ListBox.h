@@ -37,6 +37,8 @@ protected:
 
 public:
 
+	TArray<UObject*> GetOptions() const;
+
 	void SetOptions(const TArray<UObject*>& InOptions);
 
 	void SetOptionsWithInitial(const TArray<UObject*>& InOptions, UObject* Initial);

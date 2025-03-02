@@ -58,11 +58,11 @@ void UStructureInfo::SetTarget(AStructure* InTargetStructure)
 	TArray<FStringFormatArg> FormatArgs;
 	
 	HullField->SetContentFromFloat(MaxHull);
-	ShieldField->SetContentFromString(FString::Printf(TEXT("%g+%g"), MaxShield, ShieldRegen));
-	EnergyField->SetContentFromString(FString::Printf(TEXT("%g+%g"), MaxEnergy, EnergyRegen));
-	UpkeepField->SetContentFromString(FString::Printf(TEXT("%g/%g"), Upkeep, MaxUpkeep));
-	LinearField->SetContentFromString(FString::Printf(TEXT("%g+%g"), LinearSpeed, LinearAccel));
-	AngularField->SetContentFromString(FString::Printf(TEXT("%g+%g"), AngularSpeed, AngularAccel));
+	ShieldField->SetContentFromString(FString::Printf(TEXT("%.1f+%.1f"), MaxShield, ShieldRegen));
+	EnergyField->SetContentFromString(FString::Printf(TEXT("%.1f+%.1f"), MaxEnergy, EnergyRegen));
+	UpkeepField->SetContentFromString(FString::Printf(TEXT("%.1f/%.1f"), Upkeep, MaxUpkeep));
+	LinearField->SetContentFromString(FString::Printf(TEXT("%.1f+%.1f"), LinearSpeed, LinearAccel));
+	AngularField->SetContentFromString(FString::Printf(TEXT("%.1f+%.1f"), AngularSpeed, AngularAccel));
 
 	OnTypeModeSelected();
 	RebuildTypeMode();

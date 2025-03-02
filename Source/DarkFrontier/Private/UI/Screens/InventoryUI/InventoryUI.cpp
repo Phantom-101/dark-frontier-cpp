@@ -95,21 +95,26 @@ UInventory* UInventoryUI::GetInventory() const
 void UInventoryUI::Rebuild()
 {
 	TArray<UObject*> Options;
+	UObject* Current = nullptr;
 	for(UItem* Item : GetInventory()->GetItems())
 	{
 		UItemStackObject* Obj = NewObject<UItemStackObject>();
 		Obj->Inventory = GetInventory();
 		Obj->Item = Item;
 		Options.Add(Obj);
+
+		if(ItemListBox->IsCurrentOptionValid() && Item == Cast<UItemStackObject>(ItemListBox->GetCurrentOption())->Item)
+		{
+			Current = Obj;
+		}
 	}
-	ItemListBox->SetOptions(Options);
+	ItemListBox->SetOptionsWithInitial(Options, Current);
 	ItemListBox->SetBuilder([Owner = this, Class = ItemStackEntryClass](UObject* ItemStack)
 	{
 		UItemStackEntry* Option = CreateWidget<UItemStackEntry>(Owner, Class);
 		Option->Init(Cast<UItemStackObject>(ItemStack));
 		return Option;
 	});
-	// TODO remember prior item selection to reselect after rebuilding
 }
 
 void UInventoryUI::HandleSwitch()

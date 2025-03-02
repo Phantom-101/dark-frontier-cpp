@@ -4,10 +4,18 @@
 #include "CommonListView.h"
 #include "UI/Widgets/Visuals/ListBoxOptionParams.h"
 
+TArray<UObject*> UListBox::GetOptions() const
+{
+	return Options;
+}
+
 void UListBox::SetOptions(const TArray<UObject*>& InOptions)
 {
 	Options = InOptions;
-	SetCurrentOption(nullptr);
+	if(!Options.Contains(CurrentOption))
+	{
+		SetCurrentOption(nullptr);
+	}
 }
 
 void UListBox::SetOptionsWithInitial(const TArray<UObject*>& InOptions, UObject* Initial)
