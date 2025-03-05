@@ -33,6 +33,8 @@ class DARKFRONTIER_API UInventoryUI : public UCommonActivatableWidget
 
 protected:
 
+	// TODO add close button
+
 	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
 	TObjectPtr<UCommonButtonBase> SwitchButton;
 

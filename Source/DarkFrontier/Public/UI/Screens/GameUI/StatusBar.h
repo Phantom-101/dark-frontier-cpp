@@ -6,10 +6,12 @@
 #include "CommonUserWidget.h"
 #include "StatusBar.generated.h"
 
+class UMenuUI;
 class ULogUI;
 class UCommonButtonBase;
 class UWidgetSwitcher;
 class UCommonTextBlock;
+
 /**
  * 
  */
@@ -44,10 +46,15 @@ protected:
 	UPROPERTY(BlueprintReadOnly, EditAnywhere)
 	TSubclassOf<ULogUI> LogUIClass;
 
+	UPROPERTY(BlueprintReadOnly, EditAnywhere)
+	TSubclassOf<UMenuUI> MenuUIClass;
+
 	virtual void NativeConstruct() override;
 
 private:
 
 	void HandleLog() const;
+
+	void HandleMenu() const;
 	
 };
