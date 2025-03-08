@@ -14,7 +14,7 @@ class UTab;
 /**
  * 
  */
-UCLASS()
+UCLASS(Abstract)
 class DARKFRONTIER_API UTabs : public UCommonUserWidget
 {
 	GENERATED_BODY()

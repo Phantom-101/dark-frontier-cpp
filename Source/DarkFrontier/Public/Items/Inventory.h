@@ -74,7 +74,13 @@ public:
 	float GetTotalVolume() const;
 
 	UFUNCTION(BlueprintCallable)
+	float GetTotalVolume01() const;
+
+	UFUNCTION(BlueprintCallable)
 	float GetFreeVolume() const;
+
+	UFUNCTION(BlueprintCallable)
+	float GetFreeVolume01() const;
 	
 	UFUNCTION(BlueprintCallable)
 	float GetVolume(UItem* Item) const;
@@ -86,7 +92,13 @@ public:
 	float GetTotalMass() const;
 
 	UFUNCTION(BlueprintCallable)
+	float GetTotalMass01() const;
+
+	UFUNCTION(BlueprintCallable)
 	float GetFreeMass() const;
+
+	UFUNCTION(BlueprintCallable)
+	float GetFreeMass01() const;
 	
 	UFUNCTION(BlueprintCallable)
 	float GetMass(UItem* Item) const;

@@ -88,9 +88,19 @@ float UInventory::GetTotalVolume() const
 	return Items->GetTotalVolume();
 }
 
+float UInventory::GetTotalVolume01() const
+{
+	return Items->GetTotalVolume() / MaxVolume;
+}
+
 float UInventory::GetFreeVolume() const
 {
 	return MaxVolume - GetTotalVolume();
+}
+
+float UInventory::GetFreeVolume01() const
+{
+	return 1 - GetTotalVolume01();
 }
 
 float UInventory::GetVolume(UItem* Item) const
@@ -108,9 +118,19 @@ float UInventory::GetTotalMass() const
 	return Items->GetTotalMass();
 }
 
+float UInventory::GetTotalMass01() const
+{
+	return Items->GetTotalMass() / MaxMass;
+}
+
 float UInventory::GetFreeMass() const
 {
 	return MaxMass - GetTotalMass();
+}
+
+float UInventory::GetFreeMass01() const
+{
+	return 1 - GetTotalMass01();
 }
 
 float UInventory::GetMass(UItem* Item) const

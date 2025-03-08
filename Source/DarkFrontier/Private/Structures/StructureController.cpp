@@ -3,16 +3,20 @@
 #include "Structures/StructureController.h"
 #include "AbilitySystemComponent.h"
 #include "EnhancedInputComponent.h"
+#include "Log.h"
 #include "Game/UniverseGameState.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Input/CommonUIActionRouterBase.h"
 #include "Libraries/BoundsBlueprintFunctionLibrary.h"
 #include "Structures/Structure.h"
+#include "Structures/StructureDock.h"
 #include "Structures/StructureIndices.h"
+#include "Structures/StructureLocation.h"
 #include "UI/Screens/StructureDetails/StructureDetails.h"
 #include "UI/Screens/UIBase.h"
 #include "UI/Screens/GameUI/GameUI.h"
 #include "UI/Screens/InventoryUI/InventoryUI.h"
+#include "UI/Screens/StationUI/StationUI.h"
 
 AStructureController::AStructureController()
 {
@@ -70,7 +74,8 @@ void AStructureController::OnPossess(APawn* InPawn)
 	{
 		StructurePawn->GetAbilitySystemComponent()->InitAbilityActorInfo(StructurePawn, StructurePawn);
 		
-		OnLayoutChangedHandle = StructurePawn->GetIndices()->OnUpdated.AddUObject<AStructureController>(this, &AStructureController::PropagateLayoutChange);
+		StructurePawn->GetIndices()->OnUpdated.AddUObject<AStructureController>(this, &AStructureController::PropagateLayoutChange);
+		StructurePawn->GetLocation()->OnDockChanged.AddUObject<AStructureController>(this, &AStructureController::HandleDock);
 
 		GetWorld()->GetGameState<AUniverseGameState>()->SetPlayerFaction(StructurePawn->GetOwningFaction());
 	}
@@ -82,7 +87,8 @@ void AStructureController::OnUnPossess()
 
 	if(StructurePawn)
 	{
-		StructurePawn->GetIndices()->OnUpdated.Remove(OnLayoutChangedHandle);
+		StructurePawn->GetIndices()->OnUpdated.RemoveAll(this);
+		StructurePawn->GetLocation()->OnDockChanged.RemoveAll(this);
 	}
 
 	StructurePawn = nullptr;
@@ -212,4 +218,11 @@ void AStructureController::EditStructure(const FInputActionInstance& Instance)
 void AStructureController::PropagateLayoutChange() const
 {
 	OnLayoutChanged.Broadcast();
+}
+
+void AStructureController::HandleDock(UStructureDock* Dock) const
+{
+	if(!IsValid(Dock)) return;
+	
+	(void)UIBaseWidget->PushGameMenu<UStationUI>(StationUIClass);
 }
