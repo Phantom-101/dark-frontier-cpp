@@ -73,6 +73,8 @@ bool UStructureLocation::EnterDock(UStructureDock* Target)
 	DockStructure->GetLocation()->Dockers.Add(GetStructure());
 	
 	GetStructure()->AttachToActor(DockStructure, FAttachmentTransformRules(EAttachmentRule::KeepWorld, true));
+
+	OnDockChanged.Broadcast(Dock);
 	return true;
 }
 
@@ -88,6 +90,8 @@ bool UStructureLocation::ExitDock()
 	Dock = nullptr;
 
 	GetStructure()->DetachFromActor(FDetachmentTransformRules(EDetachmentRule::KeepWorld, false));
+
+	OnDockChanged.Broadcast(nullptr);
 	return true;
 }
 

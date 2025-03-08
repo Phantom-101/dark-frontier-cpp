@@ -59,6 +59,9 @@ protected:
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category="UI")
 	TSubclassOf<class UStructureDetails> StructureDetailsUIClass;
 
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category="UI")
+	TSubclassOf<class UStationUI> StationUIClass;
+
 	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly, Category="Controller")
 	TObjectPtr<class AStructure> StructurePawn;
 
@@ -91,8 +94,6 @@ protected:
 
 	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly, Category="UI")
 	TObjectPtr<UUIBase> UIBaseWidget;
-
-	FDelegateHandle OnLayoutChangedHandle;
 
 public:
 
@@ -159,5 +160,9 @@ protected:
 
 	UFUNCTION()
 	void PropagateLayoutChange() const;
+
+private:
+
+	void HandleDock(UStructureDock* Dock) const;
 	
 };

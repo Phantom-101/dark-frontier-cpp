@@ -6,12 +6,13 @@
 #include "CommonActivatableWidget.h"
 #include "StationUI.generated.h"
 
+class UStationTrade;
 class UCommonButtonBase;
 
 /**
  * 
  */
-UCLASS()
+UCLASS(Abstract)
 class DARKFRONTIER_API UStationUI : public UCommonActivatableWidget
 {
 	GENERATED_BODY()
@@ -54,6 +55,9 @@ protected:
 	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
 	TObjectPtr<UCommonButtonBase> ExitShipButton;
 
+	UPROPERTY(BlueprintReadOnly, EditAnywhere)
+	TSubclassOf<UStationTrade> StationTradeClass;
+
 	virtual void NativeConstruct() override;
 
 	virtual void NativeOnActivated() override;
@@ -62,6 +66,8 @@ protected:
 
 private:
 
-	void HandleUndock() const;
+	void HandleTrade() const;
+
+	void HandleUndock();
 	
 };

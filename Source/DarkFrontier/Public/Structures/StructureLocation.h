@@ -10,6 +10,8 @@ class UStructureDock;
 class ASector;
 class AStructure;
 
+DECLARE_MULTICAST_DELEGATE_OneParam(FDockChanged, UStructureDock*)
+
 /**
  * 
  */
@@ -33,6 +35,8 @@ protected:
 	TArray<TObjectPtr<AStructure>> Dockers;
 
 public:
+
+	FDockChanged OnDockChanged;
 
 	static UStructureLocation* CreateLocation(AStructure* Structure);
 
