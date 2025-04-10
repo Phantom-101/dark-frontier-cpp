@@ -5,6 +5,7 @@
 #include "CommonTextBlock.h"
 #include "Components/ListViewBase.h"
 #include "Libraries/UIBlueprintFunctionLibrary.h"
+#include "Objects/ComponentViewTarget.h"
 #include "Structures/StructureController.h"
 #include "Structures/StructurePart.h"
 #include "Structures/StructureSlot.h"
@@ -101,7 +102,8 @@ void UStructureSlotCard::OnLookButtonClicked() const
 	AStructureController* Controller = Cast<AStructureController>(GetWorld()->GetFirstPlayerController());
 	if(IsValid(Controller))
 	{
-		// TODO IViewTarget adaptor for components
-		//Controller->SetCameraTargetComponent(TargetSlot);
+		UComponentViewTarget* ViewTarget = NewObject<UComponentViewTarget>();
+		ViewTarget->Component = TargetSlot;
+		Controller->SetViewTarget(ViewTarget);
 	}
 }
