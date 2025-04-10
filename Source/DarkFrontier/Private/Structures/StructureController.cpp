@@ -3,11 +3,10 @@
 #include "Structures/StructureController.h"
 #include "AbilitySystemComponent.h"
 #include "EnhancedInputComponent.h"
-#include "Log.h"
 #include "Game/UniverseGameState.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Input/CommonUIActionRouterBase.h"
-#include "Libraries/BoundsBlueprintFunctionLibrary.h"
+#include "Objects/ActorViewTarget.h"
 #include "Structures/Structure.h"
 #include "Structures/StructureDock.h"
 #include "Structures/StructureIndices.h"
@@ -94,7 +93,7 @@ void AStructureController::OnUnPossess()
 	StructurePawn = nullptr;
 }
 
-void AStructureController::SetViewTarget(const TScriptInterface<IViewTarget> InTarget)
+void AStructureController::SetViewTarget(UViewTarget* InTarget)
 {
 	ViewTarget = InTarget;
 }
@@ -103,9 +102,9 @@ void AStructureController::UpdateCamera()
 {
 	if(!IsValid(StructurePawn)) return;
 	
-	if(ViewTarget == nullptr)
+	if(ViewTarget == nullptr || !ViewTarget->IsValid())
 	{
-		ViewTarget = StructurePawn;
+		ViewTarget = UActorViewTarget::New(StructurePawn);
 	}
 
 	const float ViewDistance = ViewTarget->GetViewDistance() * ZoomLevel;

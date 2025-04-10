@@ -2,11 +2,23 @@
 
 #include "Objects/ComponentViewTarget.h"
 
+UComponentViewTarget* UComponentViewTarget::New(USceneComponent* Component)
+{
+	UComponentViewTarget* ViewTarget = NewObject<UComponentViewTarget>();
+	ViewTarget->Component = Component;
+	return ViewTarget;
+}
+
+bool UComponentViewTarget::IsValid()
+{
+	return ::IsValid(Component);
+}
+
 FVector UComponentViewTarget::GetViewLocation()
 {
-	if(Component == nullptr)
+	if(!IsValid())
 	{
-		return FVector::ZeroVector;
+		return Super::GetViewLocation();
 	}
 
 	// Use TransformVector here to get the view location offset relative to the actor location and not the world origin
@@ -15,9 +27,9 @@ FVector UComponentViewTarget::GetViewLocation()
 
 FRotator UComponentViewTarget::GetViewRotation()
 {
-	if(Component == nullptr)
+	if(!IsValid())
 	{
-		return FRotator::ZeroRotator;
+		return Super::GetViewRotation();
 	}
 
 	return Component->GetComponentRotation();
@@ -25,9 +37,9 @@ FRotator UComponentViewTarget::GetViewRotation()
 
 double UComponentViewTarget::GetViewDistance()
 {
-	if(Component == nullptr)
+	if(!IsValid())
 	{
-		return 0;
+		return Super::GetViewDistance();
 	}
 
 	return Component->GetLocalBounds().SphereRadius * 2;

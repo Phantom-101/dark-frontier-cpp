@@ -3,31 +3,29 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "UObject/Interface.h"
+#include "UObject/Object.h"
 #include "ViewTarget.generated.h"
-
-// This class does not need to be modified.
-UINTERFACE()
-class UViewTarget : public UInterface
-{
-	GENERATED_BODY()
-};
 
 /**
  * 
  */
-class DARKFRONTIER_API IViewTarget
+UCLASS(Abstract, DefaultToInstanced, EditInlineNew)
+class DARKFRONTIER_API UViewTarget : public UObject
 {
 	GENERATED_BODY()
 
 public:
 
+	UFUNCTION(BlueprintCallable)
+	virtual bool IsValid();
+	
+	UFUNCTION(BlueprintCallable)
 	virtual FVector GetViewLocation();
 
+	UFUNCTION(BlueprintCallable)
 	virtual FRotator GetViewRotation();
 
+	UFUNCTION(BlueprintCallable)
 	virtual double GetViewDistance();
-
-	static FBoxSphereBounds GetLocalBounds(const AActor* Actor, const bool OnlyCollidingComponents);
 	
 };

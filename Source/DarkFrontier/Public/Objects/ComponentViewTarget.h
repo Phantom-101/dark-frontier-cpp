@@ -11,7 +11,7 @@
  * 
  */
 UCLASS()
-class DARKFRONTIER_API UComponentViewTarget : public UObject, public IViewTarget
+class DARKFRONTIER_API UComponentViewTarget : public UViewTarget
 {
 	GENERATED_BODY()
 
@@ -19,6 +19,10 @@ public:
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	TObjectPtr<USceneComponent> Component;
+
+	static UComponentViewTarget* New(USceneComponent* Component);
+
+	virtual bool IsValid() override;
 
 	virtual FVector GetViewLocation() override;
 

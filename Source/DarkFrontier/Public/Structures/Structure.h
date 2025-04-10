@@ -33,7 +33,7 @@ struct FGameplayAbilitySpecHandle;
 DECLARE_MULTICAST_DELEGATE_OneParam(FStructureIndicationChanged, UStructureIndication*)
 
 UCLASS()
-class DARKFRONTIER_API AStructure : public APawn, public IHasTargetGroup, public IAbilitySystemInterface, public IViewTarget
+class DARKFRONTIER_API AStructure : public APawn, public IHasTargetGroup, public IAbilitySystemInterface
 {
 	GENERATED_BODY()
 
