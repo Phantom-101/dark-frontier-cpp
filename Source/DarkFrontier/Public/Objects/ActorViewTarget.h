@@ -4,23 +4,22 @@
 
 #include "CoreMinimal.h"
 #include "ViewTarget.h"
-#include "UObject/Object.h"
-#include "ComponentViewTarget.generated.h"
+#include "ActorViewTarget.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class DARKFRONTIER_API UComponentViewTarget : public UViewTarget
+class DARKFRONTIER_API UActorViewTarget : public UViewTarget
 {
 	GENERATED_BODY()
 
 public:
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
-	TObjectPtr<USceneComponent> Component;
+	TObjectPtr<AActor> Actor;
 
-	static UComponentViewTarget* New(USceneComponent* Component);
+	static UActorViewTarget* New(AActor* Actor);
 
 	virtual bool IsValid() override;
 
@@ -29,5 +28,7 @@ public:
 	virtual FRotator GetViewRotation() override;
 
 	virtual double GetViewDistance() override;
+
+	static FBoxSphereBounds GetLocalBounds(const AActor* Actor, bool OnlyCollidingComponents);
 	
 };

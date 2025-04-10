@@ -15,7 +15,7 @@ class AFaction;
 class UWidget;
 
 UCLASS()
-class DARKFRONTIER_API AStructurePart : public AActor, public IViewTarget
+class DARKFRONTIER_API AStructurePart : public AActor
 {
 	GENERATED_BODY()
 	

@@ -5,6 +5,7 @@
 #include "CommonTextBlock.h"
 #include "Components/ListViewBase.h"
 #include "Libraries/UIBlueprintFunctionLibrary.h"
+#include "Objects/ActorViewTarget.h"
 #include "Structures/StructureController.h"
 #include "Structures/StructurePart.h"
 #include "UI/Screens/StructureDetails/StructureDetails.h"
@@ -77,6 +78,6 @@ void UStructurePartCard::OnLookButtonClicked() const
 	AStructureController* Controller = Cast<AStructureController>(GetWorld()->GetFirstPlayerController());
 	if(IsValid(Controller))
 	{
-		Controller->SetViewTarget(TargetPart);
+		Controller->SetViewTarget(UActorViewTarget::New(TargetPart));
 	}
 }

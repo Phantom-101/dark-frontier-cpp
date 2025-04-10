@@ -102,8 +102,6 @@ void UStructureSlotCard::OnLookButtonClicked() const
 	AStructureController* Controller = Cast<AStructureController>(GetWorld()->GetFirstPlayerController());
 	if(IsValid(Controller))
 	{
-		UComponentViewTarget* ViewTarget = NewObject<UComponentViewTarget>();
-		ViewTarget->Component = TargetSlot;
-		Controller->SetViewTarget(ViewTarget);
+		Controller->SetViewTarget(UComponentViewTarget::New(TargetSlot));
 	}
 }
