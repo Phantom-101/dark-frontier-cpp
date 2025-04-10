@@ -78,10 +78,7 @@ protected:
 	bool IsCursorUnlocked = false;
 
 	UPROPERTY(BlueprintReadOnly, EditInstanceOnly, Category="Camera")
-	TObjectPtr<AActor> CameraTargetActor;
-
-	UPROPERTY(BlueprintReadOnly, EditInstanceOnly, Category="Camera")
-	TObjectPtr<USceneComponent> CameraTargetComponent;
+	TScriptInterface<IViewTarget> ViewTarget;
 	
 	UPROPERTY(BlueprintReadOnly, EditInstanceOnly, Category="Camera")
 	FVector2D CameraRotation;
@@ -114,10 +111,7 @@ protected:
 public:
 
 	UFUNCTION(BlueprintCallable, Category="Camera")
-	void SetCameraTargetActor(AActor* InTarget);
-
-	UFUNCTION(BlueprintCallable, Category="Camera")
-	void SetCameraTargetComponent(USceneComponent* InTarget);
+	void SetViewTarget(TScriptInterface<IViewTarget> InTarget);
 
 protected:
 

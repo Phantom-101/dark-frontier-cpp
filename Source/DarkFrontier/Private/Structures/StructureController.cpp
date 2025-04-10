@@ -94,44 +94,28 @@ void AStructureController::OnUnPossess()
 	StructurePawn = nullptr;
 }
 
-void AStructureController::SetCameraTargetActor(AActor* InTarget)
+void AStructureController::SetViewTarget(const TScriptInterface<IViewTarget> InTarget)
 {
-	CameraTargetActor = InTarget;
-	CameraTargetComponent = nullptr;
-}
-
-void AStructureController::SetCameraTargetComponent(USceneComponent* InTarget)
-{
-	CameraTargetActor = nullptr;
-	CameraTargetComponent = InTarget;
+	ViewTarget = InTarget;
 }
 
 void AStructureController::UpdateCamera()
 {
 	if(!IsValid(StructurePawn)) return;
 	
-	if(!IsValid(CameraTargetActor))
+	if(ViewTarget == nullptr)
 	{
-		CameraTargetActor = StructurePawn;
+		ViewTarget = StructurePawn;
 	}
 
-	if(!IsValid(CameraTargetComponent))
-	{
-		CameraTargetComponent = nullptr;
-	}
-
-	const FBoxSphereBounds Bounds = UBoundsBlueprintFunctionLibrary::GetBounds(CameraTargetComponent ? CameraTargetComponent->GetOwner() : CameraTargetActor.Get(), true);
-	const FVector Location = CameraTargetComponent ? CameraTargetComponent->GetComponentLocation() : CameraTargetActor->GetActorLocation();
-	const FRotator Rotation = CameraTargetComponent ? CameraTargetComponent->GetComponentRotation() : CameraTargetActor->GetActorRotation();
-
-	const float TargetArmLength = Bounds.SphereRadius * 2 * ZoomLevel;
+	const float ViewDistance = ViewTarget->GetViewDistance() * ZoomLevel;
 	
 	USpringArmComponent* SpringArm = StructurePawn->GetCameraSpringArm();
 	
-	SpringArm->SetRelativeLocation(StructurePawn->GetTransform().InverseTransformPosition(Location));
-	SpringArm->TargetArmLength = TargetArmLength;
+	SpringArm->SetWorldLocation(ViewTarget->GetViewLocation());
+	SpringArm->TargetArmLength = ViewDistance;
 
-	SpringArm->SetWorldRotation(Rotation);
+	SpringArm->SetWorldRotation(ViewTarget->GetViewRotation());
 	SpringArm->AddLocalRotation(FRotator(CameraRotation.Y, CameraRotation.X, 0));
 }
 

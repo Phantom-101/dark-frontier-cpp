@@ -77,6 +77,6 @@ void UStructurePartCard::OnLookButtonClicked() const
 	AStructureController* Controller = Cast<AStructureController>(GetWorld()->GetFirstPlayerController());
 	if(IsValid(Controller))
 	{
-		Controller->SetCameraTargetActor(TargetPart);
+		Controller->SetViewTarget(TargetPart);
 	}
 }

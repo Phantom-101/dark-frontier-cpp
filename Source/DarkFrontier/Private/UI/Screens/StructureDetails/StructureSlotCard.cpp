@@ -101,6 +101,7 @@ void UStructureSlotCard::OnLookButtonClicked() const
 	AStructureController* Controller = Cast<AStructureController>(GetWorld()->GetFirstPlayerController());
 	if(IsValid(Controller))
 	{
-		Controller->SetCameraTargetComponent(TargetSlot);
+		// TODO IViewTarget adaptor for components
+		//Controller->SetCameraTargetComponent(TargetSlot);
 	}
 }

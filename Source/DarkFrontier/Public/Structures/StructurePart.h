@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "ActiveGameplayEffectHandle.h"
 #include "GameFramework/Actor.h"
+#include "Objects/ViewTarget.h"
 #include "StructurePart.generated.h"
 
 class UStructurePartGroup;
@@ -14,7 +15,7 @@ class AFaction;
 class UWidget;
 
 UCLASS()
-class DARKFRONTIER_API AStructurePart : public AActor
+class DARKFRONTIER_API AStructurePart : public AActor, public IViewTarget
 {
 	GENERATED_BODY()
 	

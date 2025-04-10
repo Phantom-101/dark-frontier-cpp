@@ -8,6 +8,7 @@
 #include "StructureTickLevel.h"
 #include "Damage/HasTargetGroup.h"
 #include "GameFramework/Pawn.h"
+#include "Objects/ViewTarget.h"
 #include "Structure.generated.h"
 
 class UStructureLocation;
@@ -32,7 +33,7 @@ struct FGameplayAbilitySpecHandle;
 DECLARE_MULTICAST_DELEGATE_OneParam(FStructureIndicationChanged, UStructureIndication*)
 
 UCLASS()
-class DARKFRONTIER_API AStructure : public APawn, public IHasTargetGroup, public IAbilitySystemInterface
+class DARKFRONTIER_API AStructure : public APawn, public IHasTargetGroup, public IAbilitySystemInterface, public IViewTarget
 {
 	GENERATED_BODY()
 
