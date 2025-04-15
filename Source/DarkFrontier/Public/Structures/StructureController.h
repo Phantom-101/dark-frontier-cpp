@@ -57,7 +57,7 @@ protected:
 	TSubclassOf<class UInventoryUI> InventoryUIClass;
 
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category="UI")
-	TSubclassOf<class UStructureDetails> StructureDetailsUIClass;
+	TSubclassOf<class UBuildUI> BuildUIClass;
 
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category="UI")
 	TSubclassOf<class UStationUI> StationUIClass;
