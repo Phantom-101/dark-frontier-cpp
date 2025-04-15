@@ -11,7 +11,7 @@
 #include "Structures/StructureDock.h"
 #include "Structures/StructureIndices.h"
 #include "Structures/StructureLocation.h"
-#include "UI/Screens/StructureDetails/StructureDetails.h"
+#include "UI/Screens/BuildUI/BuildUI.h"
 #include "UI/Screens/UIBase.h"
 #include "UI/Screens/GameUI/GameUI.h"
 #include "UI/Screens/InventoryUI/InventoryUI.h"
@@ -192,7 +192,7 @@ void AStructureController::EditStructure(const FInputActionInstance& Instance)
 {
 	if(!IsValid(StructurePawn)) return;
 	
-	UStructureDetails* Details = UIBaseWidget->PushGameMenu<UStructureDetails>(StructureDetailsUIClass);
+	UBuildUI* Details = UIBaseWidget->PushGameMenu<UBuildUI>(BuildUIClass);
 	Details->InitStructure(StructurePawn);
 	Details->SelectStructure();
 	Details->SetAvailableParts(AvailableParts);

@@ -8,20 +8,54 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="cb7ccd89-2b5f-4c19-9f87-96459d2ed121" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/Source/DarkFrontier/Private/Objects/ActorViewTarget.cpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Source/DarkFrontier/Public/Objects/ActorViewTarget.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.DarkFrontier.dir/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.DarkFrontier.dir/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Maps/Test.umap" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Maps/Test.umap" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Content/StarterContent/Architecture/Floor_400x400.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/StarterContent/Architecture/Floor_400x400.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Private/Objects/ComponentViewTarget.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Private/Objects/ComponentViewTarget.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Private/Objects/ViewTarget.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Private/Objects/ViewTarget.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Structures/Base/BP_Structure.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Structures/Base/BP_Structure.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Structures/Controllers/PC_Default.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Structures/Controllers/PC_Default.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/UI/Screens/StructureDetails/W_StructureCard.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/UI/Screens/StructureDetails/W_StructureDetails.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/UI/Screens/StructureDetails/W_StructureInfo.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/UI/Screens/StructureDetails/W_StructurePartCard.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/UI/Screens/StructureDetails/W_StructurePartCardList.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/UI/Screens/StructureDetails/W_StructurePartInfo.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/UI/Screens/StructureDetails/W_StructurePartOption.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/UI/Screens/StructureDetails/W_StructurePartSelector.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/UI/Screens/StructureDetails/W_StructureSlotCard.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/UI/Screens/StructureDetails/W_StructureSlotCardList.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/UI/Screens/StructureDetails/W_StructureSlotInfo.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/UI/Screens/StructureDetails/W_StructureSlotOption.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/UI/Screens/StructureDetails/W_StructureSlotSelector.uasset" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Private/Structures/StructureController.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Private/Structures/StructureController.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Private/UI/Screens/StructureDetails/StructurePartCard.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Private/UI/Screens/StructureDetails/StructurePartCard.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Private/UI/Screens/StructureDetails/StructureSlotCard.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Private/UI/Screens/StructureDetails/StructureSlotCard.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Public/Objects/ComponentViewTarget.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Public/Objects/ComponentViewTarget.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Public/Objects/ViewTarget.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Public/Objects/ViewTarget.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Public/Structures/Structure.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Public/Structures/Structure.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Private/UI/Screens/StructureDetails/StructureCard.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Private/UI/Screens/BuildUI/StructureCard.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Private/UI/Screens/StructureDetails/StructureDetails.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Private/UI/Screens/BuildUI/BuildUI.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Private/UI/Screens/StructureDetails/StructureInfo.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Private/UI/Screens/BuildUI/StructureInfo.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Private/UI/Screens/StructureDetails/StructurePartCard.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Private/UI/Screens/BuildUI/StructurePartCard.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Private/UI/Screens/StructureDetails/StructurePartCardList.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Private/UI/Screens/BuildUI/StructurePartCardList.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Private/UI/Screens/StructureDetails/StructurePartInfo.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Private/UI/Screens/BuildUI/StructurePartInfo.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Private/UI/Screens/StructureDetails/StructurePartOption.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Private/UI/Screens/BuildUI/StructurePartOption.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Private/UI/Screens/StructureDetails/StructurePartSelector.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Private/UI/Screens/BuildUI/StructurePartSelector.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Private/UI/Screens/StructureDetails/StructureSlotCard.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Private/UI/Screens/BuildUI/StructureSlotCard.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Private/UI/Screens/StructureDetails/StructureSlotCardList.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Private/UI/Screens/BuildUI/StructureSlotCardList.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Private/UI/Screens/StructureDetails/StructureSlotInfo.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Private/UI/Screens/BuildUI/StructureSlotInfo.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Private/UI/Screens/StructureDetails/StructureSlotOption.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Private/UI/Screens/BuildUI/StructureSlotOption.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Private/UI/Screens/StructureDetails/StructureSlotSelector.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Private/UI/Screens/BuildUI/StructureSlotSelector.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Public/Structures/StructureController.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Public/Structures/StructureController.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Public/Structures/StructurePart.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Public/Structures/StructurePart.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Public/UI/Screens/StructureDetails/StructureCard.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Public/UI/Screens/BuildUI/StructureCard.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Public/UI/Screens/StructureDetails/StructureDetails.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Public/UI/Screens/BuildUI/BuildUI.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Public/UI/Screens/StructureDetails/StructureInfo.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Public/UI/Screens/BuildUI/StructureInfo.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Public/UI/Screens/StructureDetails/StructurePartCard.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Public/UI/Screens/BuildUI/StructurePartCard.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Public/UI/Screens/StructureDetails/StructurePartCardList.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Public/UI/Screens/BuildUI/StructurePartCardList.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Public/UI/Screens/StructureDetails/StructurePartInfo.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Public/UI/Screens/BuildUI/StructurePartInfo.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Public/UI/Screens/StructureDetails/StructurePartOption.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Public/UI/Screens/BuildUI/StructurePartOption.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Public/UI/Screens/StructureDetails/StructurePartOptionObject.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Public/UI/Screens/BuildUI/StructurePartOptionObject.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Public/UI/Screens/StructureDetails/StructurePartSelector.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Public/UI/Screens/BuildUI/StructurePartSelector.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Public/UI/Screens/StructureDetails/StructureSlotCard.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Public/UI/Screens/BuildUI/StructureSlotCard.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Public/UI/Screens/StructureDetails/StructureSlotCardList.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Public/UI/Screens/BuildUI/StructureSlotCardList.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Public/UI/Screens/StructureDetails/StructureSlotInfo.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Public/UI/Screens/BuildUI/StructureSlotInfo.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Public/UI/Screens/StructureDetails/StructureSlotOption.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Public/UI/Screens/BuildUI/StructureSlotOption.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Public/UI/Screens/StructureDetails/StructureSlotOptionObject.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Public/UI/Screens/BuildUI/StructureSlotOptionObject.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Public/UI/Screens/StructureDetails/StructureSlotSelector.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Public/UI/Screens/BuildUI/StructureSlotSelector.h" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -359,7 +393,10 @@
       <workItem from="1741424099932" duration="969000" />
       <workItem from="1744140545702" duration="952000" />
       <workItem from="1744262303486" duration="8963000" />
-      <workItem from="1744314358075" duration="2670000" />
+      <workItem from="1744314358075" duration="3438000" />
+      <workItem from="1744334946317" duration="2462000" />
+      <workItem from="1744528170432" duration="595000" />
+      <workItem from="1744747513981" duration="1756000" />
     </task>
     <servers />
   </component>
