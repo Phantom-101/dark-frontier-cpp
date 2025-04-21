@@ -5,7 +5,7 @@
 #include "Structures/StructurePart.h"
 #include "Structures/Structure.h"
 #include "Kismet/KismetMathLibrary.h"
-#include "Structures/StructureIndices.h"
+#include "Structures/StructureLayout.h"
 #include "Structures/StructurePartFilter.h"
 
 UStructureSlot::UStructureSlot()
@@ -91,14 +91,14 @@ bool UStructureSlot::TryAttach(UStructureSlot* NewSlot)
 	if(!GetOwningStructure())
 	{
 		// This part previously not attached
-		AttachedSlot->GetOwningStructure()->GetIndices()->AddPart(OwningPart);
+		AttachedSlot->GetOwningStructure()->GetLayout()->AddPart(OwningPart);
 		MatchTransform(AttachedSlot);
 		OwningPart->AttachSlots();
 	}
 	else if(!AttachedSlot->GetOwningStructure())
 	{
 		// Other part previously not attached
-		GetOwningStructure()->GetIndices()->AddPart(AttachedSlot->OwningPart);
+		GetOwningStructure()->GetLayout()->AddPart(AttachedSlot->OwningPart);
 		AttachedSlot->MatchTransform(this);
 		AttachedSlot->OwningPart->AttachSlots();
 	}
@@ -118,7 +118,7 @@ bool UStructureSlot::TryDetach()
 	
 	AttachedSlot->AttachedSlot = nullptr;
 	AttachedSlot = nullptr;
-	GetOwningStructure()->GetIndices()->CullParts();
+	GetOwningStructure()->GetLayout()->RemoveUnconnected();
 
 	return true;
 }

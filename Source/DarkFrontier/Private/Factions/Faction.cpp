@@ -3,7 +3,7 @@
 #include "Factions/Faction.h"
 #include "EngineUtils.h"
 #include "Structures/Structure.h"
-#include "Structures/StructureIndices.h"
+#include "Structures/StructureLayout.h"
 
 AFaction::AFaction()
 {
@@ -84,7 +84,7 @@ float AFaction::GetPower() const
 	{
 		if(Itr->GetOwningFaction() == this)
 		{
-			Power += Itr->GetIndices()->GetParts().Num();
+			Power += Itr->GetLayout()->GetParts().Num();
 		}
 	}
 	return Power;

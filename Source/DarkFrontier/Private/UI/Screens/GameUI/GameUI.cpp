@@ -14,7 +14,7 @@
 #include "Structures/StructureController.h"
 #include "Structures/StructureDock.h"
 #include "Structures/StructureGameplay.h"
-#include "Structures/StructureIndices.h"
+#include "Structures/StructureLayout.h"
 #include "Structures/StructureLocation.h"
 #include "Structures/StructurePart.h"
 #include "UI/Screens/GameUI/Controls/StructurePartControls.h"
@@ -123,7 +123,7 @@ void UGameUI::NativeTick(const FGeometry& MyGeometry, const float InDeltaTime)
 			}
 		}
 
-		for(AStructurePart* Part : PlayerStructure->GetIndices()->GetParts())
+		for(AStructurePart* Part : PlayerStructure->GetLayout()->GetParts())
 		{
 			if(!Existing.Contains(Part))
 			{
@@ -151,7 +151,7 @@ void UGameUI::HandleDock() const
 	const AStructure* PlayerStructure = Cast<AStructure>(GetOwningPlayerPawn());
 	if(IsValid(PlayerStructure) && IsValid(PlayerStructure->GetTarget()))
 	{
-		for(UStructureDock* Dock : PlayerStructure->GetTarget()->GetIndices()->GetFacilities<UStructureDock>())
+		for(UStructureDock* Dock : PlayerStructure->GetTarget()->GetLayout()->GetFacilities<UStructureDock>())
 		{
 			if(PlayerStructure->GetLocation()->EnterDock(Dock))
 			{

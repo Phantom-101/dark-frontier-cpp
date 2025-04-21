@@ -2,7 +2,7 @@
 
 #include "Structures/StructureAuthoring.h"
 
-FStructureLayout UStructureAuthoring::GetLayout()
+FStructureLayoutData UStructureAuthoring::GetLayoutData() const
 {
-	return Layout;
+	return LayoutData;
 }

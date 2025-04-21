@@ -1,7 +1,6 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "Structures/Structure.h"
-#include "Log.h"
 #include "Camera/CameraComponent.h"
 #include "Engine/DamageEvents.h"
 #include "GameFramework/SpringArmComponent.h"
@@ -10,12 +9,9 @@
 #include "Structures/StructureAbility.h"
 #include "Structures/StructureAuthoring.h"
 #include "Structures/StructureGameplay.h"
-#include "Structures/StructureIndices.h"
 #include "Structures/StructureLayout.h"
 #include "Structures/StructureLocation.h"
 #include "Structures/StructurePart.h"
-#include "Structures/StructureSlot.h"
-#include "Structures/StructureValidationResult.h"
 #include "Structures/Damage/StructureDamageType.h"
 #include "Structures/Indications/DistanceIndication.h"
 #include "Structures/Indications/HullIndication.h"
@@ -35,7 +31,7 @@ AStructure::AStructure()
 	Camera = CreateDefaultSubobject<UCameraComponent>("Camera");
 	Camera->SetupAttachment(SpringArm);
 
-	Indices = UStructureIndices::CreateIndices(this);
+	Layout = UStructureLayout::CreateLayout(this);
 	Location = UStructureLocation::CreateLocation(this);
 	Inventory = CreateDefaultSubobject<UInventory>("Inventory");
 	Gameplay = UStructureGameplay::CreateGameplay(this);
@@ -63,18 +59,18 @@ void AStructure::BeginPlay()
 	AddIndication(UDistanceIndication::StaticClass());
 	AddIndication(USpeedIndication::StaticClass());
 
-	UStructureAuthoring* Authoring = GetComponentByClass<UStructureAuthoring>();
+	const UStructureAuthoring* Authoring = GetComponentByClass<UStructureAuthoring>();
 	if(Authoring != nullptr)
 	{
-		LoadLayout(Authoring->GetLayout());
+		Layout->LoadData(Authoring->GetLayoutData());
 	}
 }
 
-void AStructure::Tick(float DeltaTime)
+void AStructure::Tick(const float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	if(!IsValid(Indices->GetRootPart())) return;
+	if(!IsValid(Layout->GetRootPart())) return;
 
 	UpdateTickLevel();
 
@@ -110,130 +106,23 @@ void AStructure::PossessedBy(AController* NewController)
 
 bool AStructure::TryDestroy()
 {
-	if(!IsValid(Indices->GetRootPart())) return false;
+	if(!IsValid(Layout->GetRootPart())) return false;
 	
-	Indices->GetRootPart()->DetachSlots();
-	Indices->CullParts();
-
-	Indices->GetRootPart()->Destroy();
-
+	Layout->RemoveAll();
 	Location->ExitSector();
-
 	Destroy();
 
 	return true;
 }
 
-UStructureIndices* AStructure::GetIndices() const
+UStructureLayout* AStructure::GetLayout() const
 {
-	return Indices;
+	return Layout;
 }
 
 UStructureLocation* AStructure::GetLocation() const
 {
 	return Location;
-}
-
-EStructureValidationResult AStructure::ValidateLayout()
-{
-	TArray<AStructurePart*> Parts = Indices->GetParts();
-	for(int i = 0; i < Parts.Num(); i++)
-	{
-		for(int j = i + 1; j < Parts.Num(); j++)
-		{
-			if(Parts[i]->IsOverlappingActor(Parts[j]))
-			{
-				return EStructureValidationResult::SelfIntersecting;
-			}
-		}
-	}
-	
-	if(Gameplay->GetUpkeep() > Gameplay->GetMaxUpkeep())
-	{
-		return EStructureValidationResult::UpkeepExceeded;
-	}
-
-	return EStructureValidationResult::Valid;
-}
-
-bool AStructure::LoadLayout(FStructureLayout InLayout)
-{
-	if(Indices->GetRootPart()) return false;
-
-	// If any layout part has an empty id, set it to a random guid
-	for(int i = 0; i < InLayout.Parts.Num(); i++)
-	{
-		if(InLayout.Parts[i].PartId.IsEmpty())
-		{
-			InLayout.Parts[i].PartId = FGuid::NewGuid().ToString();
-		}
-	}
-	
-	// Assume first part data is for the root part
-	for(FStructureLayoutPart PartData : InLayout.Parts)
-	{
-		if(PartData.IsValid())
-		{
-			AStructurePart* Part = GetWorld()->SpawnActor<AStructurePart>(PartData.PartType);
-
-			if(!Part->TryInitPartId(PartData.PartId))
-			{
-				UE_LOG(LogDarkFrontier, Warning, TEXT("Failed to set layout part on %s to target id %s"), *GetName(), *PartData.PartId);
-			}
-			
-			if(!Indices->AddPart(Part))
-			{
-				UE_LOG(LogDarkFrontier, Warning, TEXT("Failed to create layout part on %s with id %s"), *GetName(), *PartData.PartId);
-			}
-		}
-		else
-		{
-			// All layout part ids are valid as any empty ids were set to random guids by this point
-			UE_LOG(LogDarkFrontier, Warning, TEXT("Invalid layout part on %s with invalid class"), *GetName());
-		}
-	}
-
-	if(!Indices->GetRootPart()) return false;
-
-	for(FStructureLayoutConnection ConnectionData : InLayout.Connections)
-	{
-		if(ConnectionData.IsValid())
-		{
-			AStructurePart* PartA = Indices->GetPart(ConnectionData.PartAId);
-			AStructurePart* PartB = Indices->GetPart(ConnectionData.PartBId);
-
-			if(IsValid(PartA) && IsValid(PartB))
-			{
-				UStructureSlot* SlotA = PartA->GetSlot(ConnectionData.PartASlot);
-				UStructureSlot* SlotB = PartB->GetSlot(ConnectionData.PartBSlot);
-
-				if(IsValid(SlotA) && IsValid(SlotB))
-				{
-					if(!SlotA->TryAttach(SlotB))
-					{
-						UE_LOG(LogDarkFrontier, Warning, TEXT("Failed to create layout connection on %s between %s (%s), %s (%s)"), *GetName(), *ConnectionData.PartAId, *ConnectionData.PartASlot.ToString(), *ConnectionData.PartBId, *ConnectionData.PartBSlot.ToString());
-					}
-				}
-				else
-				{
-					UE_LOG(LogDarkFrontier, Warning, TEXT("Invalid layout connection on %s with missing/invalid slots(s)"), *GetName());
-				}
-			}
-			else
-			{
-				UE_LOG(LogDarkFrontier, Warning, TEXT("Invalid layout connection on %s with missing/invalid part(s)"), *GetName());
-			}
-		}
-		else
-		{
-			UE_LOG(LogDarkFrontier, Warning, TEXT("Invalid layout connection on %s with unset ids"), *GetName());
-		}
-	}
-
-	// All parts should be connected at this point
-	Indices->ReconnectParts();
-
-	return true;
 }
 
 EStructureTickLevel AStructure::GetTickLevel()

@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "CommonActivatableWidget.h"
-#include "Structures/StructureLayout.h"
+#include "Structures/StructureLayoutData.h"
 #include "BuildUI.generated.h"
 
 /**
@@ -57,7 +57,7 @@ protected:
 	TObjectPtr<AStructure> TargetStructure;
 
 	UPROPERTY(BlueprintReadOnly, EditInstanceOnly)
-	FStructureLayout SavedLayout;
+	FStructureLayoutData SavedLayout;
 	
 	UPROPERTY(BlueprintReadOnly, EditInstanceOnly)
 	TObjectPtr<class UStructureSlot> BaseSlot;
@@ -89,7 +89,7 @@ public:
 
 	void SetBaseSlot(UStructureSlot* InSlot);
 
-	void SetPartType(TSubclassOf<AStructurePart> InClass);
+	void SetPartType(const TSubclassOf<AStructurePart>& InClass);
 
 	void AttachWithSlotName(const FText& InName);
 

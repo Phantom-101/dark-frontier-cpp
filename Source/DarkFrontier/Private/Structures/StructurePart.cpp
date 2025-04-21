@@ -7,7 +7,7 @@
 #include "Gameplay/Attributes/HullAttributeSet.h"
 #include "Structures/Structure.h"
 #include "Structures/StructureGameplay.h"
-#include "Structures/StructureIndices.h"
+#include "Structures/StructureLayout.h"
 #include "Structures/StructureProduction.h"
 #include "Structures/StructureSlot.h"
 
@@ -99,7 +99,7 @@ AStructure* AStructurePart::GetOwningStructure() const
 
 bool AStructurePart::IsRootPart() const
 {
-	return IsValid(OwningStructure) && OwningStructure->GetIndices()->GetRootPart() == this;
+	return IsValid(OwningStructure) && OwningStructure->GetLayout()->GetRootPart() == this;
 }
 
 FString AStructurePart::GetPartId() const
@@ -152,7 +152,7 @@ void AStructurePart::AttachSlots()
 			continue;
 		}
 		
-		for(UStructureSlot* Other : OwningStructure->GetIndices()->GetSlots())
+		for(UStructureSlot* Other : OwningStructure->GetLayout()->GetSlots())
 		{
 			if(Other->GetOwningPart() == this)
 			{
@@ -173,7 +173,7 @@ void AStructurePart::DetachSlots()
 	{
 		Slot->TryDetach();
 	}
-	OwningStructure->GetIndices()->CullParts();
+	OwningStructure->GetLayout()->RemoveUnconnected();
 }
 
 TArray<UStructureFacility*> AStructurePart::GetFacilities()
