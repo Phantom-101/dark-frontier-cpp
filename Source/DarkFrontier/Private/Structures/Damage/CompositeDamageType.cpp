@@ -5,33 +5,33 @@
 FCompositeDamageEntry::FCompositeDamageEntry()
 {
 	DamageType = nullptr;
-	Ratio = 0;
+	Weight = 0;
 }
 
-FCompositeDamageEntry::FCompositeDamageEntry(const TSubclassOf<UStructureDamageType> InDamageType, const float InRatio)
+FCompositeDamageEntry::FCompositeDamageEntry(const TSubclassOf<UStructureDamageType>& InDamageType, const float InWeight)
 {
 	DamageType = InDamageType;
-	Ratio = InRatio;
+	Weight = InWeight;
 }
 
 bool FCompositeDamageEntry::IsValid() const
 {
-	return DamageType != nullptr && Ratio > 0;
+	return DamageType != nullptr && Weight > 0;
 }
 
-float UCompositeDamageType::Evaluate(const UTargetGroup* TargetGroup, const UAbilitySystemComponent* Comp) const
+float UCompositeDamageType::Evaluate(const UTargetGroup* TargetGroup) const
 {
-	float TotalRatio = 0;
+	float TotalWeight = 0;
 	float Multiplier = 0;
 	
 	for(const FCompositeDamageEntry& Entry : Entries)
 	{
 		if(Entry.IsValid())
 		{
-			TotalRatio += Entry.Ratio;
-			Multiplier += Entry.Ratio * Entry.DamageType.GetDefaultObject()->Evaluate(TargetGroup, Comp);
+			TotalWeight += Entry.Weight;
+			Multiplier += Entry.Weight * Entry.DamageType.GetDefaultObject()->Evaluate(TargetGroup);
 		}
 	}
 
-	return TotalRatio == 0 ? 1 : Multiplier / TotalRatio;
+	return TotalWeight == 0 ? 1 : Multiplier / TotalWeight;
 }

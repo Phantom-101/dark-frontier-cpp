@@ -13,6 +13,7 @@ void UStructureEntry::NativeTick(const FGeometry& MyGeometry, const float InDelt
 	Super::NativeTick(MyGeometry, InDeltaTime);
 
 	UStructureGameplay* Gameplay = Structure->GetGameplay();
+	// TODO add math util function where 0/0 equals 1
 	ShieldBar->SetFill(FVector2D(Gameplay->GetShield() / Gameplay->GetMaxShield(), 1));
 	HullBar->SetFill(FVector2D(Gameplay->GetHull() / Gameplay->GetMaxHull(), 1));
 }

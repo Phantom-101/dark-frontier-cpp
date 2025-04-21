@@ -2,7 +2,7 @@
 
 #include "Structures/Damage/StructureDamageType.h"
 
-float UStructureDamageType::Evaluate(const UTargetGroup* TargetGroup, const UAbilitySystemComponent* Comp) const
+float UStructureDamageType::Evaluate(const UTargetGroup* TargetGroup) const
 {
 	return 1;
 }

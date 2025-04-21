@@ -3,7 +3,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "AttributeSet.h"
 #include "StructureDamageType.h"
 #include "SimpleDamageType.generated.h"
 
@@ -19,10 +18,10 @@ class DARKFRONTIER_API USimpleDamageType : public UStructureDamageType
 protected:
 	
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly)
-	TMap<TObjectPtr<UTargetGroup>, FGameplayAttribute> ResistanceAttributes;
+	TMap<TObjectPtr<UTargetGroup>, float> DamageMultiplierMap;
 
 public:
 
-	virtual float Evaluate(const UTargetGroup* TargetGroup, const UAbilitySystemComponent* Comp) const override;
+	virtual float Evaluate(const UTargetGroup* TargetGroup) const override;
 	
 };

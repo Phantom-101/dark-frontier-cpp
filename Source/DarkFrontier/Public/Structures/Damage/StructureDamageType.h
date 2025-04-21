@@ -19,7 +19,6 @@ class DARKFRONTIER_API UStructureDamageType : public UDamageType
 
 public:
 
-	// TODO only return resistance value and let caller decide how to calculate damage
-	virtual float Evaluate(const UTargetGroup* TargetGroup, const UAbilitySystemComponent* Comp) const;
+	virtual float Evaluate(const UTargetGroup* TargetGroup) const;
 	
 };
