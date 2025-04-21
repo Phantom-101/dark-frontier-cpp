@@ -9,7 +9,7 @@
 #include "Objects/ActorViewTarget.h"
 #include "Structures/Structure.h"
 #include "Structures/StructureDock.h"
-#include "Structures/StructureIndices.h"
+#include "Structures/StructureLayout.h"
 #include "Structures/StructureLocation.h"
 #include "UI/Screens/BuildUI/BuildUI.h"
 #include "UI/Screens/UIBase.h"
@@ -73,7 +73,7 @@ void AStructureController::OnPossess(APawn* InPawn)
 	{
 		StructurePawn->GetAbilitySystemComponent()->InitAbilityActorInfo(StructurePawn, StructurePawn);
 		
-		StructurePawn->GetIndices()->OnUpdated.AddUObject<AStructureController>(this, &AStructureController::PropagateLayoutChange);
+		StructurePawn->GetLayout()->OnUpdated.AddUObject<AStructureController>(this, &AStructureController::PropagateLayoutChange);
 		StructurePawn->GetLocation()->OnDockChanged.AddUObject<AStructureController>(this, &AStructureController::HandleDock);
 
 		GetWorld()->GetGameState<AUniverseGameState>()->SetPlayerFaction(StructurePawn->GetOwningFaction());
@@ -86,7 +86,7 @@ void AStructureController::OnUnPossess()
 
 	if(StructurePawn)
 	{
-		StructurePawn->GetIndices()->OnUpdated.RemoveAll(this);
+		StructurePawn->GetLayout()->OnUpdated.RemoveAll(this);
 		StructurePawn->GetLocation()->OnDockChanged.RemoveAll(this);
 	}
 

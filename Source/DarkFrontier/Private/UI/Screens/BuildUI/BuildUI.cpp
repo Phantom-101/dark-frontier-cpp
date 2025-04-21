@@ -6,10 +6,9 @@
 #include "Components/WidgetSwitcher.h"
 #include "Structures/Structure.h"
 #include "Structures/StructureController.h"
-#include "Structures/StructureLayout.h"
+#include "Structures/StructureLayoutData.h"
 #include "Structures/StructurePart.h"
 #include "Structures/StructureSlot.h"
-#include "Structures/StructureValidationResult.h"
 #include "UI/Screens/BuildUI/StructureInfo.h"
 #include "UI/Screens/BuildUI/StructurePartInfo.h"
 #include "UI/Screens/BuildUI/StructurePartSelector.h"
@@ -58,7 +57,7 @@ void UBuildUI::SetAvailableParts(const TArray<TSubclassOf<AStructurePart>>& InTy
 void UBuildUI::InitStructure(AStructure* InStructure)
 {
 	TargetStructure = InStructure;
-	SavedLayout = FStructureLayout(InStructure);
+	SavedLayout = FStructureLayoutData(InStructure);
 
 	UE_LOG(LogDarkFrontier, Log, TEXT("Initialized structure details view for %s"), *InStructure->GetFullName());
 }
@@ -98,13 +97,13 @@ void UBuildUI::SetBaseSlot(UStructureSlot* InSlot)
 	SelectorSwitcher->SetActiveWidget(PartSelector);
 }
 
-void UBuildUI::SetPartType(const TSubclassOf<AStructurePart> InClass)
+void UBuildUI::SetPartType(const TSubclassOf<AStructurePart>& InClass)
 {
 	PartType = InClass;
 	SelectorSwitcher->SetActiveWidget(SlotSelector);
 
 	// Call this after active widget change as populate options will automatically call attach with slot name
-	// in the event that only one slot is compatible, in which case the active widget will be set to no selector
+	// In the event that only one slot is compatible, in which case the active widget will be set to no selector
 	SlotSelector->PopulateOptions(PartType, BaseSlot);
 }
 
@@ -113,8 +112,7 @@ void UBuildUI::AttachWithSlotName(const FText& InName)
 	AStructurePart* Section = Cast<AStructurePart>(GetWorld()->SpawnActor(PartType));
 	Section->GetSlot(InName)->TryAttach(BaseSlot);
 
-	const EStructureValidationResult Result = TargetStructure->ValidateLayout();
-	if(Result != EStructureValidationResult::Valid)
+	if(!TargetStructure->GetLayout()->IsValid())
 	{
 		UE_LOG(LogDarkFrontier, Log, TEXT("Layout validation error"))
 		Section->DetachSlots();

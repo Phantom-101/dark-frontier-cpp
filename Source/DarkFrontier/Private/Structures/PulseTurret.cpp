@@ -6,7 +6,7 @@
 #include "Engine/DamageEvents.h"
 #include "Structures/Structure.h"
 #include "Structures/StructureGameplay.h"
-#include "Structures/StructureIndices.h"
+#include "Structures/StructureLayout.h"
 #include "Structures/Damage/StructureDamageType.h"
 #include "Structures/Indications/TimerIndication.h"
 
@@ -50,7 +50,7 @@ void APulseTurret::OnDelayComplete()
 	// Ignore owning structure and its parts in the line trace
 	TArray<AActor*> IgnoredActors;
 	IgnoredActors.Add(OwningStructure);
-	IgnoredActors.Append(OwningStructure->GetIndices()->GetParts());
+	IgnoredActors.Append(OwningStructure->GetLayout()->GetParts());
 
 	FCollisionQueryParams QueryParams;
 	QueryParams.AddIgnoredActors(IgnoredActors);

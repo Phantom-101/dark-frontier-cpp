@@ -6,7 +6,7 @@
 #include "GameFramework/PlayerController.h"
 #include "InputMappingContext.h"
 #include "Structure.h"
-#include "StructureIndices.h"
+#include "StructureLayout.h"
 #include "StructureController.generated.h"
 
 /**
@@ -94,7 +94,7 @@ protected:
 
 public:
 
-	FStructureIndicesUpdated OnLayoutChanged;
+	FStructureLayoutChanged OnLayoutChanged;
 
 protected:
 

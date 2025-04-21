@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "StructureLayout.h"
+#include "StructureLayoutData.h"
 #include "Components/ActorComponent.h"
 #include "StructureAuthoring.generated.h"
 
@@ -15,10 +15,10 @@ class DARKFRONTIER_API UStructureAuthoring : public UActorComponent
 protected:
 
 	UPROPERTY(BlueprintReadOnly, EditAnywhere)
-	FStructureLayout Layout;
+	FStructureLayoutData LayoutData;
 
 public:
 
-	FStructureLayout GetLayout();
+	FStructureLayoutData GetLayoutData() const;
 
 };

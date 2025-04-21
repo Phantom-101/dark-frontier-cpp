@@ -12,7 +12,7 @@
 #include "Structure.generated.h"
 
 class UStructureLocation;
-class UStructureIndices;
+class UStructureLayout;
 class UStructureGameplay;
 enum class EStructureValidationResult : uint8;
 class UInventory;
@@ -56,7 +56,7 @@ protected:
 	TObjectPtr<UTargetGroup> HullTargetGroup;
 
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere)
-	TObjectPtr<UStructureIndices> Indices;
+	TObjectPtr<UStructureLayout> Layout;
 
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere)
 	TObjectPtr<UStructureLocation> Location;
@@ -116,16 +116,10 @@ public:
 	bool TryDestroy();
 
 	UFUNCTION(BlueprintCallable)
-	UStructureIndices* GetIndices() const;
+	UStructureLayout* GetLayout() const;
 
 	UFUNCTION(BlueprintCallable)
 	UStructureLocation* GetLocation() const;
-
-	UFUNCTION(BlueprintCallable, Category="Layout")
-	EStructureValidationResult ValidateLayout();
-
-	UFUNCTION(BlueprintCallable, Category="Layout")
-	bool LoadLayout(struct FStructureLayout InLayout);
 
 	UFUNCTION(BlueprintCallable, Category="Sector")
 	EStructureTickLevel GetTickLevel();
