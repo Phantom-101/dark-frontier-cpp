@@ -6,10 +6,9 @@
 #include "Gameplay/Attributes/AttributeMacros.h"
 #include "Gameplay/Attributes/DetectionAttributeSet.h"
 #include "Gameplay/Attributes/EnergyAttributeSet.h"
-#include "Gameplay/Attributes/HullAttributeSet.h"
+#include "Gameplay/Attributes/IntegrityAttributeSet.h"
 #include "Gameplay/Attributes/LayoutAttributeSet.h"
 #include "Gameplay/Attributes/MobilityAttributeSet.h"
-#include "Gameplay/Attributes/ShieldAttributeSet.h"
 #include "UObject/Object.h"
 #include "StructureGameplay.generated.h"
 
@@ -35,10 +34,7 @@ protected:
 	TObjectPtr<UStructureAbilitySystemComponent> AbilitySystemComponent;
 
 	UPROPERTY(BlueprintReadOnly, VisibleDefaultsOnly)
-	TObjectPtr<UHullAttributeSet> HullAttributes;
-
-	UPROPERTY(BlueprintReadOnly, VisibleDefaultsOnly)
-	TObjectPtr<UShieldAttributeSet> ShieldAttributes;
+	TObjectPtr<UIntegrityAttributeSet> HullAttributes;
 
 	UPROPERTY(BlueprintReadOnly, VisibleDefaultsOnly)
 	TObjectPtr<UEnergyAttributeSet> EnergyAttributes;
@@ -79,18 +75,15 @@ public:
 	ATTRIBUTE_PASSTHROUGH_ALIAS(HullAttributes, MaxIntegrity, MaxHull);
 	ATTRIBUTE_PASSTHROUGH_ALIAS(HullAttributes, Integrity, Hull);
 	ATTRIBUTE_PASSTHROUGH_ALIAS(HullAttributes, Regeneration, HullRegeneration);
-	ATTRIBUTE_PASSTHROUGH_ALIAS(HullAttributes, KineticResistance, HullKineticResistance);
-	ATTRIBUTE_PASSTHROUGH_ALIAS(HullAttributes, ExplosiveResistance, HullExplosiveResistance);
-	ATTRIBUTE_PASSTHROUGH_ALIAS(HullAttributes, ThermalResistance, HullThermalResistance);
-	ATTRIBUTE_PASSTHROUGH_ALIAS(HullAttributes, ElectromagneticResistance, HullElectromagneticResistance);
 
-	ATTRIBUTE_PASSTHROUGH_ALIAS(ShieldAttributes, MaxIntegrity, MaxShield);
-	ATTRIBUTE_PASSTHROUGH_ALIAS(ShieldAttributes, Integrity, Shield);
-	ATTRIBUTE_PASSTHROUGH_ALIAS(ShieldAttributes, Regeneration, ShieldRegeneration);
-	ATTRIBUTE_PASSTHROUGH_ALIAS(ShieldAttributes, KineticResistance, ShieldKineticResistance);
-	ATTRIBUTE_PASSTHROUGH_ALIAS(ShieldAttributes, ExplosiveResistance, ShieldExplosiveResistance);
-	ATTRIBUTE_PASSTHROUGH_ALIAS(ShieldAttributes, ThermalResistance, ShieldThermalResistance);
-	ATTRIBUTE_PASSTHROUGH_ALIAS(ShieldAttributes, ElectromagneticResistance, ShieldElectromagneticResistance);
+	UFUNCTION(BlueprintCallable)
+	float GetMaxShield();
+	
+	UFUNCTION(BlueprintCallable)
+	float GetShield();
+
+	UFUNCTION(BlueprintCallable)
+	float GetShieldRegeneration();
 
 	ATTRIBUTE_PASSTHROUGH(EnergyAttributes, MaxEnergy);
 	ATTRIBUTE_PASSTHROUGH(EnergyAttributes, Energy);

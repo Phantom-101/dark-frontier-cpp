@@ -15,11 +15,11 @@ struct DARKFRONTIER_API FCompositeDamageEntry
 	TSubclassOf<UStructureDamageType> DamageType;
 
 	UPROPERTY(BlueprintReadOnly, EditAnywhere)
-	float Ratio;
+	float Weight;
 
 	FCompositeDamageEntry();
 
-	FCompositeDamageEntry(TSubclassOf<UStructureDamageType> InDamageType, float InRatio);
+	FCompositeDamageEntry(const TSubclassOf<UStructureDamageType>& InDamageType, float InWeight);
 
 	bool IsValid() const;
 	
@@ -40,6 +40,6 @@ protected:
 
 public:
 	
-	virtual float Evaluate(const UTargetGroup* TargetGroup, const UAbilitySystemComponent* Comp) const override;
+	virtual float Evaluate(const UTargetGroup* TargetGroup) const override;
 
 };

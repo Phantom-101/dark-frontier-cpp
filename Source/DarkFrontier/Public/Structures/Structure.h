@@ -8,7 +8,6 @@
 #include "StructureTickLevel.h"
 #include "Damage/HasTargetGroup.h"
 #include "GameFramework/Pawn.h"
-#include "Objects/ViewTarget.h"
 #include "Structure.generated.h"
 
 class UStructureLocation;

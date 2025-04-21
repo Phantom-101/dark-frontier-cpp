@@ -251,7 +251,7 @@ float AStructure::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent
 	// Healing is not supported
 	if(DamageAmount > 0)
 	{
-		const float Multiplier = StructureDamageType ? StructureDamageType->Evaluate(HullTargetGroup, GetAbilitySystemComponent()) : 1;
+		const float Multiplier = StructureDamageType ? StructureDamageType->Evaluate(HullTargetGroup) : 1;
 		const float Equivalent = Gameplay->GetHull() / Multiplier;
 		const float Absorbed = FMath::Min(DamageAmount, Equivalent);
 		const float Damage = Absorbed * Multiplier;

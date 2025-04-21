@@ -4,7 +4,7 @@
 #include "GameplayEffect.h"
 #include "Engine/SCS_Node.h"
 #include "Engine/SimpleConstructionScript.h"
-#include "Gameplay/Attributes/HullAttributeSet.h"
+#include "Gameplay/Attributes/IntegrityAttributeSet.h"
 #include "Structures/Structure.h"
 #include "Structures/StructureGameplay.h"
 #include "Structures/StructureLayout.h"
@@ -69,7 +69,7 @@ void AStructurePart::OnAdded(AStructure* Structure)
 			float Magnitude;
 			if(Modifier.ModifierMagnitude.GetStaticMagnitudeIfPossible(1, Magnitude))
 			{
-				if(Modifier.Attribute == UHullAttributeSet::GetMaxIntegrityAttribute()) Hull += Magnitude;
+				if(Modifier.Attribute == UIntegrityAttributeSet::GetMaxIntegrityAttribute()) Hull += Magnitude;
 			}
 		}
 
