@@ -6,12 +6,12 @@
 #include "Components/Image.h"
 #include "Components/WidgetSwitcher.h"
 #include "Factions/Faction.h"
-#include "Items/Inventory.h"
 #include "Items/Item.h"
 #include "Items/ItemStack.h"
 #include "Items/ItemStackObject.h"
 #include "Libraries/UIBlueprintFunctionLibrary.h"
 #include "Structures/Structure.h"
+#include "Structures/StructureInventory.h"
 #include "Structures/StructureLocation.h"
 #include "UI/Screens/UIBase.h"
 #include "UI/Screens/InventoryUI/InventoryDisposeModal.h"
@@ -87,7 +87,7 @@ AStructure* UInventoryUI::GetStructure() const
 	return Structure;
 }
 
-UInventory* UInventoryUI::GetInventory() const
+UStructureInventory* UInventoryUI::GetInventory() const
 {
 	return Structure->GetInventory();
 }

@@ -6,6 +6,7 @@
 #include "GameFramework/GameModeBase.h"
 #include "UniverseGameMode.generated.h"
 
+class UTradeParameters;
 class UItem;
 
 /**
@@ -16,14 +17,24 @@ class DARKFRONTIER_API AUniverseGameMode : public AGameModeBase
 {
 	GENERATED_BODY()
 
+public:
+
+	AUniverseGameMode();
+
 protected:
 
 	UPROPERTY(BlueprintReadOnly, EditAnywhere)
-	TArray<TObjectPtr<UItem>> AllowedItems;
-
+	TArray<TObjectPtr<UItem>> ItemList;
+	
+	UPROPERTY(BlueprintReadOnly, EditAnywhere)
+	TObjectPtr<UTradeParameters> TradeParameters;
+	
 public:
 
 	UFUNCTION(BlueprintCallable)
-	TArray<UItem*> GetAllowedItems();
+	TArray<UItem*> GetItemList();
+
+	UFUNCTION(BlueprintCallable)
+	UTradeParameters* GetTradeParameters();
 	
 };

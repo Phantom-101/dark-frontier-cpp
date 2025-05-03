@@ -2,9 +2,9 @@
 
 #include "UI/Screens/StationUI/StationTrade.h"
 #include "CommonButtonBase.h"
-#include "Items/Inventory.h"
 #include "Items/ItemObject.h"
 #include "Structures/StructureController.h"
+#include "Structures/StructureInventory.h"
 #include "Structures/StructureLocation.h"
 #include "UI/Screens/StationUI/TradeEntry.h"
 #include "UI/Widgets/Interaction/ListBox.h"
@@ -29,8 +29,8 @@ void UStationTrade::NativeOnActivated()
 	AStructure* Ship = Cast<AStructure>(Controller->GetPawn());
 	AStructure* Station = Ship->GetLocation()->GetDockStructure();
 
-	const UInventory* ShipInventory = Ship->GetInventory();
-	const UInventory* StationInventory = Station->GetInventory();
+	const UStructureInventory* ShipInventory = Ship->GetInventory();
+	const UStructureInventory* StationInventory = Station->GetInventory();
 
 	TArray<UItem*> Combined = ShipInventory->GetItems();
 	Combined.Append(StationInventory->GetItems());

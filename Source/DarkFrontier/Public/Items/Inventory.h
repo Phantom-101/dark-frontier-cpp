@@ -6,7 +6,6 @@
 #include "Inventory.generated.h"
 
 class UItemList;
-class AStructure;
 class UItem;
 struct FItemStack;
 
@@ -36,9 +35,6 @@ public:
 	FInventoryItemsChanged OnItemsChanged;
 
 	UInventory();
-
-	UFUNCTION(BlueprintCallable)
-	AStructure* GetStructure() const;
 
 	UFUNCTION(BlueprintCallable)
 	TArray<FItemStack> GetStacks() const;

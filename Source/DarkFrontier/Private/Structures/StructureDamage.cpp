@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "Structures/StructureDamage.h"
-#include "Structures/Damage/StructureDamageType.h"
+#include "Structures/StructureDamageType.h"
 
 FStructureDamage::FStructureDamage()
 {

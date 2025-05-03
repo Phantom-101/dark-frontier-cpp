@@ -6,15 +6,16 @@
 #include "CoreMinimal.h"
 #include "GameplayTagContainer.h"
 #include "StructureTickLevel.h"
-#include "Damage/HasTargetGroup.h"
+#include "HasTargetGroup.h"
 #include "GameFramework/Pawn.h"
 #include "Structure.generated.h"
 
+class UStructureInventory;
+class UItem;
 class UStructureLocation;
 class UStructureLayout;
 class UStructureGameplay;
 enum class EStructureValidationResult : uint8;
-class UInventory;
 class UStructureAbilitySystemComponent;
 class UStructureAttributeSet;
 class USpringArmComponent;
@@ -53,6 +54,9 @@ protected:
 
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category="Gameplay")
 	TObjectPtr<UTargetGroup> HullTargetGroup;
+	
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category="Gameplay")
+	TObjectPtr<UTargetGroup> ShieldTargetGroup;
 
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere)
 	TObjectPtr<UStructureLayout> Layout;
@@ -67,7 +71,7 @@ protected:
 	EStructureTickLevel TickLevel = EStructureTickLevel::Omitted;
 
 	UPROPERTY(BlueprintReadOnly, EditAnywhere, Instanced, Category="Inventory")
-	TObjectPtr<UInventory> Inventory;
+	TObjectPtr<UStructureInventory> Inventory;
 
 	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category="Combat")
 	TObjectPtr<AFaction> OwningFaction;
@@ -130,7 +134,7 @@ public:
 	void UpdateTickLevel();
 
 	UFUNCTION(BlueprintCallable, Category="Inventory")
-	UInventory* GetInventory() const;
+	UStructureInventory* GetInventory() const;
 
 	UFUNCTION(BlueprintCallable, Category="Combat")
 	AFaction* GetOwningFaction() const;

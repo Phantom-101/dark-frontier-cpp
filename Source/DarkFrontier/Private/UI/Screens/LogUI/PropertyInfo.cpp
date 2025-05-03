@@ -1,8 +1,8 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 #include "UI/Screens/LogUI/PropertyInfo.h"
-#include "Items/Inventory.h"
 #include "Structures/Structure.h"
+#include "Structures/StructureInventory.h"
 #include "UI/Screens/LogUI/StructureEntry.h"
 #include "UI/Widgets/Visuals/InfoField.h"
 

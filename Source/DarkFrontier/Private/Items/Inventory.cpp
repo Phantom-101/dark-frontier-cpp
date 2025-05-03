@@ -4,16 +4,10 @@
 #include "Items/Item.h"
 #include "Items/ItemList.h"
 #include "Items/ItemStack.h"
-#include "Structures/Structure.h"
 
 UInventory::UInventory()
 {
 	Items = CreateDefaultSubobject<UItemList>("Items");
-}
-
-AStructure* UInventory::GetStructure() const
-{
-	return Cast<AStructure>(GetOuter());
 }
 
 TArray<FItemStack> UInventory::GetStacks() const

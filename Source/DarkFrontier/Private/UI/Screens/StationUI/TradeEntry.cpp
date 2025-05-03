@@ -4,9 +4,9 @@
 #include "CommonButtonBase.h"
 #include "CommonTextBlock.h"
 #include "Components/Image.h"
-#include "Items/Inventory.h"
 #include "Items/Item.h"
 #include "Structures/Structure.h"
+#include "Structures/StructureInventory.h"
 
 void UTradeEntry::NativeConstruct()
 {

@@ -1,8 +1,8 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-#include "Structures/Damage/SimpleDamageType.h"
+#include "Structures/StructureDamageType.h"
 
-float USimpleDamageType::Evaluate(const UTargetGroup* TargetGroup) const
+float UStructureDamageType::Evaluate(const UTargetGroup* TargetGroup) const
 {
 	if(DamageMultiplierMap.Contains(TargetGroup))
 	{

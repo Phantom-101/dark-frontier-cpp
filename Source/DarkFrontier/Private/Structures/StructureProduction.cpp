@@ -1,11 +1,10 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "Structures/StructureProduction.h"
-
 #include "Factions/Faction.h"
-#include "Items/Inventory.h"
 #include "Items/Recipe.h"
 #include "Structures/Structure.h"
+#include "Structures/StructureInventory.h"
 #include "Structures/StructurePart.h"
 
 UStructureProduction::UStructureProduction()
@@ -13,13 +12,18 @@ UStructureProduction::UStructureProduction()
 	PrimaryComponentTick.bCanEverTick = true;
 }
 
-void UStructureProduction::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
+URecipe* UStructureProduction::GetRecipe() const
+{
+	return Recipe;
+}
+
+void UStructureProduction::TickComponent(const float DeltaTime, const ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
 	if(!IsValid(OwningPart) || !IsValid(Recipe)) return;
 
-	const UInventory* Inventory = OwningPart->GetOwningStructure()->GetInventory();
+	const UStructureInventory* Inventory = OwningPart->GetOwningStructure()->GetInventory();
 
 	if(RequirementsMet)
 	{

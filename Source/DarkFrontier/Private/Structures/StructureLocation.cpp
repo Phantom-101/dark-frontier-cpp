@@ -8,7 +8,6 @@
 UStructureLocation* UStructureLocation::CreateLocation(AStructure* Structure)
 {
 	UStructureLocation* Location = Structure->CreateDefaultSubobject<UStructureLocation>("Location");
-	
 	return Location;
 }
 

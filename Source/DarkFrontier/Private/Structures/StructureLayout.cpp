@@ -1,7 +1,6 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 #include "Structures/StructureLayout.h"
-
 #include "Log.h"
 #include "Structures/Structure.h"
 #include "Structures/StructureGameplay.h"
@@ -12,7 +11,6 @@
 UStructureLayout* UStructureLayout::CreateLayout(AStructure* Structure)
 {
 	UStructureLayout* Layout = Structure->CreateDefaultSubobject<UStructureLayout>("Layout");
-	
 	return Layout;
 }
 

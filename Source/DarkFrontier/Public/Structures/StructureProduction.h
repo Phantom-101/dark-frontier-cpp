@@ -31,6 +31,13 @@ protected:
 	UPROPERTY(BlueprintReadOnly, EditInstanceOnly)
 	float Progress = 0;
 
+public:
+
+	UFUNCTION(BlueprintCallable)
+	URecipe* GetRecipe() const;
+
+protected:
+
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 };
