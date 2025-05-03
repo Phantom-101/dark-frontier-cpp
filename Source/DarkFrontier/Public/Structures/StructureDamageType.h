@@ -3,15 +3,16 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "StructureDamageType.h"
-#include "SimpleDamageType.generated.h"
+#include "GameFramework/DamageType.h"
+#include "StructureDamageType.generated.h"
 
 class UTargetGroup;
+
 /**
  * 
  */
-UCLASS()
-class DARKFRONTIER_API USimpleDamageType : public UStructureDamageType
+UCLASS(Abstract)
+class DARKFRONTIER_API UStructureDamageType : public UDamageType
 {
 	GENERATED_BODY()
 
@@ -22,6 +23,6 @@ protected:
 
 public:
 
-	virtual float Evaluate(const UTargetGroup* TargetGroup) const override;
+	virtual float Evaluate(const UTargetGroup* TargetGroup) const;
 	
 };

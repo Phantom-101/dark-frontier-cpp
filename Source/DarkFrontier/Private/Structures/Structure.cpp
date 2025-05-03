@@ -3,16 +3,17 @@
 #include "Structures/Structure.h"
 #include "Camera/CameraComponent.h"
 #include "Engine/DamageEvents.h"
+#include "Factions/Faction.h"
 #include "GameFramework/SpringArmComponent.h"
-#include "Items/Inventory.h"
 #include "Structures/StructureAbilitySystemComponent.h"
 #include "Structures/StructureAbility.h"
 #include "Structures/StructureAuthoring.h"
+#include "Structures/StructureDamageType.h"
 #include "Structures/StructureGameplay.h"
+#include "Structures/StructureInventory.h"
 #include "Structures/StructureLayout.h"
 #include "Structures/StructureLocation.h"
 #include "Structures/StructurePart.h"
-#include "Structures/Damage/StructureDamageType.h"
 #include "Structures/Indications/DistanceIndication.h"
 #include "Structures/Indications/HullIndication.h"
 #include "Structures/Indications/SpeedIndication.h"
@@ -33,7 +34,7 @@ AStructure::AStructure()
 
 	Layout = UStructureLayout::CreateLayout(this);
 	Location = UStructureLocation::CreateLocation(this);
-	Inventory = CreateDefaultSubobject<UInventory>("Inventory");
+	Inventory = UStructureInventory::CreateInventory(this);
 	Gameplay = UStructureGameplay::CreateGameplay(this);
 }
 
@@ -171,7 +172,7 @@ void AStructure::UpdateTickLevel()
 	}
 }
 
-UInventory* AStructure::GetInventory() const
+UStructureInventory* AStructure::GetInventory() const
 {
 	return Inventory;
 }
@@ -244,25 +245,32 @@ float AStructure::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent
 	// Calculate damage based on damage event type and fire event dispatchers
 	// The value provided to event listeners is the raw damage before resistances are applied
 	DamageAmount = Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
+
+	if(DamageAmount <= 0)
+	{
+		return 0;
+	}
 	
 	const UDamageType* DamageType = DamageEvent.DamageTypeClass ? DamageEvent.DamageTypeClass.GetDefaultObject() : GetDefault<UDamageType>();
 	const UStructureDamageType* StructureDamageType = Cast<UStructureDamageType>(DamageType);
 
-	// Healing is not supported
-	if(DamageAmount > 0)
-	{
-		const float Multiplier = StructureDamageType ? StructureDamageType->Evaluate(HullTargetGroup) : 1;
-		const float Equivalent = Gameplay->GetHull() / Multiplier;
-		const float Absorbed = FMath::Min(DamageAmount, Equivalent);
-		const float Damage = Absorbed * Multiplier;
-		
-		Gameplay->SetHull(Gameplay->GetHull() - Damage);
-		
-		// Return the actual amount absorbed
-		return Absorbed;
-	}
+	const float ShieldMultiplier = StructureDamageType ? StructureDamageType->Evaluate(ShieldTargetGroup) : 1;
+	const float ShieldEquivalent = Gameplay->GetShield() / ShieldMultiplier;
+	const float ShieldAbsorbed = FMath::Min(DamageAmount, ShieldEquivalent);
+	const float ShieldDamage = ShieldAbsorbed * ShieldMultiplier;
+	
+	Gameplay->SetShield(Gameplay->GetShield() - ShieldDamage);
+	DamageAmount -= ShieldAbsorbed;
 
-	return 0;
+	const float HullMultiplier = StructureDamageType ? StructureDamageType->Evaluate(HullTargetGroup) : 1;
+	const float HullEquivalent = Gameplay->GetShield() / HullMultiplier;
+	const float HullAbsorbed = FMath::Min(DamageAmount, HullEquivalent);
+	const float HullDamage = HullAbsorbed * HullMultiplier;
+	
+	Gameplay->SetHull(Gameplay->GetHull() - HullDamage);
+	
+	// Return the actual amount absorbed
+	return ShieldAbsorbed + HullAbsorbed;
 }
 
 TArray<UStructureIndication*> AStructure::GetIndications()

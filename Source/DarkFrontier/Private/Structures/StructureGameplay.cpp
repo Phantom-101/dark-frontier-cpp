@@ -3,7 +3,7 @@
 #include "Structures/StructureGameplay.h"
 #include "Log.h"
 #include "Gameplay/Attributes/EnergyAttributeSet.h"
-#include "Gameplay/Attributes/IntegrityAttributeSet.h"
+#include "Gameplay/Attributes/HullAttributeSet.h"
 #include "Gameplay/Attributes/LayoutAttributeSet.h"
 #include "Gameplay/Attributes/DetectionAttributeSet.h"
 #include "Structures/Structure.h"
@@ -18,7 +18,8 @@ UStructureGameplay* UStructureGameplay::CreateGameplay(AStructure* Structure)
 	Gameplay->AbilitySystemComponent->SetIsReplicated(true);
 	Gameplay->AbilitySystemComponent->SetReplicationMode(EGameplayEffectReplicationMode::Minimal);
 
-	Gameplay->HullAttributes = Structure->CreateDefaultSubobject<UIntegrityAttributeSet>("HullAttributes");
+	Gameplay->HullAttributes = Structure->CreateDefaultSubobject<UHullAttributeSet>("HullAttributes");
+	Gameplay->ShieldAttributes = Structure->CreateDefaultSubobject<UShieldAttributeSet>("ShieldAttributes");
 	Gameplay->EnergyAttributes = Structure->CreateDefaultSubobject<UEnergyAttributeSet>("EnergyAttributes");
 	Gameplay->LayoutAttributes = Structure->CreateDefaultSubobject<ULayoutAttributeSet>("LayoutAttributes");
 	Gameplay->DetectionAttributes = Structure->CreateDefaultSubobject<UDetectionAttributeSet>("DetectionAttributes");
@@ -92,22 +93,6 @@ void UStructureGameplay::ClearAbility(const FGameplayAbilitySpecHandle Handle) c
 UStructureAbilitySystemComponent* UStructureGameplay::GetAbilitySystemComponent() const
 {
 	return AbilitySystemComponent;
-}
-
-float UStructureGameplay::GetMaxShield()
-{
-	// TODO replace bodies with actual functions
-	return 1;
-}
-
-float UStructureGameplay::GetShield()
-{
-	return 0;
-}
-
-float UStructureGameplay::GetShieldRegeneration()
-{
-	return 0;
 }
 
 bool UStructureGameplay::IsDetecting(AStructure* Other) const

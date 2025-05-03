@@ -2,6 +2,8 @@
 
 #include "Factions/Faction.h"
 #include "EngineUtils.h"
+#include "Game/UniverseGameMode.h"
+#include "Items/Item.h"
 #include "Structures/Structure.h"
 #include "Structures/StructureLayout.h"
 

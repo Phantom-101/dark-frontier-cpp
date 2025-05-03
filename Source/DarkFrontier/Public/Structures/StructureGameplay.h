@@ -6,9 +6,10 @@
 #include "Gameplay/Attributes/AttributeMacros.h"
 #include "Gameplay/Attributes/DetectionAttributeSet.h"
 #include "Gameplay/Attributes/EnergyAttributeSet.h"
-#include "Gameplay/Attributes/IntegrityAttributeSet.h"
+#include "Gameplay/Attributes/HullAttributeSet.h"
 #include "Gameplay/Attributes/LayoutAttributeSet.h"
 #include "Gameplay/Attributes/MobilityAttributeSet.h"
+#include "Gameplay/Attributes/ShieldAttributeSet.h"
 #include "UObject/Object.h"
 #include "StructureGameplay.generated.h"
 
@@ -34,7 +35,10 @@ protected:
 	TObjectPtr<UStructureAbilitySystemComponent> AbilitySystemComponent;
 
 	UPROPERTY(BlueprintReadOnly, VisibleDefaultsOnly)
-	TObjectPtr<UIntegrityAttributeSet> HullAttributes;
+	TObjectPtr<UHullAttributeSet> HullAttributes;
+
+	UPROPERTY(BlueprintReadOnly, VisibleDefaultsOnly)
+	TObjectPtr<UShieldAttributeSet> ShieldAttributes;
 
 	UPROPERTY(BlueprintReadOnly, VisibleDefaultsOnly)
 	TObjectPtr<UEnergyAttributeSet> EnergyAttributes;
@@ -72,18 +76,13 @@ public:
 
 	virtual UStructureAbilitySystemComponent* GetAbilitySystemComponent() const;
 
-	ATTRIBUTE_PASSTHROUGH_ALIAS(HullAttributes, MaxIntegrity, MaxHull);
-	ATTRIBUTE_PASSTHROUGH_ALIAS(HullAttributes, Integrity, Hull);
+	ATTRIBUTE_PASSTHROUGH_ALIAS(HullAttributes, MaxHull, MaxHull);
+	ATTRIBUTE_PASSTHROUGH_ALIAS(HullAttributes, Hull, Hull);
 	ATTRIBUTE_PASSTHROUGH_ALIAS(HullAttributes, Regeneration, HullRegeneration);
 
-	UFUNCTION(BlueprintCallable)
-	float GetMaxShield();
-	
-	UFUNCTION(BlueprintCallable)
-	float GetShield();
-
-	UFUNCTION(BlueprintCallable)
-	float GetShieldRegeneration();
+	ATTRIBUTE_PASSTHROUGH_ALIAS(ShieldAttributes, MaxShield, MaxShield);
+	ATTRIBUTE_PASSTHROUGH_ALIAS(ShieldAttributes, Shield, Shield);
+	ATTRIBUTE_PASSTHROUGH_ALIAS(ShieldAttributes, Regeneration, ShieldRegeneration);
 
 	ATTRIBUTE_PASSTHROUGH(EnergyAttributes, MaxEnergy);
 	ATTRIBUTE_PASSTHROUGH(EnergyAttributes, Energy);

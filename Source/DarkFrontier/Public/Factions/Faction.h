@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Faction.generated.h"
 
+class UItem;
 class ASector;
 
 /**

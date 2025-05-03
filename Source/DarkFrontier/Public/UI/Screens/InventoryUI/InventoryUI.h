@@ -6,6 +6,7 @@
 #include "CommonActivatableWidget.h"
 #include "InventoryUI.generated.h"
 
+class UStructureInventory;
 class UItemStackEntry;
 class UListBox;
 class UInventoryTradeModal;
@@ -21,7 +22,6 @@ class UImage;
 class UWidgetSwitcher;
 class UCommonButtonBase;
 class UItem;
-class UInventory;
 
 /**
  * 
@@ -113,7 +113,7 @@ public:
 
 	AStructure* GetStructure() const;
 
-	UInventory* GetInventory() const;
+	UStructureInventory* GetInventory() const;
 
 private:
 

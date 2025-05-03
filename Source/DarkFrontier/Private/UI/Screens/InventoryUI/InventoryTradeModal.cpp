@@ -4,10 +4,10 @@
 #include "CommonButtonBase.h"
 #include "CommonTextBlock.h"
 #include "Factions/Faction.h"
-#include "Items/Inventory.h"
 #include "Items/Item.h"
 #include "Items/ItemStack.h"
 #include "Structures/Structure.h"
+#include "Structures/StructureInventory.h"
 #include "UI/Screens/InventoryUI/InventoryEntry.h"
 #include "UI/Screens/InventoryUI/QuantityInput.h"
 #include "UI/Widgets/Interaction/ListBox.h"
@@ -50,7 +50,7 @@ bool UInventoryTradeModal::NativeOnHandleBackAction()
 	return true;
 }
 
-void UInventoryTradeModal::Init(UInventory* InInventory, UItem* InItem, const TArray<AStructure*>& InTargets)
+void UInventoryTradeModal::Init(UStructureInventory* InInventory, UItem* InItem, const TArray<AStructure*>& InTargets)
 {
 	Inventory = InInventory;
 	Item = InItem;
@@ -70,7 +70,7 @@ void UInventoryTradeModal::HandleTargetChange(UObject* Target) const
 {
 	if(IsValid(Target))
 	{
-		const UInventory* Other = Cast<AStructure>(Target)->GetInventory();
+		const UStructureInventory* Other = Cast<AStructure>(Target)->GetInventory();
 		
 		const int Available = Inventory->GetQuantity(Item);
 		const float VolumeFit = Inventory->GetFreeVolume() / Item->Volume;

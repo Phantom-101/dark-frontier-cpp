@@ -5,9 +5,9 @@
 #include "NiagaraFunctionLibrary.h"
 #include "Engine/DamageEvents.h"
 #include "Structures/Structure.h"
+#include "Structures/StructureDamageType.h"
 #include "Structures/StructureGameplay.h"
 #include "Structures/StructureLayout.h"
-#include "Structures/Damage/StructureDamageType.h"
 #include "Structures/Indications/TimerIndication.h"
 
 APulseTurret::APulseTurret()

@@ -13,7 +13,7 @@ void ULogItemsTab::NativeConstruct()
 {
 	Super::NativeConstruct();
 	
-	TArray<UItem*> Items = Cast<AUniverseGameMode>(GetWorld()->GetAuthGameMode())->GetAllowedItems();
+	TArray<UItem*> Items = GetWorld()->GetAuthGameMode<AUniverseGameMode>()->GetItemList();
 
 	TArray<UObject*> ItemObjects;
 	for(UItem* Item : Items)

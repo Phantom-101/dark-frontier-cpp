@@ -2,10 +2,10 @@
 
 #include "UI/Screens/InventoryUI/InventoryTransferModal.h"
 #include "CommonButtonBase.h"
-#include "Items/Inventory.h"
 #include "Items/Item.h"
 #include "Items/ItemStack.h"
 #include "Structures/Structure.h"
+#include "Structures/StructureInventory.h"
 #include "UI/Screens/InventoryUI/InventoryEntry.h"
 #include "UI/Screens/InventoryUI/QuantityInput.h"
 #include "UI/Widgets/Interaction/ListBox.h"
@@ -66,7 +66,7 @@ void UInventoryTransferModal::HandleTargetChange(UObject* Target) const
 {
 	if(IsValid(Target))
 	{
-		UInventory* TargetInventory = Cast<AStructure>(Target)->GetInventory();
+		const UStructureInventory* TargetInventory = Cast<AStructure>(Target)->GetInventory();
 		const int Available = Inventory->GetQuantity(Item);
 		const float VolumeFit = TargetInventory->GetFreeVolume() / Item->Volume;
 		const float MassFit = TargetInventory->GetFreeMass() / Item->Mass;

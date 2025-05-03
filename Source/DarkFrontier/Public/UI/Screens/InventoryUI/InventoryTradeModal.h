@@ -6,9 +6,9 @@
 #include "CommonActivatableWidget.h"
 #include "InventoryTradeModal.generated.h"
 
+class UStructureInventory;
 class UCommonTextBlock;
 class UItem;
-class UInventory;
 class UInventoryEntry;
 class UCommonButtonBase;
 class UQuantityInput;
@@ -54,7 +54,7 @@ protected:
 	TSubclassOf<UInventoryEntry> InventoryEntryClass;
 
 	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly)
-	TObjectPtr<UInventory> Inventory;
+	TObjectPtr<UStructureInventory> Inventory;
 
 	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly)
 	TObjectPtr<UItem> Item;
@@ -71,7 +71,7 @@ protected:
 
 public:
 
-	void Init(UInventory* InInventory, UItem* InItem, const TArray<AStructure*>& InTargets);
+	void Init(UStructureInventory* InInventory, UItem* InItem, const TArray<AStructure*>& InTargets);
 
 private:
 

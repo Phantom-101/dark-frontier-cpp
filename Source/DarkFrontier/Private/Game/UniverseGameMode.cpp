@@ -1,8 +1,19 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 #include "Game/UniverseGameMode.h"
+#include "Game/TradeParameters.h"
 
-TArray<UItem*> AUniverseGameMode::GetAllowedItems()
+AUniverseGameMode::AUniverseGameMode()
 {
-	return AllowedItems;
+	TradeParameters = CreateDefaultSubobject<UTradeParameters>("TradeParameters");
+}
+
+TArray<UItem*> AUniverseGameMode::GetItemList()
+{
+	return ItemList;
+}
+
+UTradeParameters* AUniverseGameMode::GetTradeParameters()
+{
+	return TradeParameters;
 }
