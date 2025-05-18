@@ -11,11 +11,13 @@
 #include "Structures/StructureDock.h"
 #include "Structures/StructureLayout.h"
 #include "Structures/StructureLocation.h"
+#include "UI/Screens/GameUIBase.h"
 #include "UI/Screens/BuildUI/BuildUI.h"
 #include "UI/Screens/UIBase.h"
 #include "UI/Screens/GameUI/GameUI.h"
 #include "UI/Screens/InventoryUI/InventoryUI.h"
 #include "UI/Screens/StationUI/StationUI.h"
+#include "Widgets/CommonActivatableWidgetContainer.h"
 
 AStructureController::AStructureController()
 {
@@ -27,7 +29,8 @@ void AStructureController::BeginPlay()
 
 	UIBaseWidget = CreateWidget<UUIBase>(GetGameInstance(), UIBaseClass);
 	UIBaseWidget->AddToViewport();
-	(void)UIBaseWidget->PushGame(GameUIClass.Get());
+	GameUIBaseWidget = UIBaseWidget->GetStack()->AddWidget<UGameUIBase>(GameUIBaseClass.Get());
+	(void)GameUIBaseWidget->GetGameStack()->AddWidget(GameUIClass.Get());
 }
 
 void AStructureController::SetupInputComponent()
@@ -98,6 +101,11 @@ void AStructureController::SetViewTarget(UViewTarget* InTarget)
 	ViewTarget = InTarget;
 }
 
+bool AStructureController::GetIsCursorUnlocked() const
+{
+	return IsCursorUnlocked;
+}
+
 void AStructureController::UpdateCamera()
 {
 	if(!IsValid(StructurePawn)) return;
@@ -121,6 +129,11 @@ void AStructureController::UpdateCamera()
 UUIBase* AStructureController::GetUIBaseWidget() const
 {
 	return UIBaseWidget;
+}
+
+UGameUIBase* AStructureController::GetGameUIBaseWidget() const
+{
+	return GameUIBaseWidget;
 }
 
 FVector AStructureController::GetTurnIndicatorOffset() const
@@ -184,7 +197,7 @@ void AStructureController::OpenInventory(const FInputActionInstance& Instance)
 {
 	if(!IsValid(StructurePawn)) return;
 
-	UInventoryUI* Inventory = UIBaseWidget->PushGameMenu<UInventoryUI>(InventoryUIClass);
+	UInventoryUI* Inventory = GameUIBaseWidget->GetGameStack()->AddWidget<UInventoryUI>(InventoryUIClass);
 	Inventory->SetStructure(StructurePawn);
 }
 
@@ -192,7 +205,7 @@ void AStructureController::EditStructure(const FInputActionInstance& Instance)
 {
 	if(!IsValid(StructurePawn)) return;
 	
-	UBuildUI* Details = UIBaseWidget->PushGameMenu<UBuildUI>(BuildUIClass);
+	UBuildUI* Details = GameUIBaseWidget->GetGameStack()->AddWidget<UBuildUI>(BuildUIClass);
 	Details->InitStructure(StructurePawn);
 	Details->SelectStructure();
 	Details->SetAvailableParts(AvailableParts);
@@ -207,5 +220,5 @@ void AStructureController::HandleDock(UStructureDock* Dock) const
 {
 	if(!IsValid(Dock)) return;
 	
-	(void)UIBaseWidget->PushGameMenu<UStationUI>(StationUIClass);
+	GameUIBaseWidget->GetGameStack()->AddWidget<UStationUI>(StationUIClass);
 }

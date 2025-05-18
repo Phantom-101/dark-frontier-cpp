@@ -26,6 +26,13 @@
 
 TOptional<FUIInputConfig> UGameUI::GetDesiredInputConfig() const
 {
+	if(const AStructureController* Controller = GetWorld()->GetFirstPlayerController<AStructureController>())
+	{
+		if(Controller->GetIsCursorUnlocked())
+		{
+			return FUIInputConfig(ECommonInputMode::All, EMouseCaptureMode::NoCapture);
+		}
+	}
 	return FUIInputConfig(ECommonInputMode::Game, EMouseCaptureMode::CapturePermanently);
 }
 

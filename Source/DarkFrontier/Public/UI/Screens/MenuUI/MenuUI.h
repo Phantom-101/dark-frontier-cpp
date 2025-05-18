@@ -41,6 +41,8 @@ protected:
 
 	virtual UWidget* NativeGetDesiredFocusTarget() const override;
 
+	virtual TOptional<FUIInputConfig> GetDesiredInputConfig() const override;
+
 private:
 
 	void HandleQuit() const;

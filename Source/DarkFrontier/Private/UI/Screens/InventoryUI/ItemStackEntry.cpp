@@ -9,7 +9,7 @@
 
 void UItemStackEntry::Init(UItemStackObject* InItemStack)
 {
-	if(!ensureMsgf(ItemStack == nullptr, TEXT("Init called on ItemStackEntry with non-null item stack")))
+	if(!ensureMsgf(ItemStack == nullptr, TEXT("Init should only be called on freshly created ItemStackEntry objects")))
 	{
 		ItemStack->Inventory->OnItemsChanged.RemoveAll(this);
 	}

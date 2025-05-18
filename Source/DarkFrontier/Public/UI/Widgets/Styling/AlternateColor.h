@@ -4,13 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "CommonUserWidget.h"
-#include "AlternatingColorScope.generated.h"
+#include "AlternateColor.generated.h"
 
 /**
  * 
  */
 UCLASS(Abstract)
-class DARKFRONTIER_API UAlternatingColorScope : public UCommonUserWidget
+class DARKFRONTIER_API UAlternateColor : public UCommonUserWidget
 {
 	GENERATED_BODY()
 

@@ -4,8 +4,9 @@
 
 #include "CoreMinimal.h"
 #include "CommonActivatableWidget.h"
-#include "Widgets/CommonActivatableWidgetContainer.h"
 #include "UIBase.generated.h"
+
+class UCommonActivatableWidgetStack;
 
 /**
  * 
@@ -18,78 +19,12 @@ class DARKFRONTIER_API UUIBase : public UCommonActivatableWidget
 protected:
 
 	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
-	TObjectPtr<UCommonActivatableWidgetStack> GameStack;
-
-	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
-	TObjectPtr<UCommonActivatableWidgetStack> GameMenuStack;
-
-	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
-	TObjectPtr<UCommonActivatableWidgetStack> MenuStack;
-
-	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
-	TObjectPtr<UCommonActivatableWidgetStack> ModalStack;
+	TObjectPtr<UCommonActivatableWidgetStack> Stack;
 
 public:
 
 	UFUNCTION(BlueprintCallable)
-	UCommonActivatableWidget* PeekGame() const;
-
-	UFUNCTION(BlueprintCallable)
-	UCommonActivatableWidget* PushGame(TSubclassOf<UCommonActivatableWidget> WidgetClass) const;
-
-	template <typename WidgetType = UCommonActivatableWidget>
-	WidgetType* PushGame(const TSubclassOf<UCommonActivatableWidget> WidgetClass) const
-	{
-#if WITH_EDITOR
-		GEngine->AddOnScreenDebugMessage(-1, 10, FColor::White, FString::Printf(TEXT("Game stack pushed: %s"), *WidgetClass->GetDisplayNameText().ToString()));
-#endif
-		return GameStack->AddWidget<WidgetType>(WidgetClass);
-	}
-
-	UFUNCTION(BlueprintCallable)
-	UCommonActivatableWidget* PeekGameMenu() const;
-
-	UFUNCTION(BlueprintCallable)
-	UCommonActivatableWidget* PushGameMenu(TSubclassOf<UCommonActivatableWidget> WidgetClass) const;
-	
-	template <typename WidgetType = UCommonActivatableWidget>
-	WidgetType* PushGameMenu(const TSubclassOf<UCommonActivatableWidget> WidgetClass) const
-	{
-#if WITH_EDITOR
-		GEngine->AddOnScreenDebugMessage(-1, 10, FColor::White, FString::Printf(TEXT("GameMenu stack pushed: %s"), *WidgetClass->GetDisplayNameText().ToString()));
-#endif
-		return GameMenuStack->AddWidget<WidgetType>(WidgetClass);
-	}
-
-	UFUNCTION(BlueprintCallable)
-	UCommonActivatableWidget* PeekMenu() const;
-
-	UFUNCTION(BlueprintCallable)
-	UCommonActivatableWidget* PushMenu(TSubclassOf<UCommonActivatableWidget> WidgetClass) const;
-	
-	template <typename WidgetType = UCommonActivatableWidget>
-	WidgetType* PushMenu(const TSubclassOf<UCommonActivatableWidget> WidgetClass) const
-	{
-#if WITH_EDITOR
-		GEngine->AddOnScreenDebugMessage(-1, 10, FColor::White, FString::Printf(TEXT("Menu stack pushed: %s"), *WidgetClass->GetDisplayNameText().ToString()));
-#endif
-		return MenuStack->AddWidget<WidgetType>(WidgetClass);
-	}
-	
-	UFUNCTION(BlueprintCallable)
-	UCommonActivatableWidget* PeekModal() const;
-
-	UFUNCTION(BlueprintCallable)
-	UCommonActivatableWidget* PushModal(TSubclassOf<UCommonActivatableWidget> WidgetClass) const;
-	
-	template <typename WidgetType = UCommonActivatableWidget>
-	WidgetType* PushModal(const TSubclassOf<UCommonActivatableWidget> WidgetClass) const
-	{
-#if WITH_EDITOR
-		GEngine->AddOnScreenDebugMessage(-1, 10, FColor::White, FString::Printf(TEXT("Modal stack pushed: %s"), *WidgetClass->GetDisplayNameText().ToString()));
-#endif
-		return ModalStack->AddWidget<WidgetType>(WidgetClass);
-	}
+	UCommonActivatableWidgetStack* GetStack() const;
 
 protected:
 

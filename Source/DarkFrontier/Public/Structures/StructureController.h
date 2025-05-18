@@ -49,6 +49,9 @@ protected:
 
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category="UI")
 	TSubclassOf<class UUIBase> UIBaseClass;
+
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category="UI")
+	TSubclassOf<class UGameUIBase> GameUIBaseClass;
 	
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category="UI")
 	TSubclassOf<class UGameUI> GameUIClass;
@@ -92,6 +95,9 @@ protected:
 	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly, Category="UI")
 	TObjectPtr<UUIBase> UIBaseWidget;
 
+	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly, Category="UI")
+	TObjectPtr<UGameUIBase> GameUIBaseWidget;
+
 public:
 
 	FStructureLayoutChanged OnLayoutChanged;
@@ -113,6 +119,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category="Camera")
 	void SetViewTarget(UViewTarget* InTarget);
 
+	UFUNCTION(BlueprintCallable)
+	bool GetIsCursorUnlocked() const;
+
 protected:
 
 	UFUNCTION(BlueprintCallable, Category="Camera")
@@ -122,6 +131,9 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category="UI")
 	UUIBase* GetUIBaseWidget() const;
+	
+	UFUNCTION(BlueprintCallable, Category="UI")
+	UGameUIBase* GetGameUIBaseWidget() const;
 	
 	UFUNCTION(BlueprintCallable, Category="UI")
 	FVector GetTurnIndicatorOffset() const;

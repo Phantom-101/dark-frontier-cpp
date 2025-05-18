@@ -21,11 +21,17 @@ class DARKFRONTIER_API UTradeBlueprintFunctionLibrary : public UBlueprintFunctio
 public:
 
 	UFUNCTION(BlueprintCallable)
+	static float GetBuyPrice(UStructureInventory* Inventory, UItem* Item, int BuyQuantity);
+
+	UFUNCTION(BlueprintCallable)
 	static float GetUnitBuyPrice(UStructureInventory* Inventory, UItem* Item);
 	
 	UFUNCTION(BlueprintCallable)
 	static float CalculateUnitBuyPrice(UItem* Item, int Quantity, float RateIn, float RateOut, UTradeParameters* Parameters);
 
+	UFUNCTION(BlueprintCallable)
+	static float GetSellPrice(UStructureInventory* Inventory, UItem* Item, int SellQuantity);
+	
 	UFUNCTION(BlueprintCallable)
 	static float GetUnitSellPrice(UStructureInventory* Inventory, UItem* Item);
 	
