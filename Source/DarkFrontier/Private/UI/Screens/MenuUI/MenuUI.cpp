@@ -41,6 +41,11 @@ UWidget* UMenuUI::NativeGetDesiredFocusTarget() const
 	return ResumeButton;
 }
 
+TOptional<FUIInputConfig> UMenuUI::GetDesiredInputConfig() const
+{
+	return FUIInputConfig(ECommonInputMode::All, EMouseCaptureMode::NoCapture);
+}
+
 void UMenuUI::HandleQuit() const
 {
 	// TODO replace with quitting to main menu

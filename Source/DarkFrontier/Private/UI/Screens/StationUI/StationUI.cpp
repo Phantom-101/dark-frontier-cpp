@@ -4,8 +4,9 @@
 #include "CommonButtonBase.h"
 #include "Structures/StructureController.h"
 #include "Structures/StructureLocation.h"
-#include "UI/Screens/UIBase.h"
+#include "UI/Screens/GameUIBase.h"
 #include "UI/Screens/StationUI/StationTrade.h"
+#include "Widgets/CommonActivatableWidgetContainer.h"
 
 void UStationUI::NativeConstruct()
 {
@@ -29,10 +30,15 @@ UWidget* UStationUI::NativeGetDesiredFocusTarget() const
 	return UndockButton;
 }
 
+TOptional<FUIInputConfig> UStationUI::GetDesiredInputConfig() const
+{
+	return FUIInputConfig(ECommonInputMode::All, EMouseCaptureMode::NoCapture);
+}
+
 void UStationUI::HandleTrade() const
 {
 	const AStructureController* Controller = Cast<AStructureController>(GetWorld()->GetFirstPlayerController());
-	(void)Controller->GetUIBaseWidget()->PushGameMenu<UStationTrade>(StationTradeClass);
+	Controller->GetGameUIBaseWidget()->GetGameStack()->AddWidget<UStationTrade>(StationTradeClass);
 }
 
 void UStationUI::HandleUndock()

@@ -1,30 +1,30 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
 
 #include "CoreMinimal.h"
 #include "CommonActivatableWidget.h"
-#include "UIBase.generated.h"
+#include "GameUIBase.generated.h"
 
 class UCommonActivatableWidgetStack;
 
 /**
  * 
  */
-UCLASS()
-class DARKFRONTIER_API UUIBase : public UCommonActivatableWidget
+UCLASS(Abstract)
+class DARKFRONTIER_API UGameUIBase : public UCommonActivatableWidget
 {
 	GENERATED_BODY()
 
 protected:
 
 	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
-	TObjectPtr<UCommonActivatableWidgetStack> Stack;
+	TObjectPtr<UCommonActivatableWidgetStack> GameStack;
 
 public:
 
 	UFUNCTION(BlueprintCallable)
-	UCommonActivatableWidgetStack* GetStack() const;
+	UCommonActivatableWidgetStack* GetGameStack() const;
 
 protected:
 

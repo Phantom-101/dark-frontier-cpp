@@ -16,12 +16,14 @@ void UListBox::SetOptions(const TArray<UObject*>& InOptions)
 	{
 		SetCurrentOption(nullptr);
 	}
+	Rebuild();
 }
 
 void UListBox::SetOptionsWithInitial(const TArray<UObject*>& InOptions, UObject* Initial)
 {
 	Options = InOptions;
 	SetCurrentOption(Initial);
+	Rebuild();
 }
 
 void UListBox::SetCurrentOption(UObject* Option)
@@ -52,13 +54,16 @@ UObject* UListBox::GetCurrentOption()
 void UListBox::Rebuild()
 {
 	OptionList->ClearListItems();
-	for(UObject* Option : Options)
+	if(OptionBuilder)
 	{
-		UListBoxOptionParams* Params = NewObject<UListBoxOptionParams>();
-		Params->ListBox = this;
-		Params->Option = Option;
-		Params->Builder = OptionBuilder;
-		OptionList->AddItem(Params);
+		for(UObject* Option : Options)
+		{
+			UListBoxOptionParams* Params = NewObject<UListBoxOptionParams>();
+			Params->ListBox = this;
+			Params->Option = Option;
+			Params->Builder = OptionBuilder;
+			OptionList->AddItem(Params);
+		}
+		OptionList->RegenerateAllEntries();
 	}
-	OptionList->RegenerateAllEntries();
 }

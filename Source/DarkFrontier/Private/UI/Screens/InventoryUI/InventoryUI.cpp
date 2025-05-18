@@ -127,7 +127,7 @@ void UInventoryUI::HandleSwitch()
 		CurrentModal = nullptr;
 	}
 
-	UListBoxModal* SwitchModal = Base->PushModal<UListBoxModal>(ListBoxModalClass);
+	UListBoxModal* SwitchModal = Base->GetStack()->AddWidget<UListBoxModal>(ListBoxModalClass);
 	SwitchModal->SetOptionsWithInitial(TArray<UObject*>(Structure->GetLocation()->GetInTree()), Structure);
 	SwitchModal->SetBuilder([Owner = SwitchModal, Class = InventoryEntryClass](UObject* Structure)
 	{
@@ -171,7 +171,7 @@ void UInventoryUI::HandleTrade()
 		}
 	}
 	
-	UInventoryTradeModal* TradeModal = Base->PushModal<UInventoryTradeModal>(TradeModalClass);
+	UInventoryTradeModal* TradeModal = Base->GetStack()->AddWidget<UInventoryTradeModal>(TradeModalClass);
 	TradeModal->Init(GetInventory(), Cast<UItemStackObject>(ItemListBox->GetCurrentOption())->Item, Targets);
 
 	TradeModal->OnConfirmed.Clear();
@@ -209,7 +209,7 @@ void UInventoryUI::HandleTransfer()
 	TArray<AStructure*> Targets = Structure->GetLocation()->GetInTree();
 	Targets.Remove(Structure);
 	
-	UInventoryTransferModal* TransferModal = Base->PushModal<UInventoryTransferModal>(TransferModalClass);
+	UInventoryTransferModal* TransferModal = Base->GetStack()->AddWidget<UInventoryTransferModal>(TransferModalClass);
 	TransferModal->Init(GetInventory(), Cast<UItemStackObject>(ItemListBox->GetCurrentOption())->Item, Targets);
 
 	TransferModal->OnConfirmed.Clear();
@@ -234,7 +234,7 @@ void UInventoryUI::HandleDispose()
 		CurrentModal = nullptr;
 	}
 	
-	UInventoryDisposeModal* DisposeModal = Base->PushModal<UInventoryDisposeModal>(DisposeModalClass);
+	UInventoryDisposeModal* DisposeModal = Base->GetStack()->AddWidget<UInventoryDisposeModal>(DisposeModalClass);
 	DisposeModal->Init(GetInventory(), Cast<UItemStackObject>(ItemListBox->GetCurrentOption())->Item);
 
 	DisposeModal->OnConfirmed.Clear();

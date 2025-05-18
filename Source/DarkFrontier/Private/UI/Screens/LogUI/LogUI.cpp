@@ -23,6 +23,11 @@ UWidget* ULogUI::NativeGetDesiredFocusTarget() const
 	return CloseButton;
 }
 
+TOptional<FUIInputConfig> ULogUI::GetDesiredInputConfig() const
+{
+	return FUIInputConfig(ECommonInputMode::All, EMouseCaptureMode::NoCapture);
+}
+
 void ULogUI::HandleClose()
 {
 	DeactivateWidget();
