@@ -40,7 +40,17 @@ float UTradeBlueprintFunctionLibrary::GetBuyPrice(UStructureInventory* Inventory
 
 float UTradeBlueprintFunctionLibrary::GetUnitBuyPrice(UStructureInventory* Inventory, UItem* Item)
 {
-	return GetBuyPrice(Inventory, Item, 1);
+	check(Inventory != nullptr)
+	check(Item != nullptr)
+
+	const int Quantity = Inventory->GetQuantity(Item);
+
+	const float RateIn = GetRateIn(Inventory, Item);
+	const float RateOut = GetRateOut(Inventory, Item);
+
+	UTradeParameters* Parameters = Inventory->GetWorld()->GetAuthGameMode<AUniverseGameMode>()->GetTradeParameters();
+
+	return CalculateUnitBuyPrice(Item, Quantity, RateIn, RateOut, Parameters);
 }
 
 float UTradeBlueprintFunctionLibrary::CalculateUnitBuyPrice(UItem* Item, int Quantity, float RateIn, float RateOut, UTradeParameters* Parameters)
@@ -112,7 +122,17 @@ float UTradeBlueprintFunctionLibrary::GetSellPrice(UStructureInventory* Inventor
 
 float UTradeBlueprintFunctionLibrary::GetUnitSellPrice(UStructureInventory* Inventory, UItem* Item)
 {
-	return GetSellPrice(Inventory, Item, 1);
+	check(Inventory != nullptr)
+	check(Item != nullptr)
+
+	const int Quantity = Inventory->GetQuantity(Item);
+
+	const float RateIn = GetRateIn(Inventory, Item);
+	const float RateOut = GetRateOut(Inventory, Item);
+
+	UTradeParameters* Parameters = Inventory->GetWorld()->GetAuthGameMode<AUniverseGameMode>()->GetTradeParameters();
+
+	return CalculateUnitSellPrice(Item, Quantity, RateIn, RateOut, Parameters);
 }
 
 float UTradeBlueprintFunctionLibrary::CalculateUnitSellPrice(UItem* Item, int Quantity, float RateIn, float RateOut, UTradeParameters* Parameters)

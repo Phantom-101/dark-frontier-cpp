@@ -6,6 +6,7 @@
 #include "CommonUserWidget.h"
 #include "TradeEntry.generated.h"
 
+class UStructureInventory;
 class AStructure;
 class UItem;
 class UCommonButtonBase;
@@ -46,11 +47,24 @@ protected:
 	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
 	TObjectPtr<UCommonButtonBase> SellButton;
 
+	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly)
+	TObjectPtr<UItem> Item;
+	
+	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly)
+	TObjectPtr<UStructureInventory> Current;
+	
+	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly)
+	TObjectPtr<UStructureInventory> Target;
+
 	virtual void NativeConstruct() override;
 
 public:
 
-	void Init(UItem* Item, AStructure* Ship, AStructure* Station) const;
+	void Init(UItem* InItem, UStructureInventory* InCurrent, UStructureInventory* InTarget);
+
+protected:
+
+	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
 
 private:
 

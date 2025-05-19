@@ -2,40 +2,38 @@
 
 #include "Libraries/UIBlueprintFunctionLibrary.h"
 
-UCommonActivatableWidget* UUIBlueprintFunctionLibrary::PopWidget(UCommonActivatableWidgetContainerBase* Container)
+bool UUIBlueprintFunctionLibrary::IsWidgetOfType(UCommonActivatableWidgetContainerBase* Container, const TSubclassOf<UCommonActivatableWidget> WidgetClass)
+{
+	return Container->GetActiveWidget()->IsA(WidgetClass);
+}
+
+void UUIBlueprintFunctionLibrary::PopWidget(UCommonActivatableWidgetContainerBase* Container)
 {
 	UCommonActivatableWidget* Widget = Container->GetActiveWidget();
 	if(Widget != nullptr)
 	{
 		Container->RemoveWidget(*Widget);
-		return Widget;
 	}
-	return nullptr;
 }
 
-UCommonActivatableWidget* UUIBlueprintFunctionLibrary::ExtractWidget(UCommonActivatableWidgetContainerBase* Container, const TSubclassOf<UCommonActivatableWidget> WidgetClass)
+void UUIBlueprintFunctionLibrary::ExtractWidgets(UCommonActivatableWidgetContainerBase* Container, const TSubclassOf<UCommonActivatableWidget> WidgetClass)
 {
-	TArray Widgets(Container->GetWidgetList());
-	Algo::Reverse(Widgets);
-	for(UCommonActivatableWidget* Widget : Widgets)
+	for(UCommonActivatableWidget* Widget : TArray(Container->GetWidgetList()))
 	{
 		if(Widget->IsA(WidgetClass))
 		{
 			Container->RemoveWidget(*Widget);
-			return Widget;
 		}
 	}
-	return nullptr;
 }
 
 UCommonActivatableWidget* UUIBlueprintFunctionLibrary::FloatWidget(UCommonActivatableWidgetContainerBase* Container, const TSubclassOf<UCommonActivatableWidget> WidgetClass)
 {
-	UCommonActivatableWidget* Widget = ExtractWidget(Container, WidgetClass);
-	if(Widget != nullptr)
+	if(IsWidgetOfType(Container, WidgetClass))
 	{
-		Container->AddWidgetInstance(*Widget);
-		return Widget;
+		return Container->GetActiveWidget();
 	}
+	ExtractWidgets(Container, WidgetClass);
 	return Container->AddWidget(WidgetClass);
 }
 
