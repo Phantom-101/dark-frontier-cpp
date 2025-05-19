@@ -21,49 +21,23 @@ class DARKFRONTIER_API UUIBlueprintFunctionLibrary : public UBlueprintFunctionLi
 
 public:
 
-	template <typename T>
-	static T* PopWidget(UCommonActivatableWidgetContainerBase* Container)
-	{
-		UCommonActivatableWidget* Widget = Container->GetActiveWidget();
-		if(Widget != nullptr)
-		{
-			Container->RemoveWidget(*Widget);
-			return Cast<T>(Widget);
-		}
-		return nullptr;
-	}
+	UFUNCTION(BlueprintCallable)
+	static bool IsWidgetOfType(UCommonActivatableWidgetContainerBase* Container, const TSubclassOf<UCommonActivatableWidget> WidgetClass);
 
 	UFUNCTION(BlueprintCallable)
-	static UCommonActivatableWidget* PopWidget(UCommonActivatableWidgetContainerBase* Container);
-
-	template <typename T>
-	static T* ExtractWidget(UCommonActivatableWidgetContainerBase* Container, const TSubclassOf<T> WidgetClass)
-	{
-		TArray Widgets(Container->GetWidgetList());
-		Algo::Reverse(Widgets);
-		for(UCommonActivatableWidget* Widget : Widgets)
-		{
-			if(Widget->IsA(WidgetClass))
-			{
-				Container->RemoveWidget(*Widget);
-				return Cast<T>(Widget);
-			}
-		}
-		return nullptr;
-	}
+	static void PopWidget(UCommonActivatableWidgetContainerBase* Container);
 
 	UFUNCTION(BlueprintCallable)
-	static UCommonActivatableWidget* ExtractWidget(UCommonActivatableWidgetContainerBase* Container, const TSubclassOf<UCommonActivatableWidget> WidgetClass);
+	static void ExtractWidgets(UCommonActivatableWidgetContainerBase* Container, const TSubclassOf<UCommonActivatableWidget> WidgetClass);
 
 	template <typename T>
 	static T* FloatWidget(UCommonActivatableWidgetContainerBase* Container, const TSubclassOf<T> WidgetClass)
 	{
-		T* Widget = ExtractWidget<T>(Container, WidgetClass);
-		if(Widget != nullptr)
+		if(IsWidgetOfType(Container, WidgetClass))
 		{
-			Container->AddWidgetInstance(*Widget);
-			return Widget;
+			return Cast<T>(Container->GetActiveWidget());
 		}
+		ExtractWidgets(Container, WidgetClass);
 		return Container->AddWidget<T>(WidgetClass);
 	}
 

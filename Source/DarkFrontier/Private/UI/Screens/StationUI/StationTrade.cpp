@@ -32,7 +32,7 @@ void UStationTrade::NativeOnActivated()
 	const UStructureInventory* ShipInventory = Ship->GetInventory();
 	const UStructureInventory* StationInventory = Station->GetInventory();
 
-	TArray<UItem*> Combined = ShipInventory->GetItems();
+	TSet Combined(ShipInventory->GetItems());
 	Combined.Append(StationInventory->GetItems());
 	TArray<UObject*> Items;
 	for(UItem* Item : Combined)
@@ -45,7 +45,7 @@ void UStationTrade::NativeOnActivated()
 	ItemListBox->SetBuilder([Owner = this, Class = TradeEntryClass, Ship = Ship, Station = Station](UObject* Item)
 	{
 		UTradeEntry* Option = CreateWidget<UTradeEntry>(Owner, Class);
-		Option->Init(Cast<UItemObject>(Item)->Item, Ship, Station);
+		Option->Init(Cast<UItemObject>(Item)->Item, Ship->GetInventory(), Station->GetInventory());
 		return Option;
 	});
 	

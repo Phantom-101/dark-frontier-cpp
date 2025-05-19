@@ -26,6 +26,6 @@ public:
 	float PriceQuantityFactor = 0.3;
 	
 	UPROPERTY(BlueprintReadOnly, EditAnywhere)
-	float PriceQuantityTime = 300;
+	float PriceQuantityTime = 1800;
 	
 };
