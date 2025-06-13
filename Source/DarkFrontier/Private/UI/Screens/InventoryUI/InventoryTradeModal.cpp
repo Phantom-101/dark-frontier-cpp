@@ -5,7 +5,6 @@
 #include "CommonTextBlock.h"
 #include "Factions/Faction.h"
 #include "Items/Item.h"
-#include "Items/ItemStack.h"
 #include "Structures/Structure.h"
 #include "Structures/StructureInventory.h"
 #include "UI/Screens/InventoryUI/InventoryEntry.h"
@@ -29,14 +28,6 @@ void UInventoryTradeModal::NativeOnActivated()
 	Super::NativeOnActivated();
 
 	GetDesiredFocusTarget()->SetFocus();
-}
-
-void UInventoryTradeModal::NativeOnDeactivated()
-{
-	Super::NativeOnDeactivated();
-
-	OnConfirmed.Clear();
-	OnCanceled.Clear();
 }
 
 UWidget* UInventoryTradeModal::NativeGetDesiredFocusTarget() const
@@ -103,13 +94,25 @@ void UInventoryTradeModal::HandleConfirm()
 {
 	if(TargetListBox->IsCurrentOptionValid())
 	{
-		OnConfirmed.Broadcast(FItemStack(Item, QuantityInput->GetQuantity()), Cast<AStructure>(TargetListBox->GetCurrentOption()));
+		const int Quantity = QuantityInput->GetQuantity();
+		UStructureInventory* Target = Cast<AStructure>(TargetListBox->GetCurrentOption())->GetInventory();
+		if(Quantity > 0)
+		{
+			Inventory->AddQuantity(Item, Quantity);
+			Target->RemoveQuantity(Item, Quantity);
+		}
+		else
+		{
+			Inventory->RemoveQuantity(Item, Quantity);
+			Target->AddQuantity(Item, Quantity);
+		}
+		Inventory->GetStructure()->GetOwningFaction()->ChangeBalance(-Quantity * Item->Value);
+		Target->GetStructure()->GetOwningFaction()->ChangeBalance(Quantity * Item->Value);
 		DeactivateWidget();
 	}
 }
 
 void UInventoryTradeModal::HandleCancel()
 {
-	OnCanceled.Broadcast();
 	DeactivateWidget();
 }

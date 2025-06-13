@@ -16,9 +16,6 @@ class UListBox;
 struct FItemStack;
 class AStructure;
 
-DECLARE_MULTICAST_DELEGATE_TwoParams(FInventoryTradeModalConfirmed, FItemStack, AStructure*)
-DECLARE_MULTICAST_DELEGATE(FInventoryTradeModalCanceled)
-
 /**
  * 
  */
@@ -26,12 +23,6 @@ UCLASS(Abstract)
 class DARKFRONTIER_API UInventoryTradeModal : public UCommonActivatableWidget
 {
 	GENERATED_BODY()
-	
-public:
-
-	FInventoryTradeModalConfirmed OnConfirmed;
-
-	FInventoryTradeModalCanceled OnCanceled;
 
 protected:
 
@@ -62,8 +53,6 @@ protected:
 	virtual void NativeConstruct() override;
 
 	virtual void NativeOnActivated() override;
-
-	virtual void NativeOnDeactivated() override;
 
 	virtual UWidget* NativeGetDesiredFocusTarget() const override;
 	

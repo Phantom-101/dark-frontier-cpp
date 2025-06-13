@@ -125,14 +125,8 @@ private:
 
 	void HandleTrade();
 
-	void HandleTradeConfirmed(const FItemStack Trade, AStructure* Target) const;
-
 	void HandleTransfer();
-
-	void HandleTransferConfirmed(const FItemStack Transfer, AStructure* Target) const;
 
 	void HandleDispose();
 
-	void HandleDisposeConfirmed(const FItemStack Dispose) const;
-	
 };

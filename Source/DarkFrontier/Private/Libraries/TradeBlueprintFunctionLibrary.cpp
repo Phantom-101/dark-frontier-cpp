@@ -14,8 +14,8 @@
 
 float UTradeBlueprintFunctionLibrary::GetBuyPrice(UStructureInventory* Inventory, UItem* Item, int BuyQuantity)
 {
-	check(Inventory != nullptr)
-	check(Item != nullptr)
+	check(Inventory != nullptr);
+	check(Item != nullptr);
 
 	if(!ensure(BuyQuantity >= 0))
 	{
@@ -40,8 +40,8 @@ float UTradeBlueprintFunctionLibrary::GetBuyPrice(UStructureInventory* Inventory
 
 float UTradeBlueprintFunctionLibrary::GetUnitBuyPrice(UStructureInventory* Inventory, UItem* Item)
 {
-	check(Inventory != nullptr)
-	check(Item != nullptr)
+	check(Inventory != nullptr);
+	check(Item != nullptr);
 
 	const int Quantity = Inventory->GetQuantity(Item);
 
@@ -55,8 +55,8 @@ float UTradeBlueprintFunctionLibrary::GetUnitBuyPrice(UStructureInventory* Inven
 
 float UTradeBlueprintFunctionLibrary::CalculateUnitBuyPrice(UItem* Item, int Quantity, float RateIn, float RateOut, UTradeParameters* Parameters)
 {
-	check(Item != nullptr)
-	check(Parameters != nullptr)
+	check(Item != nullptr);
+	check(Parameters != nullptr);
 	
 	if(!ensure(Quantity >= 0))
 	{
@@ -91,8 +91,8 @@ float UTradeBlueprintFunctionLibrary::CalculateUnitBuyPrice(UItem* Item, int Qua
 
 float UTradeBlueprintFunctionLibrary::GetSellPrice(UStructureInventory* Inventory, UItem* Item, int SellQuantity)
 {
-	check(Inventory != nullptr)
-	check(Item != nullptr)
+	check(Inventory != nullptr);
+	check(Item != nullptr);
 
 	if(!ensure(SellQuantity >= 0))
 	{
@@ -122,8 +122,8 @@ float UTradeBlueprintFunctionLibrary::GetSellPrice(UStructureInventory* Inventor
 
 float UTradeBlueprintFunctionLibrary::GetUnitSellPrice(UStructureInventory* Inventory, UItem* Item)
 {
-	check(Inventory != nullptr)
-	check(Item != nullptr)
+	check(Inventory != nullptr);
+	check(Item != nullptr);
 
 	const int Quantity = Inventory->GetQuantity(Item);
 
@@ -137,8 +137,8 @@ float UTradeBlueprintFunctionLibrary::GetUnitSellPrice(UStructureInventory* Inve
 
 float UTradeBlueprintFunctionLibrary::CalculateUnitSellPrice(UItem* Item, int Quantity, float RateIn, float RateOut, UTradeParameters* Parameters)
 {
-	check(Item != nullptr)
-	check(Parameters != nullptr)
+	check(Item != nullptr);
+	check(Parameters != nullptr);
 	
 	if(!ensure(Quantity >= 0))
 	{
@@ -173,6 +173,9 @@ float UTradeBlueprintFunctionLibrary::CalculateUnitSellPrice(UItem* Item, int Qu
 
 float UTradeBlueprintFunctionLibrary::GetRateIn(UStructureInventory* Inventory, UItem* Item)
 {
+	check(Inventory != nullptr);
+	check(Item != nullptr);
+	
 	float Rate = 0;
 	for(const UStructureProduction* Production : Inventory->GetStructure()->GetLayout()->GetFacilities<UStructureProduction>())
 	{
@@ -187,6 +190,9 @@ float UTradeBlueprintFunctionLibrary::GetRateIn(UStructureInventory* Inventory, 
 
 float UTradeBlueprintFunctionLibrary::GetRateOut(UStructureInventory* Inventory, UItem* Item)
 {
+	check(Inventory != nullptr);
+	check(Item != nullptr);
+	
 	float Rate = 0;
 	for(const UStructureProduction* Production : Inventory->GetStructure()->GetLayout()->GetFacilities<UStructureProduction>())
 	{

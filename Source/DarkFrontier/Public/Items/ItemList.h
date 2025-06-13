@@ -7,6 +7,8 @@
 #include "UObject/Object.h"
 #include "ItemList.generated.h"
 
+DECLARE_MULTICAST_DELEGATE(FItemListChanged)
+
 /**
  * 
  */
@@ -21,12 +23,11 @@ protected:
 	TArray<FItemStack> Stacks;
 
 public:
+	
+	FItemListChanged OnChanged;
 
 	UFUNCTION(BlueprintCallable)
 	TArray<FItemStack> GetStacks() const;
-
-	UFUNCTION(BlueprintCallable)
-	bool GetStack(UItem* Item, FItemStack& OutStack) const;
 
 	UFUNCTION(BlueprintCallable)
 	TArray<UItem*> GetItems() const;
@@ -38,13 +39,13 @@ public:
 	int HasQuantity(UItem* Item, int Quantity) const;
 
 	UFUNCTION(BlueprintCallable)
-	void SetQuantity(UItem* Item, int Quantity);
+	virtual bool SetQuantity(UItem* Item, int Quantity);
 	
 	UFUNCTION(BlueprintCallable)
-	void AddQuantity(UItem* Item, int Quantity);
+	virtual bool AddQuantity(UItem* Item, int Quantity);
 
 	UFUNCTION(BlueprintCallable)
-	void RemoveQuantity(UItem* Item, int Quantity);
+	virtual bool RemoveQuantity(UItem* Item, int Quantity);
 
 	UFUNCTION(BlueprintCallable)
 	float GetTotalVolume() const;
@@ -62,12 +63,16 @@ public:
 	bool HasList(UItemList* Other) const;
 
 	UFUNCTION(BlueprintCallable)
-	void SetList(UItemList* Other);
+	virtual bool SetList(UItemList* Other);
 
 	UFUNCTION(BlueprintCallable)
-	void AddList(UItemList* Other);
+	virtual bool AddList(UItemList* Other);
 
 	UFUNCTION(BlueprintCallable)
-	void RemoveList(UItemList* Other);
+	virtual bool RemoveList(UItemList* Other);
+
+private:
+
+	bool GetStack(UItem* Item, FItemStack& OutStack) const;
 
 };

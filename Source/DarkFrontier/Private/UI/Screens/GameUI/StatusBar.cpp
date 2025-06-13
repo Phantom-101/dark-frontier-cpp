@@ -19,13 +19,13 @@ void UStatusBar::NativeConstruct()
 void UStatusBar::HandleLog() const
 {
 	UCommonActivatableWidgetContainerBase* Container = UUIBlueprintFunctionLibrary::GetParentWidgetOfClass<UGameUIBase>(this)->GetGameStack();
-	if(UUIBlueprintFunctionLibrary::IsWidgetOfType(Container, LogUIClass))
+	if(UUIBlueprintFunctionLibrary::IsWidgetOfType(Container, LogUIClass.Get()))
 	{
 		UUIBlueprintFunctionLibrary::PopWidget(Container);
 	}
 	else
 	{
-		UUIBlueprintFunctionLibrary::FloatWidget(Container, LogUIClass);
+		UUIBlueprintFunctionLibrary::FloatWidget(Container, LogUIClass.Get());
 	}
 }
 
@@ -33,5 +33,5 @@ void UStatusBar::HandleMenu() const
 {
 	const UUIBase* Base = UUIBlueprintFunctionLibrary::GetParentWidgetOfClass<UUIBase>(this);
 	// Should not matter as the menu button is inaccessible from the menu UI itself
-	UUIBlueprintFunctionLibrary::FloatWidget(Base->GetStack(), MenuUIClass);
+	UUIBlueprintFunctionLibrary::FloatWidget(Base->GetStack(), MenuUIClass.Get());
 }
