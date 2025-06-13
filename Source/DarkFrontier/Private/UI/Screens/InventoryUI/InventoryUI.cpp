@@ -7,7 +7,6 @@
 #include "Components/WidgetSwitcher.h"
 #include "Factions/Faction.h"
 #include "Items/Item.h"
-#include "Items/ItemStack.h"
 #include "Items/ItemStackObject.h"
 #include "Libraries/UIBlueprintFunctionLibrary.h"
 #include "Structures/Structure.h"
@@ -41,7 +40,7 @@ void UInventoryUI::NativeTick(const FGeometry& MyGeometry, const float InDeltaTi
 {
 	Super::NativeTick(MyGeometry, InDeltaTime);
 
-	UInventory* Inventory = GetInventory();
+	const UInventory* Inventory = GetInventory();
 	const UItemStackObject* Selected = Cast<UItemStackObject>(ItemListBox->GetCurrentOption());
 	if(Selected == nullptr)
 	{
@@ -69,14 +68,14 @@ void UInventoryUI::SetStructure(AStructure* InStructure)
 {
 	if(IsValid(Structure))
 	{
-		GetInventory()->OnItemsChanged.RemoveAll(this);
+		GetInventory()->OnChanged.RemoveAll(this);
 	}
 	
 	Structure = InStructure;
 
 	if(IsValid(Structure))
 	{
-		GetInventory()->OnItemsChanged.AddUObject<UInventoryUI>(this, &UInventoryUI::Rebuild);
+		GetInventory()->OnChanged.AddUObject<UInventoryUI>(this, &UInventoryUI::Rebuild);
 	}
 	
 	Rebuild();
@@ -174,26 +173,7 @@ void UInventoryUI::HandleTrade()
 	UInventoryTradeModal* TradeModal = Base->GetStack()->AddWidget<UInventoryTradeModal>(TradeModalClass);
 	TradeModal->Init(GetInventory(), Cast<UItemStackObject>(ItemListBox->GetCurrentOption())->Item, Targets);
 
-	TradeModal->OnConfirmed.Clear();
-	TradeModal->OnConfirmed.AddUObject<UInventoryUI>(this, &UInventoryUI::HandleTradeConfirmed);
-
 	CurrentModal = TradeModal;
-}
-
-void UInventoryUI::HandleTradeConfirmed(const FItemStack Trade, AStructure* Target) const
-{
-	if(Trade.Quantity > 0)
-	{
-		GetInventory()->AddQuantity(Trade.Item, Trade.Quantity);
-		Target->GetInventory()->RemoveQuantity(Trade.Item, Trade.Quantity);
-	}
-	else
-	{
-		GetInventory()->RemoveQuantity(Trade.Item, Trade.Quantity);
-		Target->GetInventory()->AddQuantity(Trade.Item, Trade.Quantity);
-	}
-	GetInventory()->GetStructure()->GetOwningFaction()->ChangeBalance(-Trade.Quantity * Trade.Item->Value);
-	Target->GetOwningFaction()->ChangeBalance(Trade.Quantity * Trade.Item->Value);
 }
 
 void UInventoryUI::HandleTransfer()
@@ -212,16 +192,7 @@ void UInventoryUI::HandleTransfer()
 	UInventoryTransferModal* TransferModal = Base->GetStack()->AddWidget<UInventoryTransferModal>(TransferModalClass);
 	TransferModal->Init(GetInventory(), Cast<UItemStackObject>(ItemListBox->GetCurrentOption())->Item, Targets);
 
-	TransferModal->OnConfirmed.Clear();
-	TransferModal->OnConfirmed.AddUObject<UInventoryUI>(this, &UInventoryUI::HandleTransferConfirmed);
-
 	CurrentModal = TransferModal;
-}
-
-void UInventoryUI::HandleTransferConfirmed(const FItemStack Transfer, AStructure* Target) const
-{
-	GetInventory()->RemoveQuantity(Transfer.Item, Transfer.Quantity);
-	Target->GetInventory()->AddQuantity(Transfer.Item, Transfer.Quantity);
 }
 
 void UInventoryUI::HandleDispose()
@@ -237,13 +208,5 @@ void UInventoryUI::HandleDispose()
 	UInventoryDisposeModal* DisposeModal = Base->GetStack()->AddWidget<UInventoryDisposeModal>(DisposeModalClass);
 	DisposeModal->Init(GetInventory(), Cast<UItemStackObject>(ItemListBox->GetCurrentOption())->Item);
 
-	DisposeModal->OnConfirmed.Clear();
-	DisposeModal->OnConfirmed.AddUObject<UInventoryUI>(this, &UInventoryUI::HandleDisposeConfirmed);
-
 	CurrentModal = DisposeModal;
-}
-
-void UInventoryUI::HandleDisposeConfirmed(const FItemStack Dispose) const
-{
-	GetInventory()->RemoveQuantity(Dispose.Item, Dispose.Quantity);
 }

@@ -8,19 +8,6 @@ TArray<FItemStack> UItemList::GetStacks() const
 	return Stacks;
 }
 
-bool UItemList::GetStack(UItem* Item, FItemStack& OutStack) const
-{
-	for(const FItemStack& Stack : Stacks)
-	{
-		if(Stack.Item == Item)
-		{
-			OutStack = Stack;
-			return true;
-		}
-	}
-	return false;
-}
-
 TArray<UItem*> UItemList::GetItems() const
 {
 	TArray<UItem*> Items;
@@ -33,6 +20,8 @@ TArray<UItem*> UItemList::GetItems() const
 
 int UItemList::GetQuantity(UItem* Item) const
 {
+	check(Item != nullptr);
+	
 	FItemStack Stack;
 	if(GetStack(Item, Stack))
 	{
@@ -43,13 +32,24 @@ int UItemList::GetQuantity(UItem* Item) const
 
 int UItemList::HasQuantity(UItem* Item, const int Quantity) const
 {
+	check(Item != nullptr);
+
+	if(!ensure(Quantity >= 0))
+	{
+		return true;
+	}
+	
 	return GetQuantity(Item) >= Quantity;
 }
 
-void UItemList::SetQuantity(UItem* Item, const int Quantity)
+bool UItemList::SetQuantity(UItem* Item, const int Quantity)
 {
-	check(Item != nullptr)
-	check(Quantity >= 0)
+	check(Item != nullptr);
+
+	if(!ensure(Quantity >= 0))
+	{
+		return false;
+	}
 	
 	FItemStack Stack;
 	if(GetStack(Item, Stack))
@@ -60,23 +60,37 @@ void UItemList::SetQuantity(UItem* Item, const int Quantity)
 	{
 		Stacks.Add(FItemStack(Item, Quantity));
 	}
+	OnChanged.Broadcast();
+	return true;
 }
 
-void UItemList::AddQuantity(UItem* Item, const int Quantity)
+bool UItemList::AddQuantity(UItem* Item, const int Quantity)
 {
 	check(Item != nullptr)
-	check(Quantity >= 0)
 
-	SetQuantity(Item, GetQuantity(Item) + Quantity);
+	if(!ensure(Quantity >= 0))
+	{
+		return false;
+	}
+
+	return SetQuantity(Item, GetQuantity(Item) + Quantity);
 }
 
-void UItemList::RemoveQuantity(UItem* Item, const int Quantity)
+bool UItemList::RemoveQuantity(UItem* Item, const int Quantity)
 {
 	check(Item != nullptr)
-	check(Quantity >= 0)
-	check(HasQuantity(Item, Quantity))
 
-	SetQuantity(Item, GetQuantity(Item) - Quantity);
+	if(!ensure(Quantity >= 0))
+	{
+		return false;
+	}
+	
+	if(!ensure(HasQuantity(Item, Quantity)))
+	{
+		return false;
+	}
+
+	return SetQuantity(Item, GetQuantity(Item) - Quantity);
 }
 
 float UItemList::GetTotalVolume() const
@@ -91,6 +105,8 @@ float UItemList::GetTotalVolume() const
 
 float UItemList::GetVolume(UItem* Item) const
 {
+	check(Item != nullptr);
+	
 	return GetQuantity(Item) * Item->Volume;
 }
 
@@ -106,12 +122,14 @@ float UItemList::GetTotalMass() const
 
 float UItemList::GetMass(UItem* Item) const
 {
+	check(Item != nullptr);
+	
 	return GetQuantity(Item) * Item->Mass;
 }
 
 bool UItemList::HasList(UItemList* Other) const
 {
-	check(Other != nullptr)
+	check(Other != nullptr);
 	
 	for(const FItemStack& Stack : Other->Stacks)
 	{
@@ -123,34 +141,63 @@ bool UItemList::HasList(UItemList* Other) const
 	return true;
 }
 
-void UItemList::SetList(UItemList* Other)
+bool UItemList::SetList(UItemList* Other)
 {
-	check(Other != nullptr)
+	check(Other != nullptr);
 	
 	Stacks.Empty();
 	for(const FItemStack& Stack : Other->Stacks)
 	{
 		Stacks.Add(Stack);
 	}
+	OnChanged.Broadcast();
+	return true;
 }
 
-void UItemList::AddList(UItemList* Other)
+bool UItemList::AddList(UItemList* Other)
 {
-	check(Other != nullptr)
+	check(Other != nullptr);
 
 	for(const FItemStack& Stack : Other->Stacks)
 	{
-		AddQuantity(Stack.Item, Stack.Quantity);
+		if(!AddQuantity(Stack.Item, Stack.Quantity))
+		{
+			return false;
+		}
 	}
+	return true;
 }
 
-void UItemList::RemoveList(UItemList* Other)
+bool UItemList::RemoveList(UItemList* Other)
 {
-	check(Other != nullptr)
-	check(HasList(Other))
+	check(Other != nullptr);
+
+	if(!ensure(HasList(Other)))
+	{
+		return false;
+	}
 
 	for(const FItemStack& Stack : Other->Stacks)
 	{
-		RemoveQuantity(Stack.Item, Stack.Quantity);
+		if(!RemoveQuantity(Stack.Item, Stack.Quantity))
+		{
+			return false;
+		}
 	}
+	return true;
+}
+
+bool UItemList::GetStack(UItem* Item, FItemStack& OutStack) const
+{
+	check(Item != nullptr);
+	
+	for(const FItemStack& Stack : Stacks)
+	{
+		if(Stack.Item == Item)
+		{
+			OutStack = Stack;
+			return true;
+		}
+	}
+	return false;
 }

@@ -15,9 +15,6 @@ class UCommonButtonBase;
 class UQuantityInput;
 struct FItemStack;
 
-DECLARE_MULTICAST_DELEGATE_TwoParams(FInventoryTransferModalConfirmed, FItemStack, AStructure*)
-DECLARE_MULTICAST_DELEGATE(FInventoryTransferModalCanceled)
-
 /**
  * 
  */
@@ -25,12 +22,6 @@ UCLASS(Abstract)
 class DARKFRONTIER_API UInventoryTransferModal : public UCommonActivatableWidget
 {
 	GENERATED_BODY()
-
-public:
-
-	FInventoryTransferModalConfirmed OnConfirmed;
-
-	FInventoryTransferModalCanceled OnCanceled;
 
 protected:
 
@@ -58,8 +49,6 @@ protected:
 	virtual void NativeConstruct() override;
 
 	virtual void NativeOnActivated() override;
-
-	virtual void NativeOnDeactivated() override;
 
 	virtual UWidget* NativeGetDesiredFocusTarget() const override;
 	

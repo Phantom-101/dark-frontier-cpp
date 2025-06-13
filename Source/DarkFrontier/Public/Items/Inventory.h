@@ -3,19 +3,16 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "ItemList.h"
 #include "Inventory.generated.h"
 
-class UItemList;
 class UItem;
-struct FItemStack;
-
-DECLARE_MULTICAST_DELEGATE(FInventoryItemsChanged)
 
 /**
  * 
  */
 UCLASS(DefaultToInstanced, EditInlineNew)
-class DARKFRONTIER_API UInventory : public UObject
+class DARKFRONTIER_API UInventory : public UItemList
 {
 	GENERATED_BODY()
 
@@ -27,47 +24,22 @@ protected:
 	UPROPERTY(BlueprintReadOnly, EditAnywhere)
 	float MaxMass = 0;
 	
-	UPROPERTY(BlueprintReadOnly, EditAnywhere)
-	TObjectPtr<UItemList> Items;
-
 public:
 	
-	FInventoryItemsChanged OnItemsChanged;
-
-	UInventory();
-
-	UFUNCTION(BlueprintCallable)
-	TArray<FItemStack> GetStacks() const;
-
-	UFUNCTION(BlueprintCallable)
-	bool GetStack(UItem* Item, FItemStack& OutStack) const;
-
-	UFUNCTION(BlueprintCallable)
-	TArray<UItem*> GetItems() const;
-
-	UFUNCTION(BlueprintCallable)
-	int GetQuantity(UItem* Item) const;
-
-	UFUNCTION(BlueprintCallable)
-	int HasQuantity(UItem* Item, int Quantity) const;
-
 	UFUNCTION(BlueprintCallable)
 	int FitsQuantity(const UItem* Item, int Quantity) const;
 
 	UFUNCTION(BlueprintCallable)
-	void SetQuantity(UItem* Item, int Quantity) const;
+	virtual bool SetQuantity(UItem* Item, int Quantity) override;
 	
 	UFUNCTION(BlueprintCallable)
-	void AddQuantity(UItem* Item, int Quantity) const;
+	virtual bool AddQuantity(UItem* Item, int Quantity) override;
 
 	UFUNCTION(BlueprintCallable)
-	void RemoveQuantity(UItem* Item, int Quantity) const;
+	virtual bool RemoveQuantity(UItem* Item, int Quantity) override;
 
 	UFUNCTION(BlueprintCallable)
 	float GetMaxVolume() const;
-
-	UFUNCTION(BlueprintCallable)
-	float GetTotalVolume() const;
 
 	UFUNCTION(BlueprintCallable)
 	float GetTotalVolume01() const;
@@ -79,13 +51,7 @@ public:
 	float GetFreeVolume01() const;
 	
 	UFUNCTION(BlueprintCallable)
-	float GetVolume(UItem* Item) const;
-
-	UFUNCTION(BlueprintCallable)
 	float GetMaxMass() const;
-
-	UFUNCTION(BlueprintCallable)
-	float GetTotalMass() const;
 
 	UFUNCTION(BlueprintCallable)
 	float GetTotalMass01() const;
@@ -97,24 +63,15 @@ public:
 	float GetFreeMass01() const;
 	
 	UFUNCTION(BlueprintCallable)
-	float GetMass(UItem* Item) const;
-
-	UFUNCTION(BlueprintCallable)
-	UItemList* GetList() const;
-
-	UFUNCTION(BlueprintCallable)
-	bool HasList(UItemList* Other) const;
-
-	UFUNCTION(BlueprintCallable)
 	bool FitsList(const UItemList* Other) const;
 
 	UFUNCTION(BlueprintCallable)
-	void SetList(UItemList* Other) const;
+	virtual bool SetList(UItemList* Other) override;
 
 	UFUNCTION(BlueprintCallable)
-	void AddList(UItemList* Other) const;
+	virtual bool AddList(UItemList* Other) override;
 
 	UFUNCTION(BlueprintCallable)
-	void RemoveList(UItemList* Other) const;
+	virtual bool RemoveList(UItemList* Other) override;
 	
 };

@@ -3,7 +3,6 @@
 #include "UI/Screens/InventoryUI/InventoryDisposeModal.h"
 #include "CommonButtonBase.h"
 #include "Items/Inventory.h"
-#include "Items/ItemStack.h"
 #include "UI/Screens/InventoryUI/QuantityInput.h"
 
 void UInventoryDisposeModal::NativeConstruct()
@@ -21,14 +20,6 @@ void UInventoryDisposeModal::NativeOnActivated()
 	Super::NativeOnActivated();
 
 	GetDesiredFocusTarget()->SetFocus();
-}
-
-void UInventoryDisposeModal::NativeOnDeactivated()
-{
-	Super::NativeOnDeactivated();
-	
-	OnConfirmed.Clear();
-	OnCanceled.Clear();
 }
 
 UWidget* UInventoryDisposeModal::NativeGetDesiredFocusTarget() const
@@ -52,12 +43,11 @@ void UInventoryDisposeModal::Init(UInventory* InInventory, UItem* InItem)
 
 void UInventoryDisposeModal::HandleConfirm()
 {
-	OnConfirmed.Broadcast(FItemStack(Item, QuantityInput->GetQuantity()));
+	Inventory->RemoveQuantity(Item, QuantityInput->GetQuantity());
 	DeactivateWidget();
 }
 
 void UInventoryDisposeModal::HandleCancel()
 {
-	OnCanceled.Broadcast();
 	DeactivateWidget();
 }

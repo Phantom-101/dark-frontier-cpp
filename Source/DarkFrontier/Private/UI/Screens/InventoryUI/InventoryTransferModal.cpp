@@ -3,7 +3,6 @@
 #include "UI/Screens/InventoryUI/InventoryTransferModal.h"
 #include "CommonButtonBase.h"
 #include "Items/Item.h"
-#include "Items/ItemStack.h"
 #include "Structures/Structure.h"
 #include "Structures/StructureInventory.h"
 #include "UI/Screens/InventoryUI/InventoryEntry.h"
@@ -27,14 +26,6 @@ void UInventoryTransferModal::NativeOnActivated()
 	Super::NativeOnActivated();
 
 	GetDesiredFocusTarget()->SetFocus();
-}
-
-void UInventoryTransferModal::NativeOnDeactivated()
-{
-	Super::NativeOnDeactivated();
-
-	OnConfirmed.Clear();
-	OnCanceled.Clear();
 }
 
 UWidget* UInventoryTransferModal::NativeGetDesiredFocusTarget() const
@@ -83,13 +74,13 @@ void UInventoryTransferModal::HandleConfirm()
 {
 	if(TargetListBox->IsCurrentOptionValid())
 	{
-		OnConfirmed.Broadcast(FItemStack(Item, QuantityInput->GetQuantity()), Cast<AStructure>(TargetListBox->GetCurrentOption()));
+		Inventory->RemoveQuantity(Item, QuantityInput->GetQuantity());
+		Cast<AStructure>(TargetListBox->GetCurrentOption())->GetInventory()->AddQuantity(Item, QuantityInput->GetQuantity());
 		DeactivateWidget();
 	}
 }
 
 void UInventoryTransferModal::HandleCancel()
 {
-	OnCanceled.Broadcast();
 	DeactivateWidget();
 }

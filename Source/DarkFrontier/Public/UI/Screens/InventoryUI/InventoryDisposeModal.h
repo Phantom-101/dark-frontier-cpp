@@ -14,9 +14,6 @@ class UCommonButtonBase;
 class UQuantityInput;
 class UListBox;
 
-DECLARE_MULTICAST_DELEGATE_OneParam(FInventoryDisposeModalConfirmed, FItemStack)
-DECLARE_MULTICAST_DELEGATE(FInventoryDisposeModalCanceled)
-
 /**
  * 
  */
@@ -24,12 +21,6 @@ UCLASS(Abstract)
 class DARKFRONTIER_API UInventoryDisposeModal : public UCommonActivatableWidget
 {
 	GENERATED_BODY()
-
-public:
-
-	FInventoryDisposeModalConfirmed OnConfirmed;
-
-	FInventoryDisposeModalCanceled OnCanceled;
 
 protected:
 
@@ -51,8 +42,6 @@ protected:
 	virtual void NativeConstruct() override;
 
 	virtual void NativeOnActivated() override;
-
-	virtual void NativeOnDeactivated() override;
 
 	virtual UWidget* NativeGetDesiredFocusTarget() const override;
 	
