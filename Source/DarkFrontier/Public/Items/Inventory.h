@@ -29,13 +29,10 @@ public:
 	UFUNCTION(BlueprintCallable)
 	int FitsQuantity(const UItem* Item, int Quantity) const;
 
-	UFUNCTION(BlueprintCallable)
 	virtual bool SetQuantity(UItem* Item, int Quantity) override;
 	
-	UFUNCTION(BlueprintCallable)
 	virtual bool AddQuantity(UItem* Item, int Quantity) override;
 
-	UFUNCTION(BlueprintCallable)
 	virtual bool RemoveQuantity(UItem* Item, int Quantity) override;
 
 	UFUNCTION(BlueprintCallable)
@@ -65,13 +62,10 @@ public:
 	UFUNCTION(BlueprintCallable)
 	bool FitsList(const UItemList* Other) const;
 
-	UFUNCTION(BlueprintCallable)
 	virtual bool SetList(UItemList* Other) override;
 
-	UFUNCTION(BlueprintCallable)
 	virtual bool AddList(UItemList* Other) override;
 
-	UFUNCTION(BlueprintCallable)
 	virtual bool RemoveList(UItemList* Other) override;
 	
 };

@@ -11,14 +11,14 @@ void UItemStackEntry::Init(UItemStackObject* InItemStack)
 {
 	if(!ensureMsgf(ItemStack == nullptr, TEXT("Init should only be called on freshly created ItemStackEntry objects")))
 	{
-		ItemStack->Inventory->OnItemsChanged.RemoveAll(this);
+		ItemStack->Inventory->OnChanged.RemoveAll(this);
 	}
 	
 	ItemStack = InItemStack;
 	IconImage->SetBrushFromTexture(ItemStack->Item->Icon);
 	NameText->SetText(ItemStack->Item->Name);
 	Update();
-	ItemStack->Inventory->OnItemsChanged.AddUObject<UItemStackEntry>(this, &UItemStackEntry::Update);
+	ItemStack->Inventory->OnChanged.AddUObject<UItemStackEntry>(this, &UItemStackEntry::Update);
 }
 
 void UItemStackEntry::Update() const

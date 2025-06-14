@@ -22,7 +22,6 @@ public:
 
 protected:
 
-	// Cannot use NativeConstruct or NativeOnInitialized as the slate hierarchy has not been initialized
-	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
-	
+	virtual void NativeOnInitialized() override;
+
 };

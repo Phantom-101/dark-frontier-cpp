@@ -33,7 +33,10 @@ void UMenuUI::NativeOnDeactivated()
 {
 	Super::NativeOnDeactivated();
 
-	GetWorld()->GetFirstPlayerController()->SetPause(false);
+	if(APlayerController* Controller = GetWorld()->GetFirstPlayerController(); IsValid(Controller))
+	{
+		Controller->SetPause(false);
+	}
 }
 
 UWidget* UMenuUI::NativeGetDesiredFocusTarget() const

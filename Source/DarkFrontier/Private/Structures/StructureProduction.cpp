@@ -23,7 +23,7 @@ void UStructureProduction::TickComponent(const float DeltaTime, const ELevelTick
 
 	if(!IsValid(OwningPart) || !IsValid(Recipe)) return;
 
-	const UStructureInventory* Inventory = OwningPart->GetOwningStructure()->GetInventory();
+	UStructureInventory* Inventory = OwningPart->GetOwningStructure()->GetInventory();
 
 	if(RequirementsMet)
 	{
