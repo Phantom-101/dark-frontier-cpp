@@ -1,6 +1,8 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "Libraries/UIBlueprintFunctionLibrary.h"
+#include "Blueprint/IUserListEntry.h"
+#include "Components/ListViewBase.h"
 
 bool UUIBlueprintFunctionLibrary::IsWidgetOfType(UCommonActivatableWidgetContainerBase* Container, const TSubclassOf<UCommonActivatableWidget> WidgetClass)
 {
@@ -45,28 +47,33 @@ UCommonActivatableWidget* UUIBlueprintFunctionLibrary::ReplaceWidget(UCommonActi
 
 UWidget* UUIBlueprintFunctionLibrary::GetParentWidget(const UWidget* InWidget)
 {
-	UWidget* Parent = InWidget->GetParent();
-	if(Parent != nullptr)
+	if(UWidget* Parent = InWidget->GetParent(); Parent != nullptr)
 	{
 		return Parent;
 	}
+
+	// List item entries will have null parent
+	if(InWidget->Implements<UUserListEntry>())
+	{
+		return Cast<IUserListEntry>(InWidget)->GetOwningListView();
+	}
+
+	// No way to get the container of an activatable widget for now
 	
 	// Parent is null when currently on the top-most widget in a user widget tree
-	// Call GetOuter twice to get the widget tree and then the wrapping user widget
-	// Which may be in the widget tree of another user widget
-	// If on a widget added directly to the viewport, outer will be a GameInstance
-	// If on an entry widget, need to call GetOwningListView or equivalent
-	// If on an activatable widget, GetOuter seems to skip directly to the enclosing user widget
+	// Call GetOuter twice to get the widget tree and then the wrapping widget
 	const UWidgetTree* Tree = Cast<UWidgetTree>(InWidget->GetOuter());
 	if(Tree != nullptr)
 	{
 		return Cast<UWidget>(Tree->GetOuter());
 	}
 
+	// If on a widget added directly to the viewport, outer will be a GameInstance
+	
 	return nullptr;
 }
 
-UWidget* UUIBlueprintFunctionLibrary::GetParentWidgetOfClass(const TSubclassOf<UWidget> InClass, const UWidget* InWidget)
+UWidget* UUIBlueprintFunctionLibrary::GetParentWidgetOfClass(const UWidget* InWidget, const TSubclassOf<UWidget> InClass)
 {
 	UWidget* Current = GetParentWidget(InWidget);
 	while(Current != nullptr)

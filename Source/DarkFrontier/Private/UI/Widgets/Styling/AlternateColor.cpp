@@ -3,15 +3,15 @@
 #include "UI/Widgets/Styling/AlternateColor.h"
 #include "Libraries/UIBlueprintFunctionLibrary.h"
 
-void UAlternateColor::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
+void UAlternateColor::NativeOnInitialized()
 {
-	Super::NativeTick(MyGeometry, InDeltaTime);
+	Super::NativeOnInitialized();
 
 	if(Colors.Num() == 0)
 	{
 		return;
 	}
-
+	
 	const UAlternateColor* Current = this;
 	int Depth = -1;
 	while(Current != nullptr)

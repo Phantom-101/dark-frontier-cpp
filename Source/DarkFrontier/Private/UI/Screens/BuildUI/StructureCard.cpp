@@ -41,13 +41,7 @@ void UStructureCard::OnCardClicked() const
 {
 	if(IsValid(TargetStructure))
 	{
-		const UWidget* Widget = GetOwningListView();
-		if(!Widget)
-		{
-			Widget = this;
-		}
-
-		UBuildUI* Screen = UUIBlueprintFunctionLibrary::GetParentWidgetOfClass<UBuildUI>(Widget);
+		UBuildUI* Screen = UUIBlueprintFunctionLibrary::GetParentWidgetOfClass<UBuildUI>(this);
 		Screen->SelectStructure();
 	}
 }

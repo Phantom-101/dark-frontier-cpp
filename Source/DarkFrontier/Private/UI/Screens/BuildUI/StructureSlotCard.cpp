@@ -63,13 +63,7 @@ void UStructureSlotCard::OnCardClicked() const
 {
 	if(IsValid(TargetSlot) && IsValid(TargetSlot->GetAttachedSlot()))
 	{
-		const UWidget* Widget = GetOwningListView();
-		if(!Widget)
-		{
-			Widget = this;
-		}
-
-		UBuildUI* Screen = UUIBlueprintFunctionLibrary::GetParentWidgetOfClass<UBuildUI>(Widget);
+		UBuildUI* Screen = UUIBlueprintFunctionLibrary::GetParentWidgetOfClass<UBuildUI>(this);
 		Screen->SelectPart(TargetSlot->GetAttachedSlot()->GetOwningPart());
 	}
 }
@@ -80,13 +74,7 @@ void UStructureSlotCard::OnAddButtonClicked() const
 	{
 		if(!TargetSlot->GetAttachedSlot())
 		{
-			const UWidget* Widget = GetOwningListView();
-			if(!Widget)
-			{
-				Widget = this;
-			}
-
-			UBuildUI* Screen = UUIBlueprintFunctionLibrary::GetParentWidgetOfClass<UBuildUI>(Widget);
+			UBuildUI* Screen = UUIBlueprintFunctionLibrary::GetParentWidgetOfClass<UBuildUI>(this);
 			Screen->SetBaseSlot(TargetSlot);
 		}
 	}

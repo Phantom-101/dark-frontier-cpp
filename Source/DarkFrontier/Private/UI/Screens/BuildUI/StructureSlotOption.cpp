@@ -22,12 +22,6 @@ void UStructureSlotOption::NativeOnListItemObjectSet(UObject* ListItemObject)
 
 void UStructureSlotOption::OnOptionClicked() const
 {
-	const UWidget* Widget = GetOwningListView();
-	if(!Widget)
-	{
-		Widget = this;
-	}
-
-	UBuildUI* Screen = UUIBlueprintFunctionLibrary::GetParentWidgetOfClass<UBuildUI>(Widget);
+	UBuildUI* Screen = UUIBlueprintFunctionLibrary::GetParentWidgetOfClass<UBuildUI>(this);
 	Screen->AttachWithSlotName(SlotName);
 }

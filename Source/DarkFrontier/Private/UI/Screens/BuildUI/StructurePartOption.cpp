@@ -23,12 +23,6 @@ void UStructurePartOption::NativeOnListItemObjectSet(UObject* ListItemObject)
 
 void UStructurePartOption::OnOptionClicked() const
 {
-	const UWidget* Widget = GetOwningListView();
-	if(!Widget)
-	{
-		Widget = this;
-	}
-
-	UBuildUI* Screen = UUIBlueprintFunctionLibrary::GetParentWidgetOfClass<UBuildUI>(Widget);
+	UBuildUI* Screen = UUIBlueprintFunctionLibrary::GetParentWidgetOfClass<UBuildUI>(this);
 	Screen->SetPartType(PartClass);
 }
