@@ -11,12 +11,12 @@
 #include "Structures/StructureDock.h"
 #include "Structures/StructureLayout.h"
 #include "Structures/StructureLocation.h"
-#include "UI/Screens/GameUIBase.h"
-#include "UI/Screens/BuildUI/BuildUI.h"
-#include "UI/Screens/UIBase.h"
-#include "UI/Screens/GameUI/GameUI.h"
-#include "UI/Screens/InventoryUI/InventoryUI.h"
-#include "UI/Screens/StationUI/StationUI.h"
+#include "UI/Screens/GameScreens.h"
+#include "UI/Screens/Build/BuildScreen.h"
+#include "UI/Screens/Screens.h"
+#include "UI/Screens/Flight/FlightScreen.h"
+#include "UI/Screens/Inventory/InventoryScreen.h"
+#include "UI/Screens/Station/StationScreen.h"
 #include "Widgets/CommonActivatableWidgetContainer.h"
 
 AStructureController::AStructureController()
@@ -27,10 +27,10 @@ void AStructureController::BeginPlay()
 {
 	Super::BeginPlay();
 
-	UIBaseWidget = CreateWidget<UUIBase>(GetGameInstance(), UIBaseClass);
-	UIBaseWidget->AddToViewport();
-	GameUIBaseWidget = UIBaseWidget->GetStack()->AddWidget<UGameUIBase>(GameUIBaseClass.Get());
-	(void)GameUIBaseWidget->GetGameStack()->AddWidget(GameUIClass.Get());
+	Screens = CreateWidget<UScreens>(GetGameInstance(), ScreensClass);
+	Screens->AddToViewport();
+	GameScreens = Screens->GetStack()->AddWidget<UGameScreens>(GameScreensClass.Get());
+	(void)GameScreens->GetGameStack()->AddWidget(FlightScreenClass.Get());
 }
 
 void AStructureController::SetupInputComponent()
@@ -126,14 +126,14 @@ void AStructureController::UpdateCamera()
 	SpringArm->AddLocalRotation(FRotator(CameraRotation.Y, CameraRotation.X, 0));
 }
 
-UUIBase* AStructureController::GetUIBaseWidget() const
+UScreens* AStructureController::GetScreens() const
 {
-	return UIBaseWidget;
+	return Screens;
 }
 
-UGameUIBase* AStructureController::GetGameUIBaseWidget() const
+UGameScreens* AStructureController::GetGameScreens() const
 {
-	return GameUIBaseWidget;
+	return GameScreens;
 }
 
 FVector AStructureController::GetTurnIndicatorOffset() const
@@ -197,18 +197,18 @@ void AStructureController::OpenInventory(const FInputActionInstance& Instance)
 {
 	if(!IsValid(StructurePawn)) return;
 
-	UInventoryUI* Inventory = GameUIBaseWidget->GetGameStack()->AddWidget<UInventoryUI>(InventoryUIClass);
-	Inventory->SetStructure(StructurePawn);
+	UInventoryScreen* Screen = GameScreens->GetGameStack()->AddWidget<UInventoryScreen>(InventoryScreenClass);
+	Screen->SetStructure(StructurePawn);
 }
 
 void AStructureController::EditStructure(const FInputActionInstance& Instance)
 {
 	if(!IsValid(StructurePawn)) return;
 	
-	UBuildUI* Details = GameUIBaseWidget->GetGameStack()->AddWidget<UBuildUI>(BuildUIClass);
-	Details->InitStructure(StructurePawn);
-	Details->SelectStructure();
-	Details->SetAvailableParts(AvailableParts);
+	UBuildScreen* Screen = GameScreens->GetGameStack()->AddWidget<UBuildScreen>(BuildScreenClass);
+	Screen->InitStructure(StructurePawn);
+	Screen->SelectStructure();
+	Screen->SetAvailableParts(AvailableParts);
 }
 
 void AStructureController::PropagateLayoutChange() const
@@ -220,5 +220,5 @@ void AStructureController::HandleDock(UStructureDock* Dock) const
 {
 	if(!IsValid(Dock)) return;
 	
-	GameUIBaseWidget->GetGameStack()->AddWidget<UStationUI>(StationUIClass);
+	GameScreens->GetGameStack()->AddWidget<UStationScreen>(StationScreenClass);
 }
