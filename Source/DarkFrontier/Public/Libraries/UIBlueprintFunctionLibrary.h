@@ -9,7 +9,7 @@
 #include "Widgets/CommonActivatableWidgetContainer.h"
 #include "UIBlueprintFunctionLibrary.generated.h"
 
-class UUIBase;
+class UScreens;
 
 /**
  * 

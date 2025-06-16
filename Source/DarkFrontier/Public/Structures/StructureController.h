@@ -48,22 +48,22 @@ protected:
 	TObjectPtr<UInputAction> EditStructureAction;
 
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category="UI")
-	TSubclassOf<class UUIBase> UIBaseClass;
+	TSubclassOf<class UScreens> ScreensClass;
 
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category="UI")
-	TSubclassOf<class UGameUIBase> GameUIBaseClass;
+	TSubclassOf<class UGameScreens> GameScreensClass;
 	
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category="UI")
-	TSubclassOf<class UGameUI> GameUIClass;
+	TSubclassOf<class UFlightScreen> FlightScreenClass;
 
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category="UI")
-	TSubclassOf<class UInventoryUI> InventoryUIClass;
+	TSubclassOf<class UInventoryScreen> InventoryScreenClass;
 
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category="UI")
-	TSubclassOf<class UBuildUI> BuildUIClass;
+	TSubclassOf<class UBuildScreen> BuildScreenClass;
 
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category="UI")
-	TSubclassOf<class UStationUI> StationUIClass;
+	TSubclassOf<class UStationScreen> StationScreenClass;
 
 	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly, Category="Controller")
 	TObjectPtr<class AStructure> StructurePawn;
@@ -93,10 +93,10 @@ protected:
 	TArray<TSubclassOf<class AStructurePart>> AvailableParts;
 
 	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly, Category="UI")
-	TObjectPtr<UUIBase> UIBaseWidget;
+	TObjectPtr<UScreens> Screens;
 
 	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly, Category="UI")
-	TObjectPtr<UGameUIBase> GameUIBaseWidget;
+	TObjectPtr<UGameScreens> GameScreens;
 
 public:
 
@@ -130,10 +130,10 @@ protected:
 public:
 
 	UFUNCTION(BlueprintCallable, Category="UI")
-	UUIBase* GetUIBaseWidget() const;
+	UScreens* GetScreens() const;
 	
 	UFUNCTION(BlueprintCallable, Category="UI")
-	UGameUIBase* GetGameUIBaseWidget() const;
+	UGameScreens* GetGameScreens() const;
 	
 	UFUNCTION(BlueprintCallable, Category="UI")
 	FVector GetTurnIndicatorOffset() const;
