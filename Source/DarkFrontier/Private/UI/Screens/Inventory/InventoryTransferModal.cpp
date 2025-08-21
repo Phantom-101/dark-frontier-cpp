@@ -2,41 +2,19 @@
 
 #include "UI/Screens/Inventory/InventoryTransferModal.h"
 #include "CommonButtonBase.h"
+#include "Components/ListView.h"
 #include "Items/Item.h"
 #include "Structures/Structure.h"
 #include "Structures/StructureInventory.h"
-#include "UI/Screens/Inventory/InventoryEntry.h"
 #include "UI/Screens/Inventory/QuantityInput.h"
-#include "UI/Widgets/Interaction/ListBox.h"
 
 void UInventoryTransferModal::NativeConstruct()
 {
 	Super::NativeConstruct();
 
-	TargetListBox->OnChanged.Clear();
-	TargetListBox->OnChanged.AddUObject<UInventoryTransferModal>(this, &UInventoryTransferModal::HandleTargetChange);
-	ConfirmButton->OnClicked().Clear();
+	ListView->OnItemSelectionChanged().AddUObject<UInventoryTransferModal>(this, &UInventoryTransferModal::HandleTargetChange);
 	ConfirmButton->OnClicked().AddUObject<UInventoryTransferModal>(this, &UInventoryTransferModal::HandleConfirm);
-	CancelButton->OnClicked().Clear();
 	CancelButton->OnClicked().AddUObject<UInventoryTransferModal>(this, &UInventoryTransferModal::HandleCancel);
-}
-
-void UInventoryTransferModal::NativeOnActivated()
-{
-	Super::NativeOnActivated();
-
-	GetDesiredFocusTarget()->SetFocus();
-}
-
-UWidget* UInventoryTransferModal::NativeGetDesiredFocusTarget() const
-{
-	return CancelButton;
-}
-
-bool UInventoryTransferModal::NativeOnHandleBackAction()
-{
-	HandleCancel();
-	return true;
 }
 
 void UInventoryTransferModal::Init(UInventory* InInventory, UItem* InItem, const TArray<AStructure*>& InTargets)
@@ -44,13 +22,7 @@ void UInventoryTransferModal::Init(UInventory* InInventory, UItem* InItem, const
 	Inventory = InInventory;
 	Item = InItem;
 
-	TargetListBox->SetOptions(TArray<UObject*>(InTargets));
-	TargetListBox->SetBuilder([Owner = this, Class = InventoryEntryClass](UObject* Target)
-	{
-		UInventoryEntry* Option = CreateWidget<UInventoryEntry>(Owner, Class);
-		Option->Init(Cast<AStructure>(Target));
-		return Option;
-	});
+	ListView->SetListItems(InTargets);
 }
 
 void UInventoryTransferModal::HandleTargetChange(UObject* Target) const
@@ -67,15 +39,15 @@ void UInventoryTransferModal::HandleTargetChange(UObject* Target) const
 	{
 		QuantityInput->SetMaxQuantity(0);
 	}
-	ConfirmButton->SetIsEnabled(TargetListBox->IsCurrentOptionValid());
+	ConfirmButton->SetIsEnabled(ListView->GetSelectedItem() != nullptr);
 }
 
 void UInventoryTransferModal::HandleConfirm()
 {
-	if(TargetListBox->IsCurrentOptionValid())
+	if(const AStructure* Target = ListView->GetSelectedItem<AStructure>())
 	{
 		Inventory->RemoveQuantity(Item, QuantityInput->GetQuantity());
-		Cast<AStructure>(TargetListBox->GetCurrentOption())->GetInventory()->AddQuantity(Item, QuantityInput->GetQuantity());
+		Target->GetInventory()->AddQuantity(Item, QuantityInput->GetQuantity());
 		DeactivateWidget();
 	}
 }

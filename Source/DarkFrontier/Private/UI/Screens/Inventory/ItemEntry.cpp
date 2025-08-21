@@ -3,9 +3,14 @@
 #include "UI/Screens/Inventory/ItemEntry.h"
 #include "CommonTextBlock.h"
 #include "Items/Item.h"
-#include "Items/ItemObject.h"
 
-void UItemEntry::Init(const UItemObject* ItemObject) const
+void UItemEntry::Init(const UItem* Item) const
 {
-	NameText->SetText(ItemObject->Item->Name);
+	NameText->SetText(Item->Name);
+}
+
+void UItemEntry::NativeOnListItemObjectSet(UObject* ListItemObject)
+{
+	IUserObjectListEntry::NativeOnListItemObjectSet(ListItemObject);
+	Init(Cast<UItem>(ListItemObject));
 }

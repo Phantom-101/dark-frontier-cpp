@@ -2,7 +2,7 @@
 
 #include "UI/Screens/Flight/StatusBar.h"
 #include "CommonButtonBase.h"
-#include "Libraries/UIBlueprintFunctionLibrary.h"
+#include "Libraries/UIFunctionLibrary.h"
 #include "UI/Screens/GameScreens.h"
 #include "UI/Screens/Screens.h"
 #include "UI/Screens/Log/LogScreen.h"
@@ -18,20 +18,20 @@ void UStatusBar::NativeConstruct()
 
 void UStatusBar::HandleLog() const
 {
-	UCommonActivatableWidgetContainerBase* Container = UUIBlueprintFunctionLibrary::GetParentWidgetOfClass<UGameScreens>(this)->GetGameStack();
-	if(UUIBlueprintFunctionLibrary::IsWidgetOfType(Container, LogScreenClass.Get()))
+	UCommonActivatableWidgetContainerBase* Container = UUIFunctionLibrary::GetParentWidgetOfClass<UGameScreens>(this)->GetGameStack();
+	if(UUIFunctionLibrary::IsWidgetOfType(Container, LogScreenClass.Get()))
 	{
-		UUIBlueprintFunctionLibrary::PopWidget(Container);
+		UUIFunctionLibrary::PopWidget(Container);
 	}
 	else
 	{
-		UUIBlueprintFunctionLibrary::FloatWidget(Container, LogScreenClass.Get());
+		UUIFunctionLibrary::FloatWidget(Container, LogScreenClass.Get());
 	}
 }
 
 void UStatusBar::HandleMenu() const
 {
-	const UScreens* Screens = UUIBlueprintFunctionLibrary::GetParentWidgetOfClass<UScreens>(this);
+	const UScreens* Screens = UUIFunctionLibrary::GetParentWidgetOfClass<UScreens>(this);
 	// Should not matter as the menu button is inaccessible from the menu UI itself
-	UUIBlueprintFunctionLibrary::FloatWidget(Screens->GetStack(), MenuScreenClass.Get());
+	UUIFunctionLibrary::FloatWidget(Screens->GetStack(), MenuScreenClass.Get());
 }

@@ -4,7 +4,7 @@
 #include "CommonButtonBase.h"
 #include "CommonTextBlock.h"
 #include "Components/ListViewBase.h"
-#include "Libraries/UIBlueprintFunctionLibrary.h"
+#include "Libraries/UIFunctionLibrary.h"
 #include "Structures/StructurePart.h"
 #include "UI/Screens/Build/BuildScreen.h"
 #include "UI/Screens/Build/StructurePartOptionObject.h"
@@ -23,6 +23,6 @@ void UStructurePartOption::NativeOnListItemObjectSet(UObject* ListItemObject)
 
 void UStructurePartOption::OnOptionClicked() const
 {
-	UBuildScreen* Screen = UUIBlueprintFunctionLibrary::GetParentWidgetOfClass<UBuildScreen>(this);
+	UBuildScreen* Screen = UUIFunctionLibrary::GetParentWidgetOfClass<UBuildScreen>(this);
 	Screen->SetPartType(PartClass);
 }

@@ -13,7 +13,7 @@ TArray<UItem*> AUniverseGameMode::GetItemList()
 	return ItemList;
 }
 
-UTradeParameters* AUniverseGameMode::GetTradeParameters()
+const UTradeParameters* AUniverseGameMode::GetTradeParameters()
 {
 	return TradeParameters;
 }

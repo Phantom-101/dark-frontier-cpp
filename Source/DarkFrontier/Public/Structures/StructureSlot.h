@@ -3,17 +3,17 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "InstancedStruct.h"
+#include "StructurePartFilter.h"
 #include "Components/SceneComponent.h"
 #include "StructureSlot.generated.h"
+
+struct FStructurePartFilter;
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class DARKFRONTIER_API UStructureSlot : public USceneComponent
 {
 	GENERATED_BODY()
-
-public:
-
-	UStructureSlot();
 
 protected:
 
@@ -21,10 +21,10 @@ protected:
 	FText SlotName;
 
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category="Setup")
-	TObjectPtr<class UStructurePartFilter> Filter;
+	TInstancedStruct<FStructurePartFilter> Filter = TInstancedStruct<FStructurePartFilter>::Make();
 
 	UPROPERTY(BlueprintReadOnly)
-	TObjectPtr<class AStructurePart> OwningPart;
+	TObjectPtr<AStructurePart> OwningPart;
 
 	UPROPERTY(BlueprintReadOnly)
 	TObjectPtr<UStructureSlot> AttachedSlot;
@@ -60,7 +60,7 @@ public:
 protected:
 
 	UFUNCTION(BlueprintCallable)
-	void MatchTransform(UStructureSlot* Other);
+	void MatchTransform(UStructureSlot* Other) const;
 
 public:
 

@@ -5,7 +5,7 @@
 
 TSubclassOf<UStructurePartControls> UStructurePartControlsMapping::Map(const TSubclassOf<AStructurePart>& PartClass) const
 {
-	for (UClass* Class = PartClass; Class->IsChildOf<AStructurePart>(); Class = Class->GetSuperClass())
+	for(UClass* Class = PartClass; Class->IsChildOf<AStructurePart>(); Class = Class->GetSuperClass())
 	{
 		TSubclassOf<AStructurePart> Subclass = TSubclassOf<AStructurePart>(Class);
 		if(Mapping.Contains(Subclass))

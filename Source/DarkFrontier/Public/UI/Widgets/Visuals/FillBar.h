@@ -32,7 +32,7 @@ protected:
 	TSubclassOf<UCommonBorderStyle> ForegroundStyle;
 
 	UPROPERTY(BlueprintReadOnly, EditAnywhere)
-	FVector2D Start = FVector2D::ZeroVector;
+	FVector2D Pivot = FVector2D::ZeroVector;
 
 	UPROPERTY(BlueprintReadOnly, EditAnywhere)
 	FVector2D Fill = FVector2D::ZeroVector;
@@ -41,13 +41,26 @@ protected:
 
 public:
 
+	UFUNCTION(BlueprintCallable)
 	void SetBackgroundStyle(const TSubclassOf<UCommonBorderStyle>& InStyle);
 
+	UFUNCTION(BlueprintCallable)
 	void SetForegroundStyle(const TSubclassOf<UCommonBorderStyle>& InStyle);
 
-	void SetStart(FVector2D InStart);
+	UFUNCTION(BlueprintCallable)
+	void SetPivot(FVector2D InPivot);
 
+	UFUNCTION(BlueprintCallable)
 	void SetFill(FVector2D InFill);
+
+	UFUNCTION(BlueprintCallable)
+	void FillRect(const FVector2D& InStart, const FVector2D& InEnd);
+
+	UFUNCTION(BlueprintCallable)
+	void FillHorizontal(float InStart, float InEnd);
+
+	UFUNCTION(BlueprintCallable)
+	void FillVertical(float InStart, float InEnd);
 
 private:
 

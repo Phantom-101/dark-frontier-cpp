@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "CommonUserWidget.h"
+#include "Selector.h"
 #include "StructureSelector.generated.h"
 
 class AStructure;
@@ -16,34 +16,20 @@ class UStructureIndication;
  * 
  */
 UCLASS()
-class DARKFRONTIER_API UStructureSelector : public UCommonUserWidget
+class DARKFRONTIER_API UStructureSelector : public USelector
 {
 	GENERATED_BODY()
 
 protected:
 
 	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
-	TObjectPtr<UCommonButtonBase> SelectorButton;
-
-	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
 	TObjectPtr<UStructureIndicators> Indicators;
-
-	UPROPERTY(BlueprintReadWrite, EditInstanceOnly)
-	TObjectPtr<AStructure> Target;
-
-	virtual void NativeConstruct() override;
-
-	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
 
 public:
 
-	bool TryInit(AStructure* InTarget);
-
-	AStructure* GetTarget() const;
+	virtual void Init(const TScriptInterface<ITargetable>& InTarget) override;
 
 private:
-
-	void HandleClick() const;
 
 	void OnIndicationAdded(UStructureIndication* Indication) const;
 

@@ -1,44 +1,36 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 #include "UI/Widgets/Interaction/Tabs.h"
-#include "Components/WidgetSwitcher.h"
-#include "UI/Widgets/Interaction/ListBox.h"
-#include "UI/Widgets/Interaction/Tab.h"
-#include "UI/Widgets/Interaction/TabEntry.h"
+#include "CommonActivatableWidget.h"
+#include "Components/ListView.h"
+#include "Libraries/UIFunctionLibrary.h"
+#include "Widgets/CommonActivatableWidgetContainer.h"
+
+bool UTab::IsValid() const
+{
+	return ::IsValid(WidgetClass);
+}
 
 void UTabs::NativeConstruct()
 {
 	Super::NativeConstruct();
 
-	TabSwitcher->ClearChildren();
-	Tabs.Empty();
-	
-	for(TSubclassOf<UTab> TabClass : TabClasses)
-	{
-		UTab* Tab = CreateWidget<UTab>(this, TabClass);
-		TabSwitcher->AddChild(Tab);
-		Tabs.Add(Tab);
-	}
+	ListView->SetListItems(Tabs);
+	ListView->OnItemSelectionChanged().AddUObject(this, &UTabs::HandleSelect);
 
-	TabListBox->SetOptions(TArray<UObject*>(Tabs));
-	TabListBox->SetBuilder([Owner = this, Class = TabEntryClass](UObject* Tab)
+	if(Tabs.Num() > 0)
 	{
-		UTabEntry* Option = CreateWidget<UTabEntry>(Owner, Class);
-		Option->Init(Cast<UTab>(Tab));
-		return Option;
-	});
-	
-	TabListBox->OnChanged.AddUObject<UTabs>(this, &UTabs::HandleTabSelected);
+		// Select the first tab via selection callback so the UI gets updated as well
+		ListView->SetSelectedItem(Tabs[0]);
+	}
 }
 
-void UTabs::HandleTabSelected(UObject* Tab) const
+void UTabs::HandleSelect(UObject* Tab) const
 {
-	if(TabListBox->IsCurrentOptionValid())
+	if(Tab == nullptr)
 	{
-		TabSwitcher->SetActiveWidget(Cast<UWidget>(Tab));
+		TabStack->ClearWidgets();
+		return;
 	}
-	else
-	{
-		TabSwitcher->SetActiveWidgetIndex(0);
-	}
+	UUIFunctionLibrary::ReplaceWidget(TabStack, Cast<UTab>(Tab)->WidgetClass);
 }

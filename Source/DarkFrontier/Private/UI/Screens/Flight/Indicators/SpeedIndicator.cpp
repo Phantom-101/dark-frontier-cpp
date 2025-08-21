@@ -5,11 +5,11 @@
 #include "Structures/Structure.h"
 #include "Structures/Indications/SpeedIndication.h"
 
-void USpeedIndicator::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
+void USpeedIndicator::NativeTick(const FGeometry& MyGeometry, const float InDeltaTime)
 {
 	Super::NativeTick(MyGeometry, InDeltaTime);
 
 	const USpeedIndication* Speed = Cast<USpeedIndication>(Indication);
-	SpeedText->SetVisibility(Speed->GetStructure()->IsSelected() ? ESlateVisibility::SelfHitTestInvisible : ESlateVisibility::Collapsed);
+	SpeedText->SetVisibility(Speed->GetStructure()->IsSelectedByPlayer() ? ESlateVisibility::SelfHitTestInvisible : ESlateVisibility::Collapsed);
 	SpeedText->SetText(FText::FromString(FString::Printf(TEXT("%d m/s"), FMath::RoundToInt(Speed->GetSpeed() / 100))));
 }

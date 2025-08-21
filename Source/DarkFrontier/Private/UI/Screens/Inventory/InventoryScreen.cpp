@@ -4,11 +4,12 @@
 #include "CommonButtonBase.h"
 #include "CommonTextBlock.h"
 #include "Components/Image.h"
+#include "Components/ListView.h"
 #include "Components/WidgetSwitcher.h"
 #include "Factions/Faction.h"
 #include "Items/Item.h"
 #include "Items/ItemStackObject.h"
-#include "Libraries/UIBlueprintFunctionLibrary.h"
+#include "Libraries/UIFunctionLibrary.h"
 #include "Structures/Structure.h"
 #include "Structures/StructureInventory.h"
 #include "Structures/StructureLocation.h"
@@ -17,8 +18,6 @@
 #include "UI/Screens/Inventory/InventoryEntry.h"
 #include "UI/Screens/Inventory/InventoryTradeModal.h"
 #include "UI/Screens/Inventory/InventoryTransferModal.h"
-#include "UI/Screens/Inventory/ItemStackEntry.h"
-#include "UI/Widgets/Interaction/ListBox.h"
 #include "UI/Widgets/Modals/ListBoxModal.h"
 #include "UI/Widgets/Visuals/InfoField.h"
 
@@ -26,13 +25,9 @@ void UInventoryScreen::NativeConstruct()
 {
 	Super::NativeConstruct();
 
-	SwitchButton->OnClicked().Clear();
 	SwitchButton->OnClicked().AddUObject<UInventoryScreen>(this, &UInventoryScreen::HandleSwitch);
-	TradeButton->OnClicked().Clear();
 	TradeButton->OnClicked().AddUObject<UInventoryScreen>(this, &UInventoryScreen::HandleTrade);
-	TransferButton->OnClicked().Clear();
 	TransferButton->OnClicked().AddUObject<UInventoryScreen>(this, &UInventoryScreen::HandleTransfer);
-	DisposeButton->OnClicked().Clear();
 	DisposeButton->OnClicked().AddUObject<UInventoryScreen>(this, &UInventoryScreen::HandleDispose);
 }
 
@@ -41,7 +36,7 @@ void UInventoryScreen::NativeTick(const FGeometry& MyGeometry, const float InDel
 	Super::NativeTick(MyGeometry, InDeltaTime);
 
 	const UInventory* Inventory = GetInventory();
-	const UItemStackObject* Selected = Cast<UItemStackObject>(ItemListBox->GetCurrentOption());
+	const UItemStackObject* Selected = ListView->GetSelectedItem<UItemStackObject>();
 	if(Selected == nullptr)
 	{
 		InfoSwitcher->SetActiveWidget(NoItem);
@@ -91,10 +86,12 @@ UStructureInventory* UInventoryScreen::GetInventory() const
 	return Structure->GetInventory();
 }
 
-void UInventoryScreen::Rebuild()
+void UInventoryScreen::Rebuild() const
 {
+	const UItemStackObject* Selected = ListView->GetSelectedItem<UItemStackObject>();
+	const UObject* Current = nullptr;
+	
 	TArray<UObject*> Options;
-	UObject* Current = nullptr;
 	for(UItem* Item : GetInventory()->GetItems())
 	{
 		UItemStackObject* Obj = NewObject<UItemStackObject>();
@@ -102,23 +99,19 @@ void UInventoryScreen::Rebuild()
 		Obj->Item = Item;
 		Options.Add(Obj);
 
-		if(ItemListBox->IsCurrentOptionValid() && Item == Cast<UItemStackObject>(ItemListBox->GetCurrentOption())->Item)
+		if(Selected != nullptr && Item == Selected->Item)
 		{
 			Current = Obj;
 		}
 	}
-	ItemListBox->SetOptionsWithInitial(Options, Current);
-	ItemListBox->SetBuilder([Owner = this, Class = ItemStackEntryClass](UObject* ItemStack)
-	{
-		UItemStackEntry* Option = CreateWidget<UItemStackEntry>(Owner, Class);
-		Option->Init(Cast<UItemStackObject>(ItemStack));
-		return Option;
-	});
+	
+	ListView->SetListItems(Options);
+	ListView->SetSelectedItem(Current);
 }
 
 void UInventoryScreen::HandleSwitch()
 {
-	const UScreens* Screens = UUIBlueprintFunctionLibrary::GetParentWidgetOfClass<UScreens>(this);
+	const UScreens* Screens = UUIFunctionLibrary::GetParentWidgetOfClass<UScreens>(this);
 
 	if(IsValid(CurrentModal))
 	{
@@ -147,7 +140,7 @@ void UInventoryScreen::HandleSwitchConfirmed(UObject* Selection)
 
 void UInventoryScreen::HandleTrade()
 {
-	const UScreens* Screens = UUIBlueprintFunctionLibrary::GetParentWidgetOfClass<UScreens>(this);
+	const UScreens* Screens = UUIFunctionLibrary::GetParentWidgetOfClass<UScreens>(this);
 
 	if(IsValid(CurrentModal))
 	{
@@ -171,14 +164,14 @@ void UInventoryScreen::HandleTrade()
 	}
 	
 	UInventoryTradeModal* TradeModal = Screens->GetStack()->AddWidget<UInventoryTradeModal>(TradeModalClass);
-	TradeModal->Init(GetInventory(), Cast<UItemStackObject>(ItemListBox->GetCurrentOption())->Item, Targets);
+	TradeModal->Init(GetInventory(), ListView->GetSelectedItem<UItemStackObject>()->Item, Targets);
 
 	CurrentModal = TradeModal;
 }
 
 void UInventoryScreen::HandleTransfer()
 {
-	const UScreens* Screens = UUIBlueprintFunctionLibrary::GetParentWidgetOfClass<UScreens>(this);
+	const UScreens* Screens = UUIFunctionLibrary::GetParentWidgetOfClass<UScreens>(this);
 
 	if(IsValid(CurrentModal))
 	{
@@ -190,14 +183,14 @@ void UInventoryScreen::HandleTransfer()
 	Targets.Remove(Structure);
 	
 	UInventoryTransferModal* TransferModal = Screens->GetStack()->AddWidget<UInventoryTransferModal>(TransferModalClass);
-	TransferModal->Init(GetInventory(), Cast<UItemStackObject>(ItemListBox->GetCurrentOption())->Item, Targets);
+	TransferModal->Init(GetInventory(), ListView->GetSelectedItem<UItemStackObject>()->Item, Targets);
 
 	CurrentModal = TransferModal;
 }
 
 void UInventoryScreen::HandleDispose()
 {
-	const UScreens* Screens = UUIBlueprintFunctionLibrary::GetParentWidgetOfClass<UScreens>(this);
+	const UScreens* Screens = UUIFunctionLibrary::GetParentWidgetOfClass<UScreens>(this);
 
 	if(IsValid(CurrentModal))
 	{
@@ -206,7 +199,7 @@ void UInventoryScreen::HandleDispose()
 	}
 	
 	UInventoryDisposeModal* DisposeModal = Screens->GetStack()->AddWidget<UInventoryDisposeModal>(DisposeModalClass);
-	DisposeModal->Init(GetInventory(), Cast<UItemStackObject>(ItemListBox->GetCurrentOption())->Item);
+	DisposeModal->Init(GetInventory(), ListView->GetSelectedItem<UItemStackObject>()->Item);
 
 	CurrentModal = DisposeModal;
 }

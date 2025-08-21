@@ -2,37 +2,30 @@
 
 #include "UI/Screens/Log/LogItemsTab.h"
 #include "CommonButtonBase.h"
+#include "Components/ListView.h"
 #include "Components/WidgetSwitcher.h"
 #include "Game/UniverseGameMode.h"
 #include "Items/Item.h"
-#include "UI/Screens/Inventory/ItemEntry.h"
-#include "UI/Screens/Log/ItemInfo.h"
-#include "UI/Widgets/Interaction/ListBox.h"
+#include "UI/Screens/Log/LogItemInfo.h"
 
 void ULogItemsTab::NativeConstruct()
 {
 	Super::NativeConstruct();
 	
-	TArray<UItem*> Items = GetWorld()->GetAuthGameMode<AUniverseGameMode>()->GetItemList();
-
-	TArray<UObject*> ItemObjects;
-	for(UItem* Item : Items)
-	{
-		UItemObject* Obj = NewObject<UItemObject>();
-		Obj->Item = Item;
-		ItemObjects.Add(Obj);
-	}
-	
-	ItemListBox->SetOptions(ItemObjects);
-	ItemListBox->SetBuilder([Owner = this, Class = EntryClass](UObject* Item)
-	{
-		UItemEntry* Option = CreateWidget<UItemEntry>(Owner, Class);
-		Option->Init(Cast<UItemObject>(Item));
-		return Option;
-	});
-
-	ItemListBox->OnChanged.AddUObject<ULogItemsTab>(this, &ULogItemsTab::HandleSelect);
+	ListView->OnItemSelectionChanged().AddUObject<ULogItemsTab>(this, &ULogItemsTab::HandleSelect);
 	BackButton->OnClicked().AddUObject<ULogItemsTab>(this, &ULogItemsTab::HandleBack);
+}
+
+void ULogItemsTab::NativeOnActivated()
+{
+	Super::NativeOnActivated();
+
+	const UObject* Selected = ListView->GetSelectedItem();
+
+	const TArray<UItem*> Items = GetWorld()->GetAuthGameMode<AUniverseGameMode>()->GetItemList();
+	ListView->SetListItems(Items);
+
+	ListView->SetSelectedItem(Selected);
 }
 
 void ULogItemsTab::HandleSelect(UObject* Object) const
@@ -44,11 +37,11 @@ void ULogItemsTab::HandleSelect(UObject* Object) const
 	else
 	{
 		Switcher->SetActiveWidgetIndex(1);
-		ItemInfo->Init(Cast<UItemObject>(Object));
+		ItemInfo->Init(Cast<UItem>(Object));
 	}
 }
 
 void ULogItemsTab::HandleBack() const
 {
-	ItemListBox->SetCurrentOption(nullptr);
+	ListView->ClearSelection();
 }

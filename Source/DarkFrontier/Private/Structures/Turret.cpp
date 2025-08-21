@@ -2,21 +2,21 @@
 
 #include "Structures/Turret.h"
 
-bool ATurret::CanActivate()
+bool ATurret::CanActivate(const TScriptInterface<ITargetable>& Target)
 {
 	return true;
 }
 
-void ATurret::TryActivate()
+void ATurret::TryActivate(const TScriptInterface<ITargetable>& Target)
 {
-	if(!CanActivate())
+	if(!CanActivate(Target))
 	{
 		return;
 	}
 
-	OnActivate();
+	OnActivate(Target);
 }
 
-void ATurret::OnActivate()
+void ATurret::OnActivate(const TScriptInterface<ITargetable>& Target)
 {
 }

@@ -4,7 +4,7 @@
 #include "CommonButtonBase.h"
 #include "CommonTextBlock.h"
 #include "Components/ListViewBase.h"
-#include "Libraries/UIBlueprintFunctionLibrary.h"
+#include "Libraries/UIFunctionLibrary.h"
 #include "Structures/Structure.h"
 #include "UI/Screens/Build/BuildScreen.h"
 
@@ -41,7 +41,7 @@ void UStructureCard::OnCardClicked() const
 {
 	if(IsValid(TargetStructure))
 	{
-		UBuildScreen* Screen = UUIBlueprintFunctionLibrary::GetParentWidgetOfClass<UBuildScreen>(this);
+		UBuildScreen* Screen = UUIFunctionLibrary::GetParentWidgetOfClass<UBuildScreen>(this);
 		Screen->SelectStructure();
 	}
 }

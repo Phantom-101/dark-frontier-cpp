@@ -3,12 +3,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "CommonActivatableWidget.h"
+#include "UI/Screens/Screen.h"
 #include "InventoryTransferModal.generated.h"
 
+class UListView;
 class AStructure;
-class UInventoryEntry;
-class UListBox;
 class UItem;
 class UInventory;
 class UCommonButtonBase;
@@ -19,14 +18,14 @@ struct FItemStack;
  * 
  */
 UCLASS(Abstract)
-class DARKFRONTIER_API UInventoryTransferModal : public UCommonActivatableWidget
+class DARKFRONTIER_API UInventoryTransferModal : public UScreen
 {
 	GENERATED_BODY()
 
 protected:
 
 	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
-	TObjectPtr<UListBox> TargetListBox;
+	TObjectPtr<UListView> ListView;
 
 	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
 	TObjectPtr<UQuantityInput> QuantityInput;
@@ -37,9 +36,6 @@ protected:
 	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
 	TObjectPtr<UCommonButtonBase> CancelButton;
 
-	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly)
-	TSubclassOf<UInventoryEntry> InventoryEntryClass;
-
 	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly)
 	TObjectPtr<UInventory> Inventory;
 
@@ -47,12 +43,6 @@ protected:
 	TObjectPtr<UItem> Item;
 
 	virtual void NativeConstruct() override;
-
-	virtual void NativeOnActivated() override;
-
-	virtual UWidget* NativeGetDesiredFocusTarget() const override;
-	
-	virtual bool NativeOnHandleBackAction() override;
 
 public:
 

@@ -45,9 +45,9 @@ public:
 
 	APulseTurret();
 
-	virtual bool CanActivate() override;
+	virtual bool CanActivate(const TScriptInterface<ITargetable>& Target) override;
 
-	virtual void OnActivate() override;
+	virtual void OnActivate(const TScriptInterface<ITargetable>& Target) override;
 
 protected:
 

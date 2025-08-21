@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "UI/Widgets/Styling/AlternateColor.h"
-#include "Libraries/UIBlueprintFunctionLibrary.h"
+#include "Libraries/UIFunctionLibrary.h"
 
 void UAlternateColor::NativeOnInitialized()
 {
@@ -17,7 +17,7 @@ void UAlternateColor::NativeOnInitialized()
 	while(Current != nullptr)
 	{
 		Depth++;
-		Current = UUIBlueprintFunctionLibrary::GetParentWidgetOfClass<UAlternateColor>(Current);
+		Current = UUIFunctionLibrary::GetParentWidgetOfClass<UAlternateColor>(Current);
 	}
 
 	SetForegroundColor(Colors[Depth % Colors.Num()]);

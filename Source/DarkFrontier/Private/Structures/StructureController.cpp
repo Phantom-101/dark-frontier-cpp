@@ -96,6 +96,16 @@ void AStructureController::OnUnPossess()
 	StructurePawn = nullptr;
 }
 
+TScriptInterface<ITargetable> AStructureController::GetSelectTarget() const
+{
+	return SelectTarget;
+}
+
+void AStructureController::SetSelectTarget(const TScriptInterface<ITargetable>& InSelectTarget)
+{
+	SelectTarget = InSelectTarget;
+}
+
 void AStructureController::SetViewTarget(UViewTarget* InTarget)
 {
 	ViewTarget = InTarget;

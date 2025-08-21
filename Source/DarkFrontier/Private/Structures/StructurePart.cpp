@@ -5,6 +5,7 @@
 #include "Engine/SCS_Node.h"
 #include "Engine/SimpleConstructionScript.h"
 #include "Gameplay/Attributes/HullAttributeSet.h"
+#include "Libraries/GameplayFunctionLibrary.h"
 #include "Structures/Structure.h"
 #include "Structures/StructureGameplay.h"
 #include "Structures/StructureLayout.h"
@@ -36,9 +37,9 @@ FText AStructurePart::GetTypeName() const
 	return TypeName;
 }
 
-UStructurePartGroup* AStructurePart::GetPartType() const
+void AStructurePart::GetOwnedGameplayTags(FGameplayTagContainer& TagContainer) const
 {
-	return PartType;
+	TagContainer = PartTags;
 }
 
 TSubclassOf<UGameplayEffect> AStructurePart::GetPassiveEffect() const
@@ -51,7 +52,7 @@ void AStructurePart::OnAdded(AStructure* Structure)
 	OwningStructure = Structure;
 
 	TryInitPartId(FGuid::NewGuid().ToString());
-	
+
 	AttachToActor(OwningStructure, FAttachmentTransformRules(EAttachmentRule::KeepWorld, true));
 	SetActorRelativeLocation(FVector::ZeroVector);
 	SetActorRelativeRotation(FRotator::ZeroRotator);
@@ -60,18 +61,8 @@ void AStructurePart::OnAdded(AStructure* Structure)
 	{
 		PassiveEffectHandle = OwningStructure->GetGameplay()->ApplyEffect(PassiveEffect);
 
-		// TODO wrap in a helper function
-		float Hull = 0;
-
 		UGameplayEffect* Effect = PassiveEffect->GetDefaultObject<UGameplayEffect>();
-		for(FGameplayModifierInfo Modifier : Effect->Modifiers)
-		{
-			float Magnitude;
-			if(Modifier.ModifierMagnitude.GetStaticMagnitudeIfPossible(1, Magnitude))
-			{
-				if(Modifier.Attribute == UHullAttributeSet::GetMaxHullAttribute()) Hull += Magnitude;
-			}
-		}
+		const float Hull = UGameplayFunctionLibrary::Aggregate(Effect, UHullAttributeSet::GetMaxHullAttribute(), EGameplayModOp::Type::Additive);
 
 		// Add the extra hull that this part provides
 		UStructureGameplay* Gameplay = OwningStructure->GetGameplay();
@@ -181,21 +172,37 @@ TArray<UStructureFacility*> AStructurePart::GetFacilities()
 	return Facilities;
 }
 
-float AStructurePart::TakeDamage(const float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
+float AStructurePart::GetPartMaxHealth() const
 {
-	return OwningStructure->TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
+	return PartMaxHealth;
 }
 
-TArray<const UStructureSlot*> AStructurePart::GetSlots_CDO(TSubclassOf<AStructurePart> PartClass)
+float AStructurePart::GetPartHealth() const
+{
+	return PartHealth;
+}
+
+void AStructurePart::SetPartHealth(const float Target)
+{
+	PartHealth = FMath::Clamp(Target, 0, PartMaxHealth);
+}
+
+float AStructurePart::TakeDamage(const float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
+{
+	// Owning structure will calculate the part damage and apply it via setters
+	return OwningStructure->PropagateDamage(this, DamageAmount, DamageEvent, EventInstigator, DamageCauser);
+}
+
+TArray<const UStructureSlot*> AStructurePart::GetSlots_CDO(const TSubclassOf<AStructurePart>& PartClass)
 {
 	const UBlueprintGeneratedClass* BPClass = Cast<UBlueprintGeneratedClass>(PartClass);
 	if(BPClass == nullptr) return TArray<const UStructureSlot*>();
 
 	TArray<const UStructureSlot*> Slots;
-	TArray<USCS_Node*> Nodes = BPClass->SimpleConstructionScript->GetAllNodes();
-	for (const USCS_Node* Node : Nodes)
+	const TArray<USCS_Node*>& Nodes = BPClass->SimpleConstructionScript->GetAllNodes();
+	for(const USCS_Node* Node : Nodes)
 	{
-		if (Node->ComponentClass == UStructureSlot::StaticClass())
+		if(Node->ComponentClass == UStructureSlot::StaticClass())
 		{
 			Slots.Add(Cast<UStructureSlot>(Node->ComponentTemplate));
 		}
@@ -203,7 +210,7 @@ TArray<const UStructureSlot*> AStructurePart::GetSlots_CDO(TSubclassOf<AStructur
 	return Slots;
 }
 
-TArray<const UStructureSlot*> AStructurePart::GetCompatibleSlots_CDO(const TSubclassOf<AStructurePart> PartClass, const UStructureSlot* Other)
+TArray<const UStructureSlot*> AStructurePart::GetCompatibleSlots_CDO(const TSubclassOf<AStructurePart>& PartClass, const UStructureSlot* Other)
 {
 	TArray<const UStructureSlot*> CDOSlots = GetSlots_CDO(PartClass);
 	TArray<const UStructureSlot*> Ret;
@@ -215,7 +222,7 @@ TArray<const UStructureSlot*> AStructurePart::GetCompatibleSlots_CDO(const TSubc
 	return Ret;
 }
 
-const UStructureSlot* AStructurePart::GetSlot_CDO(const TSubclassOf<AStructurePart> PartClass, const FText& InName)
+const UStructureSlot* AStructurePart::GetSlot_CDO(const TSubclassOf<AStructurePart>& PartClass, const FText& InName)
 {
 	for(const UStructureSlot* Slot : GetSlots_CDO(PartClass))
 	{

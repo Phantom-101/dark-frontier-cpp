@@ -3,64 +3,81 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "CommonActivatableWidget.h"
+#include "UI/Screens/Screen.h"
 #include "StationScreen.generated.h"
 
-class UStationTradeScreen;
-class UCommonButtonBase;
+class URepairScreen;
+class URefitScreen;
+class UTradeScreen;
 
 /**
  * 
  */
 UCLASS(Abstract)
-class DARKFRONTIER_API UStationScreen : public UCommonActivatableWidget
+class DARKFRONTIER_API UStationScreen : public UScreen
 {
 	GENERATED_BODY()
 
 protected:
 
 	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
-	TObjectPtr<UCommonButtonBase> ShipButton;
+	TObjectPtr<UCommonBoundActionButton> ShipButton;
 
 	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
-	TObjectPtr<UCommonButtonBase> TradeButton;
+	TObjectPtr<UCommonBoundActionButton> TradeButton;
 
 	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
-	TObjectPtr<UCommonButtonBase> RepairButton;
+	TObjectPtr<UCommonBoundActionButton> RepairButton;
 
 	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
-	TObjectPtr<UCommonButtonBase> UpgradeButton;
+	TObjectPtr<UCommonBoundActionButton> RefitButton;
 	
 	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
-	TObjectPtr<UCommonButtonBase> PassengersButton;
+	TObjectPtr<UCommonBoundActionButton> PassengersButton;
 
 	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
-	TObjectPtr<UCommonButtonBase> UndockButton;
+	TObjectPtr<UCommonBoundActionButton> UndockButton;
 
 	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
-	TObjectPtr<UCommonButtonBase> StationButton;
+	TObjectPtr<UCommonBoundActionButton> StationButton;
 
 	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
-	TObjectPtr<UCommonButtonBase> HangarButton;
+	TObjectPtr<UCommonBoundActionButton> HangarButton;
 
 	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
-	TObjectPtr<UCommonButtonBase> BuyShipButton;
+	TObjectPtr<UCommonBoundActionButton> BuyShipButton;
 
 	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
-	TObjectPtr<UCommonButtonBase> TravelButton;
+	TObjectPtr<UCommonBoundActionButton> TravelButton;
 	
 	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
-	TObjectPtr<UCommonButtonBase> MissionsButton;
+	TObjectPtr<UCommonBoundActionButton> MissionsButton;
 
 	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
-	TObjectPtr<UCommonButtonBase> ExitShipButton;
+	TObjectPtr<UCommonBoundActionButton> ExitShipButton;
 
 	UPROPERTY(BlueprintReadOnly, EditAnywhere)
-	TSubclassOf<UStationTradeScreen> TradeScreenClass;
+	TObjectPtr<UInputAction> TradeAction;
 
-	virtual void NativeConstruct() override;
+	UPROPERTY(BlueprintReadOnly, EditAnywhere)
+	TObjectPtr<UInputAction> RepairAction;
 
-	virtual void NativeOnActivated() override;
+	UPROPERTY(BlueprintReadOnly, EditAnywhere)
+	TObjectPtr<UInputAction> RefitAction;
+
+	UPROPERTY(BlueprintReadOnly, EditAnywhere)
+	TObjectPtr<UInputAction> UndockAction;
+
+	UPROPERTY(BlueprintReadOnly, EditAnywhere)
+	TSubclassOf<UTradeScreen> TradeScreenClass;
+
+	UPROPERTY(BlueprintReadOnly, EditAnywhere)
+	TSubclassOf<URepairScreen> RepairScreenClass;
+
+	UPROPERTY(BlueprintReadOnly, EditAnywhere)
+	TSubclassOf<URefitScreen> RefitScreenClass;
+
+	virtual void RegisterBindings() override;
 
 	virtual UWidget* NativeGetDesiredFocusTarget() const override;
 
@@ -68,8 +85,6 @@ protected:
 
 private:
 
-	void HandleTrade() const;
-
-	void HandleUndock();
+	void UndockPlayer();
 	
 };

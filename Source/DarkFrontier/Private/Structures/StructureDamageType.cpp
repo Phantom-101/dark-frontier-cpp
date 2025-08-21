@@ -1,13 +1,13 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 #include "Structures/StructureDamageType.h"
+#include "Macros.h"
+#include "Engine/DamageEvents.h"
 
-float UStructureDamageType::Evaluate(const UTargetGroup* TargetGroup) const
+const UStructureDamageType* UStructureDamageType::GetDamageTypeFromEvent(const FDamageEvent& DamageEvent)
 {
-	if(DamageMultiplierMap.Contains(TargetGroup))
-	{
-		return DamageMultiplierMap[TargetGroup];
-	}
-
-	return 1;
+	GUARD_RETURN(DamageEvent.DamageTypeClass, GetDefault<UStructureDamageType>());
+	const UStructureDamageType* DamageType = Cast<UStructureDamageType>(DamageEvent.DamageTypeClass.GetDefaultObject());
+	GUARD_RETURN(IsValid(DamageType), GetDefault<UStructureDamageType>());
+	return DamageType;
 }

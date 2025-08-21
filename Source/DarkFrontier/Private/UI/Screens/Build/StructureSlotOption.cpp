@@ -4,7 +4,7 @@
 #include "CommonButtonBase.h"
 #include "CommonTextBlock.h"
 #include "Components/ListViewBase.h"
-#include "Libraries/UIBlueprintFunctionLibrary.h"
+#include "Libraries/UIFunctionLibrary.h"
 #include "UI/Screens/Build/BuildScreen.h"
 #include "UI/Screens/Build/StructureSlotOptionObject.h"
 
@@ -22,6 +22,6 @@ void UStructureSlotOption::NativeOnListItemObjectSet(UObject* ListItemObject)
 
 void UStructureSlotOption::OnOptionClicked() const
 {
-	UBuildScreen* Screen = UUIBlueprintFunctionLibrary::GetParentWidgetOfClass<UBuildScreen>(this);
+	UBuildScreen* Screen = UUIFunctionLibrary::GetParentWidgetOfClass<UBuildScreen>(this);
 	Screen->AttachWithSlotName(SlotName);
 }

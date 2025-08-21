@@ -2,35 +2,62 @@
 
 #include "UI/Screens/Log/LogFactionsTab.h"
 #include "CommonButtonBase.h"
+#include "Log.h"
+#include "Components/ListView.h"
 #include "Components/WidgetSwitcher.h"
 #include "Factions/Faction.h"
 #include "Kismet/GameplayStatics.h"
-#include "UI/Screens/Log/FactionEntry.h"
-#include "UI/Screens/Log/FactionInfo.h"
-#include "UI/Widgets/Interaction/ListBox.h"
+#include "UI/Screens/Log/LogFactionInfo.h"
 
 void ULogFactionsTab::NativeConstruct()
 {
 	Super::NativeConstruct();
+	
+	ListView->OnItemSelectionChanged().AddUObject<ULogFactionsTab>(this, &ULogFactionsTab::HandleSelect);
+	BackButton->OnClicked().AddUObject<ULogFactionsTab>(this, &ULogFactionsTab::HandleBack);
+}
+
+void ULogFactionsTab::NativeOnActivated()
+{
+	Super::NativeOnActivated();
+
+	UE_LOG(LogDarkFrontier, Log, TEXT("On activated"));
+	UE_LOG(LogDarkFrontier, Log, TEXT("%d"), ListView->GetListItems().Num());
+
+	const AFaction* Selected = ListView->GetSelectedItem<AFaction>();
+
+	if(Selected != nullptr)
+	{
+		UE_LOG(LogDarkFrontier, Log, TEXT("%s"), *Selected->GetFactionName().ToString());
+	}
 
 	TArray<AActor*> Factions;
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AFaction::StaticClass(), Factions);
-	FactionListBox->SetOptions(TArray<UObject*>(Factions));
-	FactionListBox->SetBuilder([Owner = this, Class = EntryClass](UObject* Faction)
-	{
-		UFactionEntry* Option = CreateWidget<UFactionEntry>(Owner, Class);
-		Option->Init(Cast<AFaction>(Faction));
-		return Option;
-	});
+	ListView->SetListItems(Factions);
 
-	FactionListBox->OnChanged.AddUObject<ULogFactionsTab>(this, &ULogFactionsTab::HandleSelect);
-	BackButton->OnClicked().AddUObject<ULogFactionsTab>(this, &ULogFactionsTab::HandleBack);
+	ListView->SetSelectedItem(Selected);
+}
+
+void ULogFactionsTab::NativeOnDeactivated()
+{
+	Super::NativeOnDeactivated();
+
+	UE_LOG(LogDarkFrontier, Log, TEXT("On deactivated"));
+	UE_LOG(LogDarkFrontier, Log, TEXT("%d"), ListView->GetListItems().Num());
+
+	const AFaction* Selected = ListView->GetSelectedItem<AFaction>();
+
+	if(Selected != nullptr)
+	{
+		UE_LOG(LogDarkFrontier, Log, TEXT("%s"), *Selected->GetFactionName().ToString());
+	}
 }
 
 void ULogFactionsTab::HandleSelect(UObject* Object) const
 {
 	if(Object == nullptr)
 	{
+		UE_LOG(LogDarkFrontier, Log, TEXT("handle deselect"));
 		Switcher->SetActiveWidgetIndex(0);
 	}
 	else
@@ -42,5 +69,5 @@ void ULogFactionsTab::HandleSelect(UObject* Object) const
 
 void ULogFactionsTab::HandleBack() const
 {
-	FactionListBox->SetCurrentOption(nullptr);
+	ListView->ClearSelection();
 }

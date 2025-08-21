@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "CommonUserWidget.h"
+#include "UI/Widgets/Interaction/SelectableEntry.h"
 #include "TradeEntry.generated.h"
 
 class UStructureInventory;
@@ -13,11 +13,31 @@ class UCommonButtonBase;
 class UCommonTextBlock;
 class UImage;
 
+UCLASS()
+class UTradeEntryObject : public UObject
+{
+	GENERATED_BODY()
+
+public:
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	TObjectPtr<UItem> Item;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	TObjectPtr<UStructureInventory> Inventory;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	TObjectPtr<UStructureInventory> Other;
+
+	static UTradeEntryObject* New(UItem* Item, UStructureInventory* Inventory, UStructureInventory* Other);
+	
+};
+
 /**
  * 
  */
 UCLASS(Abstract)
-class DARKFRONTIER_API UTradeEntry : public UCommonUserWidget
+class DARKFRONTIER_API UTradeEntry : public USelectableEntry
 {
 	GENERATED_BODY()
 
@@ -51,18 +71,20 @@ protected:
 	TObjectPtr<UItem> Item;
 	
 	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly)
-	TObjectPtr<UStructureInventory> Current;
+	TObjectPtr<UStructureInventory> Inventory;
 	
 	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly)
-	TObjectPtr<UStructureInventory> Target;
+	TObjectPtr<UStructureInventory> Other;
 
 	virtual void NativeConstruct() override;
 
 public:
 
-	void Init(UItem* InItem, UStructureInventory* InCurrent, UStructureInventory* InTarget);
+	void Init(UItem* InItem, UStructureInventory* InInventory, UStructureInventory* InOther);
 
 protected:
+
+	virtual void NativeOnListItemObjectSet(UObject* ListItemObject) override;
 
 	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
 

@@ -9,7 +9,7 @@
 /**
  * 
  */
-UCLASS()
+UCLASS(Abstract)
 class DARKFRONTIER_API UInfoField : public UCommonUserWidget
 {
 	GENERATED_BODY()

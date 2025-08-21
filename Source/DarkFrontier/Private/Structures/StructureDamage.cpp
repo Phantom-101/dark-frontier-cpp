@@ -17,5 +17,5 @@ FStructureDamage::FStructureDamage(const TSubclassOf<UStructureDamageType>& InDa
 
 bool FStructureDamage::IsValid() const
 {
-	return DamageType != nullptr && Amount > 0;
+	return DamageType != nullptr && Amount >= 0;
 }

@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "CommonUserWidget.h"
+#include "Blueprint/IUserObjectListEntry.h"
 #include "InventoryEntry.generated.h"
 
 class UCommonTextBlock;
@@ -13,7 +14,7 @@ class AStructure;
  * 
  */
 UCLASS(Abstract)
-class DARKFRONTIER_API UInventoryEntry : public UCommonUserWidget
+class DARKFRONTIER_API UInventoryEntry : public UCommonUserWidget, public IUserObjectListEntry
 {
 	GENERATED_BODY()
 
@@ -25,5 +26,9 @@ protected:
 public:
 
 	void Init(const AStructure* Structure) const;
+
+protected:
+
+	virtual void NativeOnListItemObjectSet(UObject* ListItemObject) override;
 	
 };

@@ -27,5 +27,14 @@ public:
 	
 	UPROPERTY(BlueprintReadOnly, EditAnywhere)
 	float PriceQuantityTime = 1800;
+
+	UPROPERTY(BlueprintReadOnly, EditAnywhere)
+	float HullRepairMultiplier = 10;
+
+	UPROPERTY(BlueprintReadOnly, EditAnywhere)
+	float ShieldRepairMultiplier = 5;
+
+	UPROPERTY(BlueprintReadOnly, EditAnywhere)
+	float PartRepairMultiplier = 20;
 	
 };
