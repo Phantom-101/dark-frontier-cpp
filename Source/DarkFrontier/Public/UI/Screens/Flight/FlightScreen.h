@@ -43,7 +43,7 @@ protected:
 	TObjectPtr<class UCommonListView> GameplayEffectList;
 
 	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
-	TObjectPtr<class UStructureSelectors> Selectors;
+	TObjectPtr<class USelectorCanvas> Selectors;
 
 	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
 	TObjectPtr<class UScrollBox> PartControls;
@@ -57,6 +57,8 @@ protected:
 	virtual TOptional<FUIInputConfig> GetDesiredInputConfig() const override;
 
 	virtual void NativeConstruct() override;
+
+	virtual void NativeOnActivated() override;
 	
 	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
 

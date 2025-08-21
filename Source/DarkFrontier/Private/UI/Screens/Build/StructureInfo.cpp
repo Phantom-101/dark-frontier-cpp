@@ -11,7 +11,6 @@
 #include "Structures/StructureGameplay.h"
 #include "Structures/StructureLayout.h"
 #include "Structures/StructurePart.h"
-#include "Structures/StructurePartGroup.h"
 #include "UI/Screens/Build/StructurePartCardList.h"
 #include "UI/Widgets/Visuals/InfoField.h"
 
@@ -73,19 +72,25 @@ void UStructureInfo::RebuildTypeMode()
 {
 	if(!IsValid(TargetStructure)) return;
 	
-	TArray<UStructurePartGroup*> PartTypes;
+	TSet<FGameplayTag> Tags;
 	for(const AStructurePart* Part : TargetStructure->GetLayout()->GetParts())
 	{
-		PartTypes.AddUnique(Part->GetPartType());
+		FGameplayTagContainer PartTags;
+		Part->GetOwnedGameplayTags(PartTags);
+		Tags.Append(PartTags.GetGameplayTagArray());
 	}
 
 	TypeList->ClearChildren();
-	for(const UStructurePartGroup* PartType : PartTypes)
+
+	// Pass for each found tag
+	for(const FGameplayTag& Tag : Tags)
 	{
 		TArray<AStructurePart*> Parts;
 		for(AStructurePart* Part : TargetStructure->GetLayout()->GetParts())
 		{
-			if(Part->GetPartType() == PartType)
+			FGameplayTagContainer PartTags;
+			Part->GetOwnedGameplayTags(PartTags);
+			if(PartTags.HasTag(Tag))
 			{
 				Parts.Add(Part);
 			}
@@ -94,16 +99,31 @@ void UStructureInfo::RebuildTypeMode()
 		UStructurePartCardList* CardList = CreateWidget<UStructurePartCardList>(this, CardListClass);
 		TypeList->AddChild(CardList);
 
-		if(PartType == nullptr)
+		CardList->SetHeader(FText::FromName(Tag.GetTagName()));
+		// TODO change color based on tag?
+		CardList->SetHeaderColor(FLinearColor::White);
+
+		CardList->SetParts(Parts);
+	}
+
+	// Parts without any tags
+	{
+		TArray<AStructurePart*> Parts;
+		for(AStructurePart* Part : TargetStructure->GetLayout()->GetParts())
 		{
-			CardList->SetHeader(FText::FromString("Miscellaneous"));
-			CardList->SetHeaderColor(FLinearColor::White);
+			FGameplayTagContainer PartTags;
+			Part->GetOwnedGameplayTags(PartTags);
+			if(PartTags.IsEmpty())
+			{
+				Parts.Add(Part);
+			}
 		}
-		else
-		{
-			CardList->SetHeader(PartType->TypeName);
-			CardList->SetHeaderColor(PartType->Color);
-		}
+		
+		UStructurePartCardList* CardList = CreateWidget<UStructurePartCardList>(this, CardListClass);
+		TypeList->AddChild(CardList);
+
+		CardList->SetHeader(FText::FromString("Miscellaneous"));
+		CardList->SetHeaderColor(FLinearColor::White);
 
 		CardList->SetParts(Parts);
 	}

@@ -1,6 +1,8 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 #include "Structures/StructureLocation.h"
+
+#include "Macros.h"
 #include "Sectors/Sector.h"
 #include "Structures/Structure.h"
 #include "Structures/StructureDock.h"
@@ -23,30 +25,35 @@ ASector* UStructureLocation::GetSector() const
 
 bool UStructureLocation::EnterSector(ASector* Target)
 {
-	if(Target == nullptr || Target == Sector)
-	{
-		return false;
-	}
+	GUARD_RETURN(Sector != Target && IsValid(Target), false);
 
 	ExitSector();
 
 	Sector = Target;
 	Sector->RegisterStructure(GetStructure());
 
+	for(const AStructure* Docker : Dockers)
+	{
+		Docker->GetLocation()->EnterSector(Target);
+	}
+
 	GetStructure()->UpdateTickLevel();
-	
+
 	return true;
 }
 
 bool UStructureLocation::ExitSector()
 {
-	if(Sector == nullptr)
-	{
-		return false;
-	}
+	GUARD_RETURN(Sector != nullptr, false);
 
 	Sector->UnregisterStructure(GetStructure());
 	Sector = nullptr;
+
+	for(const AStructure* Docker : Dockers)
+	{
+		Docker->GetLocation()->ExitSector();
+	}
+
 	return true;
 }
 

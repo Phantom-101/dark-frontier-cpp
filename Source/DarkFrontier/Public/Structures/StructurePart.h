@@ -4,18 +4,18 @@
 
 #include "CoreMinimal.h"
 #include "ActiveGameplayEffectHandle.h"
+#include "GameplayTagAssetInterface.h"
+#include "GameplayTagContainer.h"
 #include "GameFramework/Actor.h"
-#include "Objects/ViewTarget.h"
 #include "StructurePart.generated.h"
 
-class UStructurePartGroup;
 class UStructureSlot;
 class UStructureFacility;
 class AFaction;
 class UWidget;
 
 UCLASS()
-class DARKFRONTIER_API AStructurePart : public AActor
+class DARKFRONTIER_API AStructurePart : public AActor, public IGameplayTagAssetInterface
 {
 	GENERATED_BODY()
 	
@@ -29,7 +29,7 @@ protected:
 	FText TypeName;
 
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category="Setup")
-	TObjectPtr<UStructurePartGroup> PartType;
+	FGameplayTagContainer PartTags;
 
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category="Setup")
 	TSubclassOf<class UGameplayEffect> PassiveEffect;
@@ -46,6 +46,12 @@ protected:
 	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly, Category="Facilities")
 	TArray<TObjectPtr<UStructureFacility>> Facilities;
 
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category="Gameplay")
+	float PartMaxHealth = 0;
+
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category="Gameplay")
+	float PartHealth = 0;
+
 	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly, Category="Gameplay")
 	FActiveGameplayEffectHandle PassiveEffectHandle;
 
@@ -59,7 +65,7 @@ public:
 	FText GetTypeName() const;
 
 	UFUNCTION(BlueprintCallable, Category="Prototype")
-	UStructurePartGroup* GetPartType() const;
+	virtual void GetOwnedGameplayTags(FGameplayTagContainer& TagContainer) const override;
 
 	UFUNCTION(BlueprintCallable, Category="Prototype")
 	TSubclassOf<UGameplayEffect> GetPassiveEffect() const;
@@ -100,12 +106,21 @@ public:
 	UFUNCTION(BlueprintCallable, Category="Facilities")
 	TArray<UStructureFacility*> GetFacilities();
 
+	UFUNCTION(BlueprintCallable, Category="Gameplay")
+	float GetPartMaxHealth() const;
+
+	UFUNCTION(BlueprintCallable, Category="Gameplay")
+	float GetPartHealth() const;
+
+	UFUNCTION(BlueprintCallable, Category="Gameplay")
+	void SetPartHealth(float Target);
+
 	virtual float TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
 	
-	static TArray<const UStructureSlot*> GetSlots_CDO(TSubclassOf<AStructurePart> PartClass);
+	static TArray<const UStructureSlot*> GetSlots_CDO(const TSubclassOf<AStructurePart>& PartClass);
 
-	static TArray<const UStructureSlot*> GetCompatibleSlots_CDO(TSubclassOf<AStructurePart> PartClass, const UStructureSlot* Other);
+	static TArray<const UStructureSlot*> GetCompatibleSlots_CDO(const TSubclassOf<AStructurePart>& PartClass, const UStructureSlot* Other);
 
-	static const UStructureSlot* GetSlot_CDO(TSubclassOf<AStructurePart> PartClass, const FText& InName);
+	static const UStructureSlot* GetSlot_CDO(const TSubclassOf<AStructurePart>& PartClass, const FText& InName);
 
 };

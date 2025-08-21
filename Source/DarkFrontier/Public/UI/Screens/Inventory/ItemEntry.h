@@ -4,16 +4,17 @@
 
 #include "CoreMinimal.h"
 #include "CommonUserWidget.h"
+#include "Blueprint/IUserObjectListEntry.h"
 #include "ItemEntry.generated.h"
 
+class UItem;
 class UCommonTextBlock;
-class UItemObject;
 
 /**
  * 
  */
 UCLASS(Abstract)
-class DARKFRONTIER_API UItemEntry : public UCommonUserWidget
+class DARKFRONTIER_API UItemEntry : public UCommonUserWidget, public IUserObjectListEntry
 {
 	GENERATED_BODY()
 
@@ -24,6 +25,10 @@ protected:
 
 public:
 
-	void Init(const UItemObject* ItemObject) const;
+	void Init(const UItem* Item) const;
+
+protected:
+
+	virtual void NativeOnListItemObjectSet(UObject* ListItemObject) override;
 	
 };

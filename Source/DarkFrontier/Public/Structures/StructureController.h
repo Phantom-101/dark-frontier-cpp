@@ -9,6 +9,8 @@
 #include "StructureLayout.h"
 #include "StructureController.generated.h"
 
+class UViewTarget;
+
 /**
  * 
  */
@@ -65,6 +67,8 @@ protected:
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category="UI")
 	TSubclassOf<class UStationScreen> StationScreenClass;
 
+	// TODO add faction
+
 	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly, Category="Controller")
 	TObjectPtr<class AStructure> StructurePawn;
 
@@ -79,6 +83,9 @@ protected:
 
 	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly, Category="Input")
 	bool IsCursorUnlocked = false;
+
+	UPROPERTY(BlueprintReadOnly, EditInstanceOnly, Category="Gameplay")
+	TScriptInterface<ITargetable> SelectTarget;
 
 	UPROPERTY(BlueprintReadOnly, EditInstanceOnly, Category="Camera")
 	TObjectPtr<UViewTarget> ViewTarget;
@@ -115,6 +122,12 @@ protected:
 	virtual void OnUnPossess() override;
 
 public:
+
+	UFUNCTION(BlueprintPure, Category="Gameplay")
+	TScriptInterface<ITargetable> GetSelectTarget() const;
+
+	UFUNCTION(BlueprintCallable, Category="Gameplay")
+	void SetSelectTarget(const TScriptInterface<ITargetable>& InSelectTarget);
 
 	UFUNCTION(BlueprintCallable, Category="Camera")
 	void SetViewTarget(UViewTarget* InTarget);

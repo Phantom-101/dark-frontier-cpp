@@ -3,20 +3,19 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "UI/Widgets/Interaction/Tab.h"
+#include "CommonActivatableWidget.h"
 #include "LogMailTab.generated.h"
 
-class UMailEntry;
+class UListView;
 class UCommonButtonBase;
 class UCommonTextBlock;
-class UListBox;
 class UWidgetSwitcher;
 
 /**
  * 
  */
 UCLASS(Abstract)
-class DARKFRONTIER_API ULogMailTab : public UTab
+class DARKFRONTIER_API ULogMailTab : public UCommonActivatableWidget
 {
 	GENERATED_BODY()
 
@@ -26,7 +25,7 @@ protected:
 	TObjectPtr<UWidgetSwitcher> Switcher;
 
 	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
-	TObjectPtr<UListBox> MailListBox;
+	TObjectPtr<UListView> ListView;
 
 	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
 	TObjectPtr<UCommonTextBlock> SubjectText;
@@ -37,10 +36,9 @@ protected:
 	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
 	TObjectPtr<UCommonButtonBase> BackButton;
 
-	UPROPERTY(BlueprintReadOnly, EditAnywhere)
-	TSubclassOf<UMailEntry> EntryClass;
-
 	virtual void NativeConstruct() override;
+
+	virtual void NativeOnActivated() override;
 
 private:
 

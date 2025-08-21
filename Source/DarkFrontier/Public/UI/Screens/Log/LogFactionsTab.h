@@ -3,21 +3,19 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "UI/Widgets/Interaction/Tab.h"
+#include "CommonActivatableWidget.h"
 #include "LogFactionsTab.generated.h"
 
-class UFactionInfo;
-class UFactionEntry;
+class UListView;
+class ULogFactionInfo;
 class UCommonButtonBase;
-class UCommonTextBlock;
-class UListBox;
 class UWidgetSwitcher;
 
 /**
  * 
  */
 UCLASS(Abstract)
-class DARKFRONTIER_API ULogFactionsTab : public UTab
+class DARKFRONTIER_API ULogFactionsTab : public UCommonActivatableWidget
 {
 	GENERATED_BODY()
 
@@ -27,18 +25,19 @@ protected:
 	TObjectPtr<UWidgetSwitcher> Switcher;
 
 	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
-	TObjectPtr<UListBox> FactionListBox;
+	TObjectPtr<UListView> ListView;
 
 	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
-	TObjectPtr<UFactionInfo> FactionInfo;
+	TObjectPtr<ULogFactionInfo> FactionInfo;
 
 	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
 	TObjectPtr<UCommonButtonBase> BackButton;
 
-	UPROPERTY(BlueprintReadOnly, EditAnywhere)
-	TSubclassOf<UFactionEntry> EntryClass;
-
 	virtual void NativeConstruct() override;
+
+	virtual void NativeOnActivated() override;
+
+	virtual void NativeOnDeactivated() override;
 
 private:
 

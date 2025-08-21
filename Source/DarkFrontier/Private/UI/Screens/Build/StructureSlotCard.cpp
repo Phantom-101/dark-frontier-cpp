@@ -4,7 +4,7 @@
 #include "CommonButtonBase.h"
 #include "CommonTextBlock.h"
 #include "Components/ListViewBase.h"
-#include "Libraries/UIBlueprintFunctionLibrary.h"
+#include "Libraries/UIFunctionLibrary.h"
 #include "Objects/ComponentViewTarget.h"
 #include "Structures/StructureController.h"
 #include "Structures/StructurePart.h"
@@ -63,7 +63,7 @@ void UStructureSlotCard::OnCardClicked() const
 {
 	if(IsValid(TargetSlot) && IsValid(TargetSlot->GetAttachedSlot()))
 	{
-		UBuildScreen* Screen = UUIBlueprintFunctionLibrary::GetParentWidgetOfClass<UBuildScreen>(this);
+		UBuildScreen* Screen = UUIFunctionLibrary::GetParentWidgetOfClass<UBuildScreen>(this);
 		Screen->SelectPart(TargetSlot->GetAttachedSlot()->GetOwningPart());
 	}
 }
@@ -74,7 +74,7 @@ void UStructureSlotCard::OnAddButtonClicked() const
 	{
 		if(!TargetSlot->GetAttachedSlot())
 		{
-			UBuildScreen* Screen = UUIBlueprintFunctionLibrary::GetParentWidgetOfClass<UBuildScreen>(this);
+			UBuildScreen* Screen = UUIFunctionLibrary::GetParentWidgetOfClass<UBuildScreen>(this);
 			Screen->SetBaseSlot(TargetSlot);
 		}
 	}

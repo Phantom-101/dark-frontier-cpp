@@ -3,19 +3,27 @@
 #include "UI/Screens/Log/LogPropertyTab.h"
 #include "CommonButtonBase.h"
 #include "EngineUtils.h"
+#include "Components/ListView.h"
 #include "Components/WidgetSwitcher.h"
 #include "Factions/Faction.h"
 #include "Structures/Structure.h"
-#include "UI/Screens/Log/PropertyInfo.h"
-#include "UI/Screens/Log/StructureEntry.h"
-#include "UI/Widgets/Interaction/ListBox.h"
+#include "UI/Screens/Log/LogPropertyInfo.h"
 
 void ULogPropertyTab::NativeConstruct()
 {
 	Super::NativeConstruct();
 
+	ListView->OnItemSelectionChanged().AddUObject<ULogPropertyTab>(this, &ULogPropertyTab::HandleSelect);
+	BackButton->OnClicked().AddUObject<ULogPropertyTab>(this, &ULogPropertyTab::HandleBack);
+}
+
+void ULogPropertyTab::NativeOnActivated()
+{
+	Super::NativeOnActivated();
+
+	const UObject* Selected = ListView->GetSelectedItem();
+
 	const AFaction* PlayerFaction = Cast<AStructure>(GetWorld()->GetFirstPlayerController()->GetPawn())->GetOwningFaction();
-	
 	TArray<UObject*> Structures;
 	for(TActorIterator<AStructure> Itr(GetWorld()); Itr; ++Itr)
 	{
@@ -24,17 +32,9 @@ void ULogPropertyTab::NativeConstruct()
 			Structures.Add(*Itr);
 		}
 	}
-	
-	StructureListBox->SetOptions(TArray<UObject*>(Structures));
-	StructureListBox->SetBuilder([Owner = this, Class = EntryClass](UObject* Faction)
-	{
-		UStructureEntry* Option = CreateWidget<UStructureEntry>(Owner, Class);
-		Option->Init(Cast<AStructure>(Faction));
-		return Option;
-	});
+	ListView->SetListItems(TArray(Structures));
 
-	StructureListBox->OnChanged.AddUObject<ULogPropertyTab>(this, &ULogPropertyTab::HandleSelect);
-	BackButton->OnClicked().AddUObject<ULogPropertyTab>(this, &ULogPropertyTab::HandleBack);
+	ListView->SetSelectedItem(Selected);
 }
 
 void ULogPropertyTab::HandleSelect(UObject* Object) const
@@ -52,5 +52,5 @@ void ULogPropertyTab::HandleSelect(UObject* Object) const
 
 void ULogPropertyTab::HandleBack() const
 {
-	StructureListBox->SetCurrentOption(nullptr);
+	ListView->ClearSelection();
 }

@@ -6,23 +6,32 @@
 #include "GameFramework/DamageType.h"
 #include "StructureDamageType.generated.h"
 
+struct FDamageEvent;
 class UTargetGroup;
 
 /**
  * 
  */
-UCLASS(Abstract)
+UCLASS()
 class DARKFRONTIER_API UStructureDamageType : public UDamageType
 {
 	GENERATED_BODY()
 
-protected:
-	
-	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly)
-	TMap<TObjectPtr<UTargetGroup>, float> DamageMultiplierMap;
-
 public:
+	
+	UPROPERTY(BlueprintReadOnly, EditAnywhere)
+	float ShieldMultiplier = 1;
 
-	virtual float Evaluate(const UTargetGroup* TargetGroup) const;
+	UPROPERTY(BlueprintReadOnly, EditAnywhere)
+	float HullMultiplier = 1;
+
+	UPROPERTY(BlueprintReadOnly, EditAnywhere)
+	float PartMultiplier = 1;
+
+	UPROPERTY(BlueprintReadOnly, EditAnywhere)
+	float MiningPower = 0.1;
+
+	UFUNCTION(BlueprintPure)
+	static const UStructureDamageType* GetDamageTypeFromEvent(const FDamageEvent& DamageEvent);
 	
 };

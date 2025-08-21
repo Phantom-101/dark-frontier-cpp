@@ -6,10 +6,11 @@
 #include "CoreMinimal.h"
 #include "GameplayTagContainer.h"
 #include "StructureTickLevel.h"
-#include "HasTargetGroup.h"
 #include "GameFramework/Pawn.h"
+#include "Objects/Targetable.h"
 #include "Structure.generated.h"
 
+class UTargetGroup;
 class UStructureInventory;
 class UItem;
 class UStructureLocation;
@@ -33,7 +34,7 @@ struct FGameplayAbilitySpecHandle;
 DECLARE_MULTICAST_DELEGATE_OneParam(FStructureIndicationChanged, UStructureIndication*)
 
 UCLASS()
-class DARKFRONTIER_API AStructure : public APawn, public IHasTargetGroup, public IAbilitySystemInterface
+class DARKFRONTIER_API AStructure : public APawn, public ITargetable, public IAbilitySystemInterface
 {
 	GENERATED_BODY()
 
@@ -76,8 +77,8 @@ protected:
 	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category="Combat")
 	TObjectPtr<AFaction> OwningFaction;
 
-	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly, Category="Combat")
-	TObjectPtr<AStructure> Target;
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category="Combat")
+	TSubclassOf<USelector> SelectorClass;
 
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere)
 	TObjectPtr<UStructureGameplay> Gameplay;
@@ -143,25 +144,24 @@ public:
 	void SetOwningFaction(AFaction* InFaction);
 
 	UFUNCTION(BlueprintCallable, Category="Combat")
-	AStructure* GetTarget() const;
-
-	UFUNCTION(BlueprintCallable, Category="Combat")
-	void SetTarget(AStructure* InTarget);
-
-	UFUNCTION(BlueprintCallable, Category="Combat")
 	bool IsPlayer() const;
 
-	UFUNCTION(BlueprintCallable, Category="Combat")
-	bool IsSelected() const;
+	virtual FVector GetTargetLocation() override;
+
+	virtual bool IsTargetable(AStructure* Structure) const override;
+
+	virtual TSubclassOf<USelector> GetSelectorClass() const override;
+
+	virtual bool ShouldShowSelector() const override;
 
 	UFUNCTION(BlueprintCallable)
 	UStructureGameplay* GetGameplay() const;
 
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 
-	virtual UTargetGroup* GetTargetGroup() const override;
-
 	virtual float TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
+
+	float PropagateDamage(AStructurePart* Part, float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser);
 
 	UFUNCTION(BlueprintCallable, Category="Gameplay")
 	TArray<UStructureIndication*> GetIndications();
@@ -177,11 +177,16 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category="Input")
 	void SetRotateInput(FVector InInput);
+
+	UFUNCTION(BlueprintCallable)
+	UStaticMeshComponent* GetStaticMesh() const;
 	
 	UFUNCTION(BlueprintCallable, Category="Camera")
 	USpringArmComponent* GetCameraSpringArm() const;
 
 protected:
+
+	virtual void SetActorHiddenInGame(bool bNewHidden) override;
 	
 	FVector CalculateImpulse(const FVector& RawVelocities, const FVector& RawInput, float MaxSpeed, float Accel, float DeltaTime) const;
 

@@ -3,42 +3,20 @@
 #include "UI/Screens/Inventory/InventoryTradeModal.h"
 #include "CommonButtonBase.h"
 #include "CommonTextBlock.h"
+#include "Components/ListView.h"
 #include "Factions/Faction.h"
 #include "Items/Item.h"
 #include "Structures/Structure.h"
 #include "Structures/StructureInventory.h"
-#include "UI/Screens/Inventory/InventoryEntry.h"
 #include "UI/Screens/Inventory/QuantityInput.h"
-#include "UI/Widgets/Interaction/ListBox.h"
 
 void UInventoryTradeModal::NativeConstruct()
 {
 	Super::NativeConstruct();
 
-	TargetListBox->OnChanged.Clear();
-	TargetListBox->OnChanged.AddUObject<UInventoryTradeModal>(this, &UInventoryTradeModal::HandleTargetChange);
-	ConfirmButton->OnClicked().Clear();
+	ListView->OnItemSelectionChanged().AddUObject<UInventoryTradeModal>(this, &UInventoryTradeModal::HandleTargetChange);
 	ConfirmButton->OnClicked().AddUObject<UInventoryTradeModal>(this, &UInventoryTradeModal::HandleConfirm);
-	CancelButton->OnClicked().Clear();
 	CancelButton->OnClicked().AddUObject<UInventoryTradeModal>(this, &UInventoryTradeModal::HandleCancel);
-}
-
-void UInventoryTradeModal::NativeOnActivated()
-{
-	Super::NativeOnActivated();
-
-	GetDesiredFocusTarget()->SetFocus();
-}
-
-UWidget* UInventoryTradeModal::NativeGetDesiredFocusTarget() const
-{
-	return CancelButton;
-}
-
-bool UInventoryTradeModal::NativeOnHandleBackAction()
-{
-	HandleCancel();
-	return true;
 }
 
 void UInventoryTradeModal::Init(UStructureInventory* InInventory, UItem* InItem, const TArray<AStructure*>& InTargets)
@@ -46,13 +24,7 @@ void UInventoryTradeModal::Init(UStructureInventory* InInventory, UItem* InItem,
 	Inventory = InInventory;
 	Item = InItem;
 
-	TargetListBox->SetOptions(TArray<UObject*>(InTargets));
-	TargetListBox->SetBuilder([Owner = this, Class = InventoryEntryClass](UObject* Target)
-	{
-		UInventoryEntry* Option = CreateWidget<UInventoryEntry>(Owner, Class);
-		Option->Init(Cast<AStructure>(Target));
-		return Option;
-	});
+	ListView->SetListItems(InTargets);
 
 	HandleQuantityChange(QuantityInput->GetQuantity());
 }
@@ -82,7 +54,7 @@ void UInventoryTradeModal::HandleTargetChange(UObject* Target) const
 	{
 		QuantityInput->SetBounds(0, 0);
 	}
-	ConfirmButton->SetIsEnabled(TargetListBox->IsCurrentOptionValid());
+	ConfirmButton->SetIsEnabled(ListView->GetSelectedItem() != nullptr);
 }
 
 void UInventoryTradeModal::HandleQuantityChange(const int Quantity) const
@@ -92,22 +64,22 @@ void UInventoryTradeModal::HandleQuantityChange(const int Quantity) const
 
 void UInventoryTradeModal::HandleConfirm()
 {
-	if(TargetListBox->IsCurrentOptionValid())
+	if(const AStructure* Target = ListView->GetSelectedItem<AStructure>())
 	{
 		const int Quantity = QuantityInput->GetQuantity();
-		UStructureInventory* Target = Cast<AStructure>(TargetListBox->GetCurrentOption())->GetInventory();
+		UStructureInventory* Other = Target->GetInventory();
 		if(Quantity > 0)
 		{
 			Inventory->AddQuantity(Item, Quantity);
-			Target->RemoveQuantity(Item, Quantity);
+			Other->RemoveQuantity(Item, Quantity);
 		}
 		else
 		{
 			Inventory->RemoveQuantity(Item, Quantity);
-			Target->AddQuantity(Item, Quantity);
+			Other->AddQuantity(Item, Quantity);
 		}
 		Inventory->GetStructure()->GetOwningFaction()->ChangeBalance(-Quantity * Item->Value);
-		Target->GetStructure()->GetOwningFaction()->ChangeBalance(Quantity * Item->Value);
+		Target->GetOwningFaction()->ChangeBalance(Quantity * Item->Value);
 		DeactivateWidget();
 	}
 }

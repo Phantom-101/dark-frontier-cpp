@@ -16,19 +16,19 @@ class DARKFRONTIER_API UMath : public UBlueprintFunctionLibrary
 
 public:
 
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintPure)
 	static FORCEINLINE float Div(const float A, const float B, const float Fallback)
 	{
 		return B == 0 ? Fallback : A / B;
 	}
 
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintPure)
 	static FORCEINLINE float DivTo0(const float A, const float B)
 	{
 		return Div(A, B, 0);
 	}
 
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintPure)
 	static FORCEINLINE float DivTo1(const float A, const float B)
 	{
 		return Div(A, B, 1);

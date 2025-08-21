@@ -29,6 +29,4 @@ public:
 
 	virtual double GetViewDistance() override;
 
-	static FBoxSphereBounds GetLocalBounds(const AActor* Actor, bool OnlyCollidingComponents);
-	
 };

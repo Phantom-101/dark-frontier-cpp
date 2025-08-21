@@ -6,12 +6,6 @@
 #include "Structures/Structure.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Structures/StructureLayout.h"
-#include "Structures/StructurePartFilter.h"
-
-UStructureSlot::UStructureSlot()
-{
-	Filter = CreateDefaultSubobject<UStructurePartFilter>("Filter");
-}
 
 void UStructureSlot::BeginPlay()
 {
@@ -53,7 +47,8 @@ UStructureSlot* UStructureSlot::GetAttachedSlot() const
 
 bool UStructureSlot::CanAttach(const UStructureSlot* Other) const
 {
-	return Filter->IsCompatible(Other->GetOwningPart_Always()) && Other->Filter->IsCompatible(GetOwningPart_Always());
+	return Filter.GetPtr<FStructurePartFilter>()->Matches(Other->GetOwningPart_Always()) &&
+		Other->Filter.GetPtr<FStructurePartFilter>()->Matches(GetOwningPart_Always());
 }
 
 /**
@@ -123,7 +118,7 @@ bool UStructureSlot::TryDetach()
 	return true;
 }
 
-void UStructureSlot::MatchTransform(UStructureSlot* Other)
+void UStructureSlot::MatchTransform(UStructureSlot* Other) const
 {
 	// Match part xy with other slot xy
 	OwningPart->SetActorRotation(UKismetMathLibrary::MakeRotFromXY(-Other->GetForwardVector(), -Other->GetRightVector()));

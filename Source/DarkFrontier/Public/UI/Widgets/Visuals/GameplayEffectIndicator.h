@@ -34,11 +34,7 @@ protected:
 	UPROPERTY()
 	FActiveGameplayEffectHandle EffectHandle;
 
-public:
-
 	virtual void NativeOnListItemObjectSet(UObject* ListItemObject) override;
-
-protected:
 	
 	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
 	

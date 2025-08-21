@@ -29,7 +29,7 @@ void UGameplayEffectIndicator::NativeTick(const FGeometry& MyGeometry, float InD
 		{
 			DurationBar->SetPercent(1);
 		}
-		else if (CDO->DurationPolicy == EGameplayEffectDurationType::HasDuration)
+		else if(CDO->DurationPolicy == EGameplayEffectDurationType::HasDuration)
 		{
 			const FActiveGameplayEffect* Effect = EffectHandle.GetOwningAbilitySystemComponent()->GetActiveGameplayEffect(EffectHandle);
 			DurationBar->SetPercent(Effect->GetTimeRemaining(GetWorld()->GetTimeSeconds()) / Effect->GetDuration());

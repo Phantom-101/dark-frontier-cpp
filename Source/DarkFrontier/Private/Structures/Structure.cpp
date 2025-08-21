@@ -1,10 +1,10 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "Structures/Structure.h"
+#include "Macros.h"
 #include "Camera/CameraComponent.h"
-#include "Engine/DamageEvents.h"
-#include "Factions/Faction.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "Libraries/GameFunctionLibrary.h"
 #include "Structures/StructureAbilitySystemComponent.h"
 #include "Structures/StructureAbility.h"
 #include "Structures/StructureAuthoring.h"
@@ -187,42 +187,30 @@ void AStructure::SetOwningFaction(AFaction* InFaction)
 	OwningFaction = InFaction;
 }
 
-AStructure* AStructure::GetTarget() const
-{
-	return Target;
-}
-
-void AStructure::SetTarget(AStructure* InTarget)
-{
-	Target = InTarget;
-}
-
 bool AStructure::IsPlayer() const
 {
-	const APlayerController* PlayerController = GetWorld()->GetFirstPlayerController();
-	if(PlayerController == nullptr)
-	{
-		return false;
-	}
-
-	return PlayerController->GetPawn() == this;
+	return this == UGameFunctionLibrary::GetPlayerStructure(this);
 }
 
-bool AStructure::IsSelected() const
+FVector AStructure::GetTargetLocation()
 {
-	const APlayerController* PlayerController = GetWorld()->GetFirstPlayerController();
-	if(PlayerController == nullptr)
-	{
-		return false;
-	}
+	return GetActorLocation();
+}
 
-	const AStructure* Player = Cast<AStructure>(PlayerController->GetPawn());
-	if(Player == nullptr)
-	{
-		return false;
-	}
+bool AStructure::IsTargetable(AStructure* Structure) const
+{
+	// TODO check detection
+	return Structure->Location->GetSector() == Location->GetSector();
+}
 
-	return Player->Target == this;
+TSubclassOf<USelector> AStructure::GetSelectorClass() const
+{
+	return SelectorClass;
+}
+
+bool AStructure::ShouldShowSelector() const
+{
+	return !IsPlayer();
 }
 
 UStructureGameplay* AStructure::GetGameplay() const
@@ -235,39 +223,40 @@ UAbilitySystemComponent* AStructure::GetAbilitySystemComponent() const
 	return Gameplay->GetAbilitySystemComponent();
 }
 
-UTargetGroup* AStructure::GetTargetGroup() const
+float AStructure::TakeDamage(const float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
 {
-	return HullTargetGroup;
+	// This function should not be called as all damage should be routed through structure parts first 
+	return PropagateDamage(nullptr, DamageAmount, DamageEvent, EventInstigator, DamageCauser);
 }
 
-float AStructure::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
+float AStructure::PropagateDamage(AStructurePart* Part, float DamageAmount, FDamageEvent const& DamageEvent,
+	AController* EventInstigator, AActor* DamageCauser)
 {
 	// Calculate damage based on damage event type and fire event dispatchers
-	// The value provided to event listeners is the raw damage before resistances are applied
+	// The value provided to event listeners is the raw damage before multipliers are applied
 	DamageAmount = Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
-
-	if(DamageAmount <= 0)
-	{
-		return 0;
-	}
+	GUARD_RETURN(DamageAmount >= 0, 0);
 	
-	const UDamageType* DamageType = DamageEvent.DamageTypeClass ? DamageEvent.DamageTypeClass.GetDefaultObject() : GetDefault<UDamageType>();
-	const UStructureDamageType* StructureDamageType = Cast<UStructureDamageType>(DamageType);
+	const UStructureDamageType* DamageType = UStructureDamageType::GetDamageTypeFromEvent(DamageEvent);
 
-	const float ShieldMultiplier = StructureDamageType ? StructureDamageType->Evaluate(ShieldTargetGroup) : 1;
-	const float ShieldEquivalent = Gameplay->GetShield() / ShieldMultiplier;
+	const float ShieldEquivalent = Gameplay->GetShield() / DamageType->ShieldMultiplier;
 	const float ShieldAbsorbed = FMath::Min(DamageAmount, ShieldEquivalent);
-	const float ShieldDamage = ShieldAbsorbed * ShieldMultiplier;
+	const float ShieldDamage = ShieldAbsorbed * DamageType->ShieldMultiplier;
 	
 	Gameplay->SetShield(Gameplay->GetShield() - ShieldDamage);
 	DamageAmount -= ShieldAbsorbed;
 
-	const float HullMultiplier = StructureDamageType ? StructureDamageType->Evaluate(HullTargetGroup) : 1;
-	const float HullEquivalent = Gameplay->GetShield() / HullMultiplier;
+	const float HullEquivalent = Gameplay->GetShield() / DamageType->HullMultiplier;
 	const float HullAbsorbed = FMath::Min(DamageAmount, HullEquivalent);
-	const float HullDamage = HullAbsorbed * HullMultiplier;
+	const float HullDamage = HullAbsorbed * DamageType->HullMultiplier;
 	
 	Gameplay->SetHull(Gameplay->GetHull() - HullDamage);
+
+	if(IsValid(Part))
+	{
+		const float PartDamage = HullAbsorbed * DamageType->PartMultiplier;
+		Part->SetPartHealth(Part->GetPartHealth() - PartDamage);
+	}
 	
 	// Return the actual amount absorbed
 	return ShieldAbsorbed + HullAbsorbed;
@@ -308,9 +297,23 @@ void AStructure::SetRotateInput(const FVector InInput)
 	RotateInput = InInput.GetClampedToMaxSize(1);
 }
 
+UStaticMeshComponent* AStructure::GetStaticMesh() const
+{
+	return StaticMesh;
+}
+
 USpringArmComponent* AStructure::GetCameraSpringArm() const
 {
 	return SpringArm;
+}
+
+void AStructure::SetActorHiddenInGame(const bool bNewHidden)
+{
+	Super::SetActorHiddenInGame(bNewHidden);
+	for(AStructurePart* Part : Layout->GetParts())
+	{
+		Part->SetActorHiddenInGame(bNewHidden);
+	}
 }
 
 FVector AStructure::CalculateImpulse(const FVector& RawVelocities, const FVector& RawInput, const float MaxSpeed, const float Accel, const float DeltaTime) const

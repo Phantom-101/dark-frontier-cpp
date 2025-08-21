@@ -20,14 +20,11 @@ class DARKFRONTIER_API UItemList : public UObject
 protected:
 
 	UPROPERTY(BlueprintReadOnly, EditAnywhere)
-	TArray<FItemStack> Stacks;
+	TMap<TObjectPtr<UItem>, int> Quantities;
 
 public:
 	
 	FItemListChanged OnChanged;
-
-	UFUNCTION(BlueprintCallable)
-	TArray<FItemStack> GetStacks() const;
 
 	UFUNCTION(BlueprintCallable)
 	TArray<UItem*> GetItems() const;
@@ -70,9 +67,5 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	virtual bool RemoveList(UItemList* Other);
-
-private:
-
-	bool GetStack(UItem* Item, FItemStack& OutStack) const;
 
 };

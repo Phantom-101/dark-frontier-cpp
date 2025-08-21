@@ -8,3 +8,8 @@ void UInventoryEntry::Init(const AStructure* Structure) const
 {
 	NameText->SetText(FText::FromString(Structure->GetName()));
 }
+
+void UInventoryEntry::NativeOnListItemObjectSet(UObject* ListItemObject) {
+	IUserObjectListEntry::NativeOnListItemObjectSet(ListItemObject);
+	Init(Cast<AStructure>(ListItemObject));
+}

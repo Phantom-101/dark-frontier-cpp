@@ -5,7 +5,7 @@
 
 TSubclassOf<UStructureIndicator> UStructureIndicatorMapping::Map(const TSubclassOf<UStructureIndication>& IndicationClass) const
 {
-	for (UClass* Class = IndicationClass; Class->IsChildOf<UStructureIndication>(); Class = Class->GetSuperClass())
+	for(UClass* Class = IndicationClass; Class->IsChildOf<UStructureIndication>(); Class = Class->GetSuperClass())
 	{
 		TSubclassOf<UStructureIndication> Subclass = TSubclassOf<UStructureIndication>(Class);
 		if(Mapping.Contains(Subclass))

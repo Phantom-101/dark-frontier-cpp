@@ -4,28 +4,28 @@
 
 #define ATTRIBUTE_GETTER_PASSTHROUGH(ObjectName, AttributeName) \
 	UFUNCTION(BlueprintCallable) \
-	FORCEINLINE float Get##AttributeName() \
+	FORCEINLINE float Get##AttributeName() const \
 	{ \
 		return ObjectName->Get##AttributeName(); \
 	}
 
 #define ATTRIBUTE_GETTER_PASSTHROUGH_ALIAS(ObjectName, AttributeName, Alias) \
 	UFUNCTION(BlueprintCallable) \
-	FORCEINLINE float Get##Alias() \
+	FORCEINLINE float Get##Alias() const \
 	{ \
 		return ObjectName->Get##AttributeName(); \
 	}
 
 #define ATTRIBUTE_SETTER_PASSTHROUGH(ObjectName, AttributeName) \
 	UFUNCTION(BlueprintCallable) \
-	FORCEINLINE void Set##AttributeName(float NewVal) \
+	FORCEINLINE void Set##AttributeName(const float NewVal) \
 	{ \
 		return ObjectName->Set##AttributeName(NewVal); \
 	}
 
 #define ATTRIBUTE_SETTER_PASSTHROUGH_ALIAS(ObjectName, AttributeName, Alias) \
 	UFUNCTION(BlueprintCallable) \
-	FORCEINLINE void Set##Alias(float NewVal) \
+	FORCEINLINE void Set##Alias(const float NewVal) \
 	{ \
 		return ObjectName->Set##AttributeName(NewVal); \
 	}

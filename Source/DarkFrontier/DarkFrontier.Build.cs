@@ -8,8 +8,8 @@ public class DarkFrontier : ModuleRules
 	{
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 
-		PublicDependencyModuleNames.AddRange(new[] { "Core", "CoreUObject", "Engine", "InputCore", "UMG", "SlateCore", "GameplayAbilities" });
-		PrivateDependencyModuleNames.AddRange(new[] { "GameplayAbilities", "GameplayTags", "GameplayTasks", "EnhancedInput", "ProceduralMeshComponent", "Niagara" });
+		PublicDependencyModuleNames.AddRange(new[] { "Core", "CoreUObject", "Engine", "InputCore", "UMG", "SlateCore", "GameplayAbilities", "CommonUI", "StructUtils" });
+		PrivateDependencyModuleNames.AddRange(new[] { "Slate", "GameplayTags", "GameplayTasks", "EnhancedInput", "ProceduralMeshComponent", "Niagara" });
 
 		// Uncomment if you are using Slate UI
 		// PrivateDependencyModuleNames.AddRange(new string[] { "Slate", "SlateCore" });

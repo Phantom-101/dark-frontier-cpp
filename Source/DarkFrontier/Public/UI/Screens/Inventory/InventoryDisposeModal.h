@@ -12,7 +12,6 @@ class UInventory;
 struct FItemStack;
 class UCommonButtonBase;
 class UQuantityInput;
-class UListBox;
 
 /**
  * 

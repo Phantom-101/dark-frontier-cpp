@@ -3,10 +3,12 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "InstancedStruct.h"
 #include "ItemObject.h"
 #include "Engine/DataAsset.h"
 #include "Item.generated.h"
 
+struct FItemFragment;
 class UItemObject;
 /**
  * 
@@ -36,9 +38,20 @@ public:
 	UPROPERTY(BlueprintReadOnly, EditAnywhere)
 	float Value = 0;
 
+	UPROPERTY(BlueprintReadOnly, EditAnywhere)
+	TArray<TInstancedStruct<FItemFragment>> Fragments;
+
+	const TArray<TInstancedStruct<FItemFragment>>& GetFragments() const;
+
 	UItemObject* ToObject();
 	
 };
+
+// TODO move to cpp file
+inline const TArray<TInstancedStruct<FItemFragment>>& UItem::GetFragments() const
+{
+	return Fragments;
+}
 
 inline UItemObject* UItem::ToObject()
 {

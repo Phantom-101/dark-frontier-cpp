@@ -2,27 +2,23 @@
 
 #include "UI/Screens/Station/StationScreen.h"
 #include "CommonButtonBase.h"
+#include "Input/CommonBoundActionButton.h"
 #include "Structures/StructureController.h"
 #include "Structures/StructureLocation.h"
 #include "UI/Screens/GameScreens.h"
-#include "UI/Screens/Station/Trade/StationTradeScreen.h"
+#include "UI/Screens/Station/Refit/RefitScreen.h"
+#include "UI/Screens/Station/Repair/RepairScreen.h"
+#include "UI/Screens/Station/Trade/TradeScreen.h"
 #include "Widgets/CommonActivatableWidgetContainer.h"
 
-void UStationScreen::NativeConstruct()
+void UStationScreen::RegisterBindings()
 {
-	Super::NativeConstruct();
+	Super::RegisterBindings();
 
-	TradeButton->OnClicked().Clear();
-	TradeButton->OnClicked().AddUObject<UStationScreen>(this, &UStationScreen::HandleTrade);
-	UndockButton->OnClicked().Clear();
-	UndockButton->OnClicked().AddUObject<UStationScreen>(this, &UStationScreen::HandleUndock);
-}
-
-void UStationScreen::NativeOnActivated()
-{
-	Super::NativeOnActivated();
-
-	GetDesiredFocusTarget()->SetFocus();
+	TradeButton->SetRepresentedAction(BindScreen(TradeAction, TradeScreenClass.Get()));
+	RepairButton->SetRepresentedAction(BindScreen(RepairAction, RepairScreenClass.Get()));
+	RefitButton->SetRepresentedAction(BindScreen(RefitAction, RefitScreenClass.Get()));
+	UndockButton->SetRepresentedAction(BindFunction<UStationScreen>(UndockAction, &UStationScreen::UndockPlayer));
 }
 
 UWidget* UStationScreen::NativeGetDesiredFocusTarget() const
@@ -35,13 +31,7 @@ TOptional<FUIInputConfig> UStationScreen::GetDesiredInputConfig() const
 	return FUIInputConfig(ECommonInputMode::All, EMouseCaptureMode::NoCapture);
 }
 
-void UStationScreen::HandleTrade() const
-{
-	const AStructureController* Controller = Cast<AStructureController>(GetWorld()->GetFirstPlayerController());
-	Controller->GetGameScreens()->GetGameStack()->AddWidget<UStationTradeScreen>(TradeScreenClass.Get());
-}
-
-void UStationScreen::HandleUndock()
+void UStationScreen::UndockPlayer()
 {
 	const AStructureController* Controller = Cast<AStructureController>(GetWorld()->GetFirstPlayerController());
 	const AStructure* Player = Cast<AStructure>(Controller->GetPawn());

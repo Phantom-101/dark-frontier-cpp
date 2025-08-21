@@ -21,8 +21,9 @@ FVector UComponentViewTarget::GetViewLocation()
 		return Super::GetViewLocation();
 	}
 
-	// Use TransformVector here to get the view location offset relative to the actor location and not the world origin
-	return Component->GetComponentLocation() + Component->GetComponentTransform().TransformVector(Component->GetLocalBounds().Origin);
+	// Use TransformVector to get the view location origin offset in world space
+	const FVector Origin = Component->GetLocalBounds().Origin;
+	return Component->GetComponentLocation() + Component->GetComponentTransform().TransformVector(Origin);
 }
 
 FRotator UComponentViewTarget::GetViewRotation()

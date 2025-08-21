@@ -6,9 +6,9 @@
 #include "CommonActivatableWidget.h"
 #include "InventoryScreen.generated.h"
 
+class UListView;
 class UStructureInventory;
 class UItemStackEntry;
-class UListBox;
 class UInventoryTradeModal;
 class UInventoryTransferModal;
 struct FItemStack;
@@ -39,8 +39,8 @@ protected:
 	TObjectPtr<UCommonButtonBase> SwitchButton;
 
 	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
-	TObjectPtr<UListBox> ItemListBox;
-
+	TObjectPtr<UListView> ListView;
+	
 	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
 	TObjectPtr<UWidgetSwitcher> InfoSwitcher;
 
@@ -76,9 +76,6 @@ protected:
 
 	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
 	TObjectPtr<UCommonButtonBase> DisposeButton;
-
-	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly)
-	TSubclassOf<UItemStackEntry> ItemStackEntryClass;
 
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly)
 	TSubclassOf<UListBoxModal> ListBoxModalClass;
@@ -117,7 +114,7 @@ public:
 
 private:
 
-	void Rebuild();
+	void Rebuild() const;
 
 	void HandleSwitch();
 

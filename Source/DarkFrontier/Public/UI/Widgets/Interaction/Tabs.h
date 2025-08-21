@@ -6,10 +6,31 @@
 #include "CommonUserWidget.h"
 #include "Tabs.generated.h"
 
+class UListView;
+class UCommonActivatableWidgetStack;
+class UCommonActivatableWidget;
 class UTabEntry;
 class UWidgetSwitcher;
-class UListBox;
-class UTab;
+
+UCLASS(DefaultToInstanced, EditInlineNew)
+class DARKFRONTIER_API UTab : public UObject
+{
+	GENERATED_BODY()
+
+public:
+	
+	UPROPERTY(BlueprintReadOnly, EditAnywhere)
+	TSubclassOf<UCommonActivatableWidget> WidgetClass;
+
+	UPROPERTY(BlueprintReadOnly, EditAnywhere)
+	TObjectPtr<UTexture2D> Icon;
+
+	UPROPERTY(BlueprintReadOnly, EditAnywhere)
+	FText Name;
+
+	bool IsValid() const;
+	
+};
 
 /**
  * 
@@ -22,24 +43,18 @@ class DARKFRONTIER_API UTabs : public UCommonUserWidget
 protected:
 
 	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
-	TObjectPtr<UListBox> TabListBox;
+	TObjectPtr<UListView> ListView;
 	
 	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
-	TObjectPtr<UWidgetSwitcher> TabSwitcher;
+	TObjectPtr<UCommonActivatableWidgetStack> TabStack;
 
 	UPROPERTY(BlueprintReadOnly, EditAnywhere)
-	TSubclassOf<UTabEntry> TabEntryClass;
-
-	UPROPERTY(BlueprintReadOnly, EditAnywhere)
-	TArray<TSubclassOf<UTab>> TabClasses;
-
-	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly)
 	TArray<TObjectPtr<UTab>> Tabs;
 
 	virtual void NativeConstruct() override;
 
 private:
 
-	void HandleTabSelected(UObject* Tab) const;
+	void HandleSelect(UObject* Tab) const;
 	
 };

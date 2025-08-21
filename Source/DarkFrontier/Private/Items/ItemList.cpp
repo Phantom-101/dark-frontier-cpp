@@ -3,70 +3,52 @@
 #include "Items/ItemList.h"
 #include "Items/Item.h"
 
-TArray<FItemStack> UItemList::GetStacks() const
-{
-	return Stacks;
-}
-
 TArray<UItem*> UItemList::GetItems() const
 {
 	TArray<UItem*> Items;
-	for(const FItemStack& Stack : Stacks)
+	for(const TPair<TObjectPtr<UItem>, int>& Pair : Quantities)
 	{
-		Items.Add(Stack.Item);
+		Items.Add(Pair.Key);
 	}
 	return Items;
 }
 
 int UItemList::GetQuantity(UItem* Item) const
 {
-	check(Item != nullptr);
-	
-	FItemStack Stack;
-	if(GetStack(Item, Stack))
-	{
-		return Stack.Quantity;
-	}
-	return 0;
+	check(IsValid(Item));
+
+	return Quantities.Contains(Item) ? Quantities[Item] : 0;
 }
 
 int UItemList::HasQuantity(UItem* Item, const int Quantity) const
 {
-	check(Item != nullptr);
+	check(IsValid(Item));
 
 	if(!ensure(Quantity >= 0))
 	{
 		return true;
 	}
-	
+
 	return GetQuantity(Item) >= Quantity;
 }
 
 bool UItemList::SetQuantity(UItem* Item, const int Quantity)
 {
-	check(Item != nullptr);
+	check(IsValid(Item));
 
 	if(!ensure(Quantity >= 0))
 	{
 		return false;
 	}
-	
-	FItemStack Stack;
-	if(GetStack(Item, Stack))
-	{
-		Stacks.RemoveSwap(Stack);
-	}
-	if(Quantity > 0)
-	{
-		Stacks.Add(FItemStack(Item, Quantity));
-	}
+
+	Quantities.Add(Item, Quantity);
 	OnChanged.Broadcast();
 	return true;
 }
 
 bool UItemList::AddQuantity(UItem* Item, const int Quantity)
 {
-	check(Item != nullptr)
+	check(IsValid(Item));
 
 	if(!ensure(Quantity >= 0))
 	{
@@ -78,13 +60,13 @@ bool UItemList::AddQuantity(UItem* Item, const int Quantity)
 
 bool UItemList::RemoveQuantity(UItem* Item, const int Quantity)
 {
-	check(Item != nullptr)
+	check(Item != nullptr);
 
 	if(!ensure(Quantity >= 0))
 	{
 		return false;
 	}
-	
+
 	if(!ensure(HasQuantity(Item, Quantity)))
 	{
 		return false;
@@ -96,9 +78,9 @@ bool UItemList::RemoveQuantity(UItem* Item, const int Quantity)
 float UItemList::GetTotalVolume() const
 {
 	float Volume = 0;
-	for(const FItemStack& Stack : Stacks)
+	for(const TPair<TObjectPtr<UItem>, int>& Pair : Quantities)
 	{
-		Volume += Stack.Item->Volume * Stack.Quantity;
+		Volume += Pair.Key->Volume * Pair.Value;
 	}
 	return Volume;
 }
@@ -106,16 +88,16 @@ float UItemList::GetTotalVolume() const
 float UItemList::GetVolume(UItem* Item) const
 {
 	check(Item != nullptr);
-	
+
 	return GetQuantity(Item) * Item->Volume;
 }
 
 float UItemList::GetTotalMass() const
 {
 	float Mass = 0;
-	for(const FItemStack& Stack : Stacks)
+	for(const TPair<TObjectPtr<UItem>, int>& Pair : Quantities)
 	{
-		Mass += Stack.Item->Mass * Stack.Quantity;
+		Mass += Pair.Key->Mass * Pair.Value;
 	}
 	return Mass;
 }
@@ -123,17 +105,17 @@ float UItemList::GetTotalMass() const
 float UItemList::GetMass(UItem* Item) const
 {
 	check(Item != nullptr);
-	
+
 	return GetQuantity(Item) * Item->Mass;
 }
 
 bool UItemList::HasList(UItemList* Other) const
 {
 	check(Other != nullptr);
-	
-	for(const FItemStack& Stack : Other->Stacks)
+
+	for(const TPair<TObjectPtr<UItem>, int>& Pair : Other->Quantities)
 	{
-		if(GetQuantity(Stack.Item) < Stack.Quantity)
+		if(GetQuantity(Pair.Key) < Pair.Value)
 		{
 			return false;
 		}
@@ -144,11 +126,11 @@ bool UItemList::HasList(UItemList* Other) const
 bool UItemList::SetList(UItemList* Other)
 {
 	check(Other != nullptr);
-	
-	Stacks.Empty();
-	for(const FItemStack& Stack : Other->Stacks)
+
+	Quantities.Empty();
+	for(const TPair<TObjectPtr<UItem>, int>& Pair : Other->Quantities)
 	{
-		Stacks.Add(Stack);
+		Quantities.Add(Pair);
 	}
 	OnChanged.Broadcast();
 	return true;
@@ -158,10 +140,12 @@ bool UItemList::AddList(UItemList* Other)
 {
 	check(Other != nullptr);
 
-	for(const FItemStack& Stack : Other->Stacks)
+	const TMap<TObjectPtr<UItem>, int> Restore = Quantities;
+	for(const TPair<TObjectPtr<UItem>, int>& Pair : Other->Quantities)
 	{
-		if(!AddQuantity(Stack.Item, Stack.Quantity))
+		if(!AddQuantity(Pair.Key, Pair.Value))
 		{
+			Quantities = Restore;
 			return false;
 		}
 	}
@@ -177,27 +161,12 @@ bool UItemList::RemoveList(UItemList* Other)
 		return false;
 	}
 
-	for(const FItemStack& Stack : Other->Stacks)
+	for(const TPair<TObjectPtr<UItem>, int>& Pair : Other->Quantities)
 	{
-		if(!RemoveQuantity(Stack.Item, Stack.Quantity))
+		if(!RemoveQuantity(Pair.Key, Pair.Value))
 		{
 			return false;
 		}
 	}
 	return true;
-}
-
-bool UItemList::GetStack(UItem* Item, FItemStack& OutStack) const
-{
-	check(Item != nullptr);
-	
-	for(const FItemStack& Stack : Stacks)
-	{
-		if(Stack.Item == Item)
-		{
-			OutStack = Stack;
-			return true;
-		}
-	}
-	return false;
 }

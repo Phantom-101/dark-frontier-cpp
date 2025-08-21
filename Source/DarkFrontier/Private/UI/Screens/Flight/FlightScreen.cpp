@@ -6,10 +6,12 @@
 #include "CommonButtonBase.h"
 #include "CommonListView.h"
 #include "Log.h"
+#include "Macros.h"
 #include "Blueprint/WidgetLayoutLibrary.h"
 #include "Components/Image.h"
 #include "Components/CanvasPanelSlot.h"
 #include "Components/ScrollBox.h"
+#include "Sectors/Sector.h"
 #include "Structures/Structure.h"
 #include "Structures/StructureController.h"
 #include "Structures/StructureDock.h"
@@ -19,7 +21,7 @@
 #include "Structures/StructurePart.h"
 #include "UI/Screens/Flight/Controls/StructurePartControls.h"
 #include "UI/Screens/Flight/Controls/StructurePartControlsMapping.h"
-#include "UI/Screens/Flight/Selectors/StructureSelectors.h"
+#include "UI/Screens/Flight/Selectors/SelectorCanvas.h"
 #include "UI/Widgets/Visuals/Arc.h"
 #include "UI/Widgets/Visuals/CustomGameplayEffectUIData.h"
 #include "UI/Widgets/Visuals/GameplayEffectIndicatorObject.h"
@@ -43,34 +45,34 @@ void UFlightScreen::NativeConstruct()
 	DockButton->OnClicked().AddUObject<UFlightScreen>(this, &UFlightScreen::HandleDock);
 }
 
+void UFlightScreen::NativeOnActivated()
+{
+	Super::NativeOnActivated();
+}
+
 void UFlightScreen::NativeTick(const FGeometry& MyGeometry, const float InDeltaTime)
 {  
 	Super::NativeTick(MyGeometry, InDeltaTime);
 
-	if(!IsValid(GetOwningPlayerPawn()))
-	{
-		UE_LOG(LogDarkFrontier, Warning, TEXT("Game UI pawn is invalid, skipping tick"));
-		return;
-	}
+	const AStructure* Structure = Cast<AStructure>(GetOwningPlayerPawn());
+	GUARD(IsValid(Structure));
 
+	// Draw stat arcs
+	const UStructureGameplay* Gameplay = Structure->GetGameplay();
+	HullArc->SetLength(Gameplay->GetHull() / Gameplay->GetMaxHull() * 0.25);
+	ShieldArc->SetLength(Gameplay->GetShield() / Gameplay->GetMaxShield() * 0.2);
+	EnergyArc->SetLength(Gameplay->GetEnergy() / Gameplay->GetMaxEnergy() * 0.25);
+	// TODO replace with actual speed
+	SpeedArc->SetLength(1 * 0.2);
+
+	// Move turn indicator
 	if(const AStructureController* PlayerController = Cast<AStructureController>(GetWorld()->GetFirstPlayerController()))
 	{
-		if(const AStructure* Structure = Cast<AStructure>(PlayerController->GetPawn()))
-		{
-			UStructureGameplay* Gameplay = Structure->GetGameplay();
-			
-			HullArc->SetLength(Gameplay->GetHull() / Gameplay->GetMaxHull() * 0.25);
-			ShieldArc->SetLength(Gameplay->GetShield() / Gameplay->GetMaxShield() * 0.2);
-			EnergyArc->SetLength(Gameplay->GetEnergy() / Gameplay->GetMaxEnergy() * 0.25);
-			// TODO replace with actual speed
-			SpeedArc->SetLength(1 * 0.2);
-		}
-		
 		const FVector ScaledRotateInput = PlayerController->GetTurnIndicatorOffset() * 200;
 		UWidgetLayoutLibrary::SlotAsCanvasSlot(TurnIndicator)->SetPosition(FVector2D(ScaledRotateInput.Z, ScaledRotateInput.Y));
 	}
 
-	if(const AStructure* PlayerStructure = Cast<AStructure>(GetOwningPlayerPawn()))
+	// Update gameplay effect list
 	{
 		TArray<FActiveGameplayEffectHandle> Existing;
 		TArray<UGameplayEffectIndicatorObject*> ToRemove;
@@ -92,7 +94,7 @@ void UFlightScreen::NativeTick(const FGeometry& MyGeometry, const float InDeltaT
 			GameplayEffectList->RemoveItem(Obj);
 		}
 		
-		for(FActiveGameplayEffectHandle Handle : PlayerStructure->GetAbilitySystemComponent()->GetActiveGameplayEffects().GetAllActiveEffectHandles())
+		for(FActiveGameplayEffectHandle Handle : Structure->GetAbilitySystemComponent()->GetActiveGameplayEffects().GetAllActiveEffectHandles())
 		{
 			if(!Existing.Contains(Handle) && Cast<UCustomGameplayEffectUIData>(Handle.GetOwningAbilitySystemComponent()->GetGameplayEffectCDO(Handle)->UIData))
 			{
@@ -103,10 +105,10 @@ void UFlightScreen::NativeTick(const FGeometry& MyGeometry, const float InDeltaT
 		}
 	}
 
-	Selectors->UpdateSelectors();
+	// Update targets
+	Selectors->SetTargets(Structure->GetLocation()->GetSector()->GetTargets());
 
-	const AStructure* PlayerStructure = Cast<AStructure>(GetOwningPlayerPawn());
-	if(IsValid(PlayerStructure))
+	// Update part controls
 	{
 		TArray<AStructurePart*> Existing;
 		for(UWidget* Widget : PartControls->GetAllChildren())
@@ -130,7 +132,7 @@ void UFlightScreen::NativeTick(const FGeometry& MyGeometry, const float InDeltaT
 			}
 		}
 
-		for(AStructurePart* Part : PlayerStructure->GetLayout()->GetParts())
+		for(AStructurePart* Part : Structure->GetLayout()->GetParts())
 		{
 			if(!Existing.Contains(Part))
 			{
@@ -155,15 +157,16 @@ void UFlightScreen::NativeTick(const FGeometry& MyGeometry, const float InDeltaT
 
 void UFlightScreen::HandleDock() const
 {
+	const AStructureController* Controller = Cast<AStructureController>(GetOwningPlayer());
 	const AStructure* PlayerStructure = Cast<AStructure>(GetOwningPlayerPawn());
-	if(IsValid(PlayerStructure) && IsValid(PlayerStructure->GetTarget()))
+	GUARD(IsValid(Controller) && IsValid(PlayerStructure));
+	const AStructure* TargetStructure = Cast<AStructure>(Controller->GetSelectTarget().GetObject());
+	GUARD(IsValid(TargetStructure));
+	for(UStructureDock* Dock : TargetStructure->GetLayout()->GetFacilities<UStructureDock>())
 	{
-		for(UStructureDock* Dock : PlayerStructure->GetTarget()->GetLayout()->GetFacilities<UStructureDock>())
+		if(PlayerStructure->GetLocation()->EnterDock(Dock))
 		{
-			if(PlayerStructure->GetLocation()->EnterDock(Dock))
-			{
-				break;
-			}
+			break;
 		}
 	}
 }

@@ -35,6 +35,6 @@ public:
 	TArray<UItem*> GetItemList();
 
 	UFUNCTION(BlueprintCallable)
-	UTradeParameters* GetTradeParameters();
+	const UTradeParameters* GetTradeParameters();
 	
 };
