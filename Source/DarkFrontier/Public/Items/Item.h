@@ -38,7 +38,7 @@ public:
 	UPROPERTY(BlueprintReadOnly, EditAnywhere)
 	float Value = 0;
 
-	UPROPERTY(BlueprintReadOnly, EditAnywhere)
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, meta=(BaseStruct="ItemFragment", ExcludeBaseStruct))
 	TArray<TInstancedStruct<FItemFragment>> Fragments;
 
 	const TArray<TInstancedStruct<FItemFragment>>& GetFragments() const;

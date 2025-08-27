@@ -25,7 +25,7 @@ void USelector::Init(const TScriptInterface<ITargetable>& InTarget)
 	Target = InTarget;
 }
 
-void USelector::Tick(const FGeometry& CanvasGeometry)
+void USelector::UpdateSelector(const FGeometry& CanvasGeometry)
 {
 	GUARD(IsValid(Target.GetObject()));
 
@@ -41,7 +41,7 @@ void USelector::Tick(const FGeometry& CanvasGeometry)
 	SetVisibility(Target->ShouldShowSelector() ? ESlateVisibility::SelfHitTestInvisible: ESlateVisibility::Collapsed);
 }
 
-void USelector::Select()
+void USelector::Select() const
 {
 	AStructureController* Controller = Cast<AStructureController>(GetWorld()->GetFirstPlayerController());
 	if(IsValid(Target.GetObject()) && IsValid(Controller))

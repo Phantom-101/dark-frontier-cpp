@@ -29,6 +29,7 @@ public:
 
 	virtual TSubclassOf<USelector> GetSelectorClass() const = 0;
 
+	// TODO consider moving to selector widget class
 	virtual bool ShouldShowSelector() const = 0;
 
 	bool IsSelectedByPlayer() const;

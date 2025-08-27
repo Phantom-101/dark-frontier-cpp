@@ -18,9 +18,8 @@ class DARKFRONTIER_API AAsteroid : public AActor, public ITargetable
 
 protected:
 
-	// TODO support for multiple item types
 	UPROPERTY(BlueprintReadOnly, EditAnywhere)
-	TObjectPtr<UItem> Composition;
+	TMap<TObjectPtr<UItem>, float> Composition;
 
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly)
 	int MaxAmount = 1000;
@@ -40,9 +39,15 @@ protected:
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly)
 	TSubclassOf<USelector> SelectorClass;
 
+	virtual void BeginPlay() override;
+
+	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
+
 public:
 
-	UItem* GetComposition() const;
+	const TMap<TObjectPtr<UItem>, float>& GetComposition() const;
+
+	float GetMaxWeight() const;
 
 	int GetMaxAmount() const;
 
@@ -61,5 +66,7 @@ public:
 protected:
 
 	void CreatePod();
+
+	UItem* RandomItem() const;
 
 };
