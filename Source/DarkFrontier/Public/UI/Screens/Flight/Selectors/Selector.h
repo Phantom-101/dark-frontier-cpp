@@ -31,10 +31,10 @@ public:
 
 	virtual void Init(const TScriptInterface<ITargetable>& InTarget);
 
-	virtual void Tick(const FGeometry& CanvasGeometry);
+	virtual void UpdateSelector(const FGeometry& CanvasGeometry);
 
 private:
 
-	void Select();
+	void Select() const;
 	
 };

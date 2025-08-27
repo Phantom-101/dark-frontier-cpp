@@ -24,7 +24,13 @@ protected:
 	TObjectPtr<UMultiArc> CompositionArcs;
 
 	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly)
-	TMap<TObjectPtr<UItem>, TObjectPtr<UArc>> Arcs;
+	TArray<TObjectPtr<UItem>> Items;
+	
+	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly)
+	TArray<TObjectPtr<UArc>> Arcs;
+
+	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly)
+	float MaxWeight = 0;
 
 public:
 
@@ -32,6 +38,6 @@ public:
 
 protected:
 
-	virtual void Tick(const FGeometry& CanvasGeometry) override;
+	virtual void UpdateSelector(const FGeometry& CanvasGeometry) override;
 	
 };

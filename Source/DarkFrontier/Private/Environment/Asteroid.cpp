@@ -2,14 +2,44 @@
 
 #include "Environment/Asteroid.h"
 #include "Macros.h"
+#include "Items/Item.h"
 #include "Items/ItemPod.h"
+#include "Sectors/Sector.h"
 #include "Structures/Structure.h"
 #include "Structures/StructureDamageType.h"
 #include "Structures/StructureLocation.h"
 
-UItem* AAsteroid::GetComposition() const
+void AAsteroid::BeginPlay()
+{
+	Super::BeginPlay();
+
+	if(IsValid(Sector))
+	{
+		Sector->RegisterAsteroid(this);
+	}
+}
+
+void AAsteroid::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+	Super::EndPlay(EndPlayReason);
+
+	if(IsValid(Sector))
+	{
+		Sector->UnregisterAsteroid(this);
+	}
+}
+
+const TMap<TObjectPtr<UItem>, float>& AAsteroid::GetComposition() const
 {
 	return Composition;
+}
+
+float AAsteroid::GetMaxWeight() const
+{
+	return Algo::TransformAccumulate(Composition, [](const TTuple<TObjectPtr<UItem>, float>& Pair)
+	{
+		return Pair.Value;
+	}, 0);
 }
 
 int AAsteroid::GetMaxAmount() const
@@ -64,7 +94,7 @@ float AAsteroid::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent,
 	}
 
 	// Fractional part used as probability
-	const float Rand = FMath::RandRange(0, 1);
+	const float Rand = FMath::RandRange(0.f, 1.f);
 	if(Rand <= FMath::Frac(Amount))
 	{
 		CreatePod();
@@ -78,8 +108,28 @@ void AAsteroid::CreatePod()
 	GUARD(DepletedAmount < MaxAmount);
 	DepletedAmount++;
 
+	UItem* Item = RandomItem();
+	GUARD(IsValid(Item));
+
 	FActorSpawnParameters Parameters;
 	Parameters.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
 	AItemPod* Pod = GetWorld()->SpawnActor<AItemPod>(PodClass, GetActorLocation(), GetActorRotation(), Parameters);
-	Pod->Init(Composition, 1);
+	Pod->Init(Item, 1);
+}
+
+UItem* AAsteroid::RandomItem() const
+{
+	const float TotalWeight = GetMaxWeight();
+	GUARD_RETURN(TotalWeight > 0, nullptr);
+	const float Rand = FMath::RandRange(0.f, TotalWeight);
+	float Threshold = 0;
+	for(const TTuple<TObjectPtr<UItem>, float>& Pair : Composition)
+	{
+		Threshold += Pair.Value;
+		if(Rand <= Threshold && Pair.Value != 0)
+		{
+			return Pair.Key;
+		}
+	}
+	return nullptr;
 }
