@@ -18,6 +18,7 @@
 #include "Structures/Indications/HullIndication.h"
 #include "Structures/Indications/SpeedIndication.h"
 #include "Structures/Indications/StructureIndication.h"
+#include "UI/Screens/Flight/Selectors/StructureSelector.h"
 
 AStructure::AStructure()
 {
@@ -192,11 +193,6 @@ bool AStructure::IsPlayer() const
 	return this == UGameFunctionLibrary::GetPlayerStructure(this);
 }
 
-FVector AStructure::GetTargetLocation()
-{
-	return GetActorLocation();
-}
-
 bool AStructure::IsTargetable(AStructure* Structure) const
 {
 	// TODO check detection
@@ -205,12 +201,7 @@ bool AStructure::IsTargetable(AStructure* Structure) const
 
 TSubclassOf<USelector> AStructure::GetSelectorClass() const
 {
-	return SelectorClass;
-}
-
-bool AStructure::ShouldShowSelector() const
-{
-	return !IsPlayer();
+	return SelectorClass.Get();
 }
 
 UStructureGameplay* AStructure::GetGameplay() const

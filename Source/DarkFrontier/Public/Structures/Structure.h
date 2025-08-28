@@ -10,6 +10,7 @@
 #include "Objects/Targetable.h"
 #include "Structure.generated.h"
 
+class UStructureSelector;
 class UTargetGroup;
 class UStructureInventory;
 class UItem;
@@ -78,7 +79,7 @@ protected:
 	TObjectPtr<AFaction> OwningFaction;
 
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category="Combat")
-	TSubclassOf<USelector> SelectorClass;
+	TSubclassOf<UStructureSelector> SelectorClass;
 
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere)
 	TObjectPtr<UStructureGameplay> Gameplay;
@@ -146,13 +147,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category="Combat")
 	bool IsPlayer() const;
 
-	virtual FVector GetTargetLocation() override;
-
 	virtual bool IsTargetable(AStructure* Structure) const override;
 
 	virtual TSubclassOf<USelector> GetSelectorClass() const override;
-
-	virtual bool ShouldShowSelector() const override;
 
 	UFUNCTION(BlueprintCallable)
 	UStructureGameplay* GetGameplay() const;

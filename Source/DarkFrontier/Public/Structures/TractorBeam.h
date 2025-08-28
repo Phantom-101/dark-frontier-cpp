@@ -25,6 +25,24 @@ protected:
 	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly)
 	TScriptInterface<ITargetable> Target;
 
+public:
+
+	ATractorBeam();
+
+	bool IsActivated() const;
+
+	virtual bool CanActivate(const TScriptInterface<ITargetable>& InTarget) const override;
+
+protected:
+
+	virtual void OnActivate(const TScriptInterface<ITargetable>& InTarget) override;
+
+public:
+
+	bool CanDeactivate() const;
+
+	void TryDeactivate();
+
 	virtual void Tick(float DeltaSeconds) override;
 
 private:

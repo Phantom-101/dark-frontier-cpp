@@ -15,12 +15,12 @@ APulseTurret::APulseTurret()
 	PrimaryActorTick.bCanEverTick = true;
 }
 
-bool APulseTurret::CanActivate(const TScriptInterface<ITargetable>& Target)
+bool APulseTurret::CanActivate(const TScriptInterface<ITargetable>& InTarget) const
 {
-	return IsValid(Target.GetObject()) && Target.GetObject()->IsA<AStructure>() && OwningStructure->GetGameplay()->GetEnergy() >= EnergyCost;
+	return IsValid(InTarget.GetObject()) && InTarget.GetObject()->IsA<AStructure>() && OwningStructure->GetGameplay()->GetEnergy() >= EnergyCost;
 }
 
-void APulseTurret::OnActivate(const TScriptInterface<ITargetable>& Target)
+void APulseTurret::OnActivate(const TScriptInterface<ITargetable>& InTarget)
 {
 	// Apply energy cost
 	UStructureGameplay* Gameplay = OwningStructure->GetGameplay();
@@ -28,7 +28,7 @@ void APulseTurret::OnActivate(const TScriptInterface<ITargetable>& Target)
 
 	// Save target
 	// TODO make sure target does not change before timer completes
-	SavedTarget = Cast<AStructure>(Target.GetObject());
+	SavedTarget = Cast<AStructure>(InTarget.GetObject());
 
 	// Apply damage after delay is completed
 	GetWorldTimerManager().SetTimer(DelayHandle, this, &APulseTurret::OnDelayComplete, Delay);

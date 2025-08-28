@@ -3,6 +3,7 @@
 #include "UI/Screens/Flight/Controls/PulseTurretControls.h"
 #include "CommonButtonBase.h"
 #include "Macros.h"
+#include "Libraries/GameFunctionLibrary.h"
 #include "Structures/PulseTurret.h"
 #include "Structures/StructureController.h"
 
@@ -21,7 +22,7 @@ void UPulseTurretControls::NativeTick(const FGeometry& MyGeometry, float InDelta
 	const AStructureController* Controller = Cast<AStructureController>(GetOwningPlayer());
 	if(IsValid(Controller))
 	{
-		APulseTurret* Turret = Cast<APulseTurret>(Part);
+		const APulseTurret* Turret = Cast<APulseTurret>(Part);
 		ActivateButton->SetIsEnabled(IsValid(Turret) && Turret->CanActivate(Controller->GetSelectTarget()));
 	}
 	else
@@ -40,13 +41,10 @@ bool UPulseTurretControls::TryInitialize(AStructurePart* InPart)
 	return Super::TryInitialize(InPart);
 }
 
-void UPulseTurretControls::OnClicked()
+void UPulseTurretControls::OnClicked() const
 {
-	const AStructureController* Controller = Cast<AStructureController>(GetOwningPlayer());
-	GUARD(IsValid(Controller));
+	const AStructureController* Controller = UGameFunctionLibrary::GetPlayerController(this);
 	APulseTurret* Turret = Cast<APulseTurret>(Part);
-	if(IsValid(Turret))
-	{
-		Turret->TryActivate(Controller->GetSelectTarget());
-	}
+	GUARD(IsValid(Controller) && IsValid(Turret));
+	Turret->TryActivate(Controller->GetSelectTarget());
 }

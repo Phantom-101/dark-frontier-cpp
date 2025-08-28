@@ -6,8 +6,10 @@
 #include "Kismet/BlueprintFunctionLibrary.h"
 #include "GameFunctionLibrary.generated.h"
 
+class ITargetable;
 class AStructure;
 class AStructureController;
+
 /**
  * 
  */
@@ -23,5 +25,8 @@ public:
 
 	UFUNCTION(BlueprintPure)
 	static AStructure* GetPlayerStructure(const UObject* WorldContext);
+
+	UFUNCTION(BlueprintPure)
+	static bool IsSelected(const TScriptInterface<ITargetable>& Targetable);
 	
 };

@@ -7,6 +7,47 @@
 #include "Structures/Structure.h"
 #include "Structures/StructureInventory.h"
 
+ATractorBeam::ATractorBeam()
+{
+	PrimaryActorTick.bCanEverTick = true;
+}
+
+bool ATractorBeam::IsActivated() const
+{
+	return IsValid(Target.GetObject());
+}
+
+bool ATractorBeam::CanActivate(const TScriptInterface<ITargetable>& InTarget) const
+{
+	GUARD_RETURN(IsValid(InTarget.GetObject()), false);
+	if(InTarget.GetObject()->IsA<AItemPod>())
+	{
+		const AItemPod* ItemPod = Cast<AItemPod>(InTarget.GetObject());
+		return (ItemPod->GetActorLocation() - GetActorLocation()).SizeSquared() <= TractorRange * TractorRange;
+	}
+	if(InTarget.GetObject()->IsA<AStructure>())
+	{
+		const AStructure* Structure = Cast<AStructure>(InTarget.GetObject());
+		return (Structure->GetActorLocation() - GetActorLocation()).SizeSquared() <= TractorRange * TractorRange;
+	}
+	return false;
+}
+
+void ATractorBeam::OnActivate(const TScriptInterface<ITargetable>& InTarget)
+{
+	Target = InTarget;
+}
+
+bool ATractorBeam::CanDeactivate() const
+{
+	return IsActivated();
+}
+
+void ATractorBeam::TryDeactivate()
+{
+	Target = nullptr;
+}
+
 void ATractorBeam::Tick(const float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
@@ -18,8 +59,8 @@ void ATractorBeam::Tick(const float DeltaSeconds)
 		ItemPod->GetStaticMesh()->AddForce(GetForce(ItemPod->GetActorLocation()));
 		const FVector Delta = GetActorLocation() - ItemPod->GetActorLocation();
 		const float Radius = UBoundsFunctionLibrary::GetLocalBounds(GetOwningStructure(), true).SphereRadius;
-		const float FinalCollectionRange = Radius + CollectionRange;
-		if(Delta.SizeSquared() <= FinalCollectionRange * FinalCollectionRange)
+		const float FinalRange = Radius + CollectionRange;
+		if(Delta.SizeSquared() <= FinalRange * FinalRange)
 		{
 			ItemPod->AddToInventory(GetOwningStructure()->GetInventory());
 			Target = nullptr;

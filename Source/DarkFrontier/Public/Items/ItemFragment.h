@@ -21,7 +21,7 @@ struct DARKFRONTIER_API FItemColor : public FItemFragment
 	GENERATED_BODY()
 
 	UPROPERTY(EditAnywhere)
-	FLinearColor Color;
+	FLinearColor Color = FLinearColor::White;
 };
 
 USTRUCT(BlueprintType)
@@ -30,10 +30,10 @@ struct DARKFRONTIER_API FAmmo : public FItemFragment
 	GENERATED_BODY()
 
 	UPROPERTY(EditAnywhere)
-	float Damage;
+	float Damage = 0;
 
 	UPROPERTY(EditAnywhere)
-	float ReloadTime;
+	float ReloadTime = 0;
 
 	UPROPERTY(EditAnywhere)
 	TArray<TSubclassOf<AStructurePart>> CompatibleParts;

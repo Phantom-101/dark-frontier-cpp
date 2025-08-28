@@ -9,7 +9,7 @@
 /**
  * 
  */
-UCLASS()
+UCLASS(Abstract)
 class DARKFRONTIER_API UPulseTurretControls : public UStructurePartControls
 {
 	GENERATED_BODY()
@@ -27,6 +27,6 @@ protected:
 
 private:
 
-	void OnClicked();
+	void OnClicked() const;
 	
 };

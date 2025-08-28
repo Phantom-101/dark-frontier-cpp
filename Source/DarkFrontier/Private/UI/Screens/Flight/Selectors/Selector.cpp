@@ -6,6 +6,7 @@
 #include "Blueprint/SlateBlueprintLibrary.h"
 #include "Blueprint/WidgetLayoutLibrary.h"
 #include "Components/CanvasPanelSlot.h"
+#include "Libraries/GameFunctionLibrary.h"
 #include "Objects/Targetable.h"
 #include "Structures/StructureController.h"
 
@@ -25,20 +26,21 @@ void USelector::Init(const TScriptInterface<ITargetable>& InTarget)
 	Target = InTarget;
 }
 
-void USelector::UpdateSelector(const FGeometry& CanvasGeometry)
+void USelector::Update(const FGeometry& CanvasGeometry)
 {
 	GUARD(IsValid(Target.GetObject()));
 
+	SetRenderScale(UGameFunctionLibrary::IsSelected(Target) ? FVector2D(1.5) : FVector2D(1));
+}
+
+void USelector::Position(const FGeometry& CanvasGeometry, const FVector& WorldPosition)
+{
 	UCanvasPanelSlot* PanelSlot = UWidgetLayoutLibrary::SlotAsCanvasSlot(this);
 	FVector2D ScreenPos;
-	GetOwningPlayer()->ProjectWorldLocationToScreen(Target->GetTargetLocation(), ScreenPos);
+	GetOwningPlayer()->ProjectWorldLocationToScreen(WorldPosition, ScreenPos);
 	FVector2D LocalPos;
 	USlateBlueprintLibrary::ScreenToWidgetLocal(this, CanvasGeometry, ScreenPos, LocalPos);
 	PanelSlot->SetPosition(LocalPos);
-	
-	SetRenderScale(Target->IsSelectedByPlayer() ? FVector2D(1.5) : FVector2D(1));
-	
-	SetVisibility(Target->ShouldShowSelector() ? ESlateVisibility::SelfHitTestInvisible: ESlateVisibility::Collapsed);
 }
 
 void USelector::Select() const

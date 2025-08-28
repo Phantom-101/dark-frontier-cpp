@@ -6,6 +6,7 @@
 #include "GameFramework/Actor.h"
 #include "Sector.generated.h"
 
+class AItemPod;
 class AAsteroid;
 class ITargetable;
 class AStructure;
@@ -28,6 +29,9 @@ protected:
 	TArray<TObjectPtr<AAsteroid>> Asteroids;
 
 	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly)
+	TArray<TObjectPtr<AItemPod>> ItemPods;
+
+	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly)
 	TArray<TScriptInterface<ITargetable>> Targets;
 
 public:
@@ -45,5 +49,11 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void UnregisterAsteroid(AAsteroid* Asteroid);
+
+	UFUNCTION(BlueprintCallable)
+	void RegisterItemPod(AItemPod* ItemPod);
+	
+	UFUNCTION(BlueprintCallable)
+	void UnregisterItemPod(AItemPod* ItemPod);
 	
 };

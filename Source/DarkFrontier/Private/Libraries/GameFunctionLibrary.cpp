@@ -15,3 +15,10 @@ AStructure* UGameFunctionLibrary::GetPlayerStructure(const UObject* WorldContext
 	GUARD_RETURN(IsValid(Controller), nullptr);
 	return Cast<AStructure>(Controller->GetPawn());
 }
+
+bool UGameFunctionLibrary::IsSelected(const TScriptInterface<ITargetable>& Targetable)
+{
+	const AStructureController* PlayerController = GetPlayerController(Targetable.GetObject());
+	GUARD_RETURN(IsValid(PlayerController), false);
+	return PlayerController->GetSelectTarget() == Targetable;
+}

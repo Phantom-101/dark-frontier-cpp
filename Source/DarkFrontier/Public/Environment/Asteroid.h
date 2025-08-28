@@ -7,6 +7,7 @@
 #include "Objects/Targetable.h"
 #include "Asteroid.generated.h"
 
+class UAsteroidSelector;
 class AItemPod;
 class ASector;
 class UItem;
@@ -37,7 +38,7 @@ protected:
 	TObjectPtr<ASector> Sector;
 
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly)
-	TSubclassOf<USelector> SelectorClass;
+	TSubclassOf<UAsteroidSelector> SelectorClass;
 
 	virtual void BeginPlay() override;
 
@@ -53,13 +54,9 @@ public:
 
 	int GetDepletedAmount() const;
 
-	virtual FVector GetTargetLocation() override;
-
 	virtual bool IsTargetable(AStructure* Structure) const override;
 
 	virtual TSubclassOf<USelector> GetSelectorClass() const override;
-
-	virtual bool ShouldShowSelector() const override;
 
 	virtual float TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
 

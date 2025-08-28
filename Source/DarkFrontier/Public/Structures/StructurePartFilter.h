@@ -24,7 +24,7 @@ struct DARKFRONTIER_API FStructurePartFilter_MatchesAll : public FStructurePartF
 {
 	GENERATED_BODY()
 
-	UPROPERTY(EditAnywhere, meta=(BaseStruct="StructurePartFilter"))
+	UPROPERTY(EditAnywhere, meta=(BaseStruct="/Script/DarkFrontier.StructurePartFilter"))
 	TArray<TInstancedStruct<FStructurePartFilter>> Filters;
 
 	virtual bool Matches(const AStructurePart* Other) const override;
@@ -35,7 +35,7 @@ struct DARKFRONTIER_API FStructurePartFilter_MatchesAny : public FStructurePartF
 {
 	GENERATED_BODY()
 
-	UPROPERTY(EditAnywhere, meta=(BaseStruct="StructurePartFilter"))
+	UPROPERTY(EditAnywhere, meta=(BaseStruct="/Script/DarkFrontier.StructurePartFilter"))
 	TArray<TInstancedStruct<FStructurePartFilter>> Filters;
 
 	virtual bool Matches(const AStructurePart* Other) const override;
