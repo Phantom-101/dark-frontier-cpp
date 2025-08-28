@@ -36,8 +36,6 @@ public:
 
 	virtual void Init(const TScriptInterface<ITargetable>& InTarget) override;
 
-protected:
-
-	virtual void UpdateSelector(const FGeometry& CanvasGeometry) override;
+	virtual void Update(const FGeometry& CanvasGeometry) override;
 	
 };

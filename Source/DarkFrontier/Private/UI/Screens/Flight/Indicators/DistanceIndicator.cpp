@@ -2,6 +2,7 @@
 
 #include "UI/Screens/Flight/Indicators/DistanceIndicator.h"
 #include "CommonTextBlock.h"
+#include "Libraries/GameFunctionLibrary.h"
 #include "Structures/Structure.h"
 #include "Structures/Indications/DistanceIndication.h"
 
@@ -10,6 +11,7 @@ void UDistanceIndicator::NativeTick(const FGeometry& MyGeometry, const float InD
 	Super::NativeTick(MyGeometry, InDeltaTime);
 	
 	const UDistanceIndication* Distance = Cast<UDistanceIndication>(Indication);
-	DistanceText->SetVisibility(Distance->GetStructure()->IsSelectedByPlayer() ? ESlateVisibility::SelfHitTestInvisible : ESlateVisibility::Collapsed);
+	const bool IsSelected = UGameFunctionLibrary::IsSelected(TScriptInterface<ITargetable>(Distance->GetStructure()));
+	DistanceText->SetVisibility(IsSelected ? ESlateVisibility::SelfHitTestInvisible : ESlateVisibility::Collapsed);
 	DistanceText->SetText(FText::FromString(FString::Printf(TEXT("%d m"), FMath::RoundToInt(Distance->GetDistance() / 100))));
 }

@@ -4,13 +4,16 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "Objects/Targetable.h"
 #include "ItemPod.generated.h"
 
+class UItemPodSelector;
+class ASector;
 class UInventory;
 class UItem;
 
 UCLASS(Abstract)
-class DARKFRONTIER_API AItemPod : public AActor
+class DARKFRONTIER_API AItemPod : public AActor, public ITargetable
 {
 	GENERATED_BODY()
 
@@ -25,6 +28,12 @@ protected:
 	UPROPERTY(BlueprintReadOnly, EditAnywhere)
 	int Quantity;
 
+	UPROPERTY(BlueprintReadOnly, EditAnywhere)
+	TObjectPtr<ASector> Sector;
+	
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly)
+	TSubclassOf<UItemPodSelector> SelectorClass;
+
 public:
 
 	AItemPod();
@@ -35,6 +44,8 @@ protected:
 
 	virtual void BeginPlay() override;
 
+	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
+
 public:
 
 	UItem* GetItem() const;
@@ -44,5 +55,9 @@ public:
 	void AddToInventory(UInventory* Inventory);
 
 	UStaticMeshComponent* GetStaticMesh() const;
+
+	virtual bool IsTargetable(AStructure* Structure) const override;
+
+	virtual TSubclassOf<USelector> GetSelectorClass() const override;
 	
 };

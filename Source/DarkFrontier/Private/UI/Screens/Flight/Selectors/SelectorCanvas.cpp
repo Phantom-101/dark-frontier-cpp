@@ -43,7 +43,7 @@ void USelectorCanvas::NativeTick(const FGeometry& MyGeometry, const float InDelt
 	// Manually update selectors as they do not tick by themselves when hidden
 	for(const TPair<TObjectPtr<UObject>, TObjectPtr<USelector>>& Pair : Selectors)
 	{
-		Pair.Value->UpdateSelector(MyGeometry);
+		Pair.Value->Update(MyGeometry);
 	}
 }
 

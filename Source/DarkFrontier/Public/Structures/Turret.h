@@ -18,15 +18,15 @@ class DARKFRONTIER_API ATurret : public AStructurePart
 
 public:
 
-	UFUNCTION(BlueprintCallable, Category="Gameplay")
-	virtual bool CanActivate(const TScriptInterface<ITargetable>& Target);
+	UFUNCTION(BlueprintCallable)
+	virtual bool CanActivate(const TScriptInterface<ITargetable>& InTarget) const;
 
-	UFUNCTION(BlueprintCallable, Category="Gameplay")
-	virtual void TryActivate(const TScriptInterface<ITargetable>& Target);
+	UFUNCTION(BlueprintCallable)
+	virtual void TryActivate(const TScriptInterface<ITargetable>& InTarget);
 
 protected:
 
-	UFUNCTION(BlueprintCallable, Category="Gameplay")
-	virtual void OnActivate(const TScriptInterface<ITargetable>& Target);
+	UFUNCTION(BlueprintCallable)
+	virtual void OnActivate(const TScriptInterface<ITargetable>& InTarget);
 
 };

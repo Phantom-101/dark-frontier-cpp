@@ -29,6 +29,8 @@ public:
 
 	virtual void Init(const TScriptInterface<ITargetable>& InTarget) override;
 
+	virtual void Update(const FGeometry& CanvasGeometry) override;
+
 private:
 
 	void OnIndicationAdded(UStructureIndication* Indication) const;

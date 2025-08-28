@@ -4,6 +4,7 @@
 #include "CommonButtonBase.h"
 #include "Macros.h"
 #include "Environment/Asteroid.h"
+#include "Libraries/GameFunctionLibrary.h"
 #include "Libraries/ItemFunctionLibrary.h"
 #include "UI/Widgets/Visuals/Arc.h"
 #include "UI/Widgets/Visuals/MultiArc.h"
@@ -30,16 +31,18 @@ void UAsteroidSelector::Init(const TScriptInterface<ITargetable>& InTarget)
 	MaxWeight = Asteroid->GetMaxWeight();
 }
 
-void UAsteroidSelector::UpdateSelector(const FGeometry& CanvasGeometry)
+void UAsteroidSelector::Update(const FGeometry& CanvasGeometry)
 {
-	GUARD(IsValid(Target.GetObject()));
-	Super::UpdateSelector(CanvasGeometry);
+	Super::Update(CanvasGeometry);
+	
+	const AAsteroid* Asteroid = Cast<AAsteroid>(Target.GetObject());
+	GUARD(IsValid(Asteroid));
 
-	if(Target->IsSelectedByPlayer())
+	Position(CanvasGeometry, Asteroid->GetActorLocation());
+	if(UGameFunctionLibrary::IsSelected(Target))
 	{
 		SelectButton->SetVisibility(ESlateVisibility::Collapsed);
 		CompositionArcs->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
-		const AAsteroid* Asteroid = Cast<AAsteroid>(Target.GetObject());
 		const float Multiplier = 1 - Asteroid->GetDepletedAmount() / Asteroid->GetMaxAmount();
 		float Start = 0;
 		for(int Index = 0; Index < Items.Num(); Index++)

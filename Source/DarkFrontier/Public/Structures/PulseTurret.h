@@ -45,11 +45,11 @@ public:
 
 	APulseTurret();
 
-	virtual bool CanActivate(const TScriptInterface<ITargetable>& Target) override;
-
-	virtual void OnActivate(const TScriptInterface<ITargetable>& Target) override;
+	virtual bool CanActivate(const TScriptInterface<ITargetable>& InTarget) const override;
 
 protected:
+
+	virtual void OnActivate(const TScriptInterface<ITargetable>& InTarget) override;
 
 	void OnDelayComplete();
 

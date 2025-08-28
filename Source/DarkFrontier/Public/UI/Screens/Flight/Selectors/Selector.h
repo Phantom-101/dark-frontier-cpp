@@ -31,7 +31,11 @@ public:
 
 	virtual void Init(const TScriptInterface<ITargetable>& InTarget);
 
-	virtual void UpdateSelector(const FGeometry& CanvasGeometry);
+	virtual void Update(const FGeometry& CanvasGeometry);
+
+protected:
+
+	void Position(const FGeometry& CanvasGeometry, const FVector& WorldPosition);
 
 private:
 

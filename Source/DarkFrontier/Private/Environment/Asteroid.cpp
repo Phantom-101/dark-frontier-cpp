@@ -8,6 +8,7 @@
 #include "Structures/Structure.h"
 #include "Structures/StructureDamageType.h"
 #include "Structures/StructureLocation.h"
+#include "UI/Screens/Flight/Selectors/AsteroidSelector.h"
 
 void AAsteroid::BeginPlay()
 {
@@ -52,11 +53,6 @@ int AAsteroid::GetDepletedAmount() const
 	return DepletedAmount;
 }
 
-FVector AAsteroid::GetTargetLocation()
-{
-	return GetActorLocation();
-}
-
 bool AAsteroid::IsTargetable(AStructure* Structure) const
 {
 	return Structure->GetLocation()->GetSector() == Sector;
@@ -64,13 +60,8 @@ bool AAsteroid::IsTargetable(AStructure* Structure) const
 
 TSubclassOf<USelector> AAsteroid::GetSelectorClass() const
 {
-	return SelectorClass;
+	return SelectorClass.Get();
 }
-
-bool AAsteroid::ShouldShowSelector() const
-{
-	return true;
-}	
 
 float AAsteroid::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent,
 	AController* EventInstigator, AActor* DamageCauser)
