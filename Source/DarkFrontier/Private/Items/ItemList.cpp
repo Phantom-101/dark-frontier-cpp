@@ -8,7 +8,10 @@ TArray<UItem*> UItemList::GetItems() const
 	TArray<UItem*> Items;
 	for(const TPair<TObjectPtr<UItem>, int>& Pair : Quantities)
 	{
-		Items.Add(Pair.Key);
+		if(Pair.Value > 0)
+		{
+			Items.Add(Pair.Key);
+		}
 	}
 	return Items;
 }

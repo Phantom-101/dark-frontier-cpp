@@ -14,6 +14,6 @@ void UTabEntry::Init(UTab* InTab)
 
 void UTabEntry::NativeOnListItemObjectSet(UObject* ListItemObject)
 {
-	USelectableEntry::NativeOnListItemObjectSet(ListItemObject);
+	Super::NativeOnListItemObjectSet(ListItemObject);
 	Init(Cast<UTab>(ListItemObject));
 }

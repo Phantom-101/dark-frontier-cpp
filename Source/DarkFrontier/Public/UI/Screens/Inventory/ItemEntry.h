@@ -3,8 +3,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "CommonUserWidget.h"
 #include "Blueprint/IUserObjectListEntry.h"
+#include "UI/Widgets/Interaction/SelectableEntry.h"
 #include "ItemEntry.generated.h"
 
 class UItem;
@@ -14,7 +14,7 @@ class UCommonTextBlock;
  * 
  */
 UCLASS(Abstract)
-class DARKFRONTIER_API UItemEntry : public UCommonUserWidget, public IUserObjectListEntry
+class DARKFRONTIER_API UItemEntry : public USelectableEntry
 {
 	GENERATED_BODY()
 

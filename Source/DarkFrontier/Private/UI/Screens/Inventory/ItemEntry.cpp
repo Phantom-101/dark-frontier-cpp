@@ -11,6 +11,6 @@ void UItemEntry::Init(const UItem* Item) const
 
 void UItemEntry::NativeOnListItemObjectSet(UObject* ListItemObject)
 {
-	IUserObjectListEntry::NativeOnListItemObjectSet(ListItemObject);
+	Super::NativeOnListItemObjectSet(ListItemObject);
 	Init(Cast<UItem>(ListItemObject));
 }
