@@ -19,6 +19,8 @@ class DARKFRONTIER_API UItemList : public UObject
 
 protected:
 
+	// TODO consider removing keys when their quantity is 0
+	// Currently getting items will omit those with 0 quantity from the result list
 	UPROPERTY(BlueprintReadOnly, EditAnywhere)
 	TMap<TObjectPtr<UItem>, int> Quantities;
 
@@ -29,6 +31,7 @@ public:
 	UFUNCTION(BlueprintCallable)
 	TArray<UItem*> GetItems() const;
 
+	// TODO have these take const pointers instead
 	UFUNCTION(BlueprintCallable)
 	int GetQuantity(UItem* Item) const;
 

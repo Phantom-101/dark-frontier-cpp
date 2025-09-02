@@ -36,7 +36,7 @@ void UInventoryScreen::NativeTick(const FGeometry& MyGeometry, const float InDel
 	Super::NativeTick(MyGeometry, InDeltaTime);
 
 	const UInventory* Inventory = GetInventory();
-	const UItemStackObject* Selected = ListView->GetSelectedItem<UItemStackObject>();
+	UItem* Selected = ListView->GetSelectedItem<UItem>();
 	if(Selected == nullptr)
 	{
 		InfoSwitcher->SetActiveWidget(NoItem);
@@ -45,12 +45,12 @@ void UInventoryScreen::NativeTick(const FGeometry& MyGeometry, const float InDel
 	{
 		InfoSwitcher->SetActiveWidget(ItemInfo);
 
-		IconImage->SetBrushFromTexture(Selected->Item->Icon);
-		NameText->SetText(Selected->Item->Name);
-		DescriptionText->SetText(Selected->Item->Description);
-		QuantityField->SetContentFromInt(Inventory->GetQuantity(Selected->Item));
-		VolumeField->SetContentFromFloat(Inventory->GetVolume(Selected->Item));
-		MassField->SetContentFromFloat(Inventory->GetMass(Selected->Item));
+		IconImage->SetBrushFromTexture(Selected->Icon);
+		NameText->SetText(Selected->Name);
+		DescriptionText->SetText(Selected->Description);
+		QuantityField->SetContentFromInt(Inventory->GetQuantity(Selected));
+		VolumeField->SetContentFromFloat(Inventory->GetVolume(Selected));
+		MassField->SetContentFromFloat(Inventory->GetMass(Selected));
 	}
 }
 
@@ -88,25 +88,10 @@ UStructureInventory* UInventoryScreen::GetInventory() const
 
 void UInventoryScreen::Rebuild() const
 {
-	const UItemStackObject* Selected = ListView->GetSelectedItem<UItemStackObject>();
-	const UObject* Current = nullptr;
-	
-	TArray<UObject*> Options;
-	for(UItem* Item : GetInventory()->GetItems())
-	{
-		UItemStackObject* Obj = NewObject<UItemStackObject>();
-		Obj->Inventory = GetInventory();
-		Obj->Item = Item;
-		Options.Add(Obj);
+	const UItem* Selected = ListView->GetSelectedItem<UItem>();
 
-		if(Selected != nullptr && Item == Selected->Item)
-		{
-			Current = Obj;
-		}
-	}
-	
-	ListView->SetListItems(Options);
-	ListView->SetSelectedItem(Current);
+	ListView->SetListItems(GetInventory()->GetItems());
+	ListView->SetSelectedItem(Selected);
 }
 
 void UInventoryScreen::HandleSwitch()
@@ -164,7 +149,7 @@ void UInventoryScreen::HandleTrade()
 	}
 	
 	UInventoryTradeModal* TradeModal = Screens->GetStack()->AddWidget<UInventoryTradeModal>(TradeModalClass);
-	TradeModal->Init(GetInventory(), ListView->GetSelectedItem<UItemStackObject>()->Item, Targets);
+	TradeModal->Init(GetInventory(), ListView->GetSelectedItem<UItem>(), Targets);
 
 	CurrentModal = TradeModal;
 }
@@ -183,7 +168,7 @@ void UInventoryScreen::HandleTransfer()
 	Targets.Remove(Structure);
 	
 	UInventoryTransferModal* TransferModal = Screens->GetStack()->AddWidget<UInventoryTransferModal>(TransferModalClass);
-	TransferModal->Init(GetInventory(), ListView->GetSelectedItem<UItemStackObject>()->Item, Targets);
+	TransferModal->Init(GetInventory(), ListView->GetSelectedItem<UItem>(), Targets);
 
 	CurrentModal = TransferModal;
 }
@@ -199,7 +184,7 @@ void UInventoryScreen::HandleDispose()
 	}
 	
 	UInventoryDisposeModal* DisposeModal = Screens->GetStack()->AddWidget<UInventoryDisposeModal>(DisposeModalClass);
-	DisposeModal->Init(GetInventory(), ListView->GetSelectedItem<UItemStackObject>()->Item);
+	DisposeModal->Init(GetInventory(), ListView->GetSelectedItem<UItem>());
 
 	CurrentModal = DisposeModal;
 }
