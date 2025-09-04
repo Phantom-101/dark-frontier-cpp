@@ -4,7 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "InstancedStruct.h"
-#include "ItemObject.h"
 #include "Engine/DataAsset.h"
 #include "Item.generated.h"
 
@@ -42,8 +41,6 @@ public:
 	TArray<TInstancedStruct<FItemFragment>> Fragments;
 
 	const TArray<TInstancedStruct<FItemFragment>>& GetFragments() const;
-
-	UItemObject* ToObject();
 	
 };
 
@@ -51,11 +48,4 @@ public:
 inline const TArray<TInstancedStruct<FItemFragment>>& UItem::GetFragments() const
 {
 	return Fragments;
-}
-
-inline UItemObject* UItem::ToObject()
-{
-	UItemObject* Obj = NewObject<UItemObject>();
-	Obj->Item = this;
-	return Obj;
 }

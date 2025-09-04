@@ -8,7 +8,7 @@
 
 class UListView;
 class UStructureInventory;
-class UItemStackEntry;
+class UInventoryItemEntry;
 class UInventoryTradeModal;
 class UInventoryTransferModal;
 struct FItemStack;

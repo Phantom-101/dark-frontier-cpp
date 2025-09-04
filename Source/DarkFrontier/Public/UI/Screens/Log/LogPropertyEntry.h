@@ -32,12 +32,6 @@ protected:
 	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly)
 	TObjectPtr<AStructure> Structure;
 
-public:
-
-	void Init(AStructure* InStructure);
-
-protected:
-
 	virtual void NativeOnListItemObjectSet(UObject* ListItemObject) override;
 
 	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;

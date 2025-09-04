@@ -2,31 +2,29 @@
 
 #include "UI/Screens/Log/LogPropertyEntry.h"
 #include "CommonTextBlock.h"
+#include "Macros.h"
+#include "Libraries/Math.h"
 #include "Sectors/Sector.h"
 #include "Structures/Structure.h"
 #include "Structures/StructureGameplay.h"
 #include "Structures/StructureLocation.h"
 #include "UI/Widgets/Visuals/FillBar.h"
 
-void ULogPropertyEntry::Init(AStructure* InStructure)
-{
-	Structure = InStructure;
-	
-	NameText->SetText(FText::FromString(FString::Printf(TEXT("\"%s\" (%s)"), *Structure->GetActorNameOrLabel(), *Structure->GetLocation()->GetSector()->GetActorNameOrLabel())));
-}
-
 void ULogPropertyEntry::NativeOnListItemObjectSet(UObject* ListItemObject)
 {
 	Super::NativeOnListItemObjectSet(ListItemObject);
-	Init(Cast<AStructure>(ListItemObject));
+	Structure = Cast<AStructure>(ListItemObject);
 }
 
 void ULogPropertyEntry::NativeTick(const FGeometry& MyGeometry, const float InDeltaTime)
 {
 	Super::NativeTick(MyGeometry, InDeltaTime);
 
-	UStructureGameplay* Gameplay = Structure->GetGameplay();
-	// TODO add math util function where 0/0 equals 1
-	ShieldBar->SetFill(FVector2D(Gameplay->GetShield() / Gameplay->GetMaxShield(), 1));
-	HullBar->SetFill(FVector2D(Gameplay->GetHull() / Gameplay->GetMaxHull(), 1));
+	GUARD(IsValid(Structure));
+
+	NameText->SetText(FText::FromString(FString::Printf(TEXT("\"%s\" (%s)"), *Structure->GetActorNameOrLabel(), *Structure->GetLocation()->GetSector()->GetActorNameOrLabel())));
+
+	const UStructureGameplay* Gameplay = Structure->GetGameplay();
+	ShieldBar->FillHorizontal(0, UMath::DivTo0(Gameplay->GetShield(), Gameplay->GetMaxShield()));
+	HullBar->FillHorizontal(0, UMath::DivTo0(Gameplay->GetHull(), Gameplay->GetMaxHull()));
 }

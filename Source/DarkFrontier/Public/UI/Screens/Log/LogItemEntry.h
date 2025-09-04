@@ -3,9 +3,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Blueprint/IUserObjectListEntry.h"
 #include "UI/Widgets/Interaction/SelectableEntry.h"
-#include "ItemEntry.generated.h"
+#include "LogItemEntry.generated.h"
 
 class UItem;
 class UCommonTextBlock;
@@ -14,7 +13,7 @@ class UCommonTextBlock;
  * 
  */
 UCLASS(Abstract)
-class DARKFRONTIER_API UItemEntry : public USelectableEntry
+class DARKFRONTIER_API ULogItemEntry : public USelectableEntry
 {
 	GENERATED_BODY()
 
@@ -22,12 +21,6 @@ protected:
 
 	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
 	TObjectPtr<UCommonTextBlock> NameText;
-
-public:
-
-	void Init(const UItem* Item) const;
-
-protected:
 
 	virtual void NativeOnListItemObjectSet(UObject* ListItemObject) override;
 	

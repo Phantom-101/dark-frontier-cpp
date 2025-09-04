@@ -8,17 +8,39 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="cb7ccd89-2b5f-4c19-9f87-96459d2ed121" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/Source/DarkFrontier/Private/UI/Screens/Inventory/InventoryItem.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.DarkFrontier.dir/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.DarkFrontier.dir/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Items/BP_ItemPod.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Items/BP_ItemPod.uasset" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Content/Levels/Test.umap" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Levels/Test.umap" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Structures/Controllers/PC_Default.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Structures/Controllers/PC_Default.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/UI/Screens/Inventory/W_ItemEntry.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/UI/Screens/Inventory/W_ItemEntry.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Private/Items/ItemList.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Private/Items/ItemList.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/UI/Screens/Inventory/W_InventoryScreen.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/UI/Screens/Inventory/W_InventoryScreen.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/UI/Screens/Inventory/W_ItemEntry.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/UI/Screens/Inventory/W_ItemStackEntry.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/UI/Screens/Log/W_LogFactionInfo.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/UI/Screens/Log/W_LogFactionInfo.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/UI/Screens/Log/W_LogItemInfo.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/UI/Screens/Log/W_LogItemInfo.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/UI/Screens/Log/W_LogItemsTab.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/UI/Screens/Log/W_LogItemsTab.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/UI/Screens/Log/W_LogPropertyEntry.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/UI/Screens/Log/W_LogPropertyEntry.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/UI/Screens/Log/W_LogPropertyInfo.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/UI/Screens/Log/W_LogPropertyInfo.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DarkFrontier.uproject.DotSettings.user" beforeDir="false" afterPath="$PROJECT_DIR$/DarkFrontier.uproject.DotSettings.user" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Private/Items/ItemStack.cpp" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Private/UI/Screens/Inventory/InventoryScreen.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Private/UI/Screens/Inventory/InventoryScreen.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Private/UI/Screens/Inventory/ItemEntry.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Private/UI/Screens/Inventory/ItemEntry.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Private/UI/Widgets/Interaction/TabEntry.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Private/UI/Widgets/Interaction/TabEntry.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Private/UI/Screens/Inventory/ItemEntry.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Private/UI/Screens/Log/LogItemEntry.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Private/UI/Screens/Inventory/ItemStackEntry.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Private/UI/Screens/Inventory/InventoryItemEntry.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Private/UI/Screens/Log/LogItemInfo.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Private/UI/Screens/Log/LogItemInfo.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Private/UI/Screens/Log/LogPropertyEntry.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Private/UI/Screens/Log/LogPropertyEntry.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Private/UI/Screens/Log/LogPropertyInfo.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Private/UI/Screens/Log/LogPropertyInfo.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Private/UI/Screens/Station/Trade/TradeScreen.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Private/UI/Screens/Station/Trade/TradeScreen.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Public/Items/Item.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Public/Items/Item.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Public/Items/ItemList.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Public/Items/ItemList.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Public/UI/Screens/Inventory/ItemEntry.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Public/UI/Screens/Inventory/ItemEntry.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Public/Items/ItemObject.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Public/Items/ItemStack.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Public/Items/ItemStackObject.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Public/UI/Screens/Inventory/InventoryItem.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Public/UI/Screens/Inventory/InventoryDisposeModal.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Public/UI/Screens/Inventory/InventoryDisposeModal.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Public/UI/Screens/Inventory/InventoryScreen.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Public/UI/Screens/Inventory/InventoryScreen.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Public/UI/Screens/Inventory/ItemEntry.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Public/UI/Screens/Log/LogItemEntry.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Public/UI/Screens/Inventory/ItemEntryObject.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Public/UI/Screens/Inventory/ItemStackEntry.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Public/UI/Screens/Inventory/InventoryItemEntry.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Public/UI/Screens/Log/LogItemInfo.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Public/UI/Screens/Log/LogItemInfo.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Public/UI/Screens/Log/LogPropertyEntry.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Public/UI/Screens/Log/LogPropertyEntry.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Public/UI/Screens/Log/LogPropertyInfo.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Public/UI/Screens/Log/LogPropertyInfo.h" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -451,6 +473,8 @@
       <workItem from="1756296509431" duration="1529000" />
       <workItem from="1756374645269" duration="11038000" />
       <workItem from="1756819391208" duration="3051000" />
+      <workItem from="1756992037199" duration="1766000" />
+      <workItem from="1756994182667" duration="2435000" />
     </task>
     <servers />
   </component>

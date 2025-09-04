@@ -8,7 +8,6 @@
 #include "Components/WidgetSwitcher.h"
 #include "Factions/Faction.h"
 #include "Items/Item.h"
-#include "Items/ItemStackObject.h"
 #include "Libraries/UIFunctionLibrary.h"
 #include "Structures/Structure.h"
 #include "Structures/StructureInventory.h"
@@ -16,6 +15,7 @@
 #include "UI/Screens/Screens.h"
 #include "UI/Screens/Inventory/InventoryDisposeModal.h"
 #include "UI/Screens/Inventory/InventoryEntry.h"
+#include "UI/Screens/Inventory/InventoryItem.h"
 #include "UI/Screens/Inventory/InventoryTradeModal.h"
 #include "UI/Screens/Inventory/InventoryTransferModal.h"
 #include "UI/Widgets/Modals/ListBoxModal.h"
@@ -36,7 +36,7 @@ void UInventoryScreen::NativeTick(const FGeometry& MyGeometry, const float InDel
 	Super::NativeTick(MyGeometry, InDeltaTime);
 
 	const UInventory* Inventory = GetInventory();
-	UItem* Selected = ListView->GetSelectedItem<UItem>();
+	const UInventoryItem* Selected = ListView->GetSelectedItem<UInventoryItem>();
 	if(Selected == nullptr)
 	{
 		InfoSwitcher->SetActiveWidget(NoItem);
@@ -45,12 +45,12 @@ void UInventoryScreen::NativeTick(const FGeometry& MyGeometry, const float InDel
 	{
 		InfoSwitcher->SetActiveWidget(ItemInfo);
 
-		IconImage->SetBrushFromTexture(Selected->Icon);
-		NameText->SetText(Selected->Name);
-		DescriptionText->SetText(Selected->Description);
-		QuantityField->SetContentFromInt(Inventory->GetQuantity(Selected));
-		VolumeField->SetContentFromFloat(Inventory->GetVolume(Selected));
-		MassField->SetContentFromFloat(Inventory->GetMass(Selected));
+		IconImage->SetBrushFromTexture(Selected->Item->Icon);
+		NameText->SetText(Selected->Item->Name);
+		DescriptionText->SetText(Selected->Item->Description);
+		QuantityField->SetContentFromInt(Inventory->GetQuantity(Selected->Item));
+		VolumeField->SetContentFromFloat(Inventory->GetVolume(Selected->Item));
+		MassField->SetContentFromFloat(Inventory->GetMass(Selected->Item));
 	}
 }
 
@@ -88,10 +88,20 @@ UStructureInventory* UInventoryScreen::GetInventory() const
 
 void UInventoryScreen::Rebuild() const
 {
-	const UItem* Selected = ListView->GetSelectedItem<UItem>();
+	const UInventoryItem* Selected = ListView->GetSelectedItem<UInventoryItem>();
 
-	ListView->SetListItems(GetInventory()->GetItems());
-	ListView->SetSelectedItem(Selected);
+	ListView->ClearListItems();
+	for(UItem* Item : GetInventory()->GetItems())
+	{
+		UInventoryItem* InventoryItem = UInventoryItem::New(GetInventory(), Item);
+		ListView->AddItem(InventoryItem);
+
+		if(IsValid(Selected) && Item == Selected->Item)
+		{
+			ListView->SetSelectedItem(InventoryItem);
+		}
+	}
+	ListView->RegenerateAllEntries();
 }
 
 void UInventoryScreen::HandleSwitch()
@@ -149,7 +159,7 @@ void UInventoryScreen::HandleTrade()
 	}
 	
 	UInventoryTradeModal* TradeModal = Screens->GetStack()->AddWidget<UInventoryTradeModal>(TradeModalClass);
-	TradeModal->Init(GetInventory(), ListView->GetSelectedItem<UItem>(), Targets);
+	TradeModal->Init(GetInventory(), ListView->GetSelectedItem<UInventoryItem>()->Item, Targets);
 
 	CurrentModal = TradeModal;
 }
@@ -168,7 +178,7 @@ void UInventoryScreen::HandleTransfer()
 	Targets.Remove(Structure);
 	
 	UInventoryTransferModal* TransferModal = Screens->GetStack()->AddWidget<UInventoryTransferModal>(TransferModalClass);
-	TransferModal->Init(GetInventory(), ListView->GetSelectedItem<UItem>(), Targets);
+	TransferModal->Init(GetInventory(), ListView->GetSelectedItem<UInventoryItem>()->Item, Targets);
 
 	CurrentModal = TransferModal;
 }
@@ -184,7 +194,7 @@ void UInventoryScreen::HandleDispose()
 	}
 	
 	UInventoryDisposeModal* DisposeModal = Screens->GetStack()->AddWidget<UInventoryDisposeModal>(DisposeModalClass);
-	DisposeModal->Init(GetInventory(), ListView->GetSelectedItem<UItem>());
+	DisposeModal->Init(GetInventory(), ListView->GetSelectedItem<UInventoryItem>()->Item);
 
 	CurrentModal = DisposeModal;
 }
