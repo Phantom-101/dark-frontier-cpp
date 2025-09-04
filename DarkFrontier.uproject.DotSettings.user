@@ -15,4 +15,5 @@
 	<s:String x:Key="/Default/CodeInspection/ExcludedFiles/FilesAndFoldersToSkip2/=B7052BA8_002D3AA6_002D92B9_002D5DA9_002DC720AB83FBB7_002Fd_003Aboost_002D1_005F82_005F0_002Fd_003Ainclude_002Fd_003Aboost_002Fd_003Amath_002Fd_003Accmath_002Ff_003Afabs_002Ehpp/@EntryIndexedValue">ForceIncluded</s:String>
 	<s:String x:Key="/Default/CodeInspection/ExcludedFiles/FilesAndFoldersToSkip2/=B7052BA8_002D3AA6_002D92B9_002D5DA9_002DC720AB83FBB7_002Fd_003Aboost_002D1_005F82_005F0_002Fd_003Ainclude_002Fd_003Aboost_002Fd_003Apython_002Ff_003Astr_002Ehpp/@EntryIndexedValue">ForceIncluded</s:String>
 	<s:String x:Key="/Default/CodeInspection/ExcludedFiles/FilesAndFoldersToSkip2/=B7052BA8_002D3AA6_002D92B9_002D5DA9_002DC720AB83FBB7_002Fd_003Aboost_002D1_005F82_005F0_002Fd_003Ainclude_002Fd_003Aboost_002Fd_003Aurl_002Fd_003Agrammar_002Ff_003Adelim_005Frule_002Ehpp/@EntryIndexedValue">ForceIncluded</s:String>
-	<s:String x:Key="/Default/CodeInspection/Highlighting/AnalysisEnabled/@EntryValue">SOLUTION</s:String></wpf:ResourceDictionary>
+	<s:String x:Key="/Default/CodeInspection/Highlighting/AnalysisEnabled/@EntryValue">SOLUTION</s:String>
+	</wpf:ResourceDictionary>

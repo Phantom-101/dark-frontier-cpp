@@ -9,7 +9,7 @@
 class UItem;
 class UInfoField;
 class UCommonTextBlock;
-class UItemEntry;
+class ULogItemEntry;
 
 /**
  * 
@@ -22,7 +22,7 @@ class DARKFRONTIER_API ULogItemInfo : public UCommonUserWidget
 protected:
 
 	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
-	TObjectPtr<UItemEntry> Header;
+	TObjectPtr<UCommonTextBlock> NameText;
 
 	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
 	TObjectPtr<UCommonTextBlock> DescriptionText;

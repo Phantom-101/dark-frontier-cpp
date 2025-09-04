@@ -3,9 +3,10 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "ItemStack.h"
 #include "UObject/Object.h"
 #include "ItemList.generated.h"
+
+class UItem;
 
 DECLARE_MULTICAST_DELEGATE(FItemListChanged)
 

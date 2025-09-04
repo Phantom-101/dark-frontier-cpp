@@ -3,17 +3,17 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "CommonUserWidget.h"
-#include "ItemStackEntry.generated.h"
+#include "UI/Widgets/Interaction/SelectableEntry.h"
+#include "InventoryItemEntry.generated.h"
 
 class UItem;
-class UItemStackObject;
+class UInventoryItem;
 
 /**
  * 
  */
 UCLASS(Abstract)
-class DARKFRONTIER_API UItemStackEntry : public UCommonUserWidget
+class DARKFRONTIER_API UInventoryItemEntry : public USelectableEntry
 {
 	GENERATED_BODY()
 
@@ -29,14 +29,14 @@ protected:
 	TObjectPtr<UCommonTextBlock> QuantityText;
 
 	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly)
-	TObjectPtr<UItemStackObject> ItemStack;
+	TObjectPtr<UInventoryItem> InventoryItem;
 
-public:
+	virtual void NativeOnListItemObjectSet(UObject* ListItemObject) override;
 
-	void Init(UItemStackObject* InItemStack);
+	virtual void NativeOnEntryReleased() override;
 
 private:
 	
-	void Update() const;
+	void UpdateQuantity() const;
 	
 };

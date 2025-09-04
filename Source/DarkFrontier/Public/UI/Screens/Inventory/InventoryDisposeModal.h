@@ -7,7 +7,7 @@
 #include "InventoryDisposeModal.generated.h"
 
 class UItem;
-class UItemEntry;
+class ULogItemEntry;
 class UInventory;
 struct FItemStack;
 class UCommonButtonBase;

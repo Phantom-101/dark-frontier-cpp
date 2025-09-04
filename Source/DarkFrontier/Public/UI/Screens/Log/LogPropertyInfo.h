@@ -6,6 +6,8 @@
 #include "CommonUserWidget.h"
 #include "LogPropertyInfo.generated.h"
 
+class UFillBar;
+class UCommonTextBlock;
 class AStructure;
 class UInfoField;
 class ULogPropertyEntry;
@@ -21,7 +23,16 @@ class DARKFRONTIER_API ULogPropertyInfo : public UCommonUserWidget
 protected:
 
 	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
-	TObjectPtr<ULogPropertyEntry> Header;
+	TObjectPtr<UCommonTextBlock> NameText;
+
+	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
+	TObjectPtr<UFillBar> ShieldBar;
+
+	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
+	TObjectPtr<UFillBar> HullBar;
+
+	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
+	TObjectPtr<UInfoField> SectorField;
 
 	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
 	TObjectPtr<UInfoField> PositionField;
@@ -35,8 +46,15 @@ protected:
 	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
 	TObjectPtr<UInfoField> MassField;
 
+	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly)
+	TObjectPtr<AStructure> Structure;
+
 public:
 
-	void Init(AStructure* Structure) const;
+	void Init(AStructure* InStructure);
+
+protected:
+
+	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
 	
 };

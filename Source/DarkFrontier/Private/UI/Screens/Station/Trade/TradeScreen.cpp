@@ -3,7 +3,6 @@
 #include "UI/Screens/Station/Trade/TradeScreen.h"
 #include "CommonButtonBase.h"
 #include "Components/ListView.h"
-#include "Items/ItemObject.h"
 #include "Structures/StructureController.h"
 #include "Structures/StructureInventory.h"
 #include "Structures/StructureLocation.h"
