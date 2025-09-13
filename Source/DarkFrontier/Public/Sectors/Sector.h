@@ -23,13 +23,16 @@ public:
 protected:
 
 	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly)
-	TArray<TObjectPtr<AStructure>> Structures;
+	TSet<TObjectPtr<AActor>> Actors;
 
 	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly)
-	TArray<TObjectPtr<AAsteroid>> Asteroids;
+	TSet<TObjectPtr<AStructure>> Structures;
 
 	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly)
-	TArray<TObjectPtr<AItemPod>> ItemPods;
+	TSet<TObjectPtr<AAsteroid>> Asteroids;
+
+	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly)
+	TSet<TObjectPtr<AItemPod>> ItemPods;
 
 	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly)
 	TArray<TScriptInterface<ITargetable>> Targets;
@@ -39,21 +42,27 @@ public:
 	const TArray<TScriptInterface<ITargetable>>& GetTargets();
 
 	UFUNCTION(BlueprintCallable)
-	void RegisterStructure(AStructure* Structure);
+	void Register(AActor* Actor);
 
 	UFUNCTION(BlueprintCallable)
-	void UnregisterStructure(AStructure* Structure);
+	void Unregister(AActor* Actor);
 
-	UFUNCTION(BlueprintCallable)
-	void RegisterAsteroid(AAsteroid* Asteroid);
+	template<typename T>
+	void TryRegister(AActor* Actor, TSet<TObjectPtr<T>>& Registry)
+	{
+		if(Actor->IsA<T>())
+		{
+			Registry.Add(Cast<T>(Actor));
+		}
+	}
 
-	UFUNCTION(BlueprintCallable)
-	void UnregisterAsteroid(AAsteroid* Asteroid);
+	template<typename T>
+	void TryUnregister(AActor* Actor, TSet<TObjectPtr<T>>& Registry)
+	{
+		if(Actor->IsA<T>())
+		{
+			Registry.Remove(Cast<T>(Actor));
+		}
+	}
 
-	UFUNCTION(BlueprintCallable)
-	void RegisterItemPod(AItemPod* ItemPod);
-	
-	UFUNCTION(BlueprintCallable)
-	void UnregisterItemPod(AItemPod* ItemPod);
-	
 };

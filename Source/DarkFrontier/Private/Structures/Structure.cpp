@@ -55,7 +55,7 @@ void AStructure::BeginPlay()
 
 	OnTakePointDamage.AddDynamic(this, &AStructure::HandlePointDamage);
 
-	Location->EnterSector(InitialSector);
+	Location->UpdateSector();
 
 	AddIndication(UHullIndication::StaticClass());
 	AddIndication(UDistanceIndication::StaticClass());
@@ -111,7 +111,7 @@ bool AStructure::TryDestroy()
 	if(!IsValid(Layout->GetRootPart())) return false;
 	
 	Layout->RemoveAll();
-	Location->ExitSector();
+	Location->SetSector(nullptr);
 	Destroy();
 
 	return true;

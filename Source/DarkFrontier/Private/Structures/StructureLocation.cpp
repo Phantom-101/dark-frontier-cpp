@@ -1,8 +1,6 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 #include "Structures/StructureLocation.h"
-
-#include "Macros.h"
 #include "Sectors/Sector.h"
 #include "Structures/Structure.h"
 #include "Structures/StructureDock.h"
@@ -15,46 +13,7 @@ UStructureLocation* UStructureLocation::CreateLocation(AStructure* Structure)
 
 AStructure* UStructureLocation::GetStructure() const
 {
-	return Cast<AStructure>(GetOuter());
-}
-
-ASector* UStructureLocation::GetSector() const
-{
-	return Sector;
-}
-
-bool UStructureLocation::EnterSector(ASector* Target)
-{
-	GUARD_RETURN(Sector != Target && IsValid(Target), false);
-
-	ExitSector();
-
-	Sector = Target;
-	Sector->RegisterStructure(GetStructure());
-
-	for(const AStructure* Docker : Dockers)
-	{
-		Docker->GetLocation()->EnterSector(Target);
-	}
-
-	GetStructure()->UpdateTickLevel();
-
-	return true;
-}
-
-bool UStructureLocation::ExitSector()
-{
-	GUARD_RETURN(Sector != nullptr, false);
-
-	Sector->UnregisterStructure(GetStructure());
-	Sector = nullptr;
-
-	for(const AStructure* Docker : Dockers)
-	{
-		Docker->GetLocation()->ExitSector();
-	}
-
-	return true;
+	return GetActor<AStructure>();
 }
 
 AStructure* UStructureLocation::GetDockStructure() const
@@ -130,4 +89,28 @@ TArray<AStructure*> UStructureLocation::GetInTree() const
 	}
 	
 	return Root->GetLocation()->GetInSubTree();
+}
+
+void UStructureLocation::OnEnterSector()
+{
+	Sector->RegisterStructure(GetStructure());
+
+	for(const AStructure* Docker : Dockers)
+	{
+		Docker->GetLocation()->SetSector(Sector);
+	}
+
+	GetStructure()->UpdateTickLevel();
+}
+
+void UStructureLocation::OnExitSector()
+{
+	Sector->UnregisterStructure(GetStructure());
+
+	for(const AStructure* Docker : Dockers)
+	{
+		Docker->GetLocation()->SetSector(nullptr);
+	}
+
+	GetStructure()->UpdateTickLevel();
 }

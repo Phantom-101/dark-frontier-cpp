@@ -7,8 +7,8 @@
 #include "Objects/Targetable.h"
 #include "ItemPod.generated.h"
 
+class USectorLocation;
 class UItemPodSelector;
-class ASector;
 class UInventory;
 class UItem;
 
@@ -29,7 +29,7 @@ protected:
 	int Quantity;
 
 	UPROPERTY(BlueprintReadOnly, EditAnywhere)
-	TObjectPtr<ASector> Sector;
+	TObjectPtr<UItemPodLocation> Location;
 	
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly)
 	TSubclassOf<UItemPodSelector> SelectorClass;
@@ -53,6 +53,8 @@ public:
 	int GetQuantity() const;
 
 	void AddToInventory(UInventory* Inventory);
+
+	UItemPodLocation* GetLocation() const;
 
 	UStaticMeshComponent* GetStaticMesh() const;
 

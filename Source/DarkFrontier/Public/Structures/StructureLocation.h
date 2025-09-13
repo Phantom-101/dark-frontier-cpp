@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Objects/SpaceLocation.h"
 #include "UObject/Object.h"
 #include "StructureLocation.generated.h"
 
@@ -16,15 +17,12 @@ DECLARE_MULTICAST_DELEGATE_OneParam(FDockChanged, UStructureDock*)
  * 
  */
 UCLASS(DefaultToInstanced)
-class DARKFRONTIER_API UStructureLocation : public UObject
+class DARKFRONTIER_API UStructureLocation : public USpaceLocation
 {
 	GENERATED_BODY()
 
 protected:
 
-	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly)
-	TObjectPtr<ASector> Sector;
-	
 	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly)
 	TObjectPtr<AStructure> DockStructure;
 
@@ -42,15 +40,6 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	AStructure* GetStructure() const;
-
-	UFUNCTION(BlueprintCallable)
-	ASector* GetSector() const;
-
-	UFUNCTION(BlueprintCallable)
-	bool EnterSector(ASector* Target);
-
-	UFUNCTION(BlueprintCallable)
-	bool ExitSector();
 
 	UFUNCTION(BlueprintCallable)
 	AStructure* GetDockStructure() const;
@@ -72,5 +61,11 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	TArray<AStructure*> GetInTree() const;
-	
+
+protected:
+
+	virtual void OnEnterSector() override;
+
+	virtual void OnExitSector() override;
+
 };

@@ -54,12 +54,6 @@ protected:
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category="Components")
 	TObjectPtr<UCameraComponent> Camera;
 
-	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category="Gameplay")
-	TObjectPtr<UTargetGroup> HullTargetGroup;
-	
-	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category="Gameplay")
-	TObjectPtr<UTargetGroup> ShieldTargetGroup;
-
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere)
 	TObjectPtr<UStructureLayout> Layout;
 

@@ -24,6 +24,7 @@ void AItemPod::BeginPlay()
 {
 	Super::BeginPlay();
 
+	UItemPodLocation->UpdateSector();
 	if(IsValid(Sector))
 	{
 		Sector->RegisterItemPod(this);
@@ -72,6 +73,11 @@ void AItemPod::AddToInventory(UInventory* Inventory)
 	}
 }
 
+USectorLocation* AItemPod::GetLocation() const
+{
+	return Location;
+}
+
 UStaticMeshComponent* AItemPod::GetStaticMesh() const
 {
 	return StaticMesh;
@@ -79,7 +85,7 @@ UStaticMeshComponent* AItemPod::GetStaticMesh() const
 
 bool AItemPod::IsTargetable(AStructure* Structure) const
 {
-	return Structure->GetLocation()->GetSector() == Sector;
+	return Structure->GetLocation()->GetSector() == Location->GetSector();
 }
 
 TSubclassOf<USelector> AItemPod::GetSelectorClass() const
