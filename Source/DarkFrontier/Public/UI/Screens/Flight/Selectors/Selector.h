@@ -6,7 +6,7 @@
 #include "CommonUserWidget.h"
 #include "Selector.generated.h"
 
-class ITargetable;
+class UTargetable;
 class UCommonButtonBase;
 
 /**
@@ -23,13 +23,13 @@ protected:
 	TObjectPtr<UCommonButtonBase> SelectButton;
 
 	UPROPERTY(BlueprintReadWrite, EditInstanceOnly)
-	TScriptInterface<ITargetable> Target;
+	TObjectPtr<UTargetable> Target;
 
 	virtual void NativeConstruct() override;
 
 public:
 
-	virtual void Init(const TScriptInterface<ITargetable>& InTarget);
+	virtual void Init(UTargetable* InTarget);
 
 	virtual void Update(const FGeometry& CanvasGeometry);
 

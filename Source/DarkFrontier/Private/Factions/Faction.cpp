@@ -84,7 +84,7 @@ float AFaction::GetPower() const
 	float Power = 0;
 	for(TActorIterator<AStructure> Itr(GetWorld()); Itr; ++Itr)
 	{
-		if(Itr->GetOwningFaction() == this)
+		if(Itr->GetAffiliation()->GetFaction() == this)
 		{
 			Power += Itr->GetLayout()->GetParts().Num();
 		}

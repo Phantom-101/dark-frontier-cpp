@@ -4,7 +4,6 @@
 #include "CommonButtonBase.h"
 #include "Input/CommonBoundActionButton.h"
 #include "Structures/StructureController.h"
-#include "Structures/StructureLocation.h"
 #include "UI/Screens/GameScreens.h"
 #include "UI/Screens/Station/Refit/RefitScreen.h"
 #include "UI/Screens/Station/Repair/RepairScreen.h"
@@ -35,6 +34,6 @@ void UStationScreen::UndockPlayer()
 {
 	const AStructureController* Controller = Cast<AStructureController>(GetWorld()->GetFirstPlayerController());
 	const AStructure* Player = Cast<AStructure>(Controller->GetPawn());
-	Player->GetLocation()->ExitDock();
+	Player->GetDockable()->ExitDock();
 	DeactivateWidget();
 }

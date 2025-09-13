@@ -15,7 +15,7 @@ class UStructureIndication;
 /**
  * 
  */
-UCLASS()
+UCLASS(Abstract)
 class DARKFRONTIER_API UStructureSelector : public USelector
 {
 	GENERATED_BODY()
@@ -27,7 +27,7 @@ protected:
 
 public:
 
-	virtual void Init(const TScriptInterface<ITargetable>& InTarget) override;
+	virtual void Init(UTargetable* InTarget) override;
 
 	virtual void Update(const FGeometry& CanvasGeometry) override;
 

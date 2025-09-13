@@ -6,9 +6,9 @@
 #include "UI/Widgets/Interaction/SelectableEntry.h"
 #include "LogFactionEntry.generated.h"
 
+class URelationBar;
 class UCommonBorderStyle;
 class AFaction;
-class UFillBar;
 class UCommonTextBlock;
 
 /**
@@ -25,16 +25,7 @@ protected:
 	TObjectPtr<UCommonTextBlock> NameText;
 
 	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
-	TObjectPtr<UFillBar> RelationBar;
-
-	UPROPERTY(BlueprintReadOnly, EditAnywhere)
-	TSubclassOf<UCommonBorderStyle> PlayerStyle;
-	
-	UPROPERTY(BlueprintReadOnly, EditAnywhere)
-	TSubclassOf<UCommonBorderStyle> PositiveStyle;
-
-	UPROPERTY(BlueprintReadOnly, EditAnywhere)
-	TSubclassOf<UCommonBorderStyle> NegativeStyle;
+	TObjectPtr<URelationBar> RelationBar;
 
 	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly)
 	TObjectPtr<AFaction> Faction;

@@ -85,7 +85,7 @@ protected:
 	bool IsCursorUnlocked = false;
 
 	UPROPERTY(BlueprintReadOnly, EditInstanceOnly, Category="Gameplay")
-	TScriptInterface<ITargetable> SelectTarget;
+	TObjectPtr<UTargetable> SelectTarget;
 
 	UPROPERTY(BlueprintReadOnly, EditInstanceOnly, Category="Camera")
 	TObjectPtr<UViewTarget> ViewTarget;
@@ -124,10 +124,10 @@ protected:
 public:
 
 	UFUNCTION(BlueprintPure, Category="Gameplay")
-	TScriptInterface<ITargetable> GetSelectTarget() const;
+	UTargetable* GetSelectTarget() const;
 
 	UFUNCTION(BlueprintCallable, Category="Gameplay")
-	void SetSelectTarget(const TScriptInterface<ITargetable>& InSelectTarget);
+	void SetSelectTarget(UTargetable* InSelectTarget);
 
 	UFUNCTION(BlueprintCallable, Category="Camera")
 	void SetViewTarget(UViewTarget* InTarget);

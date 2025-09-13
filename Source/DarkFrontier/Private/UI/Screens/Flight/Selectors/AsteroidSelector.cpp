@@ -9,9 +9,9 @@
 #include "UI/Widgets/Visuals/Arc.h"
 #include "UI/Widgets/Visuals/MultiArc.h"
 
-void UAsteroidSelector::Init(const TScriptInterface<ITargetable>& InTarget)
+void UAsteroidSelector::Init(UTargetable* InTarget)
 {
-	const AAsteroid* Asteroid = Cast<AAsteroid>(InTarget.GetObject());
+	const AAsteroid* Asteroid = InTarget->GetOwner<AAsteroid>();
 	if(!ensureMsgf(IsValid(Asteroid), TEXT("Null or invalid target passed to asteroid selector")))
 	{
 		return;
@@ -35,7 +35,7 @@ void UAsteroidSelector::Update(const FGeometry& CanvasGeometry)
 {
 	Super::Update(CanvasGeometry);
 	
-	const AAsteroid* Asteroid = Cast<AAsteroid>(Target.GetObject());
+	const AAsteroid* Asteroid = Target->GetOwner<AAsteroid>();
 	GUARD(IsValid(Asteroid));
 
 	Position(CanvasGeometry, Asteroid->GetActorLocation());

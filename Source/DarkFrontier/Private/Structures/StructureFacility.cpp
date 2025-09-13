@@ -7,7 +7,7 @@ void UStructureFacility::BeginPlay()
 {
 	Super::BeginPlay();
 
-	OwningPart = Cast<AStructurePart>(GetOwner());
+	OwningPart = GetOwner<AStructurePart>();
 }
 
 AStructure* UStructureFacility::GetOwningStructure() const

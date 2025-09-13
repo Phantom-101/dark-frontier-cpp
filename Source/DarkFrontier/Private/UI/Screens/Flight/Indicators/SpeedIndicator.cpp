@@ -11,7 +11,7 @@ void USpeedIndicator::NativeTick(const FGeometry& MyGeometry, const float InDelt
 	Super::NativeTick(MyGeometry, InDeltaTime);
 
 	const USpeedIndication* Speed = Cast<USpeedIndication>(Indication);
-	const bool IsSelected = UGameFunctionLibrary::IsSelected(TScriptInterface<ITargetable>(Speed->GetStructure()));
+	const bool IsSelected = UGameFunctionLibrary::IsSelected(Speed->GetStructure()->GetTargetable());
 	SpeedText->SetVisibility(IsSelected ? ESlateVisibility::SelfHitTestInvisible : ESlateVisibility::Collapsed);
 	SpeedText->SetText(FText::FromString(FString::Printf(TEXT("%d m/s"), FMath::RoundToInt(Speed->GetSpeed() / 100))));
 }

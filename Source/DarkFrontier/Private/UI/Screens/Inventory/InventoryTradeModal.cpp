@@ -38,12 +38,12 @@ void UInventoryTradeModal::HandleTargetChange(UObject* Target) const
 		const int Available = Inventory->GetQuantity(Item);
 		const float VolumeFit = Inventory->GetFreeVolume() / Item->Volume;
 		const float MassFit = Inventory->GetFreeMass() / Item->Mass;
-		const float Afford = Inventory->GetStructure()->GetOwningFaction()->GetBalance() / Item->Value;
+		const float Afford = Inventory->GetStructure()->GetAffiliation()->GetFaction()->GetBalance() / Item->Value;
 
 		const int OtherAvailable = Other->GetQuantity(Item);
 		const float OtherVolumeFit = Other->GetFreeVolume() / Item->Volume;
 		const float OtherMassFit = Other->GetFreeMass() / Item->Mass;
-		const float OtherAfford = Other->GetStructure()->GetOwningFaction()->GetBalance() / Item->Value;
+		const float OtherAfford = Other->GetStructure()->GetAffiliation()->GetFaction()->GetBalance() / Item->Value;
 
 		const int CanBuy = FMath::Min(FMath::Min(OtherAvailable, FMath::FloorToInt(FMath::Min(VolumeFit, MassFit))), Afford);
 		const int CanSell = FMath::Min(FMath::Min(Available, FMath::FloorToInt(FMath::Min(OtherVolumeFit, OtherMassFit))), OtherAfford);
@@ -78,8 +78,8 @@ void UInventoryTradeModal::HandleConfirm()
 			Inventory->RemoveQuantity(Item, Quantity);
 			Other->AddQuantity(Item, Quantity);
 		}
-		Inventory->GetStructure()->GetOwningFaction()->ChangeBalance(-Quantity * Item->Value);
-		Target->GetOwningFaction()->ChangeBalance(Quantity * Item->Value);
+		Inventory->GetStructure()->GetAffiliation()->GetFaction()->ChangeBalance(-Quantity * Item->Value);
+		Target->GetAffiliation()->GetFaction()->ChangeBalance(Quantity * Item->Value);
 		DeactivateWidget();
 	}
 }

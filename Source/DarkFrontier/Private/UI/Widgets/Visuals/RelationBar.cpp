@@ -2,11 +2,11 @@
 
 #include "UI/Widgets/Visuals/RelationBar.h"
 #include "Factions/Faction.h"
-#include "Structures/Structure.h"
+#include "Libraries/GameFunctionLibrary.h"
 
-void URelationBar::Init(AFaction* InFaction)
+void URelationBar::Init(const AFaction* InFaction)
 {
-	AFaction* PlayerFaction = Cast<AStructure>(GetWorld()->GetFirstPlayerController()->GetPawn())->GetOwningFaction();
+	AFaction* PlayerFaction = UGameFunctionLibrary::GetPlayerFaction(this);
 	if(InFaction == PlayerFaction)
 	{
 		SetForegroundStyle(PlayerStyle);
@@ -22,7 +22,7 @@ void URelationBar::Init(AFaction* InFaction)
 
 void URelationBar::Init(const AFaction* InReference, AFaction* InOther)
 {
-	AFaction* PlayerFaction = Cast<AStructure>(GetWorld()->GetFirstPlayerController()->GetPawn())->GetOwningFaction();
+	const AFaction* PlayerFaction = UGameFunctionLibrary::GetPlayerFaction(this);
 	if(InReference == PlayerFaction)
 	{
 		SetForegroundStyle(PlayerStyle);

@@ -6,9 +6,9 @@
 #include "GameFramework/Actor.h"
 #include "Sector.generated.h"
 
+class UTargetable;
 class AItemPod;
 class AAsteroid;
-class ITargetable;
 class AStructure;
 
 UCLASS()
@@ -16,44 +16,49 @@ class DARKFRONTIER_API ASector : public AActor
 {
 	GENERATED_BODY()
 
-public:
-
-	ASector();
-
 protected:
 
 	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly)
-	TArray<TObjectPtr<AStructure>> Structures;
+	TSet<TObjectPtr<AActor>> Actors;
 
 	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly)
-	TArray<TObjectPtr<AAsteroid>> Asteroids;
+	TSet<TObjectPtr<AStructure>> Structures;
 
 	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly)
-	TArray<TObjectPtr<AItemPod>> ItemPods;
+	TSet<TObjectPtr<AAsteroid>> Asteroids;
 
 	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly)
-	TArray<TScriptInterface<ITargetable>> Targets;
+	TSet<TObjectPtr<AItemPod>> ItemPods;
+
+	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly)
+	TArray<TObjectPtr<UTargetable>> Targets;
 
 public:
 
-	const TArray<TScriptInterface<ITargetable>>& GetTargets();
+	const TArray<TObjectPtr<UTargetable>>& GetTargets();
 
 	UFUNCTION(BlueprintCallable)
-	void RegisterStructure(AStructure* Structure);
+	void Register(AActor* Actor);
 
 	UFUNCTION(BlueprintCallable)
-	void UnregisterStructure(AStructure* Structure);
+	void Unregister(AActor* Actor);
 
-	UFUNCTION(BlueprintCallable)
-	void RegisterAsteroid(AAsteroid* Asteroid);
+	template<typename T>
+	void TryRegister(AActor* Actor, TSet<TObjectPtr<T>>& Registry)
+	{
+		if(Actor->IsA<T>())
+		{
+			Registry.Add(Cast<T>(Actor));
+		}
+	}
 
-	UFUNCTION(BlueprintCallable)
-	void UnregisterAsteroid(AAsteroid* Asteroid);
+	template<typename T>
+	void TryUnregister(AActor* Actor, TSet<TObjectPtr<T>>& Registry)
+	{
+		if(Actor->IsA<T>())
+		{
+			Registry.Remove(Cast<T>(Actor));
+		}
+	}
 
-	UFUNCTION(BlueprintCallable)
-	void RegisterItemPod(AItemPod* ItemPod);
-	
-	UFUNCTION(BlueprintCallable)
-	void UnregisterItemPod(AItemPod* ItemPod);
-	
 };

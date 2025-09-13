@@ -65,6 +65,8 @@ protected:
 
 	UPROPERTY(EditAnywhere)
 	TMap<TObjectPtr<AFaction>, float> Relations;
+
+	// TODO add list of affiliated actors and register through affiliation component
 	
 	virtual void BeginPlay() override;
 

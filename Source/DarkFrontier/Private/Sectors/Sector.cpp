@@ -5,48 +5,35 @@
 #include "Items/ItemPod.h"
 #include "Structures/Structure.h"
 
-ASector::ASector()
-{
-	PrimaryActorTick.bCanEverTick = true;
-}
-
-const TArray<TScriptInterface<ITargetable>>& ASector::GetTargets()
+const TArray<TObjectPtr<UTargetable>>& ASector::GetTargets()
 {
 	return Targets;
 }
 
-void ASector::RegisterStructure(AStructure* Structure)
+void ASector::Register(AActor* Actor)
 {
-	Structures.Add(Structure);
-	Targets.Add(TScriptInterface<ITargetable>(Structure));
+	Actors.Add(Actor);
+
+	TryRegister<AStructure>(Actor, Structures);
+	TryRegister<AAsteroid>(Actor, Asteroids);
+	TryRegister<AItemPod>(Actor, ItemPods);
+
+	if(Actor->Implements<UTargetableInterface>())
+	{
+		Targets.Add(Cast<ITargetableInterface>(Actor)->GetTargetable());
+	}
 }
 
-void ASector::UnregisterStructure(AStructure* Structure)
+void ASector::Unregister(AActor* Actor)
 {
-	Structures.Remove(Structure);
-	Targets.Remove(TScriptInterface<ITargetable>(Structure));
-}
+	Actors.Remove(Actor);
 
-void ASector::RegisterAsteroid(AAsteroid* Asteroid)
-{
-	Asteroids.Add(Asteroid);
-	Targets.Add(TScriptInterface<ITargetable>(Asteroid));
-}
+	TryUnregister<AStructure>(Actor, Structures);
+	TryUnregister<AAsteroid>(Actor, Asteroids);
+	TryUnregister<AItemPod>(Actor, ItemPods);
 
-void ASector::UnregisterAsteroid(AAsteroid* Asteroid)
-{
-	Asteroids.Remove(Asteroid);
-	Targets.Remove(TScriptInterface<ITargetable>(Asteroid));
-}
-
-void ASector::RegisterItemPod(AItemPod* ItemPod)
-{
-	ItemPods.Add(ItemPod);
-	Targets.Add(TScriptInterface<ITargetable>(ItemPod));
-}
-
-void ASector::UnregisterItemPod(AItemPod* ItemPod)
-{
-	ItemPods.Remove(ItemPod);
-	Targets.Remove(TScriptInterface<ITargetable>(ItemPod));
+	if(Actor->Implements<UTargetableInterface>())
+	{
+		Targets.Remove(Cast<ITargetableInterface>(Actor)->GetTargetable());
+	}
 }

@@ -2,11 +2,15 @@
 
 #include "Structures/StructureDock.h"
 #include "Structures/Structure.h"
-#include "Structures/StructureLocation.h"
+
+AStructure* UStructureDock::GetDocker() const
+{
+	return Docker;
+}
 
 bool UStructureDock::ConfirmDock(AStructure* Structure)
 {
-	if(Structure == nullptr || Docker != nullptr || Structure->GetLocation()->GetDock() != nullptr)
+	if(Structure == nullptr || Docker != nullptr || Structure->GetDockable()->GetDock() != nullptr)
 	{
 		return false;
 	}
@@ -17,7 +21,7 @@ bool UStructureDock::ConfirmDock(AStructure* Structure)
 
 bool UStructureDock::ConfirmUnDock(AStructure* Structure)
 {
-	if(Structure == nullptr || Docker != Structure || Structure->GetLocation()->GetDock() != this)
+	if(Structure == nullptr || Docker != Structure || Structure->GetDockable()->GetDock() != this)
 	{
 		return false;
 	}

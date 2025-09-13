@@ -4,16 +4,18 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "Objects/Targetable.h"
+#include "Sectors/SectorLocation.h"
+#include "Structures/Targetable.h"
 #include "Asteroid.generated.h"
 
+class USectorLocation;
 class UAsteroidSelector;
 class AItemPod;
 class ASector;
 class UItem;
 
 UCLASS()
-class DARKFRONTIER_API AAsteroid : public AActor, public ITargetable
+class DARKFRONTIER_API AAsteroid : public AActor, public ISectorLocationInterface, public ITargetableInterface
 {
 	GENERATED_BODY()
 
@@ -35,16 +37,14 @@ protected:
 	TSubclassOf<AItemPod> PodClass;
 
 	UPROPERTY(BlueprintReadOnly, EditAnywhere)
-	TObjectPtr<ASector> Sector;
-
-	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly)
-	TSubclassOf<UAsteroidSelector> SelectorClass;
-
-	virtual void BeginPlay() override;
-
-	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
+	TObjectPtr<USectorLocation> Location;
+	
+	UPROPERTY(BlueprintReadOnly, EditAnywhere)
+	TObjectPtr<UTargetable> Targetable;
 
 public:
+
+	AAsteroid();
 
 	const TMap<TObjectPtr<UItem>, float>& GetComposition() const;
 
@@ -54,11 +54,11 @@ public:
 
 	int GetDepletedAmount() const;
 
-	virtual bool IsTargetable(AStructure* Structure) const override;
-
-	virtual TSubclassOf<USelector> GetSelectorClass() const override;
-
 	virtual float TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
+
+	virtual USectorLocation* GetSectorLocation() const override;
+
+	virtual UTargetable* GetTargetable() const override;
 
 protected:
 

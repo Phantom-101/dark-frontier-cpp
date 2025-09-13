@@ -23,11 +23,11 @@ void ULogPropertyTab::NativeOnActivated()
 
 	const UObject* Selected = ListView->GetSelectedItem();
 
-	const AFaction* PlayerFaction = Cast<AStructure>(GetWorld()->GetFirstPlayerController()->GetPawn())->GetOwningFaction();
+	const AFaction* PlayerFaction = Cast<AStructure>(GetWorld()->GetFirstPlayerController()->GetPawn())->GetAffiliation()->GetFaction();
 	TArray<UObject*> Structures;
 	for(TActorIterator<AStructure> Itr(GetWorld()); Itr; ++Itr)
 	{
-		if(Itr->GetOwningFaction() == PlayerFaction)
+		if(Itr->GetAffiliation()->GetFaction() == PlayerFaction)
 		{
 			Structures.Add(*Itr);
 		}

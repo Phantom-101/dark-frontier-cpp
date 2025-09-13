@@ -6,9 +6,9 @@
 #include "Structures/Structure.h"
 #include "UI/Screens/Flight/Indicators/StructureIndicators.h"
 
-void UStructureSelector::Init(const TScriptInterface<ITargetable>& InTarget)
+void UStructureSelector::Init(UTargetable* InTarget)
 {
-	AStructure* Structure = Cast<AStructure>(InTarget.GetObject());
+	AStructure* Structure = InTarget->GetOwner<AStructure>();
 	if(!ensureMsgf(IsValid(Structure), TEXT("Null or invalid target passed to structure selector")))
 	{
 		return;
@@ -30,7 +30,7 @@ void UStructureSelector::Update(const FGeometry& CanvasGeometry)
 {
 	Super::Update(CanvasGeometry);
 
-	const AStructure* Structure = Cast<AStructure>(Target.GetObject());
+	const AStructure* Structure = Target->GetOwner<AStructure>();
 	GUARD(IsValid(Structure));
 
 	Position(CanvasGeometry, Structure->GetActorLocation());

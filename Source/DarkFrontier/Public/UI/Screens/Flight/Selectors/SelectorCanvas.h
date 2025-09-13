@@ -6,8 +6,8 @@
 #include "CommonUserWidget.h"
 #include "SelectorCanvas.generated.h"
 
+class UTargetable;
 class USelector;
-class ITargetable;
 
 /**
  * 
@@ -23,21 +23,19 @@ protected:
 	TObjectPtr<class UCanvasPanel> Panel;
 
 	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly)
-	TArray<TScriptInterface<ITargetable>> Targets;
+	TArray<TObjectPtr<UTargetable>> Targets;
 
-	// Use object keys as map is not compatible with script interface keys
 	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly)
-	TMap<TObjectPtr<UObject>, TObjectPtr<USelector>> Selectors;
+	TMap<TObjectPtr<UTargetable>, TObjectPtr<USelector>> Selectors;
 
 	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
 
 public:
 
-	UFUNCTION(BlueprintCallable)
-	void SetTargets(const TArray<TScriptInterface<ITargetable>>& InTargets);
+	void SetTargets(const TArray<TObjectPtr<UTargetable>>& InTargets);
 
 private:
 	
-	static bool ShouldRemove(const TScriptInterface<ITargetable>& Target);
+	static bool ShouldRemove(const TObjectPtr<UTargetable>& Target);
 	
 };

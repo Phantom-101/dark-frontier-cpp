@@ -3,15 +3,15 @@
 #include "Items/ItemPod.h"
 #include "Items/Inventory.h"
 #include "Items/Item.h"
-#include "Sectors/Sector.h"
 #include "Structures/Structure.h"
-#include "Structures/StructureLocation.h"
-#include "UI/Screens/Flight/Selectors/ItemPodSelector.h"
 
 AItemPod::AItemPod()
 {
 	StaticMesh = CreateDefaultSubobject<UStaticMeshComponent>("StaticMesh");
 	SetRootComponent(StaticMesh);
+
+	Location = CreateDefaultSubobject<USectorLocation>("Location");
+	Targetable = CreateDefaultSubobject<UTargetable>("Targetable");
 }
 
 void AItemPod::Init(UItem* InItem, const int InQuantity)
@@ -24,24 +24,9 @@ void AItemPod::BeginPlay()
 {
 	Super::BeginPlay();
 
-	if(IsValid(Sector))
-	{
-		Sector->RegisterItemPod(this);
-	}
-
 	if(!IsValid(Item) || Quantity <= 0)
 	{
 		Destroy();
-	}
-}
-
-void AItemPod::EndPlay(const EEndPlayReason::Type EndPlayReason)
-{
-	Super::EndPlay(EndPlayReason);
-
-	if(IsValid(Sector))
-	{
-		Sector->UnregisterItemPod(this);
 	}
 }
 
@@ -77,12 +62,12 @@ UStaticMeshComponent* AItemPod::GetStaticMesh() const
 	return StaticMesh;
 }
 
-bool AItemPod::IsTargetable(AStructure* Structure) const
+USectorLocation* AItemPod::GetSectorLocation() const
 {
-	return Structure->GetLocation()->GetSector() == Sector;
+	return Location;
 }
 
-TSubclassOf<USelector> AItemPod::GetSelectorClass() const
+UTargetable* AItemPod::GetTargetable() const
 {
-	return SelectorClass.Get();
+	return Targetable;
 }

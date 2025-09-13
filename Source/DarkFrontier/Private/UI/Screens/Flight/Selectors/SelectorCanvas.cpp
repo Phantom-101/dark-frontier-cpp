@@ -4,7 +4,6 @@
 #include "Algo/RemoveIf.h"
 #include "Components/CanvasPanel.h"
 #include "Libraries/GameFunctionLibrary.h"
-#include "Objects/Targetable.h"
 #include "Structures/Structure.h"
 #include "UI/Screens/Flight/Selectors/Selector.h"
 
@@ -17,11 +16,11 @@ void USelectorCanvas::NativeTick(const FGeometry& MyGeometry, const float InDelt
 
 	// Remove invalid selectors
 	AStructure* Player = UGameFunctionLibrary::GetPlayerStructure(this);
-	TArray<TObjectPtr<UObject>> Current;
+	TArray<TObjectPtr<UTargetable>> Current;
 	Selectors.GetKeys(Current);
-	for(const TObjectPtr<UObject>& Target : Current)
+	for(const TObjectPtr<UTargetable>& Target : Current)
 	{
-		if(!IsValid(Player) || !IsValid(Target) || !Cast<ITargetable>(Target)->IsTargetable(Player))
+		if(!IsValid(Player) || !IsValid(Target) || !Target->IsTargetable(Player))
 		{
 			Panel->RemoveChild(Selectors[Target]);
 			Selectors.Remove(Target);
@@ -29,30 +28,30 @@ void USelectorCanvas::NativeTick(const FGeometry& MyGeometry, const float InDelt
 	}
 
 	// Add new selectors
-	for(const TScriptInterface<ITargetable>& Target : Targets)
+	for(const TObjectPtr<UTargetable>& Target : Targets)
 	{
-		if(IsValid(Player) && Target->IsTargetable(Player) && !Selectors.Contains(Target.GetObject()))
+		if(IsValid(Player) && Target->IsTargetable(Player) && !Selectors.Contains(Target))
 		{
 			USelector* Selector = CreateWidget<USelector>(this, Target->GetSelectorClass());
 			Selector->Init(Target);
 			Panel->AddChildToCanvas(Selector);
-			Selectors.Add(Target.GetObject(), Selector);
+			Selectors.Add(Target, Selector);
 		}
 	}
 
 	// Manually update selectors as they do not tick by themselves when hidden
-	for(const TPair<TObjectPtr<UObject>, TObjectPtr<USelector>>& Pair : Selectors)
+	for(const TPair<TObjectPtr<UTargetable>, TObjectPtr<USelector>>& Pair : Selectors)
 	{
 		Pair.Value->Update(MyGeometry);
 	}
 }
 
-void USelectorCanvas::SetTargets(const TArray<TScriptInterface<ITargetable>>& InTargets)
+void USelectorCanvas::SetTargets(const TArray<TObjectPtr<UTargetable>>& InTargets)
 {
 	Targets = InTargets;
 }
 
-bool USelectorCanvas::ShouldRemove(const TScriptInterface<ITargetable>& Target)
+bool USelectorCanvas::ShouldRemove(const TObjectPtr<UTargetable>& Target)
 {
-	return !IsValid(Target.GetObject());
+	return !IsValid(Target);
 }

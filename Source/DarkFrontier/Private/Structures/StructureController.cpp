@@ -10,7 +10,6 @@
 #include "Structures/Structure.h"
 #include "Structures/StructureDock.h"
 #include "Structures/StructureLayout.h"
-#include "Structures/StructureLocation.h"
 #include "UI/Screens/GameScreens.h"
 #include "UI/Screens/Build/BuildScreen.h"
 #include "UI/Screens/Screens.h"
@@ -77,9 +76,9 @@ void AStructureController::OnPossess(APawn* InPawn)
 		StructurePawn->GetAbilitySystemComponent()->InitAbilityActorInfo(StructurePawn, StructurePawn);
 		
 		StructurePawn->GetLayout()->OnUpdated.AddUObject<AStructureController>(this, &AStructureController::PropagateLayoutChange);
-		StructurePawn->GetLocation()->OnDockChanged.AddUObject<AStructureController>(this, &AStructureController::HandleDock);
+		StructurePawn->GetDockable()->OnDockChanged.AddUObject<AStructureController>(this, &AStructureController::HandleDock);
 
-		GetWorld()->GetGameState<AUniverseGameState>()->SetPlayerFaction(StructurePawn->GetOwningFaction());
+		GetWorld()->GetGameState<AUniverseGameState>()->SetPlayerFaction(StructurePawn->GetAffiliation()->GetFaction());
 	}
 }
 
@@ -90,18 +89,18 @@ void AStructureController::OnUnPossess()
 	if(StructurePawn)
 	{
 		StructurePawn->GetLayout()->OnUpdated.RemoveAll(this);
-		StructurePawn->GetLocation()->OnDockChanged.RemoveAll(this);
+		StructurePawn->GetDockable()->OnDockChanged.RemoveAll(this);
 	}
 
 	StructurePawn = nullptr;
 }
 
-TScriptInterface<ITargetable> AStructureController::GetSelectTarget() const
+UTargetable* AStructureController::GetSelectTarget() const
 {
 	return SelectTarget;
 }
 
-void AStructureController::SetSelectTarget(const TScriptInterface<ITargetable>& InSelectTarget)
+void AStructureController::SetSelectTarget(UTargetable* InSelectTarget)
 {
 	SelectTarget = InSelectTarget;
 }

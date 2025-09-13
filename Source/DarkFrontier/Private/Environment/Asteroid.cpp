@@ -4,30 +4,12 @@
 #include "Macros.h"
 #include "Items/Item.h"
 #include "Items/ItemPod.h"
-#include "Sectors/Sector.h"
-#include "Structures/Structure.h"
 #include "Structures/StructureDamageType.h"
-#include "Structures/StructureLocation.h"
-#include "UI/Screens/Flight/Selectors/AsteroidSelector.h"
 
-void AAsteroid::BeginPlay()
+AAsteroid::AAsteroid()
 {
-	Super::BeginPlay();
-
-	if(IsValid(Sector))
-	{
-		Sector->RegisterAsteroid(this);
-	}
-}
-
-void AAsteroid::EndPlay(const EEndPlayReason::Type EndPlayReason)
-{
-	Super::EndPlay(EndPlayReason);
-
-	if(IsValid(Sector))
-	{
-		Sector->UnregisterAsteroid(this);
-	}
+	Location = CreateDefaultSubobject<USectorLocation>("Location");
+	Targetable = CreateDefaultSubobject<UTargetable>("Targetable");
 }
 
 const TMap<TObjectPtr<UItem>, float>& AAsteroid::GetComposition() const
@@ -51,16 +33,6 @@ int AAsteroid::GetMaxAmount() const
 int AAsteroid::GetDepletedAmount() const
 {
 	return DepletedAmount;
-}
-
-bool AAsteroid::IsTargetable(AStructure* Structure) const
-{
-	return Structure->GetLocation()->GetSector() == Sector;
-}
-
-TSubclassOf<USelector> AAsteroid::GetSelectorClass() const
-{
-	return SelectorClass.Get();
 }
 
 float AAsteroid::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent,
@@ -92,6 +64,16 @@ float AAsteroid::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent,
 	}
 
 	return Absorbed;
+}
+
+USectorLocation* AAsteroid::GetSectorLocation() const
+{
+	return Location;
+}
+
+UTargetable* AAsteroid::GetTargetable() const
+{
+	return Targetable;
 }
 
 void AAsteroid::CreatePod()

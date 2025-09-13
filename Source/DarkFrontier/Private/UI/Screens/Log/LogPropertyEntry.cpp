@@ -7,7 +7,6 @@
 #include "Sectors/Sector.h"
 #include "Structures/Structure.h"
 #include "Structures/StructureGameplay.h"
-#include "Structures/StructureLocation.h"
 #include "UI/Widgets/Visuals/FillBar.h"
 
 void ULogPropertyEntry::NativeOnListItemObjectSet(UObject* ListItemObject)
@@ -22,7 +21,7 @@ void ULogPropertyEntry::NativeTick(const FGeometry& MyGeometry, const float InDe
 
 	GUARD(IsValid(Structure));
 
-	NameText->SetText(FText::FromString(FString::Printf(TEXT("\"%s\" (%s)"), *Structure->GetActorNameOrLabel(), *Structure->GetLocation()->GetSector()->GetActorNameOrLabel())));
+	NameText->SetText(FText::FromString(FString::Printf(TEXT("\"%s\" (%s)"), *Structure->GetActorNameOrLabel(), *Structure->GetSectorLocation()->GetSector()->GetActorNameOrLabel())));
 
 	const UStructureGameplay* Gameplay = Structure->GetGameplay();
 	ShieldBar->FillHorizontal(0, UMath::DivTo0(Gameplay->GetShield(), Gameplay->GetMaxShield()));

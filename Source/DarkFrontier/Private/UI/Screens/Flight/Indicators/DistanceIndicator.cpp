@@ -11,7 +11,7 @@ void UDistanceIndicator::NativeTick(const FGeometry& MyGeometry, const float InD
 	Super::NativeTick(MyGeometry, InDeltaTime);
 	
 	const UDistanceIndication* Distance = Cast<UDistanceIndication>(Indication);
-	const bool IsSelected = UGameFunctionLibrary::IsSelected(TScriptInterface<ITargetable>(Distance->GetStructure()));
+	const bool IsSelected = UGameFunctionLibrary::IsSelected(Distance->GetStructure()->GetTargetable());
 	DistanceText->SetVisibility(IsSelected ? ESlateVisibility::SelfHitTestInvisible : ESlateVisibility::Collapsed);
 	DistanceText->SetText(FText::FromString(FString::Printf(TEXT("%d m"), FMath::RoundToInt(Distance->GetDistance() / 100))));
 }

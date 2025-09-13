@@ -3,32 +3,14 @@
 #include "UI/Screens/Log/LogFactionEntry.h"
 #include "CommonTextBlock.h"
 #include "Factions/Faction.h"
-#include "Structures/Structure.h"
-#include "UI/Widgets/Visuals/FillBar.h"
+#include "UI/Widgets/Visuals/RelationBar.h"
 
 void ULogFactionEntry::Init(AFaction* InFaction)
 {
 	Faction = InFaction;
 
 	NameText->SetText(Faction->GetFactionName());
-
-	AFaction* PlayerFaction = Cast<AStructure>(GetWorld()->GetFirstPlayerController()->GetPawn())->GetOwningFaction();
-	if(Faction == PlayerFaction)
-	{
-		RelationBar->SetForegroundStyle(PlayerStyle);
-		
-		RelationBar->SetPivot(GetStart(1));
-		RelationBar->SetFill(GetFill(1));
-	}
-	else
-	{
-		const float Relation = Faction->GetRelation(PlayerFaction);
-
-		RelationBar->SetForegroundStyle(Relation > 0 ? PositiveStyle : NegativeStyle);
-
-		RelationBar->SetPivot(GetStart(Relation));
-		RelationBar->SetFill(GetFill(Relation));
-	}
+	RelationBar->Init(Faction);
 }
 
 void ULogFactionEntry::NativeOnListItemObjectSet(UObject* ListItemObject)
