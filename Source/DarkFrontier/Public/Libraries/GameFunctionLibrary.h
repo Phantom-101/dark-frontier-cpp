@@ -6,7 +6,9 @@
 #include "Kismet/BlueprintFunctionLibrary.h"
 #include "GameFunctionLibrary.generated.h"
 
-class ITargetable;
+class ASector;
+class AFaction;
+class UTargetable;
 class AStructure;
 class AStructureController;
 
@@ -20,6 +22,8 @@ class DARKFRONTIER_API UGameFunctionLibrary : public UBlueprintFunctionLibrary
 
 public:
 
+	// TODO maybe make FORCEINLINE later
+
 	UFUNCTION(BlueprintPure)
 	static AStructureController* GetPlayerController(const UObject* WorldContext);
 
@@ -27,6 +31,12 @@ public:
 	static AStructure* GetPlayerStructure(const UObject* WorldContext);
 
 	UFUNCTION(BlueprintPure)
-	static bool IsSelected(const TScriptInterface<ITargetable>& Targetable);
+	static AFaction* GetPlayerFaction(const UObject* WorldContext);
+
+	UFUNCTION(BlueprintPure)
+	static ASector* GetPlayerSector(const UObject* WorldContext);
+
+	UFUNCTION(BlueprintPure)
+	static bool IsSelected(const UTargetable* Targetable);
 	
 };

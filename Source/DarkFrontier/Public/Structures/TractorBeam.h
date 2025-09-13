@@ -23,7 +23,7 @@ protected:
 	float CollectionRange = 0;
 
 	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly)
-	TScriptInterface<ITargetable> Target;
+	TObjectPtr<UTargetable> Target;
 
 public:
 
@@ -31,11 +31,11 @@ public:
 
 	bool IsActivated() const;
 
-	virtual bool CanActivate(const TScriptInterface<ITargetable>& InTarget) const override;
+	virtual bool CanActivate(UTargetable* InTarget) const override;
 
 protected:
 
-	virtual void OnActivate(const TScriptInterface<ITargetable>& InTarget) override;
+	virtual void OnActivate(UTargetable* InTarget) override;
 
 public:
 
@@ -47,6 +47,6 @@ public:
 
 private:
 
-	FVector GetForce(const FVector& TargetLocation) const;
+	FVector GetForce() const;
 
 };

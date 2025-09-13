@@ -8,7 +8,7 @@ void UItemPodSelector::Update(const FGeometry& CanvasGeometry)
 {
 	Super::Update(CanvasGeometry);
 
-	const AItemPod* ItemPod = Cast<AItemPod>(Target.GetObject());
+	const AItemPod* ItemPod = Target->GetOwner<AItemPod>();
 	GUARD(IsValid(ItemPod));
 
 	Position(CanvasGeometry, ItemPod->GetActorLocation());

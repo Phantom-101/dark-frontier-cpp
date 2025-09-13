@@ -29,7 +29,7 @@ protected:
 
 public:
 
-	void Init(AFaction* InFaction);
+	void Init(const AFaction* InFaction);
 
 	void Init(const AFaction* InReference, AFaction* InOther);
 

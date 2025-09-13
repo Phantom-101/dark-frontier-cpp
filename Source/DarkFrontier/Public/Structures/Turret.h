@@ -6,7 +6,7 @@
 #include "Structures/StructurePart.h"
 #include "Turret.generated.h"
 
-class ITargetable;
+class UTargetable;
 
 /**
  * 
@@ -19,14 +19,14 @@ class DARKFRONTIER_API ATurret : public AStructurePart
 public:
 
 	UFUNCTION(BlueprintCallable)
-	virtual bool CanActivate(const TScriptInterface<ITargetable>& InTarget) const;
+	virtual bool CanActivate(UTargetable* InTarget) const;
 
 	UFUNCTION(BlueprintCallable)
-	virtual void TryActivate(const TScriptInterface<ITargetable>& InTarget);
+	virtual void TryActivate(UTargetable* InTarget);
 
 protected:
 
 	UFUNCTION(BlueprintCallable)
-	virtual void OnActivate(const TScriptInterface<ITargetable>& InTarget);
+	virtual void OnActivate(UTargetable* InTarget);
 
 };

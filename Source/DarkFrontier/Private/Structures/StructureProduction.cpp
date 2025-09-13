@@ -33,7 +33,7 @@ void UStructureProduction::TickComponent(const float DeltaTime, const ELevelTick
 		if(Progress == Recipe->Time && Inventory->FitsList(Recipe->Outputs))
 		{
 			Inventory->AddList(Recipe->Outputs);
-			GetOwningStructure()->GetOwningFaction()->ChangeBalance(Recipe->Revenue);
+			GetOwningStructure()->GetAffiliation()->GetFaction()->ChangeBalance(Recipe->Revenue);
 			RequirementsMet = false;
 			Progress = 0;
 		}
@@ -41,10 +41,10 @@ void UStructureProduction::TickComponent(const float DeltaTime, const ELevelTick
 	else
 	{
 		// Recipe not in progress, try to start
-		if(Inventory->HasList(Recipe->Inputs) && GetOwningStructure()->GetOwningFaction()->GetBalance() >= Recipe->Cost)
+		if(Inventory->HasList(Recipe->Inputs) && GetOwningStructure()->GetAffiliation()->GetFaction()->GetBalance() >= Recipe->Cost)
 		{
 			Inventory->RemoveList(Recipe->Inputs);
-			GetOwningStructure()->GetOwningFaction()->ChangeBalance(-Recipe->Cost);
+			GetOwningStructure()->GetAffiliation()->GetFaction()->ChangeBalance(-Recipe->Cost);
 			RequirementsMet = true;
 			Progress = 0;
 		}

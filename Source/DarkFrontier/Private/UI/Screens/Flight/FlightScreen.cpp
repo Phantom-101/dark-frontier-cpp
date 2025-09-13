@@ -17,7 +17,6 @@
 #include "Structures/StructureDock.h"
 #include "Structures/StructureGameplay.h"
 #include "Structures/StructureLayout.h"
-#include "Structures/StructureLocation.h"
 #include "Structures/StructurePart.h"
 #include "UI/Screens/Flight/Controls/StructurePartControls.h"
 #include "UI/Screens/Flight/Controls/StructurePartControlsMapping.h"
@@ -106,7 +105,7 @@ void UFlightScreen::NativeTick(const FGeometry& MyGeometry, const float InDeltaT
 	}
 
 	// Update targets
-	Selectors->SetTargets(Structure->GetLocation()->GetSector()->GetTargets());
+	Selectors->SetTargets(Structure->GetSectorLocation()->GetSector()->GetTargets());
 
 	// Update part controls
 	{
@@ -160,11 +159,11 @@ void UFlightScreen::HandleDock() const
 	const AStructureController* Controller = Cast<AStructureController>(GetOwningPlayer());
 	const AStructure* PlayerStructure = Cast<AStructure>(GetOwningPlayerPawn());
 	GUARD(IsValid(Controller) && IsValid(PlayerStructure));
-	const AStructure* TargetStructure = Cast<AStructure>(Controller->GetSelectTarget().GetObject());
+	const AStructure* TargetStructure = Controller->GetSelectTarget()->GetOwner<AStructure>();
 	GUARD(IsValid(TargetStructure));
 	for(UStructureDock* Dock : TargetStructure->GetLayout()->GetFacilities<UStructureDock>())
 	{
-		if(PlayerStructure->GetLocation()->EnterDock(Dock))
+		if(PlayerStructure->GetDockable()->EnterDock(Dock))
 		{
 			break;
 		}

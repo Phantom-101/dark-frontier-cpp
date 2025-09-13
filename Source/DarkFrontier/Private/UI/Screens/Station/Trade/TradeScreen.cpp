@@ -5,7 +5,6 @@
 #include "Components/ListView.h"
 #include "Structures/StructureController.h"
 #include "Structures/StructureInventory.h"
-#include "Structures/StructureLocation.h"
 #include "UI/Screens/Station/Trade/TradeEntry.h"
 #include "UI/Widgets/Visuals/FillBar.h"
 
@@ -26,7 +25,7 @@ void UTradeScreen::NativeOnActivated()
 	const AStructureController* Controller = Cast<AStructureController>(GetWorld()->GetFirstPlayerController());
 
 	const AStructure* Ship = Cast<AStructure>(Controller->GetPawn());
-	const AStructure* Station = Ship->GetLocation()->GetDockStructure();
+	const AStructure* Station = Ship->GetDockable()->GetDockStructure();
 
 	const UStructureInventory* ShipInventory = Ship->GetInventory();
 	const UStructureInventory* StationInventory = Station->GetInventory();

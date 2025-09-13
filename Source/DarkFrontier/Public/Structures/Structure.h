@@ -4,17 +4,20 @@
 
 #include "AbilitySystemInterface.h"
 #include "CoreMinimal.h"
+#include "Dockable.h"
 #include "GameplayTagContainer.h"
-#include "StructureTickLevel.h"
+#include "Targetable.h"
+#include "TickLevel.h"
+#include "Factions/Affiliation.h"
 #include "GameFramework/Pawn.h"
-#include "Objects/Targetable.h"
+#include "Sectors/SectorLocation.h"
 #include "Structure.generated.h"
 
-class UStructureSelector;
-class UTargetGroup;
+class UTickLevel;
+class UTargetable;
+class USectorLocation;
 class UStructureInventory;
 class UItem;
-class UStructureLocation;
 class UStructureLayout;
 class UStructureGameplay;
 enum class EStructureValidationResult : uint8;
@@ -35,13 +38,10 @@ struct FGameplayAbilitySpecHandle;
 DECLARE_MULTICAST_DELEGATE_OneParam(FStructureIndicationChanged, UStructureIndication*)
 
 UCLASS()
-class DARKFRONTIER_API AStructure : public APawn, public ITargetable, public IAbilitySystemInterface
+class DARKFRONTIER_API AStructure : public APawn, public ISectorLocationInterface, public ITickLevelInterface,
+	public IAffiliationInterface, public IDockableInterface, public ITargetableInterface, public IAbilitySystemInterface
 {
 	GENERATED_BODY()
-
-public:
-
-	AStructure();
 
 protected:
 
@@ -54,32 +54,26 @@ protected:
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category="Components")
 	TObjectPtr<UCameraComponent> Camera;
 
-	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category="Gameplay")
-	TObjectPtr<UTargetGroup> HullTargetGroup;
-	
-	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category="Gameplay")
-	TObjectPtr<UTargetGroup> ShieldTargetGroup;
-
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere)
 	TObjectPtr<UStructureLayout> Layout;
 
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere)
-	TObjectPtr<UStructureLocation> Location;
+	TObjectPtr<USectorLocation> Location;
 
-	UPROPERTY(BlueprintReadOnly, EditAnywhere)
-	TObjectPtr<ASector> InitialSector;
+	UPROPERTY(BlueprintReadOnly, VisibleAnywhere)
+	TObjectPtr<UTickLevel> TickLevel;
 
-	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly, Category="Sector")
-	EStructureTickLevel TickLevel = EStructureTickLevel::Omitted;
+	UPROPERTY(BlueprintReadOnly, VisibleAnywhere)
+	TObjectPtr<UAffiliation> Affiliation;
+
+	UPROPERTY(BlueprintReadOnly, VisibleAnywhere)
+	TObjectPtr<UDockable> Dockable;
+
+	UPROPERTY(BlueprintReadOnly, VisibleAnywhere)
+	TObjectPtr<UTargetable> Targetable;
 
 	UPROPERTY(BlueprintReadOnly, EditAnywhere, Instanced, Category="Inventory")
 	TObjectPtr<UStructureInventory> Inventory;
-
-	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category="Combat")
-	TObjectPtr<AFaction> OwningFaction;
-
-	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category="Combat")
-	TSubclassOf<UStructureSelector> SelectorClass;
 
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere)
 	TObjectPtr<UStructureGameplay> Gameplay;
@@ -105,6 +99,8 @@ public:
 
 	FStructureIndicationChanged OnIndicationRemoved;
 
+	AStructure();
+
 protected:
 
 	virtual void PostInitializeComponents() override;
@@ -124,32 +120,26 @@ public:
 	UStructureLayout* GetLayout() const;
 
 	UFUNCTION(BlueprintCallable)
-	UStructureLocation* GetLocation() const;
+	virtual USectorLocation* GetSectorLocation() const override;
 
-	UFUNCTION(BlueprintCallable, Category="Sector")
-	EStructureTickLevel GetTickLevel();
+	UFUNCTION(BlueprintCallable)
+	virtual UTickLevel* GetTickLevel() const override;
 
-	UFUNCTION(BlueprintCallable, Category="Sector")
-	bool SetTickLevel(EStructureTickLevel InLevel);
+	UFUNCTION(BlueprintCallable)
+	virtual UAffiliation* GetAffiliation() const override;
 
-	UFUNCTION(BlueprintCallable, Category="Sector")
-	void UpdateTickLevel();
+	UFUNCTION(BlueprintCallable)
+	virtual UDockable* GetDockable() const override;
+
+	UFUNCTION(BlueprintCallable)
+	virtual UTargetable* GetTargetable() const override;
 
 	UFUNCTION(BlueprintCallable, Category="Inventory")
 	UStructureInventory* GetInventory() const;
 
-	UFUNCTION(BlueprintCallable, Category="Combat")
-	AFaction* GetOwningFaction() const;
-
-	UFUNCTION(BlueprintCallable, Category="Combat")
-	void SetOwningFaction(AFaction* InFaction);
-
+	// TODO move into function library
 	UFUNCTION(BlueprintCallable, Category="Combat")
 	bool IsPlayer() const;
-
-	virtual bool IsTargetable(AStructure* Structure) const override;
-
-	virtual TSubclassOf<USelector> GetSelectorClass() const override;
 
 	UFUNCTION(BlueprintCallable)
 	UStructureGameplay* GetGameplay() const;
@@ -182,6 +172,8 @@ public:
 	USpringArmComponent* GetCameraSpringArm() const;
 
 protected:
+
+	void HandleTickLevelChanged(ETickLevel NewTickLevel);
 
 	virtual void SetActorHiddenInGame(bool bNewHidden) override;
 	

@@ -1,13 +1,14 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "Structures/Turret.h"
+#include "Structures/Targetable.h"
 
-bool ATurret::CanActivate(const TScriptInterface<ITargetable>& InTarget) const
+bool ATurret::CanActivate(UTargetable* InTarget) const
 {
 	return true;
 }
 
-void ATurret::TryActivate(const TScriptInterface<ITargetable>& InTarget)
+void ATurret::TryActivate(UTargetable* InTarget)
 {
 	if(!CanActivate(InTarget))
 	{
@@ -17,6 +18,6 @@ void ATurret::TryActivate(const TScriptInterface<ITargetable>& InTarget)
 	OnActivate(InTarget);
 }
 
-void ATurret::OnActivate(const TScriptInterface<ITargetable>& InTarget)
+void ATurret::OnActivate(UTargetable* InTarget)
 {
 }

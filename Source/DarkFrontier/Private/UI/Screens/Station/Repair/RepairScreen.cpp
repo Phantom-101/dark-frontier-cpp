@@ -155,7 +155,7 @@ void URepairScreen::Confirm()
 	UStructureGameplay* Gameplay = Structure->GetGameplay();
 
 	const float TotalCost = GetTotalCost();
-	AFaction* Faction = Structure->GetOwningFaction();
+	AFaction* Faction = Structure->GetAffiliation()->GetFaction();
 	if(Faction->GetBalance() >= TotalCost)
 	{
 		Faction->ChangeBalance(-TotalCost);

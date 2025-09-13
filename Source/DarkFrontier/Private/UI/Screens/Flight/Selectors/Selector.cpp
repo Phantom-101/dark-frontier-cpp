@@ -7,7 +7,6 @@
 #include "Blueprint/WidgetLayoutLibrary.h"
 #include "Components/CanvasPanelSlot.h"
 #include "Libraries/GameFunctionLibrary.h"
-#include "Objects/Targetable.h"
 #include "Structures/StructureController.h"
 
 void USelector::NativeConstruct()
@@ -21,14 +20,14 @@ void USelector::NativeConstruct()
 	SelectButton->OnClicked().AddUObject(this, &USelector::Select);
 }
 
-void USelector::Init(const TScriptInterface<ITargetable>& InTarget)
+void USelector::Init(UTargetable* InTarget)
 {
 	Target = InTarget;
 }
 
 void USelector::Update(const FGeometry& CanvasGeometry)
 {
-	GUARD(IsValid(Target.GetObject()));
+	GUARD(IsValid(Target));
 
 	SetRenderScale(UGameFunctionLibrary::IsSelected(Target) ? FVector2D(1.5) : FVector2D(1));
 }
@@ -46,7 +45,7 @@ void USelector::Position(const FGeometry& CanvasGeometry, const FVector& WorldPo
 void USelector::Select() const
 {
 	AStructureController* Controller = Cast<AStructureController>(GetWorld()->GetFirstPlayerController());
-	if(IsValid(Target.GetObject()) && IsValid(Controller))
+	if(IsValid(Target) && IsValid(Controller))
 	{
 		Controller->SetSelectTarget(Target);
 	}

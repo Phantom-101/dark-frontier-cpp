@@ -14,26 +14,18 @@ ATractorBeam::ATractorBeam()
 
 bool ATractorBeam::IsActivated() const
 {
-	return IsValid(Target.GetObject());
+	return IsValid(Target);
 }
 
-bool ATractorBeam::CanActivate(const TScriptInterface<ITargetable>& InTarget) const
+bool ATractorBeam::CanActivate(UTargetable* InTarget) const
 {
-	GUARD_RETURN(IsValid(InTarget.GetObject()), false);
-	if(InTarget.GetObject()->IsA<AItemPod>())
-	{
-		const AItemPod* ItemPod = Cast<AItemPod>(InTarget.GetObject());
-		return (ItemPod->GetActorLocation() - GetActorLocation()).SizeSquared() <= TractorRange * TractorRange;
-	}
-	if(InTarget.GetObject()->IsA<AStructure>())
-	{
-		const AStructure* Structure = Cast<AStructure>(InTarget.GetObject());
-		return (Structure->GetActorLocation() - GetActorLocation()).SizeSquared() <= TractorRange * TractorRange;
-	}
-	return false;
+	GUARD_RETURN(IsValid(InTarget), false);
+	const AActor* TargetActor = InTarget->GetOwner();
+	GUARD_RETURN(TargetActor->IsA<AItemPod>() || TargetActor->IsA<AStructure>(), false);
+	return (TargetActor->GetActorLocation() - GetActorLocation()).SizeSquared() <= TractorRange * TractorRange;
 }
 
-void ATractorBeam::OnActivate(const TScriptInterface<ITargetable>& InTarget)
+void ATractorBeam::OnActivate(UTargetable* InTarget)
 {
 	Target = InTarget;
 }
@@ -52,11 +44,11 @@ void ATractorBeam::Tick(const float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
 
-	GUARD(IsValid(Target.GetObject()));
-	if(Target.GetObject()->IsA<AItemPod>())
+	GUARD(IsValid(Target));
+	if(Target->GetOwner()->IsA<AItemPod>())
 	{
-		AItemPod* ItemPod = Cast<AItemPod>(Target.GetObject());
-		ItemPod->GetStaticMesh()->AddForce(GetForce(ItemPod->GetActorLocation()));
+		AItemPod* ItemPod = Target->GetOwner<AItemPod>();
+		ItemPod->GetStaticMesh()->AddForce(GetForce());
 		const FVector Delta = GetActorLocation() - ItemPod->GetActorLocation();
 		const float Radius = UBoundsFunctionLibrary::GetLocalBounds(GetOwningStructure(), true).SphereRadius;
 		const float FinalRange = Radius + CollectionRange;
@@ -67,16 +59,16 @@ void ATractorBeam::Tick(const float DeltaSeconds)
 			// May need to add overlap check in case this does not fully work
 		}
 	}
-	else if(Target.GetObject()->IsA<AStructure>())
+	else if(Target->GetOwner()->IsA<AStructure>())
 	{
-		const AStructure* Structure = Cast<AStructure>(Target.GetObject());
-		Structure->GetStaticMesh()->AddForce(GetForce(Structure->GetActorLocation()));
+		const AStructure* Structure = Target->GetOwner<AStructure>();
+		Structure->GetStaticMesh()->AddForce(GetForce());
 	}
 }
 
-FVector ATractorBeam::GetForce(const FVector& TargetLocation) const
+FVector ATractorBeam::GetForce() const
 {
-	FVector Force = GetActorLocation() - TargetLocation;
+	FVector Force = GetActorLocation() - Target->GetOwner()->GetActorLocation();
 	Force.Normalize();
 	Force *= TractorForce;
 	return Force;

@@ -5,6 +5,7 @@
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Libraries/GameFunctionLibrary.h"
+#include "Sectors/SectorLocation.h"
 #include "Structures/StructureAbilitySystemComponent.h"
 #include "Structures/StructureAbility.h"
 #include "Structures/StructureAuthoring.h"
@@ -12,13 +13,11 @@
 #include "Structures/StructureGameplay.h"
 #include "Structures/StructureInventory.h"
 #include "Structures/StructureLayout.h"
-#include "Structures/StructureLocation.h"
 #include "Structures/StructurePart.h"
 #include "Structures/Indications/DistanceIndication.h"
 #include "Structures/Indications/HullIndication.h"
 #include "Structures/Indications/SpeedIndication.h"
 #include "Structures/Indications/StructureIndication.h"
-#include "UI/Screens/Flight/Selectors/StructureSelector.h"
 
 AStructure::AStructure()
 {
@@ -34,7 +33,12 @@ AStructure::AStructure()
 	Camera->SetupAttachment(SpringArm);
 
 	Layout = UStructureLayout::CreateLayout(this);
-	Location = UStructureLocation::CreateLocation(this);
+	Location = CreateDefaultSubobject<USectorLocation>("Location");
+	TickLevel = CreateDefaultSubobject<UTickLevel>("TickLevel");
+	TickLevel->OnTickLevelChanged.AddUObject(this, &AStructure::HandleTickLevelChanged);
+	Affiliation = CreateDefaultSubobject<UAffiliation>("Affiliation");
+	Dockable = CreateDefaultSubobject<UDockable>("Dockable");
+	Targetable = CreateDefaultSubobject<UTargetable>("Targetable");
 	Inventory = UStructureInventory::CreateInventory(this);
 	Gameplay = UStructureGameplay::CreateGameplay(this);
 }
@@ -55,8 +59,6 @@ void AStructure::BeginPlay()
 
 	OnTakePointDamage.AddDynamic(this, &AStructure::HandlePointDamage);
 
-	Location->EnterSector(InitialSector);
-
 	AddIndication(UHullIndication::StaticClass());
 	AddIndication(UDistanceIndication::StaticClass());
 	AddIndication(USpeedIndication::StaticClass());
@@ -74,9 +76,7 @@ void AStructure::Tick(const float DeltaTime)
 
 	if(!IsValid(Layout->GetRootPart())) return;
 
-	UpdateTickLevel();
-
-	if(TickLevel == EStructureTickLevel::Full)
+	if(TickLevel->GetTickLevel() == ETickLevel::Full)
 	{
 		const float LinearMaxSpeed = Gameplay->GetLinearMaxSpeed();
 		const float LinearAccel = Gameplay->GetLinearAcceleration();
@@ -86,7 +86,7 @@ void AStructure::Tick(const float DeltaTime)
 		const float AngularAccel = Gameplay->GetAngularAcceleration();
 		StaticMesh->AddAngularImpulseInDegrees(CalculateImpulse(StaticMesh->GetPhysicsAngularVelocityInDegrees(), RotateInput, AngularMaxSpeed, AngularAccel, DeltaTime), NAME_None, true);
 	}
-	else if(TickLevel == EStructureTickLevel::Limited)
+	else if(TickLevel->GetTickLevel() == ETickLevel::Partial)
 	{
 		const FVector ScaledMoveInput = MoveInput * Gameplay->GetLinearMaxSpeed();
 		SetActorLocation(GetActorLocation() + ScaledMoveInput);
@@ -111,7 +111,6 @@ bool AStructure::TryDestroy()
 	if(!IsValid(Layout->GetRootPart())) return false;
 	
 	Layout->RemoveAll();
-	Location->ExitSector();
 	Destroy();
 
 	return true;
@@ -122,55 +121,29 @@ UStructureLayout* AStructure::GetLayout() const
 	return Layout;
 }
 
-UStructureLocation* AStructure::GetLocation() const
+USectorLocation* AStructure::GetSectorLocation() const
 {
 	return Location;
 }
 
-EStructureTickLevel AStructure::GetTickLevel()
+UTickLevel* AStructure::GetTickLevel() const
 {
 	return TickLevel;
 }
 
-bool AStructure::SetTickLevel(EStructureTickLevel InLevel)
+UAffiliation* AStructure::GetAffiliation() const
 {
-	if(TickLevel == InLevel) return false;
-
-	TickLevel = InLevel;
-
-	// Set visibility and collision
-	if(TickLevel == EStructureTickLevel::Full)
-	{
-		SetActorHiddenInGame(false);
-		SetActorEnableCollision(true);
-	}
-	else
-	{
-		SetActorHiddenInGame(true);
-		SetActorEnableCollision(false);
-	}
-
-	return true;
+	return Affiliation;
 }
 
-void AStructure::UpdateTickLevel()
+UDockable* AStructure::GetDockable() const
 {
-	const AStructure* Player = Cast<AStructure>(GetWorld()->GetFirstPlayerController()->GetPawn());
-	if(IsValid(Player))
-	{
-		if(Location->GetSector() == Player->GetLocation()->GetSector())
-		{
-			SetTickLevel(EStructureTickLevel::Full);
-		}
-		else
-		{
-			SetTickLevel(EStructureTickLevel::Limited);
-		}
-	}
-	else
-	{
-		SetTickLevel(EStructureTickLevel::Omitted);
-	}
+	return Dockable;
+}
+
+UTargetable* AStructure::GetTargetable() const
+{
+	return Targetable;
 }
 
 UStructureInventory* AStructure::GetInventory() const
@@ -178,30 +151,9 @@ UStructureInventory* AStructure::GetInventory() const
 	return Inventory;
 }
 
-AFaction* AStructure::GetOwningFaction() const
-{
-	return OwningFaction;
-}
-
-void AStructure::SetOwningFaction(AFaction* InFaction)
-{
-	OwningFaction = InFaction;
-}
-
 bool AStructure::IsPlayer() const
 {
 	return this == UGameFunctionLibrary::GetPlayerStructure(this);
-}
-
-bool AStructure::IsTargetable(AStructure* Structure) const
-{
-	// TODO check detection
-	return Structure->Location->GetSector() == Location->GetSector();
-}
-
-TSubclassOf<USelector> AStructure::GetSelectorClass() const
-{
-	return SelectorClass.Get();
 }
 
 UStructureGameplay* AStructure::GetGameplay() const
@@ -296,6 +248,20 @@ UStaticMeshComponent* AStructure::GetStaticMesh() const
 USpringArmComponent* AStructure::GetCameraSpringArm() const
 {
 	return SpringArm;
+}
+
+void AStructure::HandleTickLevelChanged(const ETickLevel NewTickLevel)
+{
+	if(NewTickLevel == ETickLevel::Full)
+	{
+		SetActorHiddenInGame(false);
+		SetActorEnableCollision(true);
+	}
+	else
+	{
+		SetActorHiddenInGame(true);
+		SetActorEnableCollision(false);
+	}
 }
 
 void AStructure::SetActorHiddenInGame(const bool bNewHidden)

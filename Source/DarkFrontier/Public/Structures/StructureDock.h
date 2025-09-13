@@ -23,6 +23,9 @@ protected:
 public:
 
 	UFUNCTION(BlueprintCallable)
+	AStructure* GetDocker() const;
+
+	UFUNCTION(BlueprintCallable)
 	bool ConfirmDock(AStructure* Structure);
 
 	UFUNCTION(BlueprintCallable)

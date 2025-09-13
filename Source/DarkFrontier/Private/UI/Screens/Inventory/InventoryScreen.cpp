@@ -8,10 +8,10 @@
 #include "Components/WidgetSwitcher.h"
 #include "Factions/Faction.h"
 #include "Items/Item.h"
+#include "Libraries/StructureFunctionLibrary.h"
 #include "Libraries/UIFunctionLibrary.h"
 #include "Structures/Structure.h"
 #include "Structures/StructureInventory.h"
-#include "Structures/StructureLocation.h"
 #include "UI/Screens/Screens.h"
 #include "UI/Screens/Inventory/InventoryDisposeModal.h"
 #include "UI/Screens/Inventory/InventoryEntry.h"
@@ -115,7 +115,7 @@ void UInventoryScreen::HandleSwitch()
 	}
 
 	UListBoxModal* SwitchModal = Screens->GetStack()->AddWidget<UListBoxModal>(ListBoxModalClass);
-	SwitchModal->SetOptionsWithInitial(TArray<UObject*>(Structure->GetLocation()->GetInTree()), Structure);
+	SwitchModal->SetOptionsWithInitial(TArray<UObject*>(UStructureFunctionLibrary::GetInTree(Structure)), Structure);
 	SwitchModal->SetBuilder([Owner = SwitchModal, Class = InventoryEntryClass](UObject* Structure)
 	{
 		UInventoryEntry* Option = CreateWidget<UInventoryEntry>(Owner, Class);
@@ -143,12 +143,12 @@ void UInventoryScreen::HandleTrade()
 		CurrentModal = nullptr;
 	}
 
-	TArray<AStructure*> Targets = Structure->GetLocation()->GetInTree();
-	const AFaction* CurrentFaction = Structure->GetOwningFaction();
+	TArray<AStructure*> Targets = UStructureFunctionLibrary::GetInTree(Structure);
+	const AFaction* CurrentFaction = Structure->GetAffiliation()->GetFaction();
 	int Index = 0;
 	while(Index < Targets.Num())
 	{
-		if(Targets[Index]->GetOwningFaction() == CurrentFaction)
+		if(Targets[Index]->GetAffiliation()->GetFaction() == CurrentFaction)
 		{
 			Targets.RemoveAt(Index);
 		}
@@ -174,7 +174,7 @@ void UInventoryScreen::HandleTransfer()
 		CurrentModal = nullptr;
 	}
 
-	TArray<AStructure*> Targets = Structure->GetLocation()->GetInTree();
+	TArray<AStructure*> Targets = UStructureFunctionLibrary::GetInTree(Structure);
 	Targets.Remove(Structure);
 	
 	UInventoryTransferModal* TransferModal = Screens->GetStack()->AddWidget<UInventoryTransferModal>(TransferModalClass);
