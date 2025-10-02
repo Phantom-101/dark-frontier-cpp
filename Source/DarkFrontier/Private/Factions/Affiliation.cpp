@@ -9,7 +9,7 @@ void UAffiliation::BeginPlay()
 	Super::BeginPlay();
 	if(IsValid(Faction))
 	{
-		//Faction->Register(GetOwner());
+		Faction->Register(this);
 	}
 	OnFactionChanged.Broadcast(Faction);
 }
@@ -19,7 +19,7 @@ void UAffiliation::EndPlay(const EEndPlayReason::Type EndPlayReason)
 	Super::EndPlay(EndPlayReason);
 	if(IsValid(Faction))
 	{
-		//Faction->Unregister(GetOwner());
+		Faction->Unregister(this);
 	}
 	Faction = nullptr;
 	OnFactionChanged.Broadcast(Faction);
@@ -35,12 +35,12 @@ void UAffiliation::SetFaction(AFaction* InFaction)
 	GUARD(Faction != InFaction);
 	if(IsValid(Faction))
 	{
-		//Faction->Unregister(GetOwner());
+		Faction->Unregister(this);
 	}
 	Faction = InFaction;
 	if(IsValid(Faction))
 	{
-		//Faction->Register(GetOwner());
+		Faction->Register(this);
 	}
 	OnFactionChanged.Broadcast(Faction);
 }

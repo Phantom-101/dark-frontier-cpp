@@ -137,10 +137,6 @@ public:
 	UFUNCTION(BlueprintCallable, Category="Inventory")
 	UStructureInventory* GetInventory() const;
 
-	// TODO move into function library
-	UFUNCTION(BlueprintCallable, Category="Combat")
-	bool IsPlayer() const;
-
 	UFUNCTION(BlueprintCallable)
 	UStructureGameplay* GetGameplay() const;
 

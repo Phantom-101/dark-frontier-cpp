@@ -22,8 +22,6 @@ class DARKFRONTIER_API UGameFunctionLibrary : public UBlueprintFunctionLibrary
 
 public:
 
-	// TODO maybe make FORCEINLINE later
-
 	UFUNCTION(BlueprintPure)
 	static AStructureController* GetPlayerController(const UObject* WorldContext);
 
@@ -37,6 +35,9 @@ public:
 	static ASector* GetPlayerSector(const UObject* WorldContext);
 
 	UFUNCTION(BlueprintPure)
+	static bool IsPlayer(const AStructure* Structure);
+
+	UFUNCTION(BlueprintPure)
 	static bool IsSelected(const UTargetable* Targetable);
-	
+
 };

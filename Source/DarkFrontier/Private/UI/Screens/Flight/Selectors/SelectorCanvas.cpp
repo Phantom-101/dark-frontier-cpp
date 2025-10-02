@@ -46,9 +46,9 @@ void USelectorCanvas::NativeTick(const FGeometry& MyGeometry, const float InDelt
 	}
 }
 
-void USelectorCanvas::SetTargets(const TArray<TObjectPtr<UTargetable>>& InTargets)
+void USelectorCanvas::SetTargets(const TSet<TObjectPtr<UTargetable>>& InTargets)
 {
-	Targets = InTargets;
+	Targets = InTargets.Array();
 }
 
 bool USelectorCanvas::ShouldRemove(const TObjectPtr<UTargetable>& Target)

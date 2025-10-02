@@ -6,6 +6,7 @@
 #include "Components/ListView.h"
 #include "Components/WidgetSwitcher.h"
 #include "Factions/Faction.h"
+#include "Libraries/GameFunctionLibrary.h"
 #include "Structures/Structure.h"
 #include "UI/Screens/Log/LogPropertyInfo.h"
 
@@ -23,16 +24,8 @@ void ULogPropertyTab::NativeOnActivated()
 
 	const UObject* Selected = ListView->GetSelectedItem();
 
-	const AFaction* PlayerFaction = Cast<AStructure>(GetWorld()->GetFirstPlayerController()->GetPawn())->GetAffiliation()->GetFaction();
-	TArray<UObject*> Structures;
-	for(TActorIterator<AStructure> Itr(GetWorld()); Itr; ++Itr)
-	{
-		if(Itr->GetAffiliation()->GetFaction() == PlayerFaction)
-		{
-			Structures.Add(*Itr);
-		}
-	}
-	ListView->SetListItems(TArray(Structures));
+	const AFaction* PlayerFaction = UGameFunctionLibrary::GetPlayerFaction(this);
+	ListView->SetListItems(PlayerFaction->GetProperty().Array());
 
 	ListView->SetSelectedItem(Selected);
 }

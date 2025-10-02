@@ -1,8 +1,8 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "UI/Screens/Flight/Selectors/StructureSelector.h"
-
 #include "Macros.h"
+#include "Libraries/GameFunctionLibrary.h"
 #include "Structures/Structure.h"
 #include "UI/Screens/Flight/Indicators/StructureIndicators.h"
 
@@ -34,7 +34,7 @@ void UStructureSelector::Update(const FGeometry& CanvasGeometry)
 	GUARD(IsValid(Structure));
 
 	Position(CanvasGeometry, Structure->GetActorLocation());
-	SetVisibility(Structure->IsPlayer() ? ESlateVisibility::Collapsed : ESlateVisibility::SelfHitTestInvisible);
+	SetVisibility(UGameFunctionLibrary::IsPlayer(Structure) ? ESlateVisibility::Collapsed : ESlateVisibility::SelfHitTestInvisible);
 }
 
 void UStructureSelector::OnIndicationAdded(UStructureIndication* Indication) const

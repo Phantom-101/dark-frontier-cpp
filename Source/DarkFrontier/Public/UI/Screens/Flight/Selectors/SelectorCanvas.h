@@ -32,7 +32,7 @@ protected:
 
 public:
 
-	void SetTargets(const TArray<TObjectPtr<UTargetable>>& InTargets);
+	void SetTargets(const TSet<TObjectPtr<UTargetable>>& InTargets);
 
 private:
 	

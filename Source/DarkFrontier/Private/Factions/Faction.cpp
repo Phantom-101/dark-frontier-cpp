@@ -79,15 +79,34 @@ float AFaction::ChangeRelation(AFaction* Other, const float Delta)
 	return Target;
 }
 
+const TSet<TObjectPtr<UAffiliation>>& AFaction::GetAffiliated() const
+{
+	return Affiliated;
+}
+
+const TSet<TObjectPtr<AStructure>>& AFaction::GetProperty() const
+{
+	return Property;
+}
+
+void AFaction::Register(UAffiliation* Affiliation)
+{
+	Affiliated.Add(Affiliation);
+	REGISTER_ACTOR(Affiliation->GetOwner(), AStructure, Property);
+}
+
+void AFaction::Unregister(UAffiliation* Affiliation)
+{
+	Affiliated.Remove(Affiliation);
+	UNREGISTER_ACTOR(Affiliation->GetOwner(), AStructure, Property);
+}
+
 float AFaction::GetPower() const
 {
 	float Power = 0;
-	for(TActorIterator<AStructure> Itr(GetWorld()); Itr; ++Itr)
+	for(const AStructure* Structure : Property)
 	{
-		if(Itr->GetAffiliation()->GetFaction() == this)
-		{
-			Power += Itr->GetLayout()->GetParts().Num();
-		}
+		Power += Structure->GetLayout()->GetParts().Num();
 	}
 	return Power;
 }
