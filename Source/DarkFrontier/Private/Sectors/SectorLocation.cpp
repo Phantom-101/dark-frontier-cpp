@@ -9,7 +9,7 @@ void USectorLocation::BeginPlay()
 	Super::BeginPlay();
 	if(IsValid(Sector))
 	{
-		Sector->Register(GetOwner());
+		Sector->Register(this);
 	}
 	OnSectorChanged.Broadcast(Sector);
 }
@@ -19,7 +19,7 @@ void USectorLocation::EndPlay(const EEndPlayReason::Type EndPlayReason)
 	Super::EndPlay(EndPlayReason);
 	if(IsValid(Sector))
 	{
-		Sector->Unregister(GetOwner());
+		Sector->Unregister(this);
 	}
 	Sector = nullptr;
 	OnSectorChanged.Broadcast(Sector);
@@ -35,12 +35,12 @@ void USectorLocation::SetSector(ASector* InSector)
 	GUARD(Sector != InSector);
 	if(IsValid(Sector))
 	{
-		Sector->Unregister(GetOwner());
+		Sector->Unregister(this);
 	}
 	Sector = InSector;
 	if(IsValid(Sector))
 	{
-		Sector->Register(GetOwner());
+		Sector->Register(this);
 	}
 	OnSectorChanged.Broadcast(Sector);
 }

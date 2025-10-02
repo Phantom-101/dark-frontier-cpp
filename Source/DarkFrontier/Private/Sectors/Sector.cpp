@@ -5,35 +5,29 @@
 #include "Items/ItemPod.h"
 #include "Structures/Structure.h"
 
-const TArray<TObjectPtr<UTargetable>>& ASector::GetTargets()
+const TSet<TObjectPtr<UTargetable>>& ASector::GetTargets() const
 {
 	return Targets;
 }
 
-void ASector::Register(AActor* Actor)
+void ASector::Register(USectorLocation* Location)
 {
-	Actors.Add(Actor);
+	Locations.Add(Location);
 
-	TryRegister<AStructure>(Actor, Structures);
-	TryRegister<AAsteroid>(Actor, Asteroids);
-	TryRegister<AItemPod>(Actor, ItemPods);
-
-	if(Actor->Implements<UTargetableInterface>())
-	{
-		Targets.Add(Cast<ITargetableInterface>(Actor)->GetTargetable());
-	}
+	AActor* Actor = Location->GetOwner();
+	REGISTER_ACTOR(Actor, AStructure, Structures);
+	REGISTER_ACTOR(Actor, AAsteroid, Asteroids);
+	REGISTER_ACTOR(Actor, AItemPod, ItemPods);
+	REGISTER_COMPONENT_INTERFACE(Actor, Targetable, Targets);
 }
 
-void ASector::Unregister(AActor* Actor)
+void ASector::Unregister(USectorLocation* Location)
 {
-	Actors.Remove(Actor);
+	Locations.Remove(Location);
 
-	TryUnregister<AStructure>(Actor, Structures);
-	TryUnregister<AAsteroid>(Actor, Asteroids);
-	TryUnregister<AItemPod>(Actor, ItemPods);
-
-	if(Actor->Implements<UTargetableInterface>())
-	{
-		Targets.Remove(Cast<ITargetableInterface>(Actor)->GetTargetable());
-	}
+	AActor* Actor = Location->GetOwner();
+	UNREGISTER_ACTOR(Actor, AStructure, Structures);
+	UNREGISTER_ACTOR(Actor, AAsteroid, Asteroids);
+	UNREGISTER_ACTOR(Actor, AItemPod, ItemPods);
+	UNREGISTER_COMPONENT_INTERFACE(Actor, Targetable, Targets);
 }

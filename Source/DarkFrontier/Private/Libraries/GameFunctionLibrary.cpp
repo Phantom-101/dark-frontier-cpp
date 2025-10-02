@@ -26,6 +26,11 @@ ASector* UGameFunctionLibrary::GetPlayerSector(const UObject* WorldContext)
 	return IsValid(Structure) ? Structure->GetSectorLocation()->GetSector() : nullptr;
 }
 
+bool UGameFunctionLibrary::IsPlayer(const AStructure* Structure)
+{
+	return Structure == GetPlayerStructure(Structure);
+}
+
 bool UGameFunctionLibrary::IsSelected(const UTargetable* Targetable)
 {
 	const AStructureController* PlayerController = GetPlayerController(Targetable);

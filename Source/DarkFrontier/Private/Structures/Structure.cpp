@@ -151,11 +151,6 @@ UStructureInventory* AStructure::GetInventory() const
 	return Inventory;
 }
 
-bool AStructure::IsPlayer() const
-{
-	return this == UGameFunctionLibrary::GetPlayerStructure(this);
-}
-
 UStructureGameplay* AStructure::GetGameplay() const
 {
 	return Gameplay;
