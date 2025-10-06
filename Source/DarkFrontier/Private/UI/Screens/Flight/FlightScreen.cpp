@@ -11,6 +11,7 @@
 #include "Components/Image.h"
 #include "Components/CanvasPanelSlot.h"
 #include "Components/ScrollBox.h"
+#include "Libraries/GameFunctionLibrary.h"
 #include "Sectors/Sector.h"
 #include "Structures/Structure.h"
 #include "Structures/StructureController.h"
@@ -18,6 +19,7 @@
 #include "Structures/StructureGameplay.h"
 #include "Structures/StructureLayout.h"
 #include "Structures/StructurePart.h"
+#include "UI/Screens/Flight/TargetInfo.h"
 #include "UI/Screens/Flight/Controls/StructurePartControls.h"
 #include "UI/Screens/Flight/Controls/StructurePartControlsMapping.h"
 #include "UI/Screens/Flight/Selectors/SelectorCanvas.h"
@@ -53,8 +55,10 @@ void UFlightScreen::NativeTick(const FGeometry& MyGeometry, const float InDeltaT
 {  
 	Super::NativeTick(MyGeometry, InDeltaTime);
 
-	const AStructure* Structure = Cast<AStructure>(GetOwningPlayerPawn());
-	GUARD(IsValid(Structure));
+	const AStructureController* PlayerController = UGameFunctionLibrary::GetPlayerController(this);
+	const AStructure* Structure = UGameFunctionLibrary::GetPlayerStructure(this);
+	// TODO handle when structure is not valid because the player has died
+	GUARD(IsValid(PlayerController) && IsValid(Structure));
 
 	// Draw stat arcs
 	const UStructureGameplay* Gameplay = Structure->GetGameplay();
@@ -65,10 +69,19 @@ void UFlightScreen::NativeTick(const FGeometry& MyGeometry, const float InDeltaT
 	SpeedArc->SetLength(1 * 0.2);
 
 	// Move turn indicator
-	if(const AStructureController* PlayerController = Cast<AStructureController>(GetWorld()->GetFirstPlayerController()))
+	const FVector ScaledRotateInput = PlayerController->GetTurnIndicatorOffset() * 200;
+	UWidgetLayoutLibrary::SlotAsCanvasSlot(TurnIndicator)->SetPosition(FVector2D(ScaledRotateInput.Z, ScaledRotateInput.Y));
+
+	// Update target info
+	UTargetable* Target = PlayerController->GetSelectTarget();
+	if(IsValid(Target))
 	{
-		const FVector ScaledRotateInput = PlayerController->GetTurnIndicatorOffset() * 200;
-		UWidgetLayoutLibrary::SlotAsCanvasSlot(TurnIndicator)->SetPosition(FVector2D(ScaledRotateInput.Z, ScaledRotateInput.Y));
+		TargetInfo->Init(Target);
+		TargetInfo->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+	}
+	else
+	{
+		TargetInfo->SetVisibility(ESlateVisibility::Collapsed);
 	}
 
 	// Update gameplay effect list

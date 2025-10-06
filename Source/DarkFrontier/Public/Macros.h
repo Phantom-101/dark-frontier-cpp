@@ -8,6 +8,9 @@
 #define GUARD_RETURN(Condition, ReturnValue) \
 	if(!(Condition)) { return ReturnValue; }
 
+#define ACCESS_COMPONENT(Actor, Component) \
+	(Actor->Implements<U##Component##Interface>() ? Cast<I##Component##Interface>(Actor)->Get##Component() : nullptr)
+
 #define REGISTER_ACTOR(Actor, Type, Registry) \
 	if(Actor->IsA<Type>()) { Registry.Add(Cast<Type>(Actor)); }
 
