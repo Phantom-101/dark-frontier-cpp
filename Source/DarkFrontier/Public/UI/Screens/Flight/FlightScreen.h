@@ -6,6 +6,7 @@
 #include "CommonActivatableWidget.h"
 #include "FlightScreen.generated.h"
 
+class UTargetInfo;
 class UStructurePartControlsMapping;
 
 /**
@@ -38,6 +39,9 @@ protected:
 
 	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
 	TObjectPtr<UImage> TurnIndicator;
+
+	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
+	TObjectPtr<UTargetInfo> TargetInfo;
 
 	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
 	TObjectPtr<class UCommonListView> GameplayEffectList;
