@@ -32,6 +32,8 @@ public:
 	
 };
 
+DECLARE_MULTICAST_DELEGATE_OneParam(FTabChanged, UCommonActivatableWidget*)
+
 /**
  * 
  */
@@ -51,10 +53,24 @@ protected:
 	UPROPERTY(BlueprintReadOnly, EditAnywhere)
 	TArray<TObjectPtr<UTab>> Tabs;
 
+public:
+
+	FTabChanged OnTabChanged;
+
+protected:
+
 	virtual void NativeConstruct() override;
+
+public:
+
+	UTab* GetTab() const;
+
+	UCommonActivatableWidget* GetTabWidget() const;
 
 private:
 
-	void HandleSelect(UObject* Tab) const;
+	void HandleTabSelected(UObject* Tab) const;
+
+	void HandleWidgetChanged(UCommonActivatableWidget* Widget) const;
 	
 };

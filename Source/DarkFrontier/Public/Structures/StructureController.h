@@ -47,6 +47,9 @@ protected:
 	TObjectPtr<UInputAction> InventoryAction;
 
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category="Input")
+	TObjectPtr<UInputAction> InfoAction;
+
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category="Input")
 	TObjectPtr<UInputAction> EditStructureAction;
 
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category="UI")
@@ -60,6 +63,9 @@ protected:
 
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category="UI")
 	TSubclassOf<class UInventoryScreen> InventoryScreenClass;
+
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category="UI")
+	TSubclassOf<class UInfoScreen> InfoScreenClass;
 
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category="UI")
 	TSubclassOf<class UBuildScreen> BuildScreenClass;
@@ -173,6 +179,9 @@ protected:
 
 	UFUNCTION()
 	void OpenInventory(const FInputActionInstance& Instance);
+
+	UFUNCTION()
+	void Info(const FInputActionInstance& Instance);
 
 	UFUNCTION()
 	void EditStructure(const FInputActionInstance& Instance);

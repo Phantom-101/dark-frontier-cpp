@@ -8,7 +8,7 @@
 #include "Item.generated.h"
 
 struct FItemFragment;
-class UItemObject;
+
 /**
  * 
  */

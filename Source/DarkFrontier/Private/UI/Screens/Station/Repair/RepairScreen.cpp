@@ -16,10 +16,21 @@
 #include "UI/Widgets/Interaction/Stripe.h"
 #include "UI/Widgets/Visuals/FillBar.h"
 
+void URepairScreen::NativeConstruct()
+{
+	Super::NativeConstruct();
+
+	// Register conventional listeners here
+	// Putting them in RegisterBindings will attach them per activation
+	// As they are not unregistered automatically by UnregisterBindings
+	ShieldButton->OnClicked().AddUObject(this, &URepairScreen::ToggleShield);
+	HullButton->OnClicked().AddUObject(this, &URepairScreen::ToggleHull);
+}
+
 void URepairScreen::NativeOnActivated()
 {
 	Super::NativeOnActivated();
-	
+
 	UpdateStripes();
 
 	const AStructure* Structure = GetWorld()->GetFirstPlayerController()->GetPawn<AStructure>();
@@ -32,8 +43,6 @@ void URepairScreen::RegisterBindings()
 	Super::RegisterBindings();
 
 	CloseButton->SetRepresentedAction(BindFunction<URepairScreen>(CloseAction, &URepairScreen::DeactivateWidget));
-	ShieldButton->OnClicked().AddUObject(this, &URepairScreen::ToggleShield);
-	HullButton->OnClicked().AddUObject(this, &URepairScreen::ToggleHull);
 	SelectAllButton->SetRepresentedAction(BindFunction<URepairScreen>(SelectAllAction, &URepairScreen::SelectAll));
 	DeselectAllButton->SetRepresentedAction(BindFunction<URepairScreen>(DeselectAllAction, &URepairScreen::DeselectAll));
 	ConfirmButton->SetRepresentedAction(BindFunction<URepairScreen>(ConfirmAction, &URepairScreen::Confirm));
@@ -49,13 +58,13 @@ void URepairScreen::NativeTick(const FGeometry& MyGeometry, const float InDeltaT
 	const UStructureGameplay* Gameplay = Structure->GetGameplay();
 	const UTradeParameters* Parameters = GetWorld()->GetAuthGameMode<AUniverseGameMode>()->GetTradeParameters();
 
-	const float ShieldCondition = UMath::DivTo1(Gameplay->GetShield(), Gameplay->GetMaxShield());
+	const float ShieldCondition = UMath::DivTo0(Gameplay->GetShield(), Gameplay->GetMaxShield());
 	ShieldBar->FillHorizontal(0, ShieldCondition);
 	ShieldConditionText->SetText(FText::FromString(FString::Printf(TEXT("%.1f%%"), ShieldCondition * 100)));
 	const float ShieldCost = UTradeFunctionLibrary::GetShieldRepairPrice(Gameplay->GetMaxShield() - Gameplay->GetShield(), Parameters);
 	ShieldCostText->SetText(FText::FromString(FString::Printf(TEXT("%.0f C"), ShieldCost)));
 
-	const float HullCondition = UMath::DivTo1(Gameplay->GetHull(), Gameplay->GetMaxHull());
+	const float HullCondition = UMath::DivTo0(Gameplay->GetHull(), Gameplay->GetMaxHull());
 	HullBar->FillHorizontal(0, HullCondition);
 	HullConditionText->SetText(FText::FromString(FString::Printf(TEXT("%.1f%%"), HullCondition * 100)));
 	const float HullCost = UTradeFunctionLibrary::GetHullRepairPrice(Gameplay->GetMaxHull() - Gameplay->GetHull(), Parameters);

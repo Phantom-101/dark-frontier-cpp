@@ -14,6 +14,7 @@
 #include "UI/Screens/Build/BuildScreen.h"
 #include "UI/Screens/Screens.h"
 #include "UI/Screens/Flight/FlightScreen.h"
+#include "UI/Screens/Info/InfoScreen.h"
 #include "UI/Screens/Inventory/InventoryScreen.h"
 #include "UI/Screens/Station/StationScreen.h"
 #include "Widgets/CommonActivatableWidgetContainer.h"
@@ -49,6 +50,7 @@ void AStructureController::SetupInputComponent()
 	Input->BindAction(ZoomAction, ETriggerEvent::Completed, this, &AStructureController::Zoom);
 	Input->BindAction(ToggleUnlockAction, ETriggerEvent::Completed, this, &AStructureController::ToggleUnlock);
 	Input->BindAction(InventoryAction, ETriggerEvent::Completed, this, &AStructureController::OpenInventory);
+	Input->BindAction(InfoAction, ETriggerEvent::Completed, this, &AStructureController::Info);
 	Input->BindAction(EditStructureAction, ETriggerEvent::Completed, this, &AStructureController::EditStructure);
 }
 
@@ -208,6 +210,14 @@ void AStructureController::OpenInventory(const FInputActionInstance& Instance)
 
 	UInventoryScreen* Screen = GameScreens->GetGameStack()->AddWidget<UInventoryScreen>(InventoryScreenClass);
 	Screen->SetStructure(StructurePawn);
+}
+
+void AStructureController::Info(const FInputActionInstance& Instance)
+{
+	GUARD(IsValid(StructurePawn) && IsValid(SelectTarget));
+
+	UInfoScreen* Screen = GameScreens->GetGameStack()->AddWidget<UInfoScreen>(InfoScreenClass);
+	Screen->SetActor(SelectTarget->GetOwner());
 }
 
 void AStructureController::EditStructure(const FInputActionInstance& Instance)

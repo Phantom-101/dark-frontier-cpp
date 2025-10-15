@@ -90,6 +90,8 @@ protected:
 	UPROPERTY(BlueprintReadOnly, EditAnywhere)
 	bool RepairHull = true;
 
+	virtual void NativeConstruct() override;
+
 	virtual void NativeOnActivated() override;
 
 	virtual void RegisterBindings() override;
