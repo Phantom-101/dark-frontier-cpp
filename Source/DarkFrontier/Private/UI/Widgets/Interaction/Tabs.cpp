@@ -16,7 +16,8 @@ void UTabs::NativeConstruct()
 	Super::NativeConstruct();
 
 	ListView->SetListItems(Tabs);
-	ListView->OnItemSelectionChanged().AddUObject(this, &UTabs::HandleSelect);
+	ListView->OnItemSelectionChanged().AddUObject(this, &UTabs::HandleTabSelected);
+	TabStack->OnDisplayedWidgetChanged().AddUObject(this, &UTabs::HandleWidgetChanged);
 
 	if(Tabs.Num() > 0)
 	{
@@ -25,7 +26,17 @@ void UTabs::NativeConstruct()
 	}
 }
 
-void UTabs::HandleSelect(UObject* Tab) const
+UTab* UTabs::GetTab() const
+{
+	return ListView->GetSelectedItem<UTab>();
+}
+
+UCommonActivatableWidget* UTabs::GetTabWidget() const
+{
+	return TabStack->GetActiveWidget();
+}
+
+void UTabs::HandleTabSelected(UObject* Tab) const
 {
 	if(Tab == nullptr)
 	{
@@ -33,4 +44,9 @@ void UTabs::HandleSelect(UObject* Tab) const
 		return;
 	}
 	UUIFunctionLibrary::ReplaceWidget(TabStack, Cast<UTab>(Tab)->WidgetClass);
+}
+
+void UTabs::HandleWidgetChanged(UCommonActivatableWidget* Widget) const
+{
+	OnTabChanged.Broadcast(Widget);
 }

@@ -6,6 +6,9 @@
 #include "Kismet/BlueprintFunctionLibrary.h"
 #include "ItemFunctionLibrary.generated.h"
 
+class UItemQuantity;
+class UItemList;
+class UItemHandle;
 class UItem;
 
 /**
@@ -20,4 +23,11 @@ public:
 
 	UFUNCTION(BlueprintPure)
 	static TOptional<FLinearColor> GetColor(const UItem* Item);
+
+	UFUNCTION(BlueprintPure)
+	static TArray<UItemHandle*> ToHandles(UItemList* List);
+
+	UFUNCTION(BlueprintPure)
+	static TArray<UItemQuantity*> ToQuantities(const UItemList* List);
+	
 };

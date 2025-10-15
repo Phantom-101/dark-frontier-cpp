@@ -36,6 +36,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 	URecipe* GetRecipe() const;
 
+	UFUNCTION(BlueprintCallable)
+	float GetProgress() const;
+
 protected:
 
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;

@@ -38,10 +38,4 @@ protected:
 
 	virtual void NativeOnListItemObjectSet(UObject* ListItemObject) override;
 
-private:
-	
-	static FVector2D GetStart(float Relation);
-
-	static FVector2D GetFill(float Relation);
-	
 };

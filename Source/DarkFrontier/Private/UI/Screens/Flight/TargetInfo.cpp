@@ -31,13 +31,13 @@ void UTargetInfo::Init(const UTargetable* Target) const
 	const AStructure* Player = UGameFunctionLibrary::GetPlayerStructure(this);
 	if(IsValid(Player))
 	{
-		DistanceField->SetContentFromFloat((Actor->GetActorLocation() - Player->GetActorLocation()).Length());
+		DistanceField->SetContentFromFloat((Actor->GetActorLocation() - Player->GetActorLocation()).Length() / 100);
 	}
 	else
 	{
 		DistanceField->SetContentFromString("-");
 	}
-	SpeedField->SetContentFromFloat(Actor->GetVelocity().Length());
+	SpeedField->SetContentFromFloat(Actor->GetVelocity().Length() / 100);
 }
 
 void UTargetInfo::SetContent(const FText& Content) const

@@ -17,6 +17,11 @@ URecipe* UStructureProduction::GetRecipe() const
 	return Recipe;
 }
 
+float UStructureProduction::GetProgress() const
+{
+	return Progress;
+}
+
 void UStructureProduction::TickComponent(const float DeltaTime, const ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
