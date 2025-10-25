@@ -11,6 +11,11 @@
 #include "UI/Screens/Info/InfoScreen.h"
 #include "UI/Widgets/Visuals/FillBar.h"
 
+bool UInfoCargoTab::IsRelevant(AActor* Actor) const
+{
+	return IsValid(Cast<AStructure>(Actor));
+}
+
 void UInfoCargoTab::NativeTick(const FGeometry& MyGeometry, const float InDeltaTime)
 {
 	Super::NativeTick(MyGeometry, InDeltaTime);

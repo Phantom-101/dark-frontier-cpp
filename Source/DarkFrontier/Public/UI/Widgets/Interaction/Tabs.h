@@ -62,6 +62,10 @@ protected:
 	virtual void NativeConstruct() override;
 
 public:
+	
+	const TArray<TObjectPtr<UTab>>& GetTabs() const;
+
+	void SetTabs(const TArray<UTab*>& InTabs);
 
 	UTab* GetTab() const;
 
