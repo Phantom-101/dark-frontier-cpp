@@ -2,7 +2,6 @@
 
 #include "UI/Screens/Info/InfoScreen.h"
 #include "CommonButtonBase.h"
-#include "Log.h"
 #include "Macros.h"
 #include "UI/Screens/Info/InfoTab.h"
 #include "UI/Widgets/Interaction/Tabs.h"
@@ -14,6 +13,9 @@ void UInfoScreen::NativeConstruct()
 	InfoTabs->OnTabChanged.AddUObject<UInfoScreen>(this, &UInfoScreen::HandleTabChanged);
 	CloseButton->OnClicked().AddUObject<UInfoScreen>(this, &UInfoScreen::DeactivateWidget);
 
+	UpdateTabs();
+
+	// Initialize current tab in case tabs for null actor is non-empty
 	HandleTabChanged(InfoTabs->GetTabWidget());
 }
 
@@ -30,6 +32,21 @@ AActor* UInfoScreen::GetActor() const
 void UInfoScreen::SetActor(AActor* InActor)
 {
 	Actor = InActor;
+	UpdateTabs();
+}
+
+void UInfoScreen::UpdateTabs()
+{
+	TArray<UTab*> Tabs;
+	for(const TSubclassOf<UInfoTab>& TabClass : TabClasses)
+	{
+		if(TabClass->GetDefaultObject<UInfoTab>()->IsRelevant(Actor))
+		{
+			Tabs.Add(UInfoTab::NewTab(TabClass));
+		}
+	}
+
+	InfoTabs->SetTabs(Tabs);
 }
 
 void UInfoScreen::HandleTabChanged(UCommonActivatableWidget* Widget)

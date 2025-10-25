@@ -14,14 +14,26 @@ bool UTab::IsValid() const
 void UTabs::NativeConstruct()
 {
 	Super::NativeConstruct();
-
-	ListView->SetListItems(Tabs);
+	
 	ListView->OnItemSelectionChanged().AddUObject(this, &UTabs::HandleTabSelected);
 	TabStack->OnDisplayedWidgetChanged().AddUObject(this, &UTabs::HandleWidgetChanged);
 
+	// Select the first tab after registering selection callback so the UI gets updated
+	SetTabs(Tabs);
+}
+
+const TArray<TObjectPtr<UTab>>& UTabs::GetTabs() const
+{
+	return Tabs;
+}
+
+void UTabs::SetTabs(const TArray<UTab*>& InTabs)
+{
+	Tabs = InTabs;
+
+	ListView->SetListItems(Tabs);
 	if(Tabs.Num() > 0)
 	{
-		// Select the first tab via selection callback so the UI gets updated as well
 		ListView->SetSelectedItem(Tabs[0]);
 	}
 }

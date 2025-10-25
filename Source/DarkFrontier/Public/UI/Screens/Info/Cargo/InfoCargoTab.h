@@ -29,6 +29,12 @@ protected:
 	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
 	TObjectPtr<UListView> ListView;
 
+public:
+
+	virtual bool IsRelevant(AActor* Actor) const override;
+
+protected:
+
 	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
 
 private:

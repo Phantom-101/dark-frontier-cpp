@@ -10,6 +10,11 @@
 #include "UI/Screens/Info/InfoScreen.h"
 #include "UI/Widgets/Visuals/InfoField.h"
 
+bool UInfoLayoutTab::IsRelevant(AActor* Actor) const
+{
+	return IsValid(Cast<AStructure>(Actor));
+}
+
 void UInfoLayoutTab::NativeTick(const FGeometry& MyGeometry, const float InDeltaTime)
 {
 	Super::NativeTick(MyGeometry, InDeltaTime);

@@ -6,6 +6,8 @@
 #include "UI/Screens/Screen.h"
 #include "InfoScreen.generated.h"
 
+class UInfoTab;
+class UTab;
 class UTabs;
 class UCommonButtonBase;
 
@@ -25,6 +27,9 @@ protected:
 	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
 	TObjectPtr<UCommonButtonBase> CloseButton;
 
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly)
+	TArray<TSubclassOf<UInfoTab>> TabClasses;
+
 	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly)
 	TObjectPtr<AActor> Actor;
 
@@ -39,6 +44,8 @@ public:
 	void SetActor(AActor* InActor);
 
 private:
+
+	void UpdateTabs();
 
 	void HandleTabChanged(UCommonActivatableWidget* Widget);
 	

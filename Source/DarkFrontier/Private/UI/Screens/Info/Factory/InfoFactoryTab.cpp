@@ -8,6 +8,11 @@
 #include "Structures/StructureProduction.h"
 #include "UI/Screens/Info/InfoScreen.h"
 
+bool UInfoFactoryTab::IsRelevant(AActor* Actor) const
+{
+	return IsValid(Cast<AStructure>(Actor));
+}
+
 void UInfoFactoryTab::NativeTick(const FGeometry& MyGeometry, const float InDeltaTime)
 {
 	Super::NativeTick(MyGeometry, InDeltaTime);
