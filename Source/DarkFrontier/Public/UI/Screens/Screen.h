@@ -19,13 +19,20 @@ class DARKFRONTIER_API UScreen : public UCommonActivatableWidget
 	GENERATED_BODY()
 	
 protected:
-	
+
+	// Binding handles are registered and unregistered on construct and destruct
+	// not on activation and deactivation, as that causes a visual artifact where
+	// an action button that is clicked will lose its text while the screen is still fading away,
+	// presumably because 1) it is immediately deactivated and 2) interacting with it
+	// immediately updates its input action widget
 	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly)
 	TArray<FUIActionBindingHandle> BindingHandles;
 
-	virtual void NativeOnActivated() override;
+	virtual void NativeConstruct() override;
 
-	virtual void NativeOnDeactivated() override;
+	virtual void NativeDestruct() override;
+
+	virtual void NativeOnActivated() override;
 
 	FUIActionBindingHandle Bind(const UInputAction* InputAction, const FSimpleDelegate& OnExecuteAction);
 
@@ -43,6 +50,8 @@ protected:
 
 	virtual void UnregisterBindings();
 
-	void FloatScreen(const TSubclassOf<UCommonActivatableWidget> ScreenClass, bool IsGame);
+	UCommonActivatableWidget* FloatScreen(const TSubclassOf<UCommonActivatableWidget>& ScreenClass, bool IsGame) const;
+
+	void FloatScreenDiscard(const TSubclassOf<UCommonActivatableWidget> ScreenClass, bool IsGame);
 	
 };

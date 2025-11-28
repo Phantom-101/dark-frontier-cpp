@@ -13,10 +13,16 @@ void UInfoScreen::NativeConstruct()
 	InfoTabs->OnTabChanged.AddUObject<UInfoScreen>(this, &UInfoScreen::HandleTabChanged);
 	CloseButton->OnClicked().AddUObject<UInfoScreen>(this, &UInfoScreen::DeactivateWidget);
 
-	UpdateTabs();
-
 	// Initialize current tab in case tabs for null actor is non-empty
 	HandleTabChanged(InfoTabs->GetTabWidget());
+}
+
+void UInfoScreen::NativeDestruct()
+{
+	Super::NativeDestruct();
+
+	InfoTabs->OnTabChanged.RemoveAll(this);
+	CloseButton->OnClicked().RemoveAll(this);
 }
 
 TOptional<FUIInputConfig> UInfoScreen::GetDesiredInputConfig() const

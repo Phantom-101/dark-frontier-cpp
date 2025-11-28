@@ -7,6 +7,18 @@
 #include "UI/Screens/GameScreens.h"
 #include "UI/Screens/Screens.h"
 
+void UScreen::NativeConstruct()
+{
+	Super::NativeConstruct();
+	RegisterBindings();
+}
+
+void UScreen::NativeDestruct()
+{
+	Super::NativeDestruct();
+	UnregisterBindings();
+}
+
 void UScreen::NativeOnActivated()
 {
 	Super::NativeOnActivated();
@@ -15,13 +27,6 @@ void UScreen::NativeOnActivated()
 	{
 		FocusTarget->SetFocus();
 	}
-	RegisterBindings();
-}
-
-void UScreen::NativeOnDeactivated()
-{
-	Super::NativeOnDeactivated();
-	UnregisterBindings();
 }
 
 FUIActionBindingHandle UScreen::Bind(const UInputAction* InputAction, const FSimpleDelegate& OnExecuteAction)
@@ -31,7 +36,7 @@ FUIActionBindingHandle UScreen::Bind(const UInputAction* InputAction, const FSim
 
 FUIActionBindingHandle UScreen::BindScreen(const UInputAction* InputAction, const TSubclassOf<UCommonActivatableWidget>& ScreenClass)
 {
-	return BindFunction<UScreen>(InputAction, &UScreen::FloatScreen, ScreenClass, true);
+	return BindFunction<UScreen>(InputAction, &UScreen::FloatScreenDiscard, ScreenClass, true);
 }
 
 FUIActionBindingHandle UScreen::BindByArgs(const FBindUIActionArgs& Args)
@@ -53,16 +58,19 @@ void UScreen::UnregisterBindings()
 	}
 }
 
-void UScreen::FloatScreen(const TSubclassOf<UCommonActivatableWidget> ScreenClass, const bool IsGame)
+UCommonActivatableWidget* UScreen::FloatScreen(const TSubclassOf<UCommonActivatableWidget>& ScreenClass, const bool IsGame) const
 {
 	if(IsGame)
 	{
 		const UGameScreens* Screens = UUIFunctionLibrary::GetParentWidgetOfClass<UGameScreens>(this);
-		UUIFunctionLibrary::FloatWidget(Screens->GetGameStack(), ScreenClass);
+		return UUIFunctionLibrary::FloatWidget(Screens->GetGameStack(), ScreenClass);
 	}
-	else
-	{
-		const UScreens* Screens = UUIFunctionLibrary::GetParentWidgetOfClass<UScreens>(this);
-		UUIFunctionLibrary::FloatWidget(Screens->GetStack(), ScreenClass);
-	}
+	
+	const UScreens* Screens = UUIFunctionLibrary::GetParentWidgetOfClass<UScreens>(this);
+	return UUIFunctionLibrary::FloatWidget(Screens->GetStack(), ScreenClass);
+}
+
+void UScreen::FloatScreenDiscard(const TSubclassOf<UCommonActivatableWidget> ScreenClass, const bool IsGame)
+{
+	(void)FloatScreen(ScreenClass, IsGame);
 }

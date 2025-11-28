@@ -14,12 +14,25 @@ bool UTab::IsValid() const
 void UTabs::NativeConstruct()
 {
 	Super::NativeConstruct();
-	
+
 	ListView->OnItemSelectionChanged().AddUObject(this, &UTabs::HandleTabSelected);
 	TabStack->OnDisplayedWidgetChanged().AddUObject(this, &UTabs::HandleWidgetChanged);
 
 	// Select the first tab after registering selection callback so the UI gets updated
-	SetTabs(Tabs);
+	if(!Tabs.IsEmpty())
+	{
+		SetTabs(Tabs);
+	}
+}
+
+void UTabs::NativeDestruct()
+{
+	Super::NativeDestruct();
+
+	ListView->OnItemSelectionChanged().RemoveAll(this);
+	TabStack->OnDisplayedWidgetChanged().RemoveAll(this);
+
+	SetTabs(TArray<UTab*>());
 }
 
 const TArray<TObjectPtr<UTab>>& UTabs::GetTabs() const
@@ -31,8 +44,13 @@ void UTabs::SetTabs(const TArray<UTab*>& InTabs)
 {
 	Tabs = InTabs;
 
+	UTab* Previous = ListView->GetSelectedItem<UTab>();
 	ListView->SetListItems(Tabs);
-	if(Tabs.Num() > 0)
+	if(IsValid(Previous) && Tabs.Contains(Previous))
+	{
+		ListView->SetSelectedItem(Previous);
+	}
+	else if(Tabs.Num() > 0)
 	{
 		ListView->SetSelectedItem(Tabs[0]);
 	}
@@ -55,7 +73,17 @@ void UTabs::HandleTabSelected(UObject* Tab) const
 		TabStack->ClearWidgets();
 		return;
 	}
-	UUIFunctionLibrary::ReplaceWidget(TabStack, Cast<UTab>(Tab)->WidgetClass);
+	
+	const TSubclassOf<UCommonActivatableWidget> WidgetClass = Cast<UTab>(Tab)->WidgetClass;
+	if(IsValid(TabStack->GetActiveWidget()) && TabStack->GetActiveWidget()->GetClass() == WidgetClass)
+	{
+		// Skip replacing widget if active widget is already of the correct class
+		// We do this to prevent cases where the tabs list is changed, but the selected tab
+		// still exists in the new list, in which case it gets popped and pushed,
+		// causing the UI to fade in and out for no reason
+		return;
+	}
+	UUIFunctionLibrary::ReplaceWidget(TabStack, WidgetClass);
 }
 
 void UTabs::HandleWidgetChanged(UCommonActivatableWidget* Widget) const

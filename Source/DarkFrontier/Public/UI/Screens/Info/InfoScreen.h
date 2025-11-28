@@ -35,6 +35,8 @@ protected:
 
 	virtual void NativeConstruct() override;
 
+	virtual void NativeDestruct() override;
+
 	virtual TOptional<FUIInputConfig> GetDesiredInputConfig() const override;
 
 public:
