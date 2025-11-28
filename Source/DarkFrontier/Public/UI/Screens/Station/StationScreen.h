@@ -6,7 +6,7 @@
 #include "UI/Screens/Screen.h"
 #include "StationScreen.generated.h"
 
-class URepairScreen;
+class UInfoScreen;class URepairScreen;
 class URefitScreen;
 class UTradeScreen;
 
@@ -57,6 +57,9 @@ protected:
 	TObjectPtr<UCommonBoundActionButton> ExitShipButton;
 
 	UPROPERTY(BlueprintReadOnly, EditAnywhere)
+	TObjectPtr<UInputAction> ShipAction;
+
+	UPROPERTY(BlueprintReadOnly, EditAnywhere)
 	TObjectPtr<UInputAction> TradeAction;
 
 	UPROPERTY(BlueprintReadOnly, EditAnywhere)
@@ -67,6 +70,12 @@ protected:
 
 	UPROPERTY(BlueprintReadOnly, EditAnywhere)
 	TObjectPtr<UInputAction> UndockAction;
+
+	UPROPERTY(BlueprintReadOnly, EditAnywhere)
+	TObjectPtr<UInputAction> StationAction;
+
+	UPROPERTY(BlueprintReadOnly, EditAnywhere)
+	TSubclassOf<UInfoScreen> InfoScreenClass;
 
 	UPROPERTY(BlueprintReadOnly, EditAnywhere)
 	TSubclassOf<UTradeScreen> TradeScreenClass;
@@ -85,6 +94,10 @@ protected:
 
 private:
 
+	void ShipInfo();
+
 	void UndockPlayer();
+
+	void StationInfo();
 	
 };

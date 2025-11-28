@@ -61,6 +61,8 @@ protected:
 
 	virtual void NativeConstruct() override;
 
+	virtual void NativeDestruct() override;
+
 public:
 	
 	const TArray<TObjectPtr<UTab>>& GetTabs() const;
