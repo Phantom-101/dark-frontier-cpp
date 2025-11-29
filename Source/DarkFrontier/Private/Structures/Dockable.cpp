@@ -26,9 +26,10 @@ bool UDockable::EnterDock(UStructureDock* Target)
 	GUARD_RETURN(IsValid(Target) && Target->ConfirmDock(GetStructure()), false);
 
 	GetOwner()->AttachToActor(Target->GetOwningStructure(), FAttachmentTransformRules(EAttachmentRule::KeepWorld, true));
-	if(Target->Implements<USectorLocationInterface>())
+	USectorLocation* DockLocation = ACCESS_COMPONENT(Target, SectorLocation);
+	if(IsValid(DockLocation))
 	{
-		Cast<ISectorLocationInterface>(Target)->GetSectorLocation()->OnSectorChanged.AddUObject(this, &UDockable::PropagateSector);
+		DockLocation->OnSectorChanged.AddUObject(this, &UDockable::PropagateSector);
 	}
 
 	Dock = Target;
@@ -42,9 +43,10 @@ bool UDockable::ExitDock()
 	GUARD_RETURN(IsValid(Dock) && Dock->ConfirmUnDock(GetStructure()), false);
 
 	GetOwner()->DetachFromActor(FDetachmentTransformRules(EDetachmentRule::KeepWorld, false));
-	if(Dock->Implements<USectorLocationInterface>())
+	USectorLocation* DockLocation = ACCESS_COMPONENT(Dock, SectorLocation);
+	if(IsValid(DockLocation))
 	{
-		Cast<ISectorLocationInterface>(Dock)->GetSectorLocation()->OnSectorChanged.RemoveAll(this);
+		DockLocation->OnSectorChanged.RemoveAll(this);
 	}
 
 	Dock = nullptr;
@@ -55,8 +57,9 @@ bool UDockable::ExitDock()
 
 void UDockable::PropagateSector(ASector* Sector) const
 {
-	if(GetOwner()->Implements<USectorLocationInterface>())
+	USectorLocation* OwnerLocation = ACCESS_COMPONENT(GetOwner(), SectorLocation);
+	if(IsValid(OwnerLocation))
 	{
-		GetOwner<ISectorLocationInterface>()->GetSectorLocation()->SetSector(Sector);
+		OwnerLocation->SetSector(Sector);
 	}
 }

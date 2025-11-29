@@ -8,6 +8,12 @@
 #define GUARD_RETURN(Condition, ReturnValue) \
 	if(!(Condition)) { return ReturnValue; }
 
+#define COMPONENT_ACCESSOR(Component) \
+	virtual U##Component* Get##Component() const override { return Component; }
+
+#define COMPONENT_ACCESSOR_NAME(Component, Name) \
+	virtual U##Component* Get##Component() const override { return Name; }
+
 #define ACCESS_COMPONENT(Actor, Component) \
 	(Actor->Implements<U##Component##Interface>() ? Cast<I##Component##Interface>(Actor)->Get##Component() : nullptr)
 

@@ -56,9 +56,8 @@ public:
 
 	virtual float TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
 
-	virtual USectorLocation* GetSectorLocation() const override;
-
-	virtual UTargetable* GetTargetable() const override;
+	COMPONENT_ACCESSOR_NAME(SectorLocation, Location);
+	COMPONENT_ACCESSOR(Targetable);
 
 protected:
 

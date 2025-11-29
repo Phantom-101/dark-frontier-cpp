@@ -19,10 +19,7 @@ void UTabs::NativeConstruct()
 	TabStack->OnDisplayedWidgetChanged().AddUObject(this, &UTabs::HandleWidgetChanged);
 
 	// Select the first tab after registering selection callback so the UI gets updated
-	if(!Tabs.IsEmpty())
-	{
-		SetTabs(Tabs);
-	}
+	SetTabs(Tabs);
 }
 
 void UTabs::NativeDestruct()
@@ -42,17 +39,22 @@ const TArray<TObjectPtr<UTab>>& UTabs::GetTabs() const
 
 void UTabs::SetTabs(const TArray<UTab*>& InTabs)
 {
-	Tabs = InTabs;
-
 	UTab* Previous = ListView->GetSelectedItem<UTab>();
-	ListView->SetListItems(Tabs);
-	if(IsValid(Previous) && Tabs.Contains(Previous))
+	SetTabsWithInitial(InTabs, Previous);
+}
+
+void UTabs::SetTabsWithInitial(const TArray<UTab*>& InTabs, UTab* Initial)
+{
+	if(!InTabs.Contains(Initial))
 	{
-		ListView->SetSelectedItem(Previous);
+		Initial = InTabs.Num() > 0 ? InTabs[0] : nullptr;
 	}
-	else if(Tabs.Num() > 0)
+	
+	Tabs = InTabs;
+	ListView->SetListItems(Tabs);
+	if(IsValid(Initial))
 	{
-		ListView->SetSelectedItem(Tabs[0]);
+		ListView->SetSelectedItem(Initial);
 	}
 }
 
@@ -66,24 +68,15 @@ UCommonActivatableWidget* UTabs::GetTabWidget() const
 	return TabStack->GetActiveWidget();
 }
 
-void UTabs::HandleTabSelected(UObject* Tab) const
+void UTabs::HandleTabSelected(UObject* Obj) const
 {
+	const UTab* Tab = Cast<UTab>(Obj);
 	if(Tab == nullptr)
 	{
 		TabStack->ClearWidgets();
 		return;
 	}
-	
-	const TSubclassOf<UCommonActivatableWidget> WidgetClass = Cast<UTab>(Tab)->WidgetClass;
-	if(IsValid(TabStack->GetActiveWidget()) && TabStack->GetActiveWidget()->GetClass() == WidgetClass)
-	{
-		// Skip replacing widget if active widget is already of the correct class
-		// We do this to prevent cases where the tabs list is changed, but the selected tab
-		// still exists in the new list, in which case it gets popped and pushed,
-		// causing the UI to fade in and out for no reason
-		return;
-	}
-	UUIFunctionLibrary::ReplaceWidget(TabStack, WidgetClass);
+	UUIFunctionLibrary::ReplaceWidget(TabStack, Tab->WidgetClass);
 }
 
 void UTabs::HandleWidgetChanged(UCommonActivatableWidget* Widget) const

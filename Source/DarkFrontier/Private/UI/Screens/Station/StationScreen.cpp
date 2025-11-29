@@ -23,6 +23,7 @@ void UStationScreen::RegisterBindings()
 	UndockButton->SetRepresentedAction(BindFunction<UStationScreen>(UndockAction, &UStationScreen::UndockPlayer));
 
 	StationButton->SetRepresentedAction(BindFunction<UStationScreen>(StationAction, &UStationScreen::StationInfo));
+	HangarButton->SetRepresentedAction(BindFunction<UStationScreen>(HangarAction, &UStationScreen::HangarInfo));
 }
 
 UWidget* UStationScreen::NativeGetDesiredFocusTarget() const
@@ -57,4 +58,12 @@ void UStationScreen::StationInfo()
 	GUARD(IsValid(Player));
 	UInfoScreen* Screen = Cast<UInfoScreen>(FloatScreen(InfoScreenClass, true));
 	Screen->SetActor(Player->GetDockable()->GetDockStructure());
+}
+
+void UStationScreen::HangarInfo()
+{
+	const AStructure* Player = UGameFunctionLibrary::GetPlayerStructure(this);
+	GUARD(IsValid(Player));
+	UInfoScreen* Screen = Cast<UInfoScreen>(FloatScreen(InfoScreenClass, true));
+	Screen->SetActorWithInitial(Player->GetDockable()->GetDockStructure(), HangarInfoTabClass);
 }

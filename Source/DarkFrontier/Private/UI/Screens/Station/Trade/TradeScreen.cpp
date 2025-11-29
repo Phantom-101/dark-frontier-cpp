@@ -11,9 +11,13 @@
 void UTradeScreen::NativeConstruct()
 {
 	Super::NativeConstruct();
-
-	CloseButton->OnClicked().Clear();
 	CloseButton->OnClicked().AddUObject<UTradeScreen>(this, &UTradeScreen::HandleClose);
+}
+
+void UTradeScreen::NativeDestruct()
+{
+	Super::NativeDestruct();
+	CloseButton->OnClicked().Clear();
 }
 
 void UTradeScreen::NativeOnActivated()

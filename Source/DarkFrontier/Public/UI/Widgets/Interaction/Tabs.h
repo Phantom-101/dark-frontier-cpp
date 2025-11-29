@@ -69,13 +69,15 @@ public:
 
 	void SetTabs(const TArray<UTab*>& InTabs);
 
+	void SetTabsWithInitial(const TArray<UTab*>& InTabs, UTab* Initial);
+
 	UTab* GetTab() const;
 
 	UCommonActivatableWidget* GetTabWidget() const;
 
 private:
 
-	void HandleTabSelected(UObject* Tab) const;
+	void HandleTabSelected(UObject* Obj) const;
 
 	void HandleWidgetChanged(UCommonActivatableWidget* Widget) const;
 	

@@ -21,8 +21,8 @@ void UInfoScreen::NativeDestruct()
 {
 	Super::NativeDestruct();
 
-	InfoTabs->OnTabChanged.RemoveAll(this);
-	CloseButton->OnClicked().RemoveAll(this);
+	InfoTabs->OnTabChanged.Clear();
+	CloseButton->OnClicked().Clear();
 }
 
 TOptional<FUIInputConfig> UInfoScreen::GetDesiredInputConfig() const
@@ -38,10 +38,21 @@ AActor* UInfoScreen::GetActor() const
 void UInfoScreen::SetActor(AActor* InActor)
 {
 	Actor = InActor;
-	UpdateTabs();
+	InfoTabs->SetTabs(GetRelevantTabs(Actor));
 }
 
-void UInfoScreen::UpdateTabs()
+void UInfoScreen::SetActorWithInitial(AActor* InActor, const TSubclassOf<UInfoTab>& Initial)
+{
+	Actor = InActor;
+	TArray<UTab*> Tabs = GetRelevantTabs(Actor);
+	UTab** TabPtr = Algo::FindBy(Tabs, Initial, [](UTab* Tab)
+	{
+		return Tab->WidgetClass;
+	});
+	InfoTabs->SetTabsWithInitial(Tabs, TabPtr == nullptr ? nullptr : *TabPtr);
+}
+
+TArray<UTab*> UInfoScreen::GetRelevantTabs(AActor* InActor)
 {
 	TArray<UTab*> Tabs;
 	for(const TSubclassOf<UInfoTab>& TabClass : TabClasses)
@@ -51,8 +62,7 @@ void UInfoScreen::UpdateTabs()
 			Tabs.Add(UInfoTab::NewTab(TabClass));
 		}
 	}
-
-	InfoTabs->SetTabs(Tabs);
+	return Tabs;
 }
 
 void UInfoScreen::HandleTabChanged(UCommonActivatableWidget* Widget)
