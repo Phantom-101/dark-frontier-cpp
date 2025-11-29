@@ -45,9 +45,11 @@ public:
 
 	void SetActor(AActor* InActor);
 
+	void SetActorWithInitial(AActor* InActor, const TSubclassOf<UInfoTab>& Initial);
+
 private:
 
-	void UpdateTabs();
+	TArray<UTab*> GetRelevantTabs(AActor* InActor);
 
 	void HandleTabChanged(UCommonActivatableWidget* Widget);
 	

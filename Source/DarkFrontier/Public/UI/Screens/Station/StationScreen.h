@@ -6,7 +6,9 @@
 #include "UI/Screens/Screen.h"
 #include "StationScreen.generated.h"
 
-class UInfoScreen;class URepairScreen;
+class UInfoTab;
+class UInfoScreen;
+class URepairScreen;
 class URefitScreen;
 class UTradeScreen;
 
@@ -75,6 +77,9 @@ protected:
 	TObjectPtr<UInputAction> StationAction;
 
 	UPROPERTY(BlueprintReadOnly, EditAnywhere)
+	TObjectPtr<UInputAction> HangarAction;
+
+	UPROPERTY(BlueprintReadOnly, EditAnywhere)
 	TSubclassOf<UInfoScreen> InfoScreenClass;
 
 	UPROPERTY(BlueprintReadOnly, EditAnywhere)
@@ -85,6 +90,9 @@ protected:
 
 	UPROPERTY(BlueprintReadOnly, EditAnywhere)
 	TSubclassOf<URefitScreen> RefitScreenClass;
+
+	UPROPERTY(BlueprintReadOnly, EditAnywhere)
+	TSubclassOf<UInfoTab> HangarInfoTabClass;
 
 	virtual void RegisterBindings() override;
 
@@ -99,5 +107,7 @@ private:
 	void UndockPlayer();
 
 	void StationInfo();
+
+	void HangarInfo();
 	
 };

@@ -120,31 +120,6 @@ UStructureLayout* AStructure::GetLayout() const
 	return Layout;
 }
 
-USectorLocation* AStructure::GetSectorLocation() const
-{
-	return Location;
-}
-
-UTickLevel* AStructure::GetTickLevel() const
-{
-	return TickLevel;
-}
-
-UAffiliation* AStructure::GetAffiliation() const
-{
-	return Affiliation;
-}
-
-UDockable* AStructure::GetDockable() const
-{
-	return Dockable;
-}
-
-UTargetable* AStructure::GetTargetable() const
-{
-	return Targetable;
-}
-
 UStructureInventory* AStructure::GetInventory() const
 {
 	return Inventory;

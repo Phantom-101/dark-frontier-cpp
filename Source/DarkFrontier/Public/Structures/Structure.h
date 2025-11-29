@@ -119,20 +119,11 @@ public:
 	UFUNCTION(BlueprintCallable)
 	UStructureLayout* GetLayout() const;
 
-	UFUNCTION(BlueprintCallable)
-	virtual USectorLocation* GetSectorLocation() const override;
-
-	UFUNCTION(BlueprintCallable)
-	virtual UTickLevel* GetTickLevel() const override;
-
-	UFUNCTION(BlueprintCallable)
-	virtual UAffiliation* GetAffiliation() const override;
-
-	UFUNCTION(BlueprintCallable)
-	virtual UDockable* GetDockable() const override;
-
-	UFUNCTION(BlueprintCallable)
-	virtual UTargetable* GetTargetable() const override;
+	COMPONENT_ACCESSOR_NAME(SectorLocation, Location);
+	COMPONENT_ACCESSOR(TickLevel);
+	COMPONENT_ACCESSOR(Affiliation);
+	COMPONENT_ACCESSOR(Dockable);
+	COMPONENT_ACCESSOR(Targetable);
 
 	UFUNCTION(BlueprintCallable, Category="Inventory")
 	UStructureInventory* GetInventory() const;

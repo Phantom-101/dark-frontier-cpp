@@ -20,11 +20,16 @@ void URepairScreen::NativeConstruct()
 {
 	Super::NativeConstruct();
 
-	// Register conventional listeners here
-	// Putting them in RegisterBindings will attach them per activation
-	// As they are not unregistered automatically by UnregisterBindings
 	ShieldButton->OnClicked().AddUObject(this, &URepairScreen::ToggleShield);
 	HullButton->OnClicked().AddUObject(this, &URepairScreen::ToggleHull);
+}
+
+void URepairScreen::NativeDestruct()
+{
+	Super::NativeDestruct();
+
+	ShieldButton->OnClicked().Clear();
+	HullButton->OnClicked().Clear();
 }
 
 void URepairScreen::NativeOnActivated()

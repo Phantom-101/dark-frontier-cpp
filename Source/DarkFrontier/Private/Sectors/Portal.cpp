@@ -35,16 +35,6 @@ void APortal::Tick(const float DeltaSeconds)
 	}
 }
 
-USectorLocation* APortal::GetSectorLocation() const
-{
-	return Location;
-}
-
-UTargetable* APortal::GetTargetable() const
-{
-	return Targetable;
-}
-
 void APortal::Transfer(const TObjectPtr<USectorLocation>& User) const
 {
 	const USectorLocation* Comp = ACCESS_COMPONENT(Destination, SectorLocation);

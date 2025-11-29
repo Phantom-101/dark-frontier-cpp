@@ -66,16 +66,6 @@ float AAsteroid::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent,
 	return Absorbed;
 }
 
-USectorLocation* AAsteroid::GetSectorLocation() const
-{
-	return Location;
-}
-
-UTargetable* AAsteroid::GetTargetable() const
-{
-	return Targetable;
-}
-
 void AAsteroid::CreatePod()
 {
 	GUARD(DepletedAmount < MaxAmount);

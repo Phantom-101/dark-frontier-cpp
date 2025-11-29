@@ -61,13 +61,3 @@ UStaticMeshComponent* AItemPod::GetStaticMesh() const
 {
 	return StaticMesh;
 }
-
-USectorLocation* AItemPod::GetSectorLocation() const
-{
-	return Location;
-}
-
-UTargetable* AItemPod::GetTargetable() const
-{
-	return Targetable;
-}
