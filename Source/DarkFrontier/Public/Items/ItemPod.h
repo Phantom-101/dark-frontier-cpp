@@ -30,10 +30,10 @@ protected:
 	UPROPERTY(BlueprintReadOnly, EditAnywhere)
 	int Quantity;
 
-	UPROPERTY(BlueprintReadOnly, EditAnywhere)
+	UPROPERTY(BlueprintReadOnly, VisibleAnywhere)
 	TObjectPtr<USectorLocation> Location;
 	
-	UPROPERTY(BlueprintReadOnly, EditAnywhere)
+	UPROPERTY(BlueprintReadOnly, VisibleAnywhere)
 	TObjectPtr<UTargetable> Targetable;
 
 public:

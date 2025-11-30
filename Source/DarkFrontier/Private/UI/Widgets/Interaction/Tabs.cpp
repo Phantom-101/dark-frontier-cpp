@@ -51,7 +51,7 @@ void UTabs::SetTabsWithInitial(const TArray<UTab*>& InTabs, UTab* Initial)
 	}
 	
 	Tabs = InTabs;
-	ListView->SetListItems(Tabs);
+	ListView->SetListItems(Tabs); // Does not immediately update selected item
 	if(IsValid(Initial))
 	{
 		ListView->SetSelectedItem(Initial);
