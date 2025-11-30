@@ -118,7 +118,14 @@ void UFlightScreen::NativeTick(const FGeometry& MyGeometry, const float InDeltaT
 	}
 
 	// Update targets
-	Selectors->SetTargets(Structure->GetSectorLocation()->GetSector()->GetTargets());
+	if(IsValid(Structure->GetSectorLocation()->GetSector()))
+	{
+		Selectors->SetTargets(Structure->GetSectorLocation()->GetSector()->GetTargets());
+	}
+	else
+	{
+		Selectors->SetTargets(TSet<TObjectPtr<UTargetable>>());
+	}
 
 	// Update part controls
 	{
