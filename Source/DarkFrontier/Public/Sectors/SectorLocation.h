@@ -18,7 +18,8 @@ class DARKFRONTIER_API USectorLocation : public UActorComponent
 
 protected:
 
-	UPROPERTY(BlueprintReadOnly, EditInstanceOnly)
+	// To set the sector, attach the owning actor to a Sector through the world outliner
+	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly)
 	TObjectPtr<ASector> Sector;
 
 public:
@@ -28,8 +29,6 @@ public:
 	FSectorChanged OnSectorChanged;
 
 protected:
-
-	virtual void BeginPlay() override;
 
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 

@@ -6,6 +6,7 @@
 #include "GameFramework/Actor.h"
 #include "Sector.generated.h"
 
+class USectorRoot;
 class USectorLocation;
 class UTargetable;
 class AItemPod;
@@ -18,6 +19,9 @@ class DARKFRONTIER_API ASector : public AActor
 	GENERATED_BODY()
 
 protected:
+
+	UPROPERTY(BlueprintReadOnly, VisibleAnywhere)
+	TObjectPtr<USectorRoot> Root;
 
 	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly)
 	TSet<TObjectPtr<USectorLocation>> Locations;
@@ -35,6 +39,8 @@ protected:
 	TSet<TObjectPtr<UTargetable>> Targets;
 
 public:
+
+	ASector();
 
 	const TSet<TObjectPtr<UTargetable>>& GetTargets() const;
 

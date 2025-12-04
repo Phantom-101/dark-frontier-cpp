@@ -3,7 +3,14 @@
 #include "Sectors/Sector.h"
 #include "Environment/Asteroid.h"
 #include "Items/ItemPod.h"
+#include "Sectors/SectorRoot.h"
 #include "Structures/Structure.h"
+
+ASector::ASector()
+{
+	Root = CreateDefaultSubobject<USectorRoot>("Root");
+	SetRootComponent(Root);
+}
 
 const TSet<TObjectPtr<UTargetable>>& ASector::GetTargets() const
 {
