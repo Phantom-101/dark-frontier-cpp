@@ -4,16 +4,6 @@
 #include "Macros.h"
 #include "Sectors/Sector.h"
 
-void USectorLocation::BeginPlay()
-{
-	Super::BeginPlay();
-	if(IsValid(Sector))
-	{
-		Sector->Register(this);
-	}
-	OnSectorChanged.Broadcast(Sector);
-}
-
 void USectorLocation::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
 	Super::EndPlay(EndPlayReason);
