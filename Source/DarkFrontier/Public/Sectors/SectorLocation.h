@@ -3,13 +3,13 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Macros.h"
 #include "UObject/Object.h"
 #include "SectorLocation.generated.h"
 
 class ASector;
 
 DECLARE_MULTICAST_DELEGATE_OneParam(FSectorChanged, ASector*)
+DECLARE_MULTICAST_DELEGATE(FSectorStateChanged)
 
 UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
 class DARKFRONTIER_API USectorLocation : public UActorComponent
@@ -22,13 +22,23 @@ protected:
 	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly)
 	TObjectPtr<ASector> Sector;
 
+	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly)
+	bool InPlayerSector = false;
+
 public:
 
 	// Listen to this event for type specific handling
 	// Such as structures propagating sector changes to dockers
 	FSectorChanged OnSectorChanged;
 
+	// Listen to this event for simulation LOD related code
+	// Such as changing tick functionality depending on whether the player is in the same sector
+	// For a state change triggered by owner sector change, this event fires after OnSectorChanged
+	FSectorStateChanged OnSectorStateChanged;
+
 protected:
+
+	virtual void BeginPlay() override;
 
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
@@ -45,6 +55,14 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void SetLocation(const FVector& Location) const;
+
+	UFUNCTION(BlueprintCallable)
+	bool GetInPlayerSector() const;
+
+private:
+
+	// Discard parameter as we use this to handle both owner and player sector changes
+	void UpdateSectorState(ASector* _);
 
 };
 

@@ -1,6 +1,7 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 #include "Sectors/SectorRoot.h"
+#include "Macros.h"
 #include "Sectors/Sector.h"
 #include "Sectors/SectorLocation.h"
 
