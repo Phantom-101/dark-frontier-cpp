@@ -8,28 +8,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="cb7ccd89-2b5f-4c19-9f87-96459d2ed121" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/Source/DarkFrontier/Private/UI/Screens/Flight/Selectors/PortalSelector.cpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Source/DarkFrontier/Public/UI/Screens/Flight/Selectors/PortalSelector.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.DarkFrontier.dir/.idea/.name" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.DarkFrontier.dir/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.DarkFrontier.dir/.idea/dataSources.local.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.DarkFrontier.dir/.idea/dataSources.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.DarkFrontier.dir/.idea/dataSources.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.DarkFrontier.dir/.idea/projectSettingsUpdater.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.DarkFrontier.dir/.idea/projectSettingsUpdater.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Source/DarkFrontier/Private/UI/Widgets/Interaction/InteractiveViewer.cpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Source/DarkFrontier/Public/UI/Widgets/Interaction/InteractiveViewer.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.DarkFrontier.dir/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.DarkFrontier.dir/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Content/Levels/Test.umap" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Levels/Test.umap" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Sectors/BP_Portal.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Sectors/BP_Portal.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Sectors/BP_Wormhole.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Sectors/BP_Wormhole.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Private/Sectors/Portal.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Private/Sectors/Portal.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Private/Sectors/SectorLocation.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Private/Sectors/SectorLocation.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Private/Sectors/SectorRoot.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Private/Sectors/SectorRoot.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Private/Structures/Structure.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Private/Structures/Structure.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Private/Structures/StructureController.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Private/Structures/StructureController.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Private/Structures/TickLevel.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Private/UI/Screens/Flight/Selectors/SelectorCanvas.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Private/UI/Screens/Flight/Selectors/SelectorCanvas.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Public/Macros.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Public/Macros.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Public/Sectors/SectorLocation.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Public/Sectors/SectorLocation.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Public/Structures/Structure.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Public/Structures/Structure.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Public/Structures/StructureController.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/DarkFrontier/Public/Structures/StructureController.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/DarkFrontier/Public/Structures/TickLevel.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/UI/Screens/Flight/W_FlightScreen.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/UI/Screens/Flight/W_FlightScreen.uasset" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -49,7 +32,9 @@
     <setting file="file://$PROJECT_DIR$/../../../../../Program Files/Epic Games/UE_5.4/Engine/Source/Editor/UnrealEd/Classes/ThumbnailRendering/ThumbnailRenderer.h" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../../../../../Program Files/Epic Games/UE_5.4/Engine/Source/Editor/UnrealEd/Public/WorldPartition/WorldPartitionBuilder.h" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../../../../../Program Files/Epic Games/UE_5.4/Engine/Source/Runtime/Core/Public/Algo/Find.h" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/../../../../../Program Files/Epic Games/UE_5.4/Engine/Source/Runtime/Core/Public/Delegates/Delegate.h" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../../../../../Program Files/Epic Games/UE_5.4/Engine/Source/Runtime/Core/Public/Delegates/DelegateInstancesImpl.h" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/../../../../../Program Files/Epic Games/UE_5.4/Engine/Source/Runtime/Core/Public/Delegates/DelegateSignatureImpl.inl" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../../../../../Program Files/Epic Games/UE_5.4/Engine/Source/Runtime/Core/Public/Experimental/Containers/FAAArrayQueue.h" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../../../../../Program Files/Epic Games/UE_5.4/Engine/Source/Runtime/Core/Public/Misc/Attribute.h" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../../../../../Program Files/Epic Games/UE_5.4/Engine/Source/Runtime/CoreUObject/Public/UObject/UObjectGlobals.h" root0="FORCE_HIGHLIGHTING" />
@@ -59,6 +44,7 @@
     <setting file="file://$PROJECT_DIR$/../../../../../Program Files/Epic Games/UE_5.4/Engine/Source/Runtime/Engine/Classes/GameFramework/Actor.h" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../../../../../Program Files/Epic Games/UE_5.4/Engine/Source/Runtime/Engine/Classes/GameFramework/Pawn.h" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../../../../../Program Files/Epic Games/UE_5.4/Engine/Source/Runtime/Engine/Private/Actor.cpp" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/../../../../../Program Files/Epic Games/UE_5.4/Engine/Source/Runtime/Engine/Private/Components/BoxComponent.cpp" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../../../../../Program Files/Epic Games/UE_5.4/Engine/Source/Runtime/Engine/Private/Components/SceneComponent.cpp" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../../../../../Program Files/Epic Games/UE_5.4/Engine/Source/Runtime/Engine/Private/PrimitiveComponentPhysics.cpp" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../../../../../Program Files/Epic Games/UE_5.4/Engine/Source/Runtime/Experimental/Chaos/Public/Chaos/BlendedXPBDCorotatedConstraints.h" root0="FORCE_HIGHLIGHTING" />
@@ -66,9 +52,13 @@
     <setting file="file://$PROJECT_DIR$/../../../../../Program Files/Epic Games/UE_5.4/Engine/Source/Runtime/Renderer/Private/OIT/OIT.cpp" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../../../../../Program Files/Epic Games/UE_5.4/Engine/Source/Runtime/Slate/Private/Framework/Docking/TabCommands.cpp" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../../../../../Program Files/Epic Games/UE_5.4/Engine/Source/Runtime/Slate/Public/Widgets/Views/SListView.h" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/../../../../../Program Files/Epic Games/UE_5.4/Engine/Source/Runtime/SlateCore/Public/Input/DragAndDrop.h" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/../../../../../Program Files/Epic Games/UE_5.4/Engine/Source/Runtime/SlateCore/Public/Input/Events.h" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../../../../../Program Files/Epic Games/UE_5.4/Engine/Source/Runtime/TraceLog/standalone_prologue.h" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../../../../../Program Files/Epic Games/UE_5.4/Engine/Source/Runtime/UMG/Private/Components/ListView.cpp" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/../../../../../Program Files/Epic Games/UE_5.4/Engine/Source/Runtime/UMG/Private/DragDropOperation.cpp" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../../../../../Program Files/Epic Games/UE_5.4/Engine/Source/Runtime/UMG/Private/UserWidget.cpp" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/../../../../../Program Files/Epic Games/UE_5.4/Engine/Source/Runtime/UMG/Public/Blueprint/DragDropOperation.h" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../../../../../Program Files/Epic Games/UE_5.4/Engine/Source/Runtime/UMG/Public/Blueprint/UserWidget.h" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../../../../../Program Files/Epic Games/UE_5.4/Engine/Source/Runtime/UMG/Public/Components/ListView.h" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../../../../../Program Files/Epic Games/UE_5.4/Engine/Source/Runtime/UMG/Public/Components/ListViewBase.h" root0="FORCE_HIGHLIGHTING" />
@@ -541,7 +531,7 @@
       <workItem from="1764749238636" duration="4309000" />
       <workItem from="1764836185623" duration="1337000" />
       <workItem from="1766018820503" duration="1536000" />
-      <workItem from="1766097298189" duration="8562000" />
+      <workItem from="1766097298189" duration="17138000" />
     </task>
     <servers />
   </component>
