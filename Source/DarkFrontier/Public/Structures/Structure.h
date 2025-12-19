@@ -7,13 +7,11 @@
 #include "Dockable.h"
 #include "GameplayTagContainer.h"
 #include "Targetable.h"
-#include "TickLevel.h"
 #include "Factions/Affiliation.h"
 #include "GameFramework/Pawn.h"
 #include "Sectors/SectorLocation.h"
 #include "Structure.generated.h"
 
-class UTickLevel;
 class UTargetable;
 class USectorLocation;
 class UStructureInventory;
@@ -38,7 +36,7 @@ struct FGameplayAbilitySpecHandle;
 DECLARE_MULTICAST_DELEGATE_OneParam(FStructureIndicationChanged, UStructureIndication*)
 
 UCLASS()
-class DARKFRONTIER_API AStructure : public APawn, public ISectorLocationInterface, public ITickLevelInterface,
+class DARKFRONTIER_API AStructure : public APawn, public ISectorLocationInterface,
 	public IAffiliationInterface, public IDockableInterface, public ITargetableInterface, public IAbilitySystemInterface
 {
 	GENERATED_BODY()
@@ -59,9 +57,6 @@ protected:
 
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere)
 	TObjectPtr<USectorLocation> Location;
-
-	UPROPERTY(BlueprintReadOnly, VisibleAnywhere)
-	TObjectPtr<UTickLevel> TickLevel;
 
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere)
 	TObjectPtr<UAffiliation> Affiliation;
@@ -120,7 +115,6 @@ public:
 	UStructureLayout* GetLayout() const;
 
 	COMPONENT_ACCESSOR_NAME(SectorLocation, Location);
-	COMPONENT_ACCESSOR(TickLevel);
 	COMPONENT_ACCESSOR(Affiliation);
 	COMPONENT_ACCESSOR(Dockable);
 	COMPONENT_ACCESSOR(Targetable);
@@ -160,13 +154,13 @@ public:
 
 protected:
 
-	void HandleTickLevelChanged(ETickLevel NewTickLevel);
-
 	virtual void SetActorHiddenInGame(bool bNewHidden) override;
-	
-	FVector CalculateImpulse(const FVector& RawVelocities, const FVector& RawInput, float MaxSpeed, float Accel, float DeltaTime) const;
 
 	UFUNCTION()
 	void HandlePointDamage(AActor* DamagedActor, float Damage, AController* InstigatedBy, const FVector HitLocation, UPrimitiveComponent* HitComponent, FName BoneName, FVector ShotFromDirection, const UDamageType* DamageType, AActor* DamageCauser);
-	
+
+private:
+
+	FVector CalculateImpulse(const FVector& RawVelocities, const FVector& RawInput, float MaxSpeed, float Accel, float DeltaTime) const;
+
 };

@@ -77,8 +77,9 @@ void AStructureController::OnPossess(APawn* InPawn)
 	{
 		StructurePawn->GetAbilitySystemComponent()->InitAbilityActorInfo(StructurePawn, StructurePawn);
 		
-		StructurePawn->GetLayout()->OnUpdated.AddUObject<AStructureController>(this, &AStructureController::PropagateLayoutChange);
-		StructurePawn->GetDockable()->OnDockChanged.AddUObject<AStructureController>(this, &AStructureController::HandleDock);
+		StructurePawn->GetLayout()->OnUpdated.AddUObject(this, &AStructureController::PropagateLayoutChange);
+		StructurePawn->GetSectorLocation()->OnSectorChanged.AddUObject(this, &AStructureController::PropagateSectorChange);
+		StructurePawn->GetDockable()->OnDockChanged.AddUObject(this, &AStructureController::HandleDock);
 
 		GetWorld()->GetGameState<AUniverseGameState>()->SetPlayerFaction(StructurePawn->GetAffiliation()->GetFaction());
 	}
@@ -91,6 +92,7 @@ void AStructureController::OnUnPossess()
 	if(StructurePawn)
 	{
 		StructurePawn->GetLayout()->OnUpdated.RemoveAll(this);
+		StructurePawn->GetSectorLocation()->OnSectorChanged.RemoveAll(this);
 		StructurePawn->GetDockable()->OnDockChanged.RemoveAll(this);
 	}
 
@@ -233,6 +235,12 @@ void AStructureController::EditStructure(const FInputActionInstance& Instance)
 void AStructureController::PropagateLayoutChange() const
 {
 	OnLayoutChanged.Broadcast();
+}
+
+void AStructureController::PropagateSectorChange(ASector* Sector)
+{
+	SetSelectTarget(nullptr);
+	OnSectorChanged.Broadcast(Sector);
 }
 
 void AStructureController::HandleDock(UStructureDock* Dock) const

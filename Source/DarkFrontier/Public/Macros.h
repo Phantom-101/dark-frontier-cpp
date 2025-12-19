@@ -8,6 +8,9 @@
 #define GUARD_RETURN(Condition, ReturnValue) \
 	if(!(Condition)) { return ReturnValue; }
 
+#define GUARD_SKIP(Condition) \
+	if(!(Condition)) { continue; }
+
 #define COMPONENT_ACCESSOR(Component) \
 	virtual U##Component* Get##Component() const override { return Component; }
 

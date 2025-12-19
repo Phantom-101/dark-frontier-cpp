@@ -32,7 +32,9 @@ void USelectorCanvas::NativeTick(const FGeometry& MyGeometry, const float InDelt
 	{
 		if(IsValid(Player) && Target->IsTargetable(Player) && !Selectors.Contains(Target))
 		{
+			GUARD_SKIP(IsValid(Target->GetSelectorClass()));
 			USelector* Selector = CreateWidget<USelector>(this, Target->GetSelectorClass());
+			GUARD_SKIP(IsValid(Selector));
 			Selector->Init(Target);
 			Panel->AddChildToCanvas(Selector);
 			Selectors.Add(Target, Selector);

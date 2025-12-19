@@ -33,8 +33,6 @@ AStructure::AStructure()
 
 	Layout = UStructureLayout::CreateLayout(this);
 	Location = CreateDefaultSubobject<USectorLocation>("Location");
-	TickLevel = CreateDefaultSubobject<UTickLevel>("TickLevel");
-	TickLevel->OnTickLevelChanged.AddUObject(this, &AStructure::HandleTickLevelChanged);
 	Affiliation = CreateDefaultSubobject<UAffiliation>("Affiliation");
 	Dockable = CreateDefaultSubobject<UDockable>("Dockable");
 	Targetable = CreateDefaultSubobject<UTargetable>("Targetable");
@@ -75,7 +73,7 @@ void AStructure::Tick(const float DeltaTime)
 
 	if(!IsValid(Layout->GetRootPart())) return;
 
-	if(TickLevel->GetTickLevel() == ETickLevel::Full)
+	if(Location->GetInPlayerSector())
 	{
 		const float LinearMaxSpeed = Gameplay->GetLinearMaxSpeed();
 		const float LinearAccel = Gameplay->GetLinearAcceleration();
@@ -85,7 +83,7 @@ void AStructure::Tick(const float DeltaTime)
 		const float AngularAccel = Gameplay->GetAngularAcceleration();
 		StaticMesh->AddAngularImpulseInDegrees(CalculateImpulse(StaticMesh->GetPhysicsAngularVelocityInDegrees(), RotateInput, AngularMaxSpeed, AngularAccel, DeltaTime), NAME_None, true);
 	}
-	else if(TickLevel->GetTickLevel() == ETickLevel::Partial)
+	else
 	{
 		const FVector ScaledMoveInput = MoveInput * Gameplay->GetLinearMaxSpeed();
 		SetActorLocation(GetActorLocation() + ScaledMoveInput);
@@ -219,20 +217,6 @@ USpringArmComponent* AStructure::GetCameraSpringArm() const
 	return SpringArm;
 }
 
-void AStructure::HandleTickLevelChanged(const ETickLevel NewTickLevel)
-{
-	if(NewTickLevel == ETickLevel::Full)
-	{
-		SetActorHiddenInGame(false);
-		SetActorEnableCollision(true);
-	}
-	else
-	{
-		SetActorHiddenInGame(true);
-		SetActorEnableCollision(false);
-	}
-}
-
 void AStructure::SetActorHiddenInGame(const bool bNewHidden)
 {
 	Super::SetActorHiddenInGame(bNewHidden);
@@ -240,15 +224,6 @@ void AStructure::SetActorHiddenInGame(const bool bNewHidden)
 	{
 		Part->SetActorHiddenInGame(bNewHidden);
 	}
-}
-
-FVector AStructure::CalculateImpulse(const FVector& RawVelocities, const FVector& RawInput, const float MaxSpeed, const float Accel, const float DeltaTime) const
-{
-	const FVector Velocities = GetTransform().InverseTransformVector(RawVelocities);
-	const FVector Input = RawInput.GetClampedToMaxSize(1);
-	const FVector Diff = Input * MaxSpeed - Velocities;
-	const FVector Applied = ClampVector(Diff, FVector(-Accel * DeltaTime), FVector(Accel * DeltaTime));
-	return GetTransform().TransformVector(Applied);
 }
 
 void AStructure::HandlePointDamage(AActor* DamagedActor, const float Damage, AController* InstigatedBy, const FVector HitLocation, UPrimitiveComponent* HitComponent, FName BoneName, FVector ShotFromDirection, const UDamageType* DamageType, AActor* DamageCauser)
@@ -260,4 +235,13 @@ void AStructure::HandlePointDamage(AActor* DamagedActor, const float Damage, ACo
 		Parameters.RawMagnitude = Damage;
 		Gameplay->GetAbilitySystemComponent()->ExecuteGameplayCueLocal(HullDamageCueTag, Parameters);
 	}
+}
+
+FVector AStructure::CalculateImpulse(const FVector& RawVelocities, const FVector& RawInput, const float MaxSpeed, const float Accel, const float DeltaTime) const
+{
+	const FVector Velocities = GetTransform().InverseTransformVector(RawVelocities);
+	const FVector Input = RawInput.GetClampedToMaxSize(1);
+	const FVector Diff = Input * MaxSpeed - Velocities;
+	const FVector Applied = ClampVector(Diff, FVector(-Accel * DeltaTime), FVector(Accel * DeltaTime));
+	return GetTransform().TransformVector(Applied);
 }

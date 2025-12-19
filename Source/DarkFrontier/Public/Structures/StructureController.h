@@ -115,6 +115,8 @@ public:
 
 	FStructureLayoutChanged OnLayoutChanged;
 
+	FSectorChanged OnSectorChanged;
+
 protected:
 
 	virtual void BeginPlay() override;
@@ -188,6 +190,9 @@ protected:
 
 	UFUNCTION()
 	void PropagateLayoutChange() const;
+
+	UFUNCTION()
+	void PropagateSectorChange(ASector* Sector);
 
 private:
 

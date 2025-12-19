@@ -54,4 +54,8 @@ void APortal::Transfer(const TObjectPtr<USectorLocation>& User) const
 
 	User->SetSector(Comp->GetSector());
 	User->SetLocation(TargetLocation);
+	User->GetOwner()->SetActorRotation(Destination->GetActorRotation());
+	UPrimitiveComponent* Primitive = User->GetOwner()->GetComponentByClass<UPrimitiveComponent>();
+	Primitive->SetAllPhysicsLinearVelocity(FVector::ZeroVector);
+	Primitive->SetAllPhysicsAngularVelocityInDegrees(FVector::ZeroVector);
 }
