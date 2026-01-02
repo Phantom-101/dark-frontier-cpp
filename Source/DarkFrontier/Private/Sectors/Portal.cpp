@@ -35,6 +35,11 @@ void APortal::Tick(const float DeltaSeconds)
 	}
 }
 
+AActor* APortal::GetDestination() const
+{
+	return Destination;
+}
+
 void APortal::Transfer(const TObjectPtr<USectorLocation>& User) const
 {
 	const USectorLocation* Comp = ACCESS_COMPONENT(Destination, SectorLocation);

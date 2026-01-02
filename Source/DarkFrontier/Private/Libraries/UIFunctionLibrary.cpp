@@ -4,9 +4,10 @@
 #include "Blueprint/IUserListEntry.h"
 #include "Components/ListViewBase.h"
 
-bool UUIFunctionLibrary::IsWidgetOfType(UCommonActivatableWidgetContainerBase* Container, const TSubclassOf<UCommonActivatableWidget> WidgetClass)
+bool UUIFunctionLibrary::IsWidgetOfType(const UCommonActivatableWidgetContainerBase* Container, const TSubclassOf<UCommonActivatableWidget>& WidgetClass)
 {
-	return Container->GetActiveWidget()->IsA(WidgetClass);
+	const UCommonActivatableWidget* Widget = Container->GetActiveWidget();
+	return IsValid(Widget) && Widget->IsA(WidgetClass);
 }
 
 void UUIFunctionLibrary::PopWidget(UCommonActivatableWidgetContainerBase* Container)
