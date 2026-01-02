@@ -28,8 +28,6 @@ void UTabs::NativeDestruct()
 
 	ListView->OnItemSelectionChanged().RemoveAll(this);
 	TabStack->OnDisplayedWidgetChanged().RemoveAll(this);
-
-	SetTabs(TArray<UTab*>());
 }
 
 const TArray<TObjectPtr<UTab>>& UTabs::GetTabs() const

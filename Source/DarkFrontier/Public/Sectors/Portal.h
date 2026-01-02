@@ -45,6 +45,8 @@ public:
 	COMPONENT_ACCESSOR_NAME(SectorLocation, Location);
 	COMPONENT_ACCESSOR(Targetable);
 
+	AActor* GetDestination() const;
+
 private:
 
 	void Transfer(const TObjectPtr<USectorLocation>& User) const;

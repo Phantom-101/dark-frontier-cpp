@@ -22,7 +22,7 @@ class DARKFRONTIER_API UUIFunctionLibrary : public UBlueprintFunctionLibrary
 public:
 
 	UFUNCTION(BlueprintPure)
-	static bool IsWidgetOfType(UCommonActivatableWidgetContainerBase* Container, const TSubclassOf<UCommonActivatableWidget> WidgetClass);
+	static bool IsWidgetOfType(const UCommonActivatableWidgetContainerBase* Container, const TSubclassOf<UCommonActivatableWidget>& WidgetClass);
 
 	UFUNCTION(BlueprintCallable)
 	static void PopWidget(UCommonActivatableWidgetContainerBase* Container);
