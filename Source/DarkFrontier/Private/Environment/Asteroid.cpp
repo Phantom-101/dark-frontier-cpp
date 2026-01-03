@@ -1,6 +1,7 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 #include "Environment/Asteroid.h"
+#include "Log.h"
 #include "Macros.h"
 #include "Items/Item.h"
 #include "Items/ItemPod.h"
@@ -47,7 +48,7 @@ float AAsteroid::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent,
 
 	const float Equivalent = (MaxAmount - DepletedAmount) / DamageType->MiningPower;
 	const float Absorbed = FMath::Min(DamageAmount, Equivalent);
-	const float Amount = Absorbed * DamageType->MiningPower;
+	const float Amount = Absorbed * DamageType->MiningPower * AmountPerDamage;
 
 	// Whole number part is guaranteed
 	const int Guaranteed = FMath::FloorToInt(Amount);
@@ -73,10 +74,13 @@ void AAsteroid::CreatePod()
 
 	UItem* Item = RandomItem();
 	GUARD(IsValid(Item));
-
-	FActorSpawnParameters Parameters;
-	Parameters.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
-	AItemPod* Pod = GetWorld()->SpawnActor<AItemPod>(PodClass, GetActorLocation(), GetActorRotation(), Parameters);
+	
+	AItemPod* Pod = GetWorld()->SpawnActor<AItemPod>(PodClass);
+	
+	USectorLocation* PodLocation = Pod->GetSectorLocation();
+	PodLocation->SetSector(GetSectorLocation()->GetSector());
+	PodLocation->SetLocation(GetActorLocation());
+	
 	Pod->Init(Item, 1);
 }
 
