@@ -17,7 +17,7 @@ APulseTurret::APulseTurret()
 
 bool APulseTurret::CanActivate(UTargetable* InTarget) const
 {
-	return IsValid(InTarget) && InTarget->GetOwner()->IsA<AStructure>() && OwningStructure->GetGameplay()->GetEnergy() >= EnergyCost;
+	return IsValid(InTarget) && OwningStructure->GetGameplay()->GetEnergy() >= EnergyCost;
 }
 
 void APulseTurret::OnActivate(UTargetable* InTarget)
@@ -28,7 +28,7 @@ void APulseTurret::OnActivate(UTargetable* InTarget)
 
 	// Save target
 	// TODO make sure target does not change before timer completes
-	SavedTarget = InTarget->GetOwner<AStructure>();
+	SavedTarget = InTarget->GetOwner();
 
 	// Apply damage after delay is completed
 	GetWorldTimerManager().SetTimer(DelayHandle, this, &APulseTurret::OnDelayComplete, Delay);
@@ -40,11 +40,8 @@ void APulseTurret::OnActivate(UTargetable* InTarget)
 
 void APulseTurret::OnDelayComplete()
 {
-	if(!IsValid(SavedTarget))
-	{
-		return;
-	}
-
+	GUARD(IsValid(SavedTarget));
+	
 	const FVector StartLocation = GetActorLocation();
 	const FVector EndLocation = SavedTarget->GetActorLocation();
 

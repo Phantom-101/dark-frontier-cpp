@@ -36,7 +36,7 @@ protected:
 	TObjectPtr<UNiagaraSystem> BeamSystem;
 
 	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly, Category="Gameplay")
-	TObjectPtr<AStructure> SavedTarget;
+	TObjectPtr<AActor> SavedTarget;
 
 	UPROPERTY(BlueprintReadOnly, VisibleInstanceOnly, Category="Gameplay")
 	FTimerHandle DelayHandle;

@@ -12,6 +12,9 @@ AItemPod::AItemPod()
 
 	Location = CreateDefaultSubobject<USectorLocation>("Location");
 	Targetable = CreateDefaultSubobject<UTargetable>("Targetable");
+
+	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.TickInterval = 10;
 }
 
 void AItemPod::Init(UItem* InItem, const int InQuantity)
@@ -20,9 +23,9 @@ void AItemPod::Init(UItem* InItem, const int InQuantity)
 	Quantity = InQuantity;
 }
 
-void AItemPod::BeginPlay()
+void AItemPod::Tick(const float DeltaSeconds)
 {
-	Super::BeginPlay();
+	Super::Tick(DeltaSeconds);
 
 	if(!IsValid(Item) || Quantity <= 0)
 	{
