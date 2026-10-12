@@ -72,3 +72,10 @@ Plugins/*/Intermediate/*
 
 # Cache files for the editor to use
 DerivedDataCache/*
+
+# IDE and user-specific files
+.idea/
+*.DotSettings.user
+*.user
+*.ipch
+*.pdb
