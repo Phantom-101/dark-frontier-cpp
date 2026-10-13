@@ -156,7 +156,7 @@ float AStructure::PropagateDamage(AStructurePart* Part, float DamageAmount, FDam
 	Gameplay->SetShield(Gameplay->GetShield() - ShieldDamage);
 	DamageAmount -= ShieldAbsorbed;
 
-	const float HullEquivalent = Gameplay->GetShield() / DamageType->HullMultiplier;
+	const float HullEquivalent = Gameplay->GetHull() / DamageType->HullMultiplier;
 	const float HullAbsorbed = FMath::Min(DamageAmount, HullEquivalent);
 	const float HullDamage = HullAbsorbed * DamageType->HullMultiplier;
 	
